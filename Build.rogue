@@ -16,15 +16,30 @@ routine rogo_debug
 endRoutine
 
 routine rogo_build_debug
+  rogo_deps
   File("Build/Web").create_folder
   File("Build/Source").create_folder
   execute "roguec Warlock Source/Main.rogue --libraries=Libraries/Rogue --output=Build/Source/RogueProgram"
-  execute "emcc -O0 -Wall -fno-strict-aliasing -s ALLOW_MEMORY_GROWTH=1 -s USE_SDL=2 -s USE_LIBPNG=1 -s FETCH Build/Source/RogueProgram.c -o Build/Web/Warlock.html --preload-file=Assets"
+  local cmd = "emcc -Wall -fno-strict-aliasing"
+  cmd .= appending("-O0")
+  cmd .= appending("-s ALLOW_MEMORY_GROWTH=1 -s USE_SDL=2 -s USE_LIBPNG=1 -s FETCH")
+  cmd .= appending("--preload-file=Assets")
+  cmd .= appending("--shell-file Source/index.html")
+  cmd .= appending("Build/Source/RogueProgram.c -o Build/Web/Warlock.html")
+  execute cmd
+  File("Build/Web/Warlock.html").rename("Build/Web/index.html")
   # --pre-js Build/Source/DeferredFolders.js
 endRoutine
 
 routine rogo_run
-  execute "emrun --browser chrome Build/Web/Warlock.html"
+  execute "emrun --browser chrome Build/Web/index.html"
+endRoutine
+
+routine rogo_deps
+  local index_html = File( "Source/index.html" )
+  if (not index_html.exists)
+    File("Libraries/Framework/Web/index.html").copy_to( index_html )
+  endIf
 endRoutine
 
 routine execute( commands:String, error_message=null:String, &suppress_error )->Logical
