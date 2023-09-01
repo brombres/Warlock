@@ -1,0 +1,14 @@
+uses Codec/PNG
+uses Graphics
+
+class Warlock [essential singleton]
+  METHODS
+    method init
+      Global.error = Console
+endClass
+
+augment Graphics::Bitmap
+  GLOBAL METHODS
+    method decode_png( bytes:Byte[] )->Bitmap
+      return PNGDecoder().decode( bytes )
+endAugment

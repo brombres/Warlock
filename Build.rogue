@@ -11,15 +11,20 @@ routine rogo_default
 endRoutine
 
 routine rogo_debug
-  File("Build/App").create_folder
-  File("Build/Source").create_folder
-  execute "roguec Source/Main.rogue --output=Build/Source/RogueProgram"
-  execute "emcc -O3 -Wall -fno-strict-aliasing -s USE_SDL=2 Build/Source/RogueProgram.c -o Build/App/Warlock.html"
+  rogo_build_debug
   rogo_run
 endRoutine
 
+routine rogo_build_debug
+  File("Build/Web").create_folder
+  File("Build/Source").create_folder
+  execute "roguec Warlock Source/Main.rogue --libraries=Libraries/Rogue --output=Build/Source/RogueProgram"
+  execute "emcc -O0 -Wall -fno-strict-aliasing -s ALLOW_MEMORY_GROWTH=1 -s USE_SDL=2 -s USE_LIBPNG=1 -s FETCH Build/Source/RogueProgram.c -o Build/Web/Warlock.html --preload-file=Assets"
+  # --pre-js Build/Source/DeferredFolders.js
+endRoutine
+
 routine rogo_run
-  execute "emrun Build/App/Warlock.html"
+  execute "emrun --browser chrome Build/Web/Warlock.html"
 endRoutine
 
 routine execute( commands:String, error_message=null:String, &suppress_error )->Logical
