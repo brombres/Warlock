@@ -1,83 +1,18 @@
 uses Codec/PNG
 uses Graphics
 
+$include Warlock/GLRenderer
+$include Warlock/GLShader
+$include Warlock/Renderer
+$include Warlock/Shader
+
 class Warlock [essential singleton]
-  NATIVE
-    nativeHeader
-    @|#include <SDL2/SDL.h>
-     |#include <SDL2/SDL_opengles2.h>
-     |#include <emscripten.h>
-     |#include <emscripten/html5.h>
-
-  PROPERTIES
-
-    native "SDL_Window *window;"
-    native "SDL_GLContext gl_context;"
-
-  GLOBAL METHODS
-    method draw_random_pixels [api]
-      native
-      @|//%Ns%RogueWarlock* warlock = %NS%ROGUE_SINGLETON(RogueWarlock);
-       |//if (SDL_MUSTLOCK(warlock->surface)) SDL_LockSurface(warlock->surface);
-       |//
-       |////double double_w, double_h;
-       |////emscripten_get_element_css_size( "#canvas", &double_w, &double_h );
-       |////int w = (int)double_w;
-       |////int h = (int)double_h;
-       |////int w, h;
-       |////SDL_GetWindowSize(warlock->window, &w, &h);
-       |////printf("display size %dx%d\n",w,h);
-       |//
-       |//Uint8 * pixels = warlock->surface->pixels;
-       |//for (int i=2048*2048; --i>=0; )
-       |//{
-       |//    char randomByte = rand() % 255;
-       |//    pixels[i] = randomByte;
-       |//}
-       |//
-       |//if (SDL_MUSTLOCK(warlock->surface)) SDL_UnlockSurface(warlock->surface);
-       |//
-       |//SDL_Texture *screenTexture = SDL_CreateTextureFromSurface(warlock->renderer, warlock->surface);
-       |//
-       |//SDL_RenderClear(warlock->renderer);
-       |//SDL_Rect rect = {0,0,2048,2048};
-       |//SDL_RenderCopy(warlock->renderer, screenTexture, &rect, &rect);
-       |//SDL_RenderPresent(warlock->renderer);
-       |//
-       |//SDL_DestroyTexture(screenTexture);
-
   METHODS
     method init
       Global.error = Console
+      GLRenderer # initalize - if platform is emscripten then call won't return
 
-      native
-      @|SDL_Init( SDL_INIT_VIDEO );
-       |
-       |SDL_GL_SetAttribute( SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES );
-       |SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 2 );
-       |SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 0 );
-       |SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
-       |SDL_GL_SetAttribute( SDL_GL_ACCELERATED_VISUAL, 1 );
-       |
-       |double double_w, double_h;
-       |emscripten_get_element_css_size( "#canvas", &double_w, &double_h );
-       |int w = (int)double_w;
-       |int h = (int)double_h;
-       |printf("[Warlock] Initial window size %dx%d\n",w,h);
-       |
-       |$this->window = SDL_CreateWindow( "", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, w, h, SDL_WINDOW_OPENGL );
-       |$this->gl_context = SDL_GL_CreateContext( $this->window );
-       |
-       |SDL_GL_MakeCurrent( $this->window, $this->gl_context );
-       |
-       |glClearColor(0,0,1,1);
-       |glClear(GL_COLOR_BUFFER_BIT);
-       |
-       |emscripten_set_main_loop( %Ns%RogueWarlock__draw_random_pixels, 0, 1 );
+    method render
+      Renderer.clear( Random.color )
 endClass
 
-augment Graphics::Bitmap
-  GLOBAL METHODS
-    method decode_png( bytes:Byte[] )->Bitmap
-      return PNGDecoder().decode( bytes )
-endAugment
