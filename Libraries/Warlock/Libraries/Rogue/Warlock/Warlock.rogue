@@ -1,0 +1,31 @@
+uses Codec/PNG
+uses Graphics
+
+$include Warlock/Colors
+$include Warlock/Display
+$include Warlock/Drawable
+$include Warlock/FrontFace
+$include Warlock/GLRenderTarget
+$include Warlock/GLRenderer
+$include Warlock/GLShader
+$include Warlock/Line
+$include Warlock/PrimitiveType
+$include Warlock/RenderMode
+$include Warlock/RenderTarget
+$include Warlock/Renderer
+$include Warlock/Shader
+$include Warlock/TriangleCullingMode
+
+class Warlock [essential singleton]
+  METHODS
+    method init
+      Global.error = Console
+      GLRenderer # initalize - if platform is emscripten then call won't return
+
+    method draw
+      Renderer.clear( Color.BLUE )
+      Line(XY(-1,-1),XY(1,1)).draw( Color.WHITE )
+
+    method update
+endClass
+

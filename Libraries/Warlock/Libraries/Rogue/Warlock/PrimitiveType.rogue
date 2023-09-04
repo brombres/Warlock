@@ -1,0 +1,6 @@
+enum PrimitiveType
+  POINTS
+  LINES
+  TRIANGLES
+  TRIANGLE_STRIP # Each vertex after the first three defines a new triangle using the previous two vertices
+endEnum

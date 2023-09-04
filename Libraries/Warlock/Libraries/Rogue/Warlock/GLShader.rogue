@@ -21,7 +21,7 @@ class GLShader : Shader
     world_transform_setting : Int32
 
   METHODS
-    method init( vertex_shader:String, pixel_shader:String )
+    method init( vertex_shader:String, fragment_shader:String )
       if $target("iOS") or $target("Android") or $target("Web")
         # An empty last line is required on HIGH_PRECISION and MEDIUM_PRECISION.
         # Allows high precision if the device supports it
@@ -50,16 +50,16 @@ class GLShader : Shader
 
       if (use_high_precision)
         vertex_shader = GLSL_VERSION + HIGH_PRECISION + vertex_shader.replacing( "$LOWP", LOWP )
-        pixel_shader = GLSL_VERSION + HIGH_PRECISION + pixel_shader.replacing( "$LOWP", LOWP )
+        fragment_shader = GLSL_VERSION + HIGH_PRECISION + fragment_shader.replacing( "$LOWP", LOWP )
       else
         vertex_shader = GLSL_VERSION + MEDIUM_PRECISION + vertex_shader.replacing( "$LOWP", LOWP )
-        pixel_shader = GLSL_VERSION + MEDIUM_PRECISION + pixel_shader.replacing( "$LOWP", LOWP )
+        fragment_shader = GLSL_VERSION + MEDIUM_PRECISION + fragment_shader.replacing( "$LOWP", LOWP )
       endIf
 
       native @|$vertex_shader_id = (RogueInt32) glCreateShader( GL_VERTEX_SHADER );
       compile_shader( vertex_shader_id, vertex_shader )
       native @|$pixel_shader_id = (RogueInt32) glCreateShader( GL_FRAGMENT_SHADER );
-      compile_shader( pixel_shader_id, pixel_shader )
+      compile_shader( pixel_shader_id, fragment_shader )
 
       local location = 0
       native @|$program_id = glCreateProgram();
@@ -128,12 +128,12 @@ class ColorGLShader : GLShader
            |  vertex_color = color / 255.0;
            |}
 
-      local pixel_shader =
+      local fragment_shader =
           @|varying $LOWP vec4 vertex_color;
            |void main()
            |{
            |  gl_FragColor = vertex_color;
            |}
 
-      prior.init( vertex_shader, pixel_shader )
+      prior.init( vertex_shader, fragment_shader )
 endClass

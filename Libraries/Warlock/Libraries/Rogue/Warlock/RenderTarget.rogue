@@ -1,0 +1,11 @@
+class RenderTarget [abstract]
+  PROPERTIES
+    size          : XY
+    true_size     : XY
+    viewport_size : XY
+    # On physical iPhone 6 Plus the rendering viewport is smaller than the rendering surface
+
+    is_main_display : Logical
+
+  METHODS
+endClass

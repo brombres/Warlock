@@ -1,0 +1,6 @@
+class Display [singleton]
+  PROPERTIES
+    size : XY
+
+  METHODS
+endClass

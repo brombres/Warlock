@@ -1,0 +1,9 @@
+augment Geometry::Line
+  METHODS
+    method draw( colors:Colors )
+      drawable( colors ).draw
+
+    method drawable( color:Colors )->DrawableLine
+      return DrawableLine( Line<<XYZW>>(a,b), color )
+
+endAugment

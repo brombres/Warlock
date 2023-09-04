@@ -1,0 +1,6 @@
+enum TriangleCullingMode
+  NONE
+  FRONT
+  BACK
+endEnum
+

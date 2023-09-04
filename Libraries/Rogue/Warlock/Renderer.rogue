@@ -1,9 +1,0 @@
-class Renderer [singleton]
-  PROPERTIES
-    COLOR_SHADER : Shader
-
-  METHODS
-    method clear( color:Color )
-      noAction
-endClass
-

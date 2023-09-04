@@ -1,0 +1,93 @@
+class Renderer [singleton]
+  DEFINITIONS
+    VERTEX_BUFFER_SIZE = 4096
+
+  PROPERTIES
+    COLOR_SHADER : Shader
+
+    primitive_type        : PrimitiveType
+    render_mode           : RenderMode
+    triangle_culling_mode : TriangleCullingMode
+    front_face            : FrontFace
+
+    vertex_count     : Int32
+    vertex_positions = Real32[](VERTEX_BUFFER_SIZE*4)
+    vertex_uvs       = Real32[](VERTEX_BUFFER_SIZE*2)
+    vertex_colors    = Int32[](VERTEX_BUFFER_SIZE)
+
+  METHODS
+    method clear( color:Color )
+      noAction
+
+    method draw( drawable:DrawableLine )
+      primitive_type = PrimitiveType.LINES
+      render_mode = drawable.render_mode
+
+      reserve_vertices( 2 )
+
+      vertex_positions.add( drawable.line.a.x )
+      vertex_positions.add( drawable.line.a.y )
+      vertex_positions.add( drawable.line.a.z )
+      vertex_positions.add( drawable.line.a.w )
+      vertex_positions.add( drawable.line.b.x )
+      vertex_positions.add( drawable.line.b.y )
+      vertex_positions.add( drawable.line.b.z )
+      vertex_positions.add( drawable.line.b.w )
+
+      vertex_colors.add( drawable.colors.a.argb )
+      vertex_colors.add( drawable.colors.b.argb )
+
+    method begin_present
+      # Set defaults
+      triangle_culling_mode = TriangleCullingMode.BACK
+      front_face = FrontFace.COUNTER_CLOCKWISE
+
+    method end_present
+      noAction
+
+    method present( display_size:XY, viewport_size:XY )
+      begin_present
+
+      #native
+      #@|//%Ns%RogueGLRenderer* renderer = %NS%ROGUE_SINGLETON(RogueGLRenderer);
+      # |//if (SDL_MUSTLOCK(renderer->surface)) SDL_LockSurface(renderer->surface);
+      # |//
+      # |////double double_w, double_h;
+      # |////emscripten_get_element_css_size( "#canvas", &double_w, &double_h );
+      # |////int w = (int)double_w;
+      # |////int h = (int)double_h;
+      # |////int w, h;
+      # |////SDL_GetWindowSize(renderer->window, &w, &h);
+      # |////printf("display size %dx%d\n",w,h);
+      # |//
+
+      Warlock.update
+      Warlock.draw
+      render
+
+      end_present
+
+    method render
+      noAction
+
+    method reserve_vertices( n:Int32 )
+      if (vertex_count + n > VERTEX_BUFFER_SIZE) flush
+      vertex_count += n
+
+    method set_primitive_type( new_type:PrimitiveType )
+      if (primitive_type == new_type) return
+      render
+      @primitive_type = new_type
+
+    method set_render_mode( new_mode:RenderMode )
+      if (render_mode is new_mode) return
+      render
+      @render_mode = new_mode
+
+    method set_triangle_culling_mode( new_mode:TriangleCullingMode )
+      if (triangle_culling_mode == new_mode) return
+      render
+      @triangle_culling_mode = new_mode
+
+endClass
+

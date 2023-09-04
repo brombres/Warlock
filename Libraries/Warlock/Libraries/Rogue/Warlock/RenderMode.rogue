@@ -1,0 +1,5 @@
+class RenderMode
+  METHODS
+    method apply( shader:Shader )
+      noAction
+endClass

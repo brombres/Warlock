@@ -1,0 +1,271 @@
+class GLRenderer : Renderer [singleton]
+  NATIVE
+    nativeHeader
+    @|#include <SDL2/SDL.h>
+     |#include <SDL2/SDL_opengles2.h>
+     |#include <emscripten.h>
+     |#include <emscripten/html5.h>
+     |#include <GLES2/gl2.h>
+     |#include <GLES2/gl2ext.h>
+     |
+     |static EM_BOOL on_web_display_size_changed( int event_type, const EmscriptenUiEvent *event, void *user_data );
+
+    nativeCode
+    @|static EM_BOOL on_web_display_size_changed( int event_type, const EmscriptenUiEvent *event, void *user_data )
+     |{
+     |  %NS%ROGUE_SINGLETON(RogueGLRenderer)->display_size_changed = 1;
+     |  return 0;
+     |}
+
+  GLOBAL METHODS
+    method dispatch_present [api]
+      GLRenderer.present
+
+  PROPERTIES
+    native "SDL_Window *window;"
+    native "SDL_GLContext gl_context;"
+    native "GLuint position_buffer, color_buffer, uv_buffer;"
+
+    main_render_target    : GLRenderTarget
+    current_render_target : GLRenderTarget
+
+    is_configured        : Logical
+    display_size_changed : Logical
+
+  METHODS
+    method init
+      Renderer = this
+
+      local initial_size : XY
+
+      native
+      @|SDL_Init( SDL_INIT_VIDEO );
+       |
+       |SDL_GL_SetAttribute( SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES );
+       |SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 2 );
+       |SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 0 );
+       |SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
+       |SDL_GL_SetAttribute( SDL_GL_ACCELERATED_VISUAL, 1 );
+       |
+       |double w, h;
+       |emscripten_get_element_css_size( "#canvas", &w, &h );
+       |$initial_size.x = (RogueReal) w;
+       |$initial_size.y = (RogueReal) h;
+       |
+       |$this->window = SDL_CreateWindow( "", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, (int)w, (int)h, SDL_WINDOW_OPENGL );
+       |$this->gl_context = SDL_GL_CreateContext( $this->window );
+       |
+       |SDL_GL_MakeCurrent( $this->window, $this->gl_context );
+       |
+       |glClearColor(0,0,1,1);
+       |glClear(GL_COLOR_BUFFER_BIT);
+
+      Display.size = initial_size
+
+      main_render_target = GLRenderTarget()
+      current_render_target = main_render_target
+
+      COLOR_SHADER = ColorGLShader()
+
+      native
+      @|#if defined(%NS%ROGUE_PLATFORM_WEB)
+       |  emscripten_set_resize_callback( EMSCRIPTEN_EVENT_TARGET_WINDOW, 0, 0, on_web_display_size_changed );
+       |
+       |  // This emscripten call never returns
+       |  emscripten_set_main_loop( %Ns%RogueGLRenderer__dispatch_present, 0, 1 );
+       |#endif
+
+    method clear( color:Color ) [override]
+      render
+      native
+      @|int gl_flags = GL_COLOR_BUFFER_BIT;
+       |int c = $color.argb;
+       |gl_flags |= GL_COLOR_BUFFER_BIT;
+       |glClearColor( ((c>>16)&255)/255.0f, ((c>>8)&255)/255.0f, (c&255)/255.0f, ((c>>24)&255)/255.0f );
+       |glClear( gl_flags );
+
+      #{
+    method fill_quad( quad:Quad<<XYZW>>, colors:Colors, render_mode:RenderMode, shader:Shader )
+      set_primitive_type( TRIANGLES )
+      set_render_mode( colors, null, render_mode, shader )
+
+      reserve_vertices( 6 )
+
+      vertex_positions.add( quad.a.x )
+      vertex_positions.add( quad.a.y )
+      vertex_positions.add( quad.a.z )
+      vertex_positions.add( quad.a.w )
+      vertex_positions.add( quad.b.x )
+      vertex_positions.add( quad.b.y )
+      vertex_positions.add( quad.b.z )
+      vertex_positions.add( quad.b.w )
+      vertex_positions.add( quad.c.x )
+      vertex_positions.add( quad.c.y )
+      vertex_positions.add( quad.c.z )
+      vertex_positions.add( quad.c.w )
+
+      vertex_positions.add( quad.a.x )
+      vertex_positions.add( quad.a.y )
+      vertex_positions.add( quad.a.z )
+      vertex_positions.add( quad.a.w )
+      vertex_positions.add( quad.c.x )
+      vertex_positions.add( quad.c.y )
+      vertex_positions.add( quad.c.z )
+      vertex_positions.add( quad.c.w )
+      vertex_positions.add( quad.d.x )
+      vertex_positions.add( quad.d.y )
+      vertex_positions.add( quad.d.z )
+      vertex_positions.add( quad.d.w )
+
+      vertex_colors.add( colors.a.argb )
+      vertex_colors.add( colors.b.argb )
+      vertex_colors.add( colors.c.argb )
+      vertex_colors.add( colors.a.argb )
+      vertex_colors.add( colors.c.argb )
+      vertex_colors.add( colors.d.argb )
+    }#
+
+    method log_errors( where="":String )
+      native @|GLenum error_code = glGetError();
+              |if (error_code)
+              |{
+              |  switch (error_code)
+              |  {
+              |    case 1286: break;   // resizing the window - ignore
+              |    default:
+              |      ROGUE_LOG_ERROR( "[Warlock] OpenGL %s error: %d\n", $where->data->as_utf8, error_code );
+              |  }
+              |}
+
+    method max_texture_size->Int32
+      local result : Int32
+      native @|GLint result = 0;
+              |glGetIntegerv( GL_MAX_TEXTURE_SIZE, &result );
+              |$result = (%Ns%RogueInt32) result;
+      return result
+
+    method present
+      if (display_size_changed)
+        display_size_changed = false
+
+        local sz : XY
+        native
+        @|double w, h;
+         |emscripten_get_element_css_size( "#canvas", &w, &h );
+         |SDL_SetWindowSize( $this->window, (int)w, (int) h );
+         |$sz.x = (RogueReal)w;
+         |$sz.y = (RogueReal)h;
+
+        Display.size = sz
+      endIf
+
+      present( Display.size, Display.size )
+
+    method present( display_size:XY, viewport_size:XY ) [api]
+      Display.size = display_size
+      main_render_target.size = display_size
+      main_render_target.viewport_size = display_size
+      prior.present( display_size, viewport_size )
+
+    method render [override]
+      if (not vertex_count) return
+
+      if (not is_configured)
+        is_configured = true
+
+        native @|glGenBuffers( 1, &$this->position_buffer );
+                |glGenBuffers( 1, &$this->color_buffer );
+                |glGenBuffers( 1, &$this->uv_buffer );
+      endIf
+
+      local shader = COLOR_SHADER->(as GLShader)
+
+      native @|glUseProgram( $shader->program_id );
+              |
+              |glViewport( 0, 0, (int)$current_render_target->viewport_size.x, (int)$current_render_target->viewport_size.y );
+
+      which (triangle_culling_mode)
+        case NONE
+          native @|glDisable( GL_CULL_FACE );
+        case FRONT
+          native @|glEnable( GL_CULL_FACE );
+                  |glCullFace( GL_FRONT );
+        case BACK
+          native @|glEnable( GL_CULL_FACE );
+                  |glCullFace( GL_BACK );
+      endWhich
+
+      which (front_face)
+        case COUNTER_CLOCKWISE: native @|glFrontFace( GL_CCW );
+        others:                 native @|glFrontFace( GL_CW );
+      endWhich
+
+      render_mode?.apply( shader )
+
+      # Swap red and blue while premultiplying R,G,B by A.
+      local count = vertex_colors.count
+      native @|{
+              |  RogueInt32* src = $vertex_colors->as_int32s - 1;
+              |  while (--$count >= 0)
+              |  {
+              |    int color = *(++src);
+              |    int a = (color >> 24) & 255;
+              |    int r = (((color >> 16) & 255) * a) / 255;
+              |    int g = (((color >> 8) & 255) * a) / 255;
+              |    int b = ((color & 255) * a) / 255;
+              |    *src = (a << 24) | (b << 16) | (g << 8) | r;
+              |  }
+              |}
+
+      # Configure shader
+      if (shader.position_attribute >= 0)
+        native @|glBindBuffer(GL_ARRAY_BUFFER, $this->position_buffer);
+                |glBufferData(GL_ARRAY_BUFFER, sizeof(GL_FLOAT) * $vertex_positions->count, $vertex_positions->as_real32s, GL_STREAM_DRAW );
+                |glEnableVertexAttribArray( $shader->position_attribute );
+                |glVertexAttribPointer( $shader->position_attribute, 4, GL_FLOAT, GL_FALSE, 0, 0);
+      endIf
+
+      if (shader.color_attribute >= 0)
+        native @|glBindBuffer(GL_ARRAY_BUFFER, $this->color_buffer);
+                |glBufferData(GL_ARRAY_BUFFER, 4 * $vertex_colors->count, $vertex_colors->as_int32s, GL_STREAM_DRAW );
+                |glEnableVertexAttribArray( $shader->color_attribute );
+                |glVertexAttribPointer( $shader->color_attribute, 4, GL_UNSIGNED_BYTE, GL_FALSE, 0, 0);
+      endIf
+
+      if (shader.uv_attribute >= 0)
+        native @|glBindBuffer(GL_ARRAY_BUFFER, $this->uv_buffer);
+                |glBufferData(GL_ARRAY_BUFFER, sizeof(GL_FLOAT) * $vertex_uvs->count, $vertex_uvs->as_real32s, GL_STREAM_DRAW );
+                |glEnableVertexAttribArray( $shader->uv_attribute );
+                |glVertexAttribPointer( $shader->uv_attribute, 2, GL_FLOAT, GL_FALSE, 0, 0);
+      endIf
+
+      # Draw primitives
+      which (primitive_type)
+        case POINTS
+          native @|glDrawArrays( GL_POINTS, 0, $vertex_count );
+
+        case LINES
+          native @|glDrawArrays( GL_LINES, 0, $vertex_count );
+
+        case TRIANGLES
+          native @|glDrawArrays( GL_TRIANGLES, 0, $vertex_count );
+
+        case TRIANGLE_STRIP
+          native @|glDrawArrays( GL_TRIANGLE_STRIP, 0, $vertex_count );
+
+      endWhich
+
+      log_errors( "rendering" )
+
+      vertex_count = 0
+      vertex_positions.clear
+      vertex_uvs.clear
+      vertex_colors.clear
+
+endClass
+
+augment Graphics::Bitmap
+  GLOBAL METHODS
+    method decode_png( bytes:Byte[] )->Bitmap
+      return PNGDecoder().decode( bytes )
+endAugment
