@@ -57,7 +57,7 @@ class GLRenderer : Renderer [singleton]
        |
        |SDL_GL_MakeCurrent( $this->window, $this->gl_context );
        |
-       |glClearColor(0,0,1,1);
+       |glClearColor(0,0,0,1);
        |glClear(GL_COLOR_BUFFER_BIT);
 
       Display.size = initial_size
@@ -70,9 +70,6 @@ class GLRenderer : Renderer [singleton]
       native
       @|#if defined(%NS%ROGUE_PLATFORM_WEB)
        |  emscripten_set_resize_callback( EMSCRIPTEN_EVENT_TARGET_WINDOW, 0, 0, on_web_display_size_changed );
-       |
-       |  // This emscripten call never returns
-       |  emscripten_set_main_loop( %Ns%RogueGLRenderer__dispatch_present, 0, 1 );
        |#endif
 
     method clear( color:Color ) [override]

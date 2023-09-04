@@ -1,6 +1,20 @@
 class Display [singleton]
   PROPERTIES
-    size : XY
+    size  : XY
+    state = DisplayState()
 
   METHODS
+    method draw
+      state.on_draw
+
+    method change_state( new_state:DisplayState )
+      if (state) state.change_state( new_state )
+      else       @state = new_state
+
+    method set_state( new_state:DisplayState )
+      if (state) state.change_state( new_state )
+      else       @state = new_state
+
+    method update
+      @state = which{ state.updated || DisplayState() }
 endClass

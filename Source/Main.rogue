@@ -30,12 +30,10 @@ native @|test_fetch();
 
  #@trace Bitmap(File("Assets/Images/Macross.png")).size
 
-nativeCode
-@|
- |
- |int main(int argc, char* argv[])
- |{
- |  Rogue_configure( argc, argv );
- |  Rogue_launch();
- |
- |}
+Display.state = DisplayState() subclass
+  METHODS
+    method on_draw
+      Renderer.clear( Color.BLUE )
+      Line(XY(-1,-1),XY(1,1)).draw( Color.WHITE )
+endSubclass
+

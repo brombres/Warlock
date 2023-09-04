@@ -61,8 +61,8 @@ class Renderer [singleton]
       # |////printf("display size %dx%d\n",w,h);
       # |//
 
-      Warlock.update
-      Warlock.draw
+      Display.update
+      Display.draw
       render
 
       end_present

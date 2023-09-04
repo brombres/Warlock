@@ -23,8 +23,15 @@ routine rogo_build_debug
   rogo_deps
   File("Build/Web").create_folder
   File("Build/Web/Source").create_folder
-  execute "roguec Warlock Source/Main.rogue --libraries=Libraries/Warlock/Libraries/Rogue --target=C,Warlock,SDL,OpenGL,Web --output=Build/Web/Source/RogueProgram"
-  local cmd = "emcc -Wall -fno-strict-aliasing"
+
+  local cmd = "roguec Source/Main.rogue Warlock"
+  cmd .= appending( "--libraries=Libraries/Warlock/Libraries/Rogue" )
+  cmd .= appending( "--target=C,Warlock,SDL,OpenGL,Web" )
+  #cmd .= appending( "--main" )
+  cmd .= appending( "--output=Build/Web/Source/RogueProgram" )
+  execute cmd
+
+  cmd = "emcc -Wall -fno-strict-aliasing"
   cmd .= appending("-O0")
   cmd .= appending("-s ALLOW_MEMORY_GROWTH=1 -s USE_SDL=2 -s USE_LIBPNG=1 -s FETCH")
   cmd .= appending("--preload-file=Assets")

@@ -3,6 +3,7 @@ uses Graphics
 
 $include Warlock/Colors
 $include Warlock/Display
+$include Warlock/DisplayState
 $include Warlock/Drawable
 $include Warlock/FrontFace
 $include Warlock/GLRenderTarget
@@ -20,12 +21,19 @@ class Warlock [essential singleton]
   METHODS
     method init
       Global.error = Console
-      GLRenderer # initalize - if platform is emscripten then call won't return
-
-    method draw
-      Renderer.clear( Color.BLUE )
-      Line(XY(-1,-1),XY(1,1)).draw( Color.WHITE )
-
-    method update
+      GLRenderer # instantiates singleton
 endClass
 
+nativeCode
+@|#if defined(%NS%ROGUE_PLATFORM_WEB)
+ |
+ |int main(int argc, char* argv[])
+ |{
+ |  Rogue_configure( argc, argv );
+ |  Rogue_launch(); // call never returns due to emscripten main loop
+ |
+ |  // This emscripten call never returns
+ |  emscripten_set_main_loop( %Ns%RogueGLRenderer__dispatch_present, 0, 1 );
+ |}
+ |
+ |#endif
