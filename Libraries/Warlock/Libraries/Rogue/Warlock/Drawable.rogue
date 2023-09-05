@@ -34,7 +34,8 @@ class DrawableTriangle(
 endClass
 }#
 
-class DrawableLine( line:Line<<XYZW>>, colors=Colors(Color.WHITE):Colors, render_mode=RenderMode.ALPHA_COLOR:RenderMode, shader=null:Shader ) [compound]
+class DrawableLine( line:Line<<XYZW>>, colors=Colors(Color.WHITE):Colors, render_mode=RenderMode.ALPHA_COLOR:RenderMode,
+                    shader=Shader.COLOR:Shader ) [compound]
   METHODS
     method draw
       Renderer.draw( this )

@@ -1,3 +1,9 @@
+class GLShaders : Shaders
+  METHODS
+    method init
+      color = GLShaderColor()
+endClass
+
 class GLShader : Shader
   PROPERTIES
     GLSL_VERSION     = ""
@@ -90,6 +96,9 @@ class GLShader : Shader
               |  ++slot;
               |}
 
+    method activate
+      native @|glUseProgram( $this->program_id );
+
     method use_high_precision->Logical
       return (GLRenderer.max_texture_size >= 2048)
 
@@ -115,7 +124,7 @@ class GLShader : Shader
 endClass
 
 
-class ColorGLShader : GLShader
+class GLShaderColor : GLShader
   METHODS
     method init
       local vertex_shader =

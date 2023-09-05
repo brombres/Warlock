@@ -61,8 +61,7 @@ class GLRenderer : Renderer [singleton]
       main_render_target = GLRenderTarget()
       current_render_target = main_render_target
 
-      COLOR_SHADER = ColorGLShader()
-
+      shaders = GLShaders()
       render_modes = GLRenderModes()
 
       native
@@ -173,10 +172,11 @@ class GLRenderer : Renderer [singleton]
                 |glGenBuffers( 1, &$this->uv_buffer );
       endIf
 
-      local shader = COLOR_SHADER->(as GLShader)
+      local shader = shader->(as GLShader)
+      shader.activate
+      render_mode?.apply( shader )
 
-      native @|glUseProgram( $shader->program_id );
-              |glViewport( 0, 0, (int)$current_render_target->viewport_size.x, (int)$current_render_target->viewport_size.y );
+      native @|glViewport( 0, 0, (int)$current_render_target->viewport_size.x, (int)$current_render_target->viewport_size.y );
 
       which (triangle_culling_mode)
         case NONE
@@ -193,8 +193,6 @@ class GLRenderer : Renderer [singleton]
         case COUNTER_CLOCKWISE: native @|glFrontFace( GL_CCW );
         others:                 native @|glFrontFace( GL_CW );
       endWhich
-
-      render_mode?.apply( shader )
 
       # Swap red and blue while premultiplying R,G,B by A.
       local count = vertex_colors.count

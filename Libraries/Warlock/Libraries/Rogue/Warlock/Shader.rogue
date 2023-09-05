@@ -1,2 +1,13 @@
 class Shader [abstract]
+  GLOBAL METHODS
+    method COLOR->Shader
+      return Renderer.shaders.color
+
+  METHODS
+    method activate [abstract]
+endClass
+
+class Shaders
+  PROPERTIES
+    color : Shader
 endClass
