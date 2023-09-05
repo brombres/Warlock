@@ -1,4 +1,7 @@
-class RenderMode
+class RenderMode [abstract]
+  GLOBAL METHODS
+    method ALPHA_COLOR->RenderMode
+
   METHODS
     method apply( shader:Shader )
       noAction

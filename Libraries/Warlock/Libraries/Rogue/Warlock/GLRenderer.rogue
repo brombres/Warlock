@@ -17,10 +17,6 @@ class GLRenderer : Renderer [singleton]
      |  return 0;
      |}
 
-  GLOBAL METHODS
-    method dispatch_present [api]
-      GLRenderer.present
-
   PROPERTIES
     native "SDL_Window *window;"
     native "SDL_GLContext gl_context;"

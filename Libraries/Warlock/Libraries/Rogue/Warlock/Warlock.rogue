@@ -18,6 +18,11 @@ $include Warlock/Shader
 $include Warlock/TriangleCullingMode
 
 class Warlock [essential singleton]
+  GLOBAL METHODS
+    method present [api]
+      GLRenderer.present
+      native @|Rogue_check_gc();
+
   METHODS
     method init
       Global.error = Console
@@ -33,7 +38,7 @@ nativeCode
  |  Rogue_launch(); // call never returns due to emscripten main loop
  |
  |  // This emscripten call never returns
- |  emscripten_set_main_loop( %Ns%RogueGLRenderer__dispatch_present, 0, 1 );
+ |  emscripten_set_main_loop( %Ns%RogueWarlock__present, 0, 1 );
  |}
  |
  |#endif

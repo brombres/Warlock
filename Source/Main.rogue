@@ -31,9 +31,20 @@ native @|test_fetch();
  #@trace Bitmap(File("Assets/Images/Macross.png")).size
 
 Display.state = DisplayState() subclass
+  PROPERTIES
+    lines = Line[]
+
   METHODS
     method on_draw
       Renderer.clear( Color.BLUE )
-      Line(XY(-1,-1),XY(1,1)).draw( Color.WHITE )
+      forEach (line at i in lines step -1)
+        line.draw( Color.WHITE.with_alpha_byte(255-i) )
+      endForEach
+
+    method on_update
+      if (lines.count == 256) lines.remove_last
+      local a = XY( Random.real(-1,1), Random.real(-1,1) )
+      local b = XY( Random.real(-1,1), Random.real(-1,1) )
+      lines.insert( Line(a,b) )
 endSubclass
 

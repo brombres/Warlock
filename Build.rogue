@@ -27,7 +27,7 @@ routine rogo_build_debug
   local cmd = "roguec Source/Main.rogue Warlock"
   cmd .= appending( "--libraries=Libraries/Warlock/Libraries/Rogue" )
   cmd .= appending( "--target=C,Warlock,SDL,OpenGL,Web" )
-  #cmd .= appending( "--main" )
+  cmd .= appending( "--gc=manual" )
   cmd .= appending( "--output=Build/Web/Source/RogueProgram" )
   execute cmd
 
