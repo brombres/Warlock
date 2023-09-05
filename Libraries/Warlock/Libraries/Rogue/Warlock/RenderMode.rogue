@@ -1,6 +1,12 @@
+class RenderModes
+  PROPERTIES
+    alpha_color : RenderMode
+endClass
+
 class RenderMode [abstract]
   GLOBAL METHODS
     method ALPHA_COLOR->RenderMode
+      return Renderer.render_modes.alpha_color
 
   METHODS
     method apply( shader:Shader )

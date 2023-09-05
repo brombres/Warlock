@@ -4,6 +4,7 @@ class Renderer [singleton]
 
   PROPERTIES
     COLOR_SHADER : Shader
+    render_modes : RenderModes
 
     primitive_type        : PrimitiveType
     render_mode           : RenderMode
@@ -90,4 +91,3 @@ class Renderer [singleton]
       @triangle_culling_mode = new_mode
 
 endClass
-

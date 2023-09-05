@@ -1,14 +1,13 @@
 uses Codec/PNG
 uses Graphics
 
+$include Warlock/OpenGLRenderer
+
 $include Warlock/Colors
 $include Warlock/Display
 $include Warlock/DisplayState
 $include Warlock/Drawable
 $include Warlock/FrontFace
-$include Warlock/GLRenderTarget
-$include Warlock/GLRenderer
-$include Warlock/GLShader
 $include Warlock/Line
 $include Warlock/PrimitiveType
 $include Warlock/RenderMode
