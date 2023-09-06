@@ -120,16 +120,13 @@ class GLRenderer : Renderer [singleton]
     }#
 
     method log_errors( where="":String )
-      native @|GLenum error_code = glGetError();
-              |if (error_code)
-              |{
-              |  switch (error_code)
-              |  {
-              |    case 1286: break;   // resizing the window - ignore
-              |    default:
-              |      ROGUE_LOG_ERROR( "[Warlock] OpenGL %s error: %d\n", $where->data->as_utf8, error_code );
-              |  }
-              |}
+      local error_code : Int32
+      native @|$error_code = (RogueInt32) glGetError();
+
+      # GL_INVALID_FRAMEBUFFER_OPERATION happens when resizing the screen
+      if (error_code and error_code != GLError.GL_INVALID_FRAMEBUFFER_OPERATION.value)
+        log.println "[Warlock] OpenGL $ error: $"(where,GLError(error_code))
+      endIf
 
     method max_texture_size->Int32
       local result : Int32

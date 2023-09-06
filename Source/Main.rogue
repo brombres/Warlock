@@ -40,6 +40,7 @@ Display.state = DisplayState() subclass
       forEach (line at i in lines step -1)
         line.draw( Color.WHITE.with_alpha_byte(255-i) )
       endForEach
+      Box( 0.25, 0.25, 0.5, 0.5 ).draw( Color.YELLOW )
 
     method on_update
       if (lines.count == 256) lines.remove_last

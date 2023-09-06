@@ -1,20 +1,23 @@
-#{
 class DrawableQuad(
     quad:Quad<<XYZW>>,
     colors=Colors(Color.WHITE):Colors,
+    thickness=1.0:Real,
     texture=null:Texture,
     uv=Quad():Quad,
-    render_mode=null:RenderMode,
-    shader=null:Shader ) [compound]
+    render_mode=RenderMode.ALPHA_COLOR:RenderMode,
+    shader=Shader.COLOR:Shader ) [compound]
 
   METHODS
     method draw
-      Display.draw( this )
+      if (colors.count < 4) colors = Colors(colors.a)
+      DrawableLine( Line<<XYZW>>(quad.a,quad.b), colors.a, thickness, render_mode, shader ).draw
+      DrawableLine( Line<<XYZW>>(quad.b,quad.c), colors.b, thickness, render_mode, shader ).draw
+      DrawableLine( Line<<XYZW>>(quad.c,quad.d), colors.c, thickness, render_mode, shader ).draw
+      DrawableLine( Line<<XYZW>>(quad.d,quad.a), colors.d, thickness, render_mode, shader ).draw
 
     method fill
-      Display.fill( this )
+      #Display.fill( this )
 endClass
-}#
 
 #{
 class DrawableTriangle(
@@ -34,8 +37,12 @@ class DrawableTriangle(
 endClass
 }#
 
-class DrawableLine( line:Line<<XYZW>>, colors=Colors(Color.WHITE):Colors, render_mode=RenderMode.ALPHA_COLOR:RenderMode,
-                    shader=Shader.COLOR:Shader ) [compound]
+class DrawableLine(
+    line:Line<<XYZW>>,
+    colors=Colors(Color.WHITE):Colors,
+    thickness=1.0:Real,
+    render_mode=RenderMode.ALPHA_COLOR:RenderMode,
+    shader=Shader.COLOR:Shader ) [compound]
   METHODS
     method draw
       Renderer.draw( this )

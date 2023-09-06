@@ -3,7 +3,7 @@ augment Geometry::Line
     method draw( colors:Colors )
       drawable( colors ).draw
 
-    method drawable( color:Colors )->DrawableLine
-      return DrawableLine( Line<<XYZW>>(a,b), color )
+    method drawable( colors:Colors )->DrawableLine
+      return DrawableLine( Line<<XYZW>>(a,b), colors )
 
 endAugment
