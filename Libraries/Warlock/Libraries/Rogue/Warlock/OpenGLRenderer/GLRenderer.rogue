@@ -1,3 +1,5 @@
+uses Utility/Timer
+
 class GLRenderer : Renderer [singleton]
   NATIVE
     nativeHeader
@@ -13,7 +15,7 @@ class GLRenderer : Renderer [singleton]
     nativeCode
     @|static EM_BOOL on_web_display_size_changed( int event_type, const EmscriptenUiEvent *event, void *user_data )
      |{
-     |  %NS%ROGUE_SINGLETON(RogueGLRenderer)->display_size_changed = 1;
+     |  %Ns%RogueGLRenderer__on_web_display_size_changed( %NS%ROGUE_SINGLETON(RogueGLRenderer) );
      |  return 0;
      |}
 
@@ -27,6 +29,7 @@ class GLRenderer : Renderer [singleton]
 
     is_configured        : Logical
     display_size_changed : Logical
+    time_since_display_size_changed = Timer()
 
   METHODS
     method init
@@ -94,8 +97,12 @@ class GLRenderer : Renderer [singleton]
               |$result = (%Ns%RogueInt32) result;
       return result
 
+    method on_web_display_size_changed [api]
+      display_size_changed = true
+      time_since_display_size_changed.restart()
+
     method present
-      if (display_size_changed)
+      if (display_size_changed and time_since_display_size_changed.elapsed >= 0.5)
         display_size_changed = false
 
         local sz : XY
