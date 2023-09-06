@@ -97,6 +97,7 @@ class Renderer [singleton]
       # |////printf("display size %dx%d\n",w,h);
       # |//
 
+      Input.update
       Display.update
       Display.draw
       render

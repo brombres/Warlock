@@ -9,6 +9,7 @@ $include Warlock/Display
 $include Warlock/DisplayState
 $include Warlock/Drawable
 $include Warlock/FrontFace
+$include Warlock/Input
 $include Warlock/Line
 $include Warlock/PrimitiveType
 $include Warlock/RenderMode
