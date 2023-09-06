@@ -78,47 +78,6 @@ class GLRenderer : Renderer [singleton]
        |glClearColor( ((c>>16)&255)/255.0f, ((c>>8)&255)/255.0f, (c&255)/255.0f, ((c>>24)&255)/255.0f );
        |glClear( gl_flags );
 
-      #{
-    method fill_quad( quad:Quad<<XYZW>>, colors:Colors, render_mode:RenderMode, shader:Shader )
-      set_primitive_type( TRIANGLES )
-      set_render_mode( colors, null, render_mode, shader )
-
-      reserve_vertices( 6 )
-
-      vertex_positions.add( quad.a.x )
-      vertex_positions.add( quad.a.y )
-      vertex_positions.add( quad.a.z )
-      vertex_positions.add( quad.a.w )
-      vertex_positions.add( quad.b.x )
-      vertex_positions.add( quad.b.y )
-      vertex_positions.add( quad.b.z )
-      vertex_positions.add( quad.b.w )
-      vertex_positions.add( quad.c.x )
-      vertex_positions.add( quad.c.y )
-      vertex_positions.add( quad.c.z )
-      vertex_positions.add( quad.c.w )
-
-      vertex_positions.add( quad.a.x )
-      vertex_positions.add( quad.a.y )
-      vertex_positions.add( quad.a.z )
-      vertex_positions.add( quad.a.w )
-      vertex_positions.add( quad.c.x )
-      vertex_positions.add( quad.c.y )
-      vertex_positions.add( quad.c.z )
-      vertex_positions.add( quad.c.w )
-      vertex_positions.add( quad.d.x )
-      vertex_positions.add( quad.d.y )
-      vertex_positions.add( quad.d.z )
-      vertex_positions.add( quad.d.w )
-
-      vertex_colors.add( colors.a.argb )
-      vertex_colors.add( colors.b.argb )
-      vertex_colors.add( colors.c.argb )
-      vertex_colors.add( colors.a.argb )
-      vertex_colors.add( colors.c.argb )
-      vertex_colors.add( colors.d.argb )
-    }#
-
     method log_errors( where="":String )
       local error_code : Int32
       native @|$error_code = (RogueInt32) glGetError();

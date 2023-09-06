@@ -1,6 +1,6 @@
 class Renderer [singleton]
   DEFINITIONS
-    VERTEX_BUFFER_SIZE = 4096
+    VERTEX_BUFFER_BATCH_LIMIT = 4096
 
   PROPERTIES
     shaders      : Shaders
@@ -9,13 +9,14 @@ class Renderer [singleton]
     primitive_type        : PrimitiveType
     render_mode           : RenderMode
     shader                : Shader
+    textures              = Texture[]
     triangle_culling_mode : TriangleCullingMode
     front_face            : FrontFace
 
     vertex_count     : Int32
-    vertex_positions = Real32[](VERTEX_BUFFER_SIZE*4)
-    vertex_uvs       = Real32[](VERTEX_BUFFER_SIZE*2)
-    vertex_colors    = Int32[](VERTEX_BUFFER_SIZE)
+    vertex_positions = Real32[](VERTEX_BUFFER_BATCH_LIMIT*4)
+    vertex_uvs       = Real32[](VERTEX_BUFFER_BATCH_LIMIT*2)
+    vertex_colors    = Int32[](VERTEX_BUFFER_BATCH_LIMIT)
 
   METHODS
     method clear( color:Color )
@@ -48,6 +49,38 @@ class Renderer [singleton]
     method end_present
       noAction
 
+    method fill( drawable:DrawableQuad )
+      if (drawable.colors.count < 4) drawable.colors = Colors(drawable.colors.a)
+      primitive_type = PrimitiveType.TRIANGLE_STRIP
+      render_mode = drawable.render_mode
+      shader = drawable.shader
+      set_textures( drawable.texture )
+
+      reserve_vertices( 4 )
+
+      vertex_positions.add( drawable.quad.d.x )
+      vertex_positions.add( drawable.quad.d.y )
+      vertex_positions.add( drawable.quad.d.z )
+      vertex_positions.add( drawable.quad.d.w )
+      vertex_positions.add( drawable.quad.a.x )
+      vertex_positions.add( drawable.quad.a.y )
+      vertex_positions.add( drawable.quad.a.z )
+      vertex_positions.add( drawable.quad.a.w )
+      vertex_positions.add( drawable.quad.c.x )
+      vertex_positions.add( drawable.quad.c.y )
+      vertex_positions.add( drawable.quad.c.z )
+      vertex_positions.add( drawable.quad.c.w )
+
+      vertex_positions.add( drawable.quad.b.x )
+      vertex_positions.add( drawable.quad.b.y )
+      vertex_positions.add( drawable.quad.b.z )
+      vertex_positions.add( drawable.quad.b.w )
+
+      vertex_colors.add( drawable.colors.d.argb )
+      vertex_colors.add( drawable.colors.a.argb )
+      vertex_colors.add( drawable.colors.c.argb )
+      vertex_colors.add( drawable.colors.b.argb )
+
     method present( display_size:XY, viewport_size:XY )
       begin_present
 
@@ -74,7 +107,7 @@ class Renderer [singleton]
       noAction
 
     method reserve_vertices( n:Int32 )
-      if (vertex_count + n > VERTEX_BUFFER_SIZE) flush
+      if (vertex_count + n > VERTEX_BUFFER_BATCH_LIMIT) flush
       vertex_count += n
 
     method set_primitive_type( new_type:PrimitiveType )
@@ -91,6 +124,29 @@ class Renderer [singleton]
       if (shader is new_shader) return
       render
       @shader = new_shader
+
+    method set_textures( texture:Texture )
+      use new_textures = WorkList<<Texture>>
+        if (texture) new_textures.add( texture )
+        set_textures( new_textures )
+      endUse
+
+    method set_textures( new_textures:Texture[] )
+      if (textures)
+        contingent
+          sufficient (textures.count != new_textures.count)
+          forEach (i of new_textures)
+            sufficient (textures[i] is not new_textures[i])
+          endForEach
+          escapeContingent
+        satisfied
+          render
+          @textures.clear
+          @textures.add( textures )
+        endContingent
+      else
+        @textures = textures
+      endIf
 
     method set_triangle_culling_mode( new_mode:TriangleCullingMode )
       if (triangle_culling_mode == new_mode) return

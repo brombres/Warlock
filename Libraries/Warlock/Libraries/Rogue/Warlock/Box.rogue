@@ -12,4 +12,8 @@ augment Geometry::Box
       local d = XY( a.x, y2 )
       return DrawableQuad( Quad<<XYZW>>(a,b,c,d), colors )
 
+    method fill( colors:Colors )
+      drawable( colors ).fill
+
+
 endAugment

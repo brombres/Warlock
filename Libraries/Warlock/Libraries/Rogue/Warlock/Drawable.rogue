@@ -16,7 +16,7 @@ class DrawableQuad(
       DrawableLine( Line<<XYZW>>(quad.d,quad.a), colors.d, thickness, render_mode, shader ).draw
 
     method fill
-      #Display.fill( this )
+      Renderer.fill( this )
 endClass
 
 #{
