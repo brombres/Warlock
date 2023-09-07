@@ -27,12 +27,12 @@ class Input [singleton]
        |      }
        |      if (e.type == SDL_MOUSEBUTTONDOWN)
        |      {
-       |        printf("BUTTON PRESSED\n");
+       |        //printf("BUTTON PRESSED\n");
        |        //w->on_mouse_down(e.button.x, e.button.y, which);
        |      }
        |      else
        |      {
-       |        printf("BUTTON RELEASED\n");
+       |        //printf("BUTTON RELEASED\n");
        |        //w->on_mouse_up(e.button.x, e.button.y, which);
        |      }
        |      break;

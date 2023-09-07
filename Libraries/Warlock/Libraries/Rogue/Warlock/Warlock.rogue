@@ -3,6 +3,8 @@ uses Graphics
 
 $include Warlock/OpenGLRenderer
 
+$include Warlock/Asset
+$include Warlock/AssetManager
 $include Warlock/Box
 $include Warlock/Colors
 $include Warlock/Display

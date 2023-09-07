@@ -1,0 +1,25 @@
+class Asset
+  PROPERTIES
+    url      : String
+    bytes    : Byte[]
+    error    : String
+    callback : Function(Asset)
+
+  METHODS
+    method init( url )
+
+    method download( callback=null )
+      AssetManager.download( this )
+
+    method exists->Logical
+      return bytes?
+
+    method to->String
+      return url
+
+  GLOBAL METHODS
+    method operator?( asset:Asset )->Logical
+      if (asset is null) return false
+      return asset.bytes?
+
+endClass
