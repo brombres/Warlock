@@ -8,14 +8,21 @@ class Asset
   METHODS
     method init( url )
 
-    method download( callback=null )
+    method description->String
+      if (bytes)     return "$ [$ bytes]"(url,bytes.count)
+      elseIf (error) return "$ [ERROR: $]" (url,error)
+      else           return "$ [downloading]"(url)
+
+    method load( callback=null )
       AssetManager.download( this )
 
     method exists->Logical
       return bytes?
 
     method to->String
-      return url
+      if (bytes)     return String(bytes)
+      elseIf (error) return error
+      else           return url
 
   GLOBAL METHODS
     method operator?( asset:Asset )->Logical

@@ -1,0 +1,15 @@
+class InternalAsset : Asset
+  METHODS
+    method init( filepath:String )
+      url = "Internal/" + filepath
+      local file = File(url)
+      if (file.exists)
+        bytes = Byte[]( file )
+      else
+        error = "File not found"
+      endIf
+
+    method load( callback=null )
+      noAction
+
+endClass

@@ -4,12 +4,11 @@ Display.state = DisplayState() subclass
 
   METHODS
     method on_start
-      trace
-      Asset("Downloads/Macross2.png").download( this=>on_download )
+      Asset("Assets/Macross.png").load( this=>on_download )
+      trace InternalAsset("Empty.txt")
 
     method on_download( asset:Asset )
-      trace asset
-      if (asset) trace asset.bytes.count
+      trace %asset
 
     method on_draw
       Renderer.clear( Color.BLUE )
