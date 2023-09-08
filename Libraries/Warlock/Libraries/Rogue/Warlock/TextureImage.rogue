@@ -1,0 +1,12 @@
+module Warlock
+
+class TextureImage : Image
+  PROPERTIES
+    texture : Texture
+
+  METHODS
+    method init( texture )
+
+    method size->XY
+      return texture.image_size
+endClass

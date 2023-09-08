@@ -12,6 +12,6 @@ class InternalAsset : Asset
       endIf
 
     method load( callback=null )
-      noAction
+      if (callback) callback( this ) # already loaded
 
 endClass

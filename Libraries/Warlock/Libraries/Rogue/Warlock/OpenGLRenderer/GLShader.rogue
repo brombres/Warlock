@@ -3,7 +3,8 @@ module Warlock
 class GLShaders : Shaders
   METHODS
     method init
-      color = GLShaderColor()
+      color = GLColorShader()
+      texture = GLTextureShader()
 endClass
 
 class GLShader : Shader
@@ -20,7 +21,7 @@ class GLShader : Shader
 
     fixed_color_setting     : Int32
     transform_setting       : Int32
-    texture_settings        = Int32[]
+    texture_parameters      = Int32[]
 
     position_attribute      : Int32
     color_attribute         : Int32
@@ -92,7 +93,7 @@ class GLShader : Shader
               |  sprintf( name, "texture_%d", slot );
               |  $location = glGetUniformLocation( $program_id, name );
 
-                 texture_settings.add( location )
+              texture_parameters.add( location )
 
       native @|
               |  ++slot;
@@ -126,25 +127,51 @@ class GLShader : Shader
 endClass
 
 
-class GLShaderColor : GLShader
+class GLColorShader : GLShader
   METHODS
     method init
       local vertex_shader =
-          @|attribute vec4  position;
-           |attribute $LOWP vec4 color;
-           |varying   $LOWP vec4 vertex_color;
-           |void main()
-           |{
-           |  gl_Position = position;
-           |  vertex_color = color / 255.0;
-           |}
+        @|attribute vec4  position;
+         |attribute $LOWP vec4 color;
+         |varying   $LOWP vec4 vertex_color;
+         |void main()
+         |{
+         |  gl_Position = position;
+         |  vertex_color = color / 255.0;
+         |}
 
       local fragment_shader =
-          @|varying $LOWP vec4 vertex_color;
-           |void main()
-           |{
-           |  gl_FragColor = vertex_color;
-           |}
+        @|varying $LOWP vec4 vertex_color;
+         |void main()
+         |{
+         |  gl_FragColor = vertex_color;
+         |}
+
+      prior.init( vertex_shader, fragment_shader )
+endClass
+
+class GLTextureShader : GLShader
+  METHODS
+    method init
+      local vertex_shader =
+        @|attribute vec4 position;
+         |attribute vec2 uv;
+         |varying   vec2 vertex_uv;
+         |
+         |void main()
+         |{
+         |  gl_Position = position;
+         |  vertex_uv = uv;
+         |}
+
+      local fragment_shader =
+        @|uniform sampler2D texture_0;
+         |varying vec2      vertex_uv;
+         |
+         |void main()
+         |{
+         |  gl_FragColor = texture2D(texture_0,vertex_uv);
+         |}
 
       prior.init( vertex_shader, fragment_shader )
 endClass

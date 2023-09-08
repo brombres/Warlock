@@ -2,21 +2,25 @@ uses Warlock
 
 Display.state = DisplayState() subclass
   PROPERTIES
-    lines = Line[]
+    lines   = Line[]
+    texture : Texture
 
   METHODS
     method on_start
-      Asset("Macross.png").load( this=>on_download )
-      trace InternalAsset("Empty.txt")
-
-    method on_download( asset:Asset )
-      if (asset.exists)
-        local bmp = Bitmap( asset.bytes )
-        trace bmp
-      endIf
+      texture = Texture( Asset("Macross.png") )
 
     method on_draw
       Renderer.clear( Color.BLUE )
+
+      if (texture.is_loaded)
+        local drawable = Box(-1,-1,2,2).drawable(Color.GRAY)
+        drawable.render_mode = RenderMode.OPAQUE_TEXTURE
+        drawable.shader = Shader.TEXTURE
+        drawable.uvs = Box(0,0,texture.uv_size)->Quad
+        drawable.texture = texture
+        drawable.fill
+      endIf
+
       forEach (line at i in lines step -1)
         line.draw( Color.WHITE.with_alpha_byte(255-i) )
       endForEach

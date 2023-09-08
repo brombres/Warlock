@@ -5,11 +5,15 @@ class Shader [abstract]
     method COLOR->Shader
       return Renderer.shaders.color
 
+    method TEXTURE->Shader
+      return Renderer.shaders.texture
+
   METHODS
     method activate [abstract]
 endClass
 
 class Shaders
   PROPERTIES
-    color : Shader
+    color   : Shader
+    texture : Shader
 endClass

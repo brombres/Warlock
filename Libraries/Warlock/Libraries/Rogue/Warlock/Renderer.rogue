@@ -56,7 +56,7 @@ class Renderer [singleton]
       primitive_type = PrimitiveType.TRIANGLE_STRIP
       render_mode = drawable.render_mode
       shader = drawable.shader
-      set_textures( drawable.texture )
+      texture = drawable.texture
 
       reserve_vertices( 4 )
 
@@ -82,6 +82,17 @@ class Renderer [singleton]
       vertex_colors.add( drawable.colors.a.argb )
       vertex_colors.add( drawable.colors.c.argb )
       vertex_colors.add( drawable.colors.b.argb )
+
+      if (drawable.texture)
+        vertex_uvs.add( drawable.uvs.d.x )
+        vertex_uvs.add( drawable.uvs.d.y )
+        vertex_uvs.add( drawable.uvs.a.x )
+        vertex_uvs.add( drawable.uvs.a.y )
+        vertex_uvs.add( drawable.uvs.c.x )
+        vertex_uvs.add( drawable.uvs.c.y )
+        vertex_uvs.add( drawable.uvs.b.x )
+        vertex_uvs.add( drawable.uvs.b.y )
+      endIf
 
     method present( display_size:XY, viewport_size:XY )
       begin_present
@@ -115,11 +126,11 @@ class Renderer [singleton]
       render
       @shader = new_shader
 
-    method set_texture( texture:Texture, bitmap:Bitmap )
+    method set_texture( texture:Texture, bitmap:Bitmap, &preserve_bitmap )
       # Renderer-specific utility method
       noAction
 
-    method set_textures( texture:Texture )
+    method set_texture( texture:Texture )
       use new_textures = WorkList<<Texture>>
         if (texture) new_textures.add( texture )
         set_textures( new_textures )
@@ -136,10 +147,10 @@ class Renderer [singleton]
         satisfied
           render
           @textures.clear
-          @textures.add( textures )
+          @textures.add( new_textures )
         endContingent
       else
-        @textures = textures
+        @textures = new_textures  # necessary for property initializer
       endIf
 
     method set_triangle_culling_mode( new_mode:TriangleCullingMode )

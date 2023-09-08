@@ -13,6 +13,7 @@ $include Warlock/Display
 $include Warlock/DisplayState
 $include Warlock/Drawable
 $include Warlock/FrontFace
+$include Warlock/Image
 $include Warlock/Input
 $include Warlock/InternalAsset
 $include Warlock/Line
@@ -22,6 +23,7 @@ $include Warlock/RenderTarget
 $include Warlock/Renderer
 $include Warlock/Shader
 $include Warlock/Texture
+$include Warlock/TextureImage
 $include Warlock/TriangleCullingMode
 
 class Warlock [essential singleton]

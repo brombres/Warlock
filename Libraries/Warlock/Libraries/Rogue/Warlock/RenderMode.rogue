@@ -2,13 +2,17 @@ module Warlock
 
 class RenderModes
   PROPERTIES
-    alpha_color : RenderMode
+    alpha_color    : RenderMode
+    opaque_texture : RenderMode
 endClass
 
 class RenderMode [abstract]
   GLOBAL METHODS
     method ALPHA_COLOR->RenderMode
       return Renderer.render_modes.alpha_color
+
+    method OPAQUE_TEXTURE->RenderMode
+      return Renderer.render_modes.opaque_texture
 
   METHODS
     method apply( shader:Shader )

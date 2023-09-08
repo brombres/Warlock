@@ -5,7 +5,7 @@ class DrawableQuad(
     colors=Colors(Color.WHITE):Colors,
     thickness=1.0:Real,
     texture=null:Texture,
-    uv=Quad():Quad,
+    uvs=Quad():Quad,
     render_mode=RenderMode.ALPHA_COLOR:RenderMode,
     shader=Shader.COLOR:Shader ) [compound]
 

@@ -89,7 +89,7 @@ class GLRenderer : Renderer [singleton]
 
       # GL_INVALID_FRAMEBUFFER_OPERATION happens when resizing the screen
       if (error_code and error_code != GLError.GL_INVALID_FRAMEBUFFER_OPERATION.value)
-        log.println "[Warlock] OpenGL $ error: $"(where,GLError(error_code))
+        log.println "[Warlock] OpenGL error $: $"(where,GLError(error_code))
       endIf
 
     method max_texture_size->Int32
@@ -219,8 +219,8 @@ class GLRenderer : Renderer [singleton]
       vertex_uvs.clear
       vertex_colors.clear
 
-    method set_texture( texture:Texture, bitmap:Bitmap )
-      GLTexture.set( texture, bitmap )
+    method set_texture( texture:Texture, bitmap:Bitmap, &preserve_bitmap )
+      GLTexture.set( texture, bitmap, &=preserve_bitmap )
 
 endClass
 
