@@ -1,3 +1,5 @@
+module Warlock
+
 class GLRenderTarget : RenderTarget
   PROPERTIES
 

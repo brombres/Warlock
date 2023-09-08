@@ -1,0 +1,9 @@
+module Warlock
+
+# Utility methods for OpenGL textures
+
+class GLTexture [singleton]
+endClass
+
+augment Warlock::Texture
+endAugment

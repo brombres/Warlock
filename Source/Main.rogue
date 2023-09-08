@@ -1,14 +1,19 @@
+uses Warlock
+
 Display.state = DisplayState() subclass
   PROPERTIES
     lines = Line[]
 
   METHODS
     method on_start
-      Asset("Assets/Macross.png").load( this=>on_download )
+      Asset("Macross.png").load( this=>on_download )
       trace InternalAsset("Empty.txt")
 
     method on_download( asset:Asset )
-      trace %asset
+      if (asset.exists)
+        local bmp = Bitmap( asset.bytes )
+        trace bmp
+      endIf
 
     method on_draw
       Renderer.clear( Color.BLUE )

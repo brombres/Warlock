@@ -1,5 +1,7 @@
+module Warlock
+
 uses Codec/PNG
-uses Graphics
+uses Graphics [export]
 
 $include Warlock/OpenGLRenderer
 
@@ -43,7 +45,7 @@ nativeCode
  |  Rogue_launch(); // call never returns due to emscripten main loop
  |
  |  // This emscripten call never returns
- |  emscripten_set_main_loop( %Ns%RogueWarlock__present, 0, 1 );
+ |  emscripten_set_main_loop( %Ns%WarlockWarlock__present, 0, 1 );
  |}
  |
  |#endif

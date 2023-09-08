@@ -1,3 +1,5 @@
+module Warlock
+
 class Renderer [singleton]
   DEFINITIONS
     VERTEX_BUFFER_BATCH_LIMIT = 4096
@@ -84,19 +86,6 @@ class Renderer [singleton]
     method present( display_size:XY, viewport_size:XY )
       begin_present
 
-      #native
-      #@|//%Ns%RogueGLRenderer* renderer = %NS%ROGUE_SINGLETON(RogueGLRenderer);
-      # |//if (SDL_MUSTLOCK(renderer->surface)) SDL_LockSurface(renderer->surface);
-      # |//
-      # |////double double_w, double_h;
-      # |////emscripten_get_element_css_size( "#canvas", &double_w, &double_h );
-      # |////int w = (int)double_w;
-      # |////int h = (int)double_h;
-      # |////int w, h;
-      # |////SDL_GetWindowSize(renderer->window, &w, &h);
-      # |////printf("display size %dx%d\n",w,h);
-      # |//
-
       Input.update
       Display.update
       Display.draw
@@ -125,6 +114,10 @@ class Renderer [singleton]
       if (shader is new_shader) return
       render
       @shader = new_shader
+
+    method set_texture( texture:Texture, bitmap:Bitmap )
+      # Renderer-specific utility method
+      noAction
 
     method set_textures( texture:Texture )
       use new_textures = WorkList<<Texture>>

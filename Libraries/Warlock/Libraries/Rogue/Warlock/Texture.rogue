@@ -1,2 +1,13 @@
+module Warlock
+
 class Texture
+  PROPERTIES
+
+  METHODS
+    method init( asset:Asset )
+
+    method init( bitmap:Bitmap )
+      set( bitmap )
+
+    method set( bitmap:Bitmap )
 endClass

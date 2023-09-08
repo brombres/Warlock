@@ -1,3 +1,5 @@
+module Warlock
+
 class RenderModes
   PROPERTIES
     alpha_color : RenderMode

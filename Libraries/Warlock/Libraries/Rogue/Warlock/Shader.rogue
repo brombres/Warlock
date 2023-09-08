@@ -1,3 +1,5 @@
+module Warlock
+
 class Shader [abstract]
   GLOBAL METHODS
     method COLOR->Shader

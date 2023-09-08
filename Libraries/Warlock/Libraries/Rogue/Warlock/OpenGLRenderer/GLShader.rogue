@@ -1,3 +1,5 @@
+module Warlock
+
 class GLShaders : Shaders
   METHODS
     method init

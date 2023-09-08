@@ -1,3 +1,5 @@
+module Warlock
+
 uses Utility/Timer
 
 class GLRenderer : Renderer [singleton]
@@ -15,7 +17,7 @@ class GLRenderer : Renderer [singleton]
     nativeCode
     @|static EM_BOOL on_web_display_size_changed( int event_type, const EmscriptenUiEvent *event, void *user_data )
      |{
-     |  %Ns%RogueGLRenderer__on_web_display_size_changed( %NS%ROGUE_SINGLETON(RogueGLRenderer) );
+     |  %Ns%WarlockGLRenderer__on_web_display_size_changed( %NS%ROGUE_SINGLETON(WarlockGLRenderer) );
      |  return 0;
      |}
 
@@ -216,6 +218,9 @@ class GLRenderer : Renderer [singleton]
       vertex_positions.clear
       vertex_uvs.clear
       vertex_colors.clear
+
+    method set_texture( texture:Texture, bitmap:Bitmap )
+      GLTexture.set( texture, bitmap )
 
 endClass
 

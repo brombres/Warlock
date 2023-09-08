@@ -1,18 +1,18 @@
 augment Geometry::Box
   METHODS
-    method draw( colors:Colors )
+    method draw( colors:Warlock::Colors )
       drawable( colors ).draw
 
-    method drawable( colors:Colors )->DrawableQuad
+    method drawable( colors:Warlock::Colors )->Warlock::DrawableQuad
       local x2 = this.x2
       local y2 = this.y2
       local a = this.position
       local b = XY( x2, a.y )
       local c = XY( x2, y2 )
       local d = XY( a.x, y2 )
-      return DrawableQuad( Quad<<XYZW>>(a,b,c,d), colors )
+      return Warlock::DrawableQuad( Quad<<XYZW>>(a,b,c,d), colors )
 
-    method fill( colors:Colors )
+    method fill( colors:Warlock::Colors )
       drawable( colors ).fill
 
 

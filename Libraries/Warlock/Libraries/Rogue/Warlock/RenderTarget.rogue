@@ -1,3 +1,5 @@
+module Warlock
+
 class RenderTarget [abstract]
   PROPERTIES
     size          : XY

@@ -1,3 +1,5 @@
+module Warlock
+
 class Asset
   PROPERTIES
     url      : String
@@ -6,27 +8,27 @@ class Asset
     callback : Function(Asset)
 
   METHODS
-    method init( url )
+    method init( url:String )
+      if (not url.begins_with("Assets/")) url = "Assets/" + url
+      this.url = url
 
     method description->String
       if (bytes)     return "$ [$ bytes]"(url,bytes.count)
       elseIf (error) return "$ [ERROR: $]" (url,error)
       else           return "$ [downloading]"(url)
 
-    method load( callback=null )
-      AssetManager.download( this )
-
     method exists->Logical
       return bytes?
+
+    method is_loaded->Logical
+      return bytes or error
+
+    method load( callback=null )
+      AssetManager.download( this )
 
     method to->String
       if (bytes)     return String(bytes)
       elseIf (error) return error
       else           return url
-
-  GLOBAL METHODS
-    method operator?( asset:Asset )->Logical
-      if (asset is null) return false
-      return asset.bytes?
 
 endClass

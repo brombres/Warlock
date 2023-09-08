@@ -1,3 +1,5 @@
+module Warlock
+
 enum GLError
   GL_INVALID_ENUM                  = 0x0500
   GL_INVALID_VALUE                 = 0x0501

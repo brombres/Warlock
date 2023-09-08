@@ -1,3 +1,5 @@
+module Warlock
+
 class InternalAsset : Asset
   METHODS
     method init( filepath:String )

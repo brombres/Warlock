@@ -1,3 +1,5 @@
+module Warlock
+
 class Input [singleton]
   METHODS
     method update

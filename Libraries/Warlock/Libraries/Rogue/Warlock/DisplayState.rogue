@@ -1,3 +1,5 @@
+module Warlock
+
 uses Control/State
 
 class DisplayState : State<<DisplayState>>

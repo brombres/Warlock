@@ -1,3 +1,5 @@
+module Warlock
+
 class DrawableQuad(
     quad:Quad<<XYZW>>,
     colors=Colors(Color.WHITE):Colors,

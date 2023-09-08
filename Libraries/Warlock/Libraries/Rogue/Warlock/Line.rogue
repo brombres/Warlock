@@ -1,9 +1,9 @@
 augment Geometry::Line
   METHODS
-    method draw( colors:Colors )
+    method draw( colors:Warlock::Colors )
       drawable( colors ).draw
 
-    method drawable( colors:Colors )->DrawableLine
-      return DrawableLine( Line<<XYZW>>(a,b), colors )
+    method drawable( colors:Warlock::Colors )->Warlock::DrawableLine
+      return Warlock::DrawableLine( Line<<XYZW>>(a,b), colors )
 
 endAugment

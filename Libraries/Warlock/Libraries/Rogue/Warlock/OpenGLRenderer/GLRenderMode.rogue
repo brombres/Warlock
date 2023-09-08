@@ -1,3 +1,5 @@
+module Warlock
+
 class GLRenderModes : RenderModes
   METHODS
     method init

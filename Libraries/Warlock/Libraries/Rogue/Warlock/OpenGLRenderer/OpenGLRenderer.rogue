@@ -1,5 +1,8 @@
+module Warlock
+
 $include OpenGLRenderer/GLError
 $include OpenGLRenderer/GLRenderMode
 $include OpenGLRenderer/GLRenderTarget
 $include OpenGLRenderer/GLRenderer
 $include OpenGLRenderer/GLShader
+$include OpenGLRenderer/GLTexture
