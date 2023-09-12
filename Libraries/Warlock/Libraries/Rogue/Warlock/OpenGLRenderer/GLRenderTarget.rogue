@@ -5,9 +5,8 @@ class GLRenderTarget : RenderTarget
 
   METHODS
     method init
-      is_main_display = true
 
     method init( size:XY )
       # Offscreen buffer creation
-      noAction # TODO
+      is_offscreen = true
 endClass

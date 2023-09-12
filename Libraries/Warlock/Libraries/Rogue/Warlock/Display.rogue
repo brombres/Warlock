@@ -2,16 +2,33 @@ module Warlock
 
 class Display [singleton]
   PROPERTIES
-    size  : XY
-    state = DisplayState()
+    default_z = -2000.0
+
+    #perspective_center : XY
+    ## The "origin" for 3D perspective and the vanishing point for polygons
+    ## parallel to the camera axis.  Automatically reset to Display.center at
+    ## the beginning of every draw.
+
+    #projection_mode = ProjectionMode2DX()
+
+    #render_target : RenderTarget
+
+    size      : XY
+    state     = DisplayState()
 
   METHODS
     method draw
       state.on_draw
 
+    method center->XY
+      return size / 2
+
     method change_state( new_state:DisplayState )
       if (state) state.change_state( new_state )
       else       @state = new_state
+
+    method height->Real
+      return size.y
 
     method set_state( new_state:DisplayState )
       if (state) state.change_state( new_state )
@@ -19,4 +36,7 @@ class Display [singleton]
 
     method update
       @state = which{ state.updated || DisplayState() }
+
+    method width->Real
+      return size.x
 endClass

@@ -15,19 +15,19 @@ class GLShader : Shader
     LOWP             = ""
 
     # OpenGL IDs
-    vertex_shader_id      : Int32
-    pixel_shader_id       : Int32
-    program_id            : Int32
+    vertex_shader_id          : Int32
+    pixel_shader_id           : Int32
+    program_id                : Int32
 
-    fixed_color_setting     : Int32
-    transform_setting       : Int32
-    texture_parameters      = Int32[]
+    fixed_color_parameter     : Int32
+    transform_parameter       : Int32
+    texture_parameters        = Int32[]
 
-    position_attribute      : Int32
-    color_attribute         : Int32
-    normal_attribute        : Int32
-    uv_attribute            : Int32
-    world_transform_setting : Int32
+    position_attribute        : Int32
+    color_attribute           : Int32
+    normal_attribute          : Int32
+    uv_attribute              : Int32
+    world_transform_parameter : Int32
 
   METHODS
     method init( vertex_shader:String, fragment_shader:String )
@@ -77,14 +77,14 @@ class GLShader : Shader
               |
               |glLinkProgram( $program_id );
               |
-              |$fixed_color_setting = glGetUniformLocation( $program_id, "fixed_color" );
+              |$fixed_color_parameter = glGetUniformLocation( $program_id, "fixed_color" );
               |
               |$position_attribute = glGetAttribLocation( $program_id, "position" );
               |$color_attribute    = glGetAttribLocation( $program_id, "color" );
               |$normal_attribute   = glGetAttribLocation( $program_id, "normal" );
               |$uv_attribute       = glGetAttribLocation( $program_id,  "uv" );
-              |$world_transform_setting = glGetUniformLocation( $program_id, "world_transform" );
-              |$transform_setting       = glGetUniformLocation( $program_id, "transform" );
+              |$world_transform_parameter = glGetUniformLocation( $program_id, "world_transform" );
+              |$transform_parameter       = glGetUniformLocation( $program_id, "transform" );
               |
               |int slot = 0;
               |while ($location >= 0)

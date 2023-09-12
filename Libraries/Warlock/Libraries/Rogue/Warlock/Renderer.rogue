@@ -46,6 +46,7 @@ class Renderer [singleton]
       # Set defaults
       triangle_culling_mode = TriangleCullingMode.BACK
       front_face = FrontFace.COUNTER_CLOCKWISE
+      #Display.perspective_center = Display.center
 
     method end_present
       noAction

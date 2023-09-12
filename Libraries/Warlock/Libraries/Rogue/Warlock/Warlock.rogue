@@ -2,6 +2,7 @@ module Warlock
 
 uses Codec/PNG
 uses Graphics [export]
+uses Math/Matrix
 
 $include Warlock/OpenGLRenderer
 
@@ -19,6 +20,7 @@ $include Warlock/Input
 $include Warlock/InternalAsset
 $include Warlock/Line
 $include Warlock/PrimitiveType
+$include Warlock/ProjectionMode
 $include Warlock/RenderMode
 $include Warlock/RenderTarget
 $include Warlock/Renderer
