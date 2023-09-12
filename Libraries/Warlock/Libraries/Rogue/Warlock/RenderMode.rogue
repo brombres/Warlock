@@ -1,20 +1,34 @@
 module Warlock
 
-class RenderModes
+class RenderMode
+  GLOBAL PROPERTIES
+    ALPHA_COLOR    = AlphaColorRenderMode()
+    OPAQUE_TEXTURE = OpaqueTextureRenderMode()
+
   PROPERTIES
-    alpha_color    : RenderMode
-    opaque_texture : RenderMode
-endClass
-
-class RenderMode [abstract]
-  GLOBAL METHODS
-    method ALPHA_COLOR->RenderMode
-      return Renderer.render_modes.alpha_color
-
-    method OPAQUE_TEXTURE->RenderMode
-      return Renderer.render_modes.opaque_texture
+    blend_enabled             = true
+    source_rgb_blend          = BlendParameter.ONE   : BlendParameter
+    destination_rgb_blend     = BlendParameter.ZERO  : BlendParameter
+    source_alpha_blend        = BlendParameter.ONE   : BlendParameter
+    destination_alpha_blend   = BlendParameter.ZERO  : BlendParameter
+    texture_wrap_horizontal   = TextureWrap.REPEAT   : TextureWrap
+    texture_wrap_vertical     = TextureWrap.REPEAT   : TextureWrap
+    texture_min_filter        = TextureFilter.LINEAR : TextureFilter
+    texture_mag_filter        = TextureFilter.LINEAR : TextureFilter
 
   METHODS
-    method apply( shader:Shader )
-      noAction
+endClass
+
+class AlphaColorRenderMode : RenderMode
+  METHODS
+    method init
+      source_rgb_blend = BlendParameter.ONE
+      destination_rgb_blend = BlendParameter.ONE_MINUS_SOURCE_ALPHA
+endClass
+
+class OpaqueTextureRenderMode : RenderMode
+  METHODS
+    method init
+      source_rgb_blend = BlendParameter.ONE
+      destination_rgb_blend = BlendParameter.ZERO
 endClass

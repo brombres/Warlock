@@ -1,0 +1,7 @@
+module Warlock
+
+enum TextureWrap
+  REPEAT
+  MIRROR
+endEnum
+

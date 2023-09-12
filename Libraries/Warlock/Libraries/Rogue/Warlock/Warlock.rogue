@@ -7,6 +7,7 @@ $include Warlock/OpenGLRenderer
 
 $include Warlock/Asset
 $include Warlock/AssetManager
+$include Warlock/BlendParameter
 $include Warlock/Box
 $include Warlock/Colors
 $include Warlock/Display
@@ -23,7 +24,9 @@ $include Warlock/RenderTarget
 $include Warlock/Renderer
 $include Warlock/Shader
 $include Warlock/Texture
+$include Warlock/TextureFilter
 $include Warlock/TextureImage
+$include Warlock/TextureWrap
 $include Warlock/TriangleCullingMode
 
 class Warlock [essential singleton]

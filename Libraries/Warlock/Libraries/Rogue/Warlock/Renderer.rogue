@@ -5,8 +5,7 @@ class Renderer [singleton]
     VERTEX_BUFFER_BATCH_LIMIT = 4096
 
   PROPERTIES
-    shaders      : Shaders
-    render_modes : RenderModes
+    shaders               : Shaders
 
     primitive_type        : PrimitiveType
     render_mode           : RenderMode

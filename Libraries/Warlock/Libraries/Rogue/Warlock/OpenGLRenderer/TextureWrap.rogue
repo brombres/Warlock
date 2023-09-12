@@ -1,0 +1,8 @@
+augment Warlock::TextureWrap
+  METHODS
+    method gl_mode->Int32
+      which (this)
+        case REPEAT: return native("GL_REPEAT")->Int32
+        others:      return native("GL_MIRRORED_REPEAT")->Int32
+      endWhich
+endAugment

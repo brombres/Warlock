@@ -67,12 +67,43 @@ class GLRenderer : Renderer [singleton]
       current_render_target = main_render_target
 
       shaders = GLShaders()
-      render_modes = GLRenderModes()
 
       native
       @|#if defined(%NS%ROGUE_PLATFORM_WEB)
        |  emscripten_set_resize_callback( EMSCRIPTEN_EVENT_TARGET_WINDOW, 0, 0, on_web_display_size_changed );
        |#endif
+
+    method apply( render_mode:RenderMode, shader:GLShader )
+      if (render_mode.blend_enabled)
+        local gl_src_rgb_blend = render_mode.source_rgb_blend.gl_parameter
+        local gl_dest_rgb_blend = render_mode.destination_rgb_blend.gl_parameter
+        local gl_src_alpha_blend = render_mode.source_alpha_blend.gl_parameter
+        local gl_dest_alpha_blend = render_mode.destination_alpha_blend.gl_parameter
+
+        native
+        @|glEnable( GL_BLEND );
+         |glBlendFuncSeparate( $gl_src_rgb_blend, $gl_dest_rgb_blend, $gl_src_alpha_blend, $gl_dest_alpha_blend );
+      endIf
+
+      forEach (i in 0..<textures.count.or_smaller(shader.texture_parameters.count))
+        local texture = textures[ i ]
+        if (texture)
+          local param = shader.texture_parameters[ i ]
+          native @|glActiveTexture( GL_TEXTURE0+$i );
+                  |glBindTexture( GL_TEXTURE_2D, $texture->gl_id );
+                  |glUniform1i( $param, $i );
+
+          local gl_mode_h = render_mode.texture_wrap_horizontal.gl_mode
+          local gl_mode_v = render_mode.texture_wrap_vertical.gl_mode
+          native @|glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, $gl_mode_h );
+                  |glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, $gl_mode_v );
+
+          local gl_mode_min = render_mode.texture_min_filter.gl_mode
+          local gl_mode_mag = render_mode.texture_mag_filter.gl_mode
+          native @|glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, $gl_mode_min );
+                  |glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, $gl_mode_mag );
+        endIf
+      endForEach
 
     method clear( color:Color ) [override]
       render
@@ -139,7 +170,7 @@ class GLRenderer : Renderer [singleton]
 
       local shader = shader->(as GLShader)
       shader.activate
-      render_mode?.apply( shader )
+      if (render_mode) apply( render_mode, shader )
 
       native @|glViewport( 0, 0, (int)$current_render_target->viewport_size.x, (int)$current_render_target->viewport_size.y );
 
