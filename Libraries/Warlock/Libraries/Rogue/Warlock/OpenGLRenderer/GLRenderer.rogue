@@ -26,9 +26,6 @@ class GLRenderer : Renderer [singleton]
     native "SDL_GLContext gl_context;"
     native "GLuint position_buffer, color_buffer, uv_buffer;"
 
-    main_render_target    : GLRenderTarget
-    current_render_target : GLRenderTarget
-
     is_configured        : Logical
     display_size_changed : Logical
     time_since_display_size_changed = Timer()
@@ -62,9 +59,6 @@ class GLRenderer : Renderer [singleton]
        |glClear(GL_COLOR_BUFFER_BIT);
 
       Display.size = initial_size
-
-      main_render_target = GLRenderTarget()
-      current_render_target = main_render_target
 
       shaders = GLShaders()
 
@@ -151,12 +145,6 @@ class GLRenderer : Renderer [singleton]
 
       present( Display.size, Display.size )
 
-    method present( display_size:XY, viewport_size:XY ) [api]
-      Display.size = display_size
-      main_render_target.size = display_size
-      main_render_target.viewport_size = display_size
-      prior.present( display_size, viewport_size )
-
     method render [override]
       if (not vertex_count) return
 
@@ -172,7 +160,9 @@ class GLRenderer : Renderer [singleton]
       shader.activate
       if (render_mode) apply( render_mode, shader )
 
-      native @|glViewport( 0, 0, (int)$current_render_target->viewport_size.x, (int)$current_render_target->viewport_size.y );
+      block sz = Canvas.viewport_size
+        native @|glViewport( 0, 0, (int)$sz.x, (int)$sz.y );
+      endBlock
 
       which (triangle_culling_mode)
         case NONE

@@ -1,22 +1,13 @@
 module Warlock
 
-class Display [singleton]
+class Display : Canvas [singleton]
   PROPERTIES
-    default_z = -2000.0
-
-    #perspective_center : XY
-    ## The "origin" for 3D perspective and the vanishing point for polygons
-    ## parallel to the camera axis.  Automatically reset to Display.center at
-    ## the beginning of every draw.
-
-    #projection_mode = ProjectionMode2DX()
-
-    #render_target : RenderTarget
-
-    size      : XY
     state     = DisplayState()
 
   METHODS
+    method init
+      Canvas = this
+
     method draw
       state.on_draw
 

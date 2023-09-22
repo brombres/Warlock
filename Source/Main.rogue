@@ -16,7 +16,9 @@ Display.state = DisplayState() subclass
         local drawable = Box(-1,-1,2,2).drawable(Color.GRAY)
         drawable.render_mode = RenderMode.OPAQUE_TEXTURE
         drawable.shader = Shader.TEXTURE
-        drawable.uvs = Box(0,0,texture.uv_size)->Quad
+        local uv = Box(0,0,texture.uv_size)->Quad
+        local v = texture.uv_size.y
+        drawable.uvs = Quad( XY(uv.a.x,v-uv.a.y), XY(uv.b.x,v-uv.b.y), XY(uv.c.x,v-uv.c.y), XY(uv.d.x,v-uv.d.y) )
         drawable.texture = texture
         drawable.fill
       endIf

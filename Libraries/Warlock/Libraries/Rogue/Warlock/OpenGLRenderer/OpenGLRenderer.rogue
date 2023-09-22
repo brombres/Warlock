@@ -2,7 +2,6 @@ module Warlock
 
 $include OpenGLRenderer/BlendParameter
 $include OpenGLRenderer/GLError
-$include OpenGLRenderer/GLRenderTarget
 $include OpenGLRenderer/GLRenderer
 $include OpenGLRenderer/GLShader
 $include OpenGLRenderer/GLTexture

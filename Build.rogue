@@ -41,13 +41,21 @@ routine rogo_build_debug
   cmd = "emcc -Wall -fno-strict-aliasing"
   cmd .= appending("-O0")
   cmd .= appending("-s ALLOW_MEMORY_GROWTH=1 -s USE_SDL=2 -s USE_LIBPNG=1 -s FETCH")
-  cmd .= appending("--preload-file=Assets/Internal@Internal")
+  cmd .= appending("--embed-file=Assets/Internal@Internal")
   cmd .= appending("--shell-file Source/index.html")
+  cmd .= appending("-sMODULARIZE")
+  cmd .= appending("-sEXPORT_ES6")
+  cmd .= appending("-sENVIRONMENT=web")
+  cmd .= appending(''-sEXPORTED_FUNCTIONS="['_main']"'')
+  cmd .= appending("Build/Web/Source/RogueProgram.c")
+  cmd .= appending("-o Build/Web/Product/Warlock.html")
   cmd .= appending("--emrun")
-  cmd .= appending("Build/Web/Source/RogueProgram.c -o Build/Web/Product/Warlock.html")
+  #cmd .= appending("-o src/routes/warlock/Warlock.js")
   execute cmd
 
-  File("Build/Web/Product/Warlock.html").rename("Build/Web/Product/index.html")
+  block file = File("Build/Web/Product/Warlock.html")
+    if (file.exists) file.rename("Build/Web/Product/index.html")
+  endBlock
 
   Files("Assets/Downloads/**").sync_to( "Build/Web/Product/Assets", &verbose )
 endRoutine

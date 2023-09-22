@@ -1,0 +1,106 @@
+module Warlock
+
+class Canvas [singleton]
+  # A Canvas is a display context.
+  # Display:Canvas is the primary rendering display.
+  # Canvas objects can be created as offscreen buffers.
+  # The Canvas singleton is set to Display or whatever the active drawing target is.
+  PROPERTIES
+    is_offscreen  : Logical
+
+    size          : XY
+    true_size     : XY
+    viewport_size : XY
+    # In most cases viewport_size matches true_size, but on physical iPhone 6 Plus the rendering
+    # viewport is smaller than the rendering surface.
+
+    projection_mode = ProjectionMode2DX()
+
+    transform_modified       = true
+    world_transform_modified = true
+
+    transform              : Matrix  # projection_transform * world_transform
+    projection_transform   : Matrix
+    world_transform        : Matrix  # view_transform * object_transform
+    view_transform         : Matrix
+    object_transform       : Matrix
+    view_transform_stack   = Matrix[]
+    object_transform_stack = Matrix[]
+
+  METHODS
+    method reset_transforms
+      projection_mode.apply # sets projection_transform
+      view_transform_stack.clear
+      object_transform_stack.clear
+      world_transform_modified = true
+
+    method push_object_transform( m:Matrix )
+      if (object_transform_stack.count)
+        object_transform_stack.add( object_transform_stack.last * m )
+      else
+        object_transform_stack.add( m )
+      endIf
+      @object_transform = object_transform_stack.last
+      world_transform_modified = true
+      transform_modified = true
+
+    method push_view_transform( m:Matrix )
+      if (view_transform_stack.count)
+        view_transform_stack.add( view_transform_stack.last * m )
+      else
+        view_transform_stack.add( m )
+      endIf
+      @view_transform = view_transform_stack.last
+      world_transform_modified = true
+      transform_modified = true
+
+    method pop_object_transform( n=1:Int32 )
+      forEach (1..n.or_smaller(object_transform_stack.count))
+        object_transform_stack.remove_last
+      endForEach
+      if (object_transform_stack.count) object_transform = object_transform_stack.last
+      else                         object_transform = Matrix.identity
+      world_transform_modified = true
+      transform_modified = true
+
+    method pop_view_transform( n=1:Int32 )
+      forEach (1..n.or_smaller(view_transform_stack.count))
+        view_transform_stack.remove_last
+      endForEach
+      if (view_transform_stack.count) view_transform = view_transform_stack.last
+      else                       view_transform = Matrix.identity
+      world_transform_modified = true
+      transform_modified = true
+
+    method set_projection_transform( new_projection_transform:Matrix )
+      @projection_transform = new_projection_transform
+      transform_modified = true
+
+    method transform->Matrix
+      if (transform_modified)
+        transform_modified = false
+        transform = projection_transform * world_transform
+      endIf
+      return @transform
+
+    method world_transform->Matrix
+      if (not world_transform_modified) return @world_transform
+
+      world_transform_modified = false
+      if (view_transform_stack.count)
+        if (object_transform_stack.count)
+          world_transform = view_transform * object_transform
+        else
+          world_transform = view_transform
+        endIf
+      else
+        if (object_transform_stack.count)
+          world_transform = object_transform
+        else
+          world_transform = Matrix.identity
+        endIf
+      endIf
+
+      return @world_transform
+
+endClass

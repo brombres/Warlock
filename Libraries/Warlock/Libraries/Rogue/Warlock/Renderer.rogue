@@ -95,6 +95,13 @@ class Renderer [singleton]
       endIf
 
     method present( display_size:XY, viewport_size:XY )
+      Canvas = Display
+      Display.size = display_size
+      Display.true_size = display_size
+      Display.viewport_size = viewport_size
+
+      Display.reset_transforms
+
       begin_present
 
       Input.update
