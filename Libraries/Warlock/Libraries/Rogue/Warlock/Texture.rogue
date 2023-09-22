@@ -45,7 +45,10 @@ class Texture
       texture_size = bitmap.size
       uv_size = image_size / texture_size
 
-      GLRenderer.set_texture( this, bitmap, &preserve_bitmap=(bitmap is original_bitmap) )
+      set_texture( bitmap, &preserve_bitmap=(bitmap is original_bitmap) )
 
       is_loaded = true
+
+    method set_texture( bitmap:Bitmap, &preserve_bitmap ) [abstract]
+
 endClass

@@ -4,6 +4,6 @@ $include OpenGLRenderer/BlendParameter
 $include OpenGLRenderer/GLError
 $include OpenGLRenderer/GLRenderer
 $include OpenGLRenderer/GLShader
-$include OpenGLRenderer/GLTexture
+$include OpenGLRenderer/Texture
 $include OpenGLRenderer/TextureFilter
 $include OpenGLRenderer/TextureWrap

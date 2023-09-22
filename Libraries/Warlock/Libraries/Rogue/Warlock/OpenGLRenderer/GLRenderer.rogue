@@ -240,9 +240,6 @@ class GLRenderer : Renderer [singleton]
       vertex_uvs.clear
       vertex_colors.clear
 
-    method set_texture( texture:Texture, bitmap:Bitmap, &preserve_bitmap )
-      GLTexture.set( texture, bitmap, &=preserve_bitmap )
-
 endClass
 
 augment Graphics::Bitmap

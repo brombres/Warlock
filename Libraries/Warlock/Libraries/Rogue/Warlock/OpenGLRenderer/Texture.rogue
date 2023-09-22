@@ -1,8 +1,6 @@
 module Warlock
 
-# Utility methods for OpenGL textures
-
-class GLTexture [singleton]
+augment Warlock::Texture
   NATIVE
     nativeHeader
     @|#ifndef GL_BGRA
@@ -13,21 +11,25 @@ class GLTexture [singleton]
      |  #endif
      |#endif
 
+  PROPERTIES
+    gl_id               : Int32
+    gl_render_target_id : Int32
+
   METHODS
-    method set( texture:Texture, bitmap:Bitmap, &preserve_bitmap )
+    method set_texture( bitmap:Bitmap, &preserve_bitmap )
       if (not bitmap) return
 
-      if (not texture.gl_id)
+      if (not gl_id)
         native
         @|GLuint new_id;
          |glGenTextures( 1, &new_id );
-         |$texture->gl_id = (RogueInt32) new_id;
+         |$this->gl_id = (RogueInt32) new_id;
       endIf
       GLRenderer.log_errors( "generating texture id" )
 
-      if (not texture.gl_id) return
+      if (not gl_id) return
 
-      native @|glBindTexture( GL_TEXTURE_2D, $texture->gl_id );
+      native @|glBindTexture( GL_TEXTURE_2D, $this->gl_id );
       GLRenderer.log_errors( "binding texture" )
 
       native @|void* data = $bitmap->pixels->as_bytes;
@@ -49,10 +51,5 @@ class GLTexture [singleton]
       endIf
 
       GLRenderer.log_errors( "defining texture" )
-endClass
 
-augment Warlock::Texture
-  PROPERTIES
-    gl_id               : Int32
-    gl_render_target_id : Int32
 endAugment
