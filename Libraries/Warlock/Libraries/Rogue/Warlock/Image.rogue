@@ -5,7 +5,16 @@ class Image
     method create( asset:Asset )->Image
       return TextureImage( Texture(asset) )
 
+  PROPERTIES
+    size : XY
+
   METHODS
+    method is_ready->Logical
+      return true
+
     method size->XY
-      return XY(0,0)
+      return @size
+
+    method texture->Texture
+      return null
 endClass

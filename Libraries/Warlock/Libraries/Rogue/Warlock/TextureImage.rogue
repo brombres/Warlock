@@ -2,11 +2,26 @@ module Warlock
 
 class TextureImage : Image
   PROPERTIES
-    texture : Texture
+    texture       : Texture
+    is_configured : Logical
 
   METHODS
     method init( texture )
 
+    method configure
+      if (is_configured or not @texture.is_loaded) return
+      is_configured = true
+      size = @texture.image_size
+
+    method is_ready->Logical
+      if (is_configured) return true
+      configure
+      return is_configured
+
     method size->XY
-      return texture.image_size
+      configure
+      return @size
+
+    method texture->Texture
+      return @texture
 endClass

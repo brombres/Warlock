@@ -23,6 +23,12 @@ class Renderer [singleton]
     method clear( color:Color )
       noAction
 
+    method begin_present
+      # Set defaults
+      triangle_culling_mode = TriangleCullingMode.BACK
+      front_face = FrontFace.COUNTER_CLOCKWISE
+      #Display.perspective_center = Display.center
+
     method draw( drawable:DrawableLine )
       primitive_type = PrimitiveType.LINES
       render_mode = drawable.render_mode
@@ -47,11 +53,22 @@ class Renderer [singleton]
       vertex_colors.add( drawable.colors.a.argb )
       vertex_colors.add( drawable.colors.b.argb )
 
-    method begin_present
-      # Set defaults
-      triangle_culling_mode = TriangleCullingMode.BACK
-      front_face = FrontFace.COUNTER_CLOCKWISE
-      #Display.perspective_center = Display.center
+    method draw( sprite:Sprite )
+      if (sprite.is_ready)
+        Canvas.push_object_transform( Matrix.transform(sprite.position, sprite.size, sprite.anchor, sprite.rotation) )
+
+        local drawable = Box(1,1).drawable( sprite.color.with_opacity(sprite.opacity) )
+        drawable.render_mode = RenderMode.OPAQUE_TEXTURE
+        drawable.shader = Shader.TEXTURE
+        if local texture = sprite.image.texture
+          drawable.uv = Box(0,0,texture.uv_size)->Quad
+          drawable.texture = texture
+        endIf
+        drawable.fill
+
+        Canvas.pop_object_transform
+
+      endIf
 
     method end_present
       noAction
@@ -96,14 +113,14 @@ class Renderer [singleton]
       vertex_colors.add( drawable.colors.c.argb )
 
       if (drawable.texture)
-        vertex_uvs.add( drawable.uvs.a.x )
-        vertex_uvs.add( drawable.uvs.a.y )
-        vertex_uvs.add( drawable.uvs.d.x )
-        vertex_uvs.add( drawable.uvs.d.y )
-        vertex_uvs.add( drawable.uvs.b.x )
-        vertex_uvs.add( drawable.uvs.b.y )
-        vertex_uvs.add( drawable.uvs.c.x )
-        vertex_uvs.add( drawable.uvs.c.y )
+        vertex_uvs.add( drawable.uv.a.x )
+        vertex_uvs.add( drawable.uv.a.y )
+        vertex_uvs.add( drawable.uv.d.x )
+        vertex_uvs.add( drawable.uv.d.y )
+        vertex_uvs.add( drawable.uv.b.x )
+        vertex_uvs.add( drawable.uv.b.y )
+        vertex_uvs.add( drawable.uv.c.x )
+        vertex_uvs.add( drawable.uv.c.y )
       endIf
 
     method present( display_size:XY, viewport_size:XY )

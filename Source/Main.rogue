@@ -2,26 +2,17 @@ uses Warlock
 
 Display.state = DisplayState() subclass
   PROPERTIES
-    lines   = Line[]
-    texture : Texture
+    lines = Line[]
+    sprite : Sprite
 
   METHODS
     method on_start
-      texture = Texture( Asset("Macross.png") )
+      sprite = Sprite( Asset("Macross.png") ).[ scale=0.25 ]
 
     method on_draw
       Renderer.clear( Color.BLUE )
 
-      if (texture.is_loaded)
-        local drawable = Canvas.bounds.drawable(Color.GRAY)
-        drawable.render_mode = RenderMode.OPAQUE_TEXTURE
-        drawable.shader = Shader.TEXTURE
-        local uv = Box(0,0,texture.uv_size)->Quad
-        #local v = texture.uv_size.y
-        drawable.uvs = uv #Quad( XY(uv.a.x,v-uv.a.y), XY(uv.b.x,v-uv.b.y), XY(uv.c.x,v-uv.c.y), XY(uv.d.x,v-uv.d.y) )
-        drawable.texture = texture
-        drawable.fill
-      endIf
+      sprite.draw( Display.center )
 
       forEach (line at i in lines step -1)
         line.draw( Color.WHITE.with_alpha_byte(255-i) )
@@ -29,6 +20,8 @@ Display.state = DisplayState() subclass
       #Box( Canvas.at(XY(0.25,0.25)), Canvas.size * XY(0.5,0.5) ).fill( Color.YELLOW )
 
     method on_update
+      sprite.rotation += Radians(Degrees(0.01))
+
       if (lines.count == 256) lines.remove_last
       local a = Random.xy(1.0) * Canvas.size
       local b = Random.xy(1.0) * Canvas.size

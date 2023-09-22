@@ -4,14 +4,6 @@ class ProjectionMode [abstract]
   PROPERTIES
     nominal_z = -1000.0 # for 2D graphics
 
-    #perspective_center = XY(0.5,0.5)
-    # 0.0 to 1.0
-    #
-    # The "origin" for 3D perspective and the vanishing point for polygons
-    # parallel to the camera axis.  Automatically reset to the center of
-    # the display at the beginning of every draw.
-
-
   METHODS
     method apply  [abstract]
 endClass
@@ -26,7 +18,7 @@ class ProjectionMode2DX : ProjectionMode
       local width   = Canvas.size.x
       local height  = Canvas.size.y
       local k = (-nominal_z + 1) * 2
-      local perspective_center = XY(0.5,0.5)
+      local perspective_center = Canvas.perspective_center / Canvas.size
       local left = ((-2 * width) / k)  * perspective_center.x
       local top  = ((-2 * height) / k) * perspective_center.y
       local right = left + 2*width/k

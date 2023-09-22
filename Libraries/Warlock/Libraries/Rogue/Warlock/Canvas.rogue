@@ -14,8 +14,9 @@ class Canvas [singleton]
     # In most cases viewport_size matches true_size, but on physical iPhone 6 Plus the rendering
     # viewport is smaller than the rendering surface.
 
-    projection_mode = ProjectionMode2DX()
-    default_z       = -2000.0 # convenience value updated by projection_mode
+    projection_mode    = ProjectionMode2DX()
+    default_z          = -2000.0 # convenience value updated by projection_mode
+    perspective_center : XY
 
     transform_modified       = true
     world_transform_modified = true
@@ -40,12 +41,6 @@ class Canvas [singleton]
 
     method height->Real
       return size.y
-
-    method reset_transforms
-      projection_mode.apply # sets projection_transform
-      view_transform_stack.clear
-      object_transform_stack.clear
-      world_transform_modified = true
 
     method push_object_transform( m:Matrix )
       if (object_transform_stack.count)
@@ -84,6 +79,16 @@ class Canvas [singleton]
       else                       view_transform = Matrix.identity
       world_transform_modified = true
       transform_modified = true
+
+    method reset_transforms
+      perspective_center = center  # applies projection_mode, which projection_transform
+      view_transform_stack.clear
+      object_transform_stack.clear
+      world_transform_modified = true
+
+    method set_perspective_center( new_center:XY )
+      @perspective_center = new_center
+      projection_mode.apply
 
     method set_projection_transform( new_projection_transform:Matrix )
       @projection_transform = new_projection_transform

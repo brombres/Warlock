@@ -23,6 +23,7 @@ $include Warlock/ProjectionMode
 $include Warlock/RenderMode
 $include Warlock/Renderer
 $include Warlock/Shader
+$include Warlock/Sprite
 $include Warlock/Texture
 $include Warlock/TextureFilter
 $include Warlock/TextureImage

@@ -1,0 +1,39 @@
+module Warlock
+
+class Sprite
+  PROPERTIES
+    image    : Image
+    position : XY
+    scale    = XY(1,1)
+    anchor   = Anchor.CENTER : Anchor
+    rotation : Radians
+    color    = Color.WHITE : Color
+    opacity  = 1.0
+
+  METHODS
+    method init( image )
+
+    method init( asset:Asset )
+      image = Image( asset )
+
+    method is_ready->Logical
+      return image.is_ready
+
+    method draw
+      if (not image.is_ready) return
+      Renderer.draw( this )
+
+    method draw( position )
+      draw
+
+    method set_size( new_size:XY )
+      localize size
+      if (size)
+        scale = new_size / size
+      endIf
+
+    method size->XY
+      if (not image.is_ready) return XY(0,0)
+      return image.size * scale
+
+endClass
