@@ -16,6 +16,9 @@ augment Warlock::Texture
     gl_render_target_id : Int32
 
   METHODS
+    method on_cleanup
+      unload
+
     method set_texture( bitmap:Bitmap, &preserve_bitmap )
       if (not bitmap) return
 
@@ -51,5 +54,19 @@ augment Warlock::Texture
       endIf
 
       GLRenderer.log_errors( "defining texture" )
+
+    method unload
+      if (gl_id)
+        native
+        @|GLuint texture_id = (GLuint) $gl_id;
+         |glDeleteTextures( 1, &texture_id );
+        gl_id = 0
+      endIf
+
+      #if (render_target_id)
+      #  native @|GLuint fb_id = (GLuint) $this->render_target_id;
+      #          |glDeleteFramebuffers( 1, &fb_id );
+      #  render_target_id = 0
+      #endIf
 
 endAugment

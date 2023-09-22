@@ -4,6 +4,6 @@ augment Geometry::Line
       drawable( colors ).draw
 
     method drawable( colors:Warlock::Colors )->Warlock::DrawableLine
-      return Warlock::DrawableLine( Line<<XYZW>>(a,b), colors )
+      return Warlock::DrawableLine( Line(a,b), colors )
 
 endAugment

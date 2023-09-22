@@ -15,6 +15,7 @@ class Canvas [singleton]
     # viewport is smaller than the rendering surface.
 
     projection_mode = ProjectionMode2DX()
+    default_z       = -2000.0 # convenience value updated by projection_mode
 
     transform_modified       = true
     world_transform_modified = true
@@ -28,6 +29,18 @@ class Canvas [singleton]
     object_transform_stack = Matrix[]
 
   METHODS
+    method at( relative_position:XY )->XY
+      return relative_position * size
+
+    method bounds->Box
+      return Box( size )
+
+    method center->XY
+      return size / 2
+
+    method height->Real
+      return size.y
+
     method reset_transforms
       projection_mode.apply # sets projection_transform
       view_transform_stack.clear
@@ -82,6 +95,9 @@ class Canvas [singleton]
         transform = projection_transform * world_transform
       endIf
       return @transform
+
+    method width->Real
+      return size.x
 
     method world_transform->Matrix
       if (not world_transform_modified) return @world_transform

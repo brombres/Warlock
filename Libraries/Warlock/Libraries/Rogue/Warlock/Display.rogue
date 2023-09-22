@@ -11,15 +11,9 @@ class Display : Canvas [singleton]
     method draw
       state.on_draw
 
-    method center->XY
-      return size / 2
-
     method change_state( new_state:DisplayState )
       if (state) state.change_state( new_state )
       else       @state = new_state
-
-    method height->Real
-      return size.y
 
     method set_state( new_state:DisplayState )
       if (state) state.change_state( new_state )
@@ -27,7 +21,4 @@ class Display : Canvas [singleton]
 
     method update
       @state = which{ state.updated || DisplayState() }
-
-    method width->Real
-      return size.x
 endClass

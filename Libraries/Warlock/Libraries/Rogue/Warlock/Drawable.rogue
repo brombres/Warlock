@@ -1,7 +1,7 @@
 module Warlock
 
 class DrawableQuad(
-    quad:Quad<<XYZW>>,
+    quad:Quad,
     colors=Colors(Color.WHITE):Colors,
     thickness=1.0:Real,
     texture=null:Texture,
@@ -12,10 +12,10 @@ class DrawableQuad(
   METHODS
     method draw
       if (colors.count < 4) colors = Colors(colors.a)
-      DrawableLine( Line<<XYZW>>(quad.a,quad.b), colors.a, thickness, render_mode, shader ).draw
-      DrawableLine( Line<<XYZW>>(quad.b,quad.c), colors.b, thickness, render_mode, shader ).draw
-      DrawableLine( Line<<XYZW>>(quad.c,quad.d), colors.c, thickness, render_mode, shader ).draw
-      DrawableLine( Line<<XYZW>>(quad.d,quad.a), colors.d, thickness, render_mode, shader ).draw
+      DrawableLine( Line(quad.a,quad.b), colors.a, thickness, render_mode, shader ).draw
+      DrawableLine( Line(quad.b,quad.c), colors.b, thickness, render_mode, shader ).draw
+      DrawableLine( Line(quad.c,quad.d), colors.c, thickness, render_mode, shader ).draw
+      DrawableLine( Line(quad.d,quad.a), colors.d, thickness, render_mode, shader ).draw
 
     method fill
       Renderer.fill( this )
@@ -40,7 +40,7 @@ endClass
 }#
 
 class DrawableLine(
-    line:Line<<XYZW>>,
+    line:Line,
     colors=Colors(Color.WHITE):Colors,
     thickness=1.0:Real,
     render_mode=RenderMode.ALPHA_COLOR:RenderMode,

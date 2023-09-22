@@ -10,7 +10,7 @@ augment Geometry::Box
       local b = XY( x2, a.y )
       local c = XY( x2, y2 )
       local d = XY( a.x, y2 )
-      return Warlock::DrawableQuad( Quad<<XYZW>>(a,b,c,d), colors )
+      return Warlock::DrawableQuad( Quad(a,b,c,d), colors )
 
     method fill( colors:Warlock::Colors )
       drawable( colors ).fill
