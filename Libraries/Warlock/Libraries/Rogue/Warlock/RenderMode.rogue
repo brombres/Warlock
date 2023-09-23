@@ -3,6 +3,7 @@ module Warlock
 class RenderMode
   GLOBAL PROPERTIES
     ALPHA_COLOR    = AlphaColorRenderMode()
+    ALPHA_TEXTURE  = AlphaTextureRenderMode()
     OPAQUE_TEXTURE = OpaqueTextureRenderMode()
 
   PROPERTIES
@@ -26,9 +27,17 @@ class AlphaColorRenderMode : RenderMode
       destination_rgb_blend = BlendParameter.ONE_MINUS_SOURCE_ALPHA
 endClass
 
+class AlphaTextureRenderMode : RenderMode
+  METHODS
+    method init
+      source_rgb_blend = BlendParameter.ONE
+      destination_rgb_blend = BlendParameter.ONE_MINUS_SOURCE_ALPHA
+endClass
+
 class OpaqueTextureRenderMode : RenderMode
   METHODS
     method init
       source_rgb_blend = BlendParameter.ONE
       destination_rgb_blend = BlendParameter.ZERO
 endClass
+

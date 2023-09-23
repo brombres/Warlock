@@ -11,3 +11,5 @@ BuildLocal.rogue
 *.swo
 *.swp
 *~
+
+/Assets/Internal/Card-*

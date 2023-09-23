@@ -19,6 +19,8 @@ class Renderer [singleton]
     vertex_uvs       = Real32[](VERTEX_BUFFER_BATCH_LIMIT*2)
     vertex_colors    = Int32[](VERTEX_BUFFER_BATCH_LIMIT)
 
+    last_presentation_time : Real
+
   METHODS
     method clear( color:Color )
       noAction
@@ -27,7 +29,10 @@ class Renderer [singleton]
       # Set defaults
       triangle_culling_mode = TriangleCullingMode.BACK
       front_face = FrontFace.COUNTER_CLOCKWISE
-      #Display.perspective_center = Display.center
+      local time = System.time
+      Display.dt = time - last_presentation_time
+      if (Display.dt > 0.1) Display.dt = 1.0/60.0
+      last_presentation_time = time
 
     method draw( drawable:DrawableLine )
       primitive_type = PrimitiveType.LINES
@@ -58,7 +63,7 @@ class Renderer [singleton]
         Canvas.push_object_transform( Matrix.transform(sprite.position, sprite.size, sprite.anchor, sprite.rotation) )
 
         local drawable = Box(1,1).drawable( sprite.color.with_opacity(sprite.opacity) )
-        drawable.render_mode = RenderMode.OPAQUE_TEXTURE
+        drawable.render_mode = RenderMode.ALPHA_TEXTURE
         drawable.shader = Shader.TEXTURE
         if local texture = sprite.image.texture
           drawable.uv = Box(0,0,texture.uv_size)->Quad

@@ -2,29 +2,48 @@ uses Warlock
 
 Display.state = DisplayState() subclass
   PROPERTIES
-    lines = Line[]
-    sprite : Sprite
+    cards = Image[]
+    falling_cards = FallingCard[]
 
   METHODS
     method on_start
-      sprite = Sprite( Asset("Macross.png") ).[ scale=0.25 ]
+      forEach (i in 1..52)
+        cards.add( Image( InternalAsset("Card-$.png"(i.format("02"))) ) )
+      endForEach
 
     method on_draw
-      Renderer.clear( Color.BLUE )
+      Renderer.clear( Color(0xcccccc) )
 
-      sprite.draw( Display.center )
-
-      forEach (line at i in lines step -1)
-        line.draw( Color.WHITE.with_alpha_byte(255-i) )
-      endForEach
-      #Box( Canvas.at(XY(0.25,0.25)), Canvas.size * XY(0.5,0.5) ).fill( Color.YELLOW )
+      (forEach in falling_cards).draw
 
     method on_update
-      sprite.rotation += Radians(Degrees(0.01))
+      if (Random.chance(0.5))
+        local card = cards.random
+        if (card.is_ready)
+          falling_cards.add( FallingCard(card) )
+        endIf
+      endIf
 
-      if (lines.count == 256) lines.remove_last
-      local a = Random.xy(1.0) * Canvas.size
-      local b = Random.xy(1.0) * Canvas.size
-      lines.insert( Line(a,b) )
+      (forEach in falling_cards).update
+      falling_cards.discard( $.card.position.y > Display.height+$.card.size.y )
 endSubclass
 
+class FallingCard
+  PROPERTIES
+    card  : Sprite
+    scale = Random.real(0.25,0.5) : Real
+    rotation_speed = Radians( Degrees(Random.real(-12,12)) )
+
+  METHODS
+    method init( card_image:Image )
+      card = Sprite( card_image )
+      card.scale = scale
+      card.position = XY( Random.real(Canvas.width), -card.size.y )
+
+    method draw
+      card.draw
+
+    method update
+      card.rotation += rotation_speed * Display.dt
+      card.position += XY(0,240*scale*Display.dt)
+endClass

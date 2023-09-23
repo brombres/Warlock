@@ -2,7 +2,8 @@ module Warlock
 
 class Display : Canvas [singleton]
   PROPERTIES
-    state     = DisplayState()
+    state = DisplayState()
+    dt    : Real
 
   METHODS
     method init
