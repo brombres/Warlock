@@ -2,8 +2,12 @@
 # to this folder and type "rogo" at the command line, or "rogo help" for a list
 # of supported commands.
 
-$requireRogue "2.28"
+$requireRogue "2.34"
 
+#$ LIBRARIES(macOS) = sdl2
+#$ LIBRARIES(Linux) = libsdl2-dev(sdl2) libsdl2-mixer-dev(SDL2_mixer)
+
+uses Utility/GitRepo
 uses Utility/VersionNumber
 
 routine rogo_default
@@ -19,6 +23,122 @@ routine rogo_build
   rogo_build_debug
 endRoutine
 
+routine rogo_build_debug
+  build( System.os, &debug )
+endRoutine
+
+routine build( platform:String, &debug )
+  deps
+
+  local product_folder = File("Build/$/Product"(platform)).[create_folder]
+  local source_folder = File("Build/$/Source"(platform)).[create_folder]
+
+  block cmd = "roguec Source/Main.rogue Warlock"
+    cmd .= appending( "Warlock/Platform/$.rogue"(platform) )
+    if (debug) cmd .= appending( "--debug" )
+    cmd .= appending( "--libraries=Libraries/Warlock/Libraries/Rogue" )
+    cmd .= appending( "--target=C++,Warlock,SDL,$"(platform) )
+    cmd .= appending( "--gc=manual" )
+    cmd .= appending( "--output=$/RogueProgram"(source_folder.esc) )
+    execute cmd
+  endBlock
+
+  #{
+  block cmd = "g++ -Wall -fno-strict-aliasing"
+    # Build/RogueC-macOS.c -o Build/RogueC-macOS -lm -I/opt/homebrew/Cellar/jpeg-turbo/3.0.0/include /opt/homebrew/Cellar/jpeg-turbo/3.0.0/lib/libjpeg.a -I/opt/homebrew/opt/libpng/include/libpng16 /opt/homebrew/opt/libpng/lib/libpng.a -lz"
+
+    if debug then cmd .= appending( "-O0" )
+    else          cmd .= appending( "-O3" )
+
+    cmd .= appending( "-std=c++11" )
+    cmd .= appending( "$/RogueProgram.cpp"(source_folder) )
+    cmd .= appending( "-o $/Warlock"(product_folder) )
+    cmd .= appending( "-lm" )
+    cmd .= appending( "$LIBRARY_FLAGS" )
+    #cmd .= appending( "-lSDL2main" )
+    cmd .= appending( "-lvulkan" )
+    #g++ -std=c++11 *.cpp -o vulkan -lSDL2main -lSDL2 -lvulkan
+    #-I/opt/homebrew/Cellar/jpeg-turbo/3.0.0/include /opt/homebrew/Cellar/jpeg-turbo/3.0.0/lib/libjpeg.a -I/opt/homebrew/opt/libpng/include/libpng16 /opt/homebrew/opt/libpng/lib/libpng.a -lz
+    execute cmd
+  endBlock
+  }#
+
+  #cmd = "emcc -Wall -fno-strict-aliasing"
+  #cmd .= appending("-O3")
+  #cmd .= appending("-s ALLOW_MEMORY_GROWTH=1 -s USE_SDL=2 -s USE_LIBPNG=1 -s FETCH")
+  #cmd .= appending("--embed-file=Assets/Internal@Internal")
+  #cmd .= appending("--shell-file Source/index.html")
+  #cmd .= appending("-sMODULARIZE")
+  #cmd .= appending("-sEXPORT_ES6")
+  #cmd .= appending("-sENVIRONMENT=web")
+  #cmd .= appending(''-sEXPORTED_FUNCTIONS="['_main']"'')
+  #cmd .= appending("Build/Web/Source/RogueProgram.c")
+  #cmd .= appending("-o Build/Web/Product/Warlock.html")
+  #execute cmd
+
+  #block file = File("Build/Web/Product/Warlock.html")
+  #  if (file.exists) file.rename("Build/Web/Product/index.html")
+  #endBlock
+
+  #Files("Assets/Downloads/**").sync_to( "Build/Web/Product/Assets", &verbose )
+endRoutine
+
+routine rogo_run
+  run( System.os )
+endRoutine
+
+routine run( platform:String )
+  execute "Build/$/Product/Warlock"(platform)
+endRoutine
+
+routine rogo_deps
+  deps
+endRoutine
+
+routine deps( &check_for_update )
+  if (not File("Libraries").exists)
+    println "> Create Libraries/"
+    File("Libraries").create_folder
+  endIf
+
+  -------- Libraries/MoltenVK --------
+  if System.is_macos
+    local folder = File("Libraries/MoltenVK")
+    local repo = GitRepo( "https://github.com/KhronosGroup/MoltenVK.git", folder )
+    if (not repo.exists)
+      banner "Cloning MoltenVK repo"
+      repo.clone( "main", &verbose )
+
+    elseIf (check_for_update and repo.has_remote_changes)
+      banner "Updating MoltenVK repo"
+      repo.pull( &verbose )
+    endIf
+
+    if (not (folder/"External/build/Release").exists)
+      execute @|cd Libraries/MoltenVK && ./fetchDependencies --macos --ios --iossim
+    endIf
+
+    if (not (folder/"Package/Release/MoltenVK/MoltenVK.xcframework/macos-arm64_x86_64").exists)
+      banner "Building MoltenVK for macOS"
+      local cmd = "cd Libraries/MoltenVK"
+      execute "cd $ && make macos"(folder.esc)
+    endIf
+
+    if (not (folder/"Package/Release/MoltenVK/MoltenVK.xcframework/ios-arm64").exists)
+      banner "Building MoltenVK for iOS"
+      execute "cd $ && make ios"(folder.esc)
+    endIf
+
+    if (not (folder/"Package/Release/MoltenVK/MoltenVK.xcframework/ios-arm64_x86_64-simulator").exists)
+      banner "Building MoltenVK for iOS Simulator"
+      execute "cd $ && make iossim"(folder.esc)
+    endIf
+  endIf
+
+endRoutine
+
+#{
+WEB BUILD
 routine rogo_build_debug
   rogo_deps
 
@@ -70,6 +190,7 @@ routine rogo_deps
     File("Libraries/Warlock/Libraries/Framework/Web/index.html").copy_to( index_html )
   endIf
 endRoutine
+}#
 
 routine rogo_clean
   block folder = File("Build")
@@ -78,6 +199,19 @@ routine rogo_clean
       folder.delete
     endIf
   endBlock
+endRoutine
+
+routine banner( content:String, w=Console.width:Int )
+  if w == 0 then w = 80
+
+  local n = w.or_smaller(100)
+  content .= word_wrapped( n-2 )
+
+  println "┌$┐" ("─"*(n-2))
+  forEach (line in content.split('\n'))
+    println "│$$│"(line," "*(n-(line.count+2)))
+  endForEach
+  println "└$┘" ("─"*(n-2))
 endRoutine
 
 routine execute( commands:String, error_message=null:String, &suppress_error )->Logical
@@ -106,7 +240,7 @@ endRoutine
 # routine calls.
 
 # Example: to handle the command "rogo abc xyz 5", define
-# "routine rogo_abc_xyz( n:Int32 )".
+# "routine rogo_abc_xyz( n:Int )".
 
 # "rogo_default" will run in the absence of any other command line argument.
 
@@ -275,7 +409,7 @@ class Build [singleton]
           if (line.contains("="))
             local name  = line.before_first('=').trimmed
             local rhs   = line.after_first('=').trimmed
-            local value : Value
+            local value : Variant
             if (rhs.begins_with('"') or rhs.begins_with('\''))
               value = rhs.leftmost(-1).rightmost(-1)
             elseIf (rhs.begins_with('{') or rhs.begins_with('['))
@@ -292,7 +426,7 @@ class Build [singleton]
         endForEach
       endIf
 
-    method _join( value:Value )->String
+    method _join( value:Variant )->String
       local args = String[]
       args.add( forEach in value )
       return args.join( "_" )

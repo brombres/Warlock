@@ -1,15 +1,19 @@
+# Libraries
+/Libraries/MoltenVK
+
+# Mac
+.DS_Store
+
 # Rogo
 .rogo
 Local.rogo
 BuildLocal.rogue
 /Build
 
-# Mac
-.DS_Store
-
 # Vim
 *.swo
 *.swp
 *~
+
 
 /Assets/Internal/Card-*

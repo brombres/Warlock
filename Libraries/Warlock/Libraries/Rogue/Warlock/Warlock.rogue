@@ -4,6 +4,7 @@ uses Codec/PNG
 uses Graphics [export]
 uses Math/Matrix
 
+#{
 $include Warlock/Asset
 $include Warlock/AssetManager
 $include Warlock/BlendParameter
@@ -31,8 +32,10 @@ $include Warlock/TextureWrap
 $include Warlock/TriangleCullingMode
 
 $include Warlock/OpenGLRenderer
+}#
 
 class Warlock [essential singleton]
+#{
   GLOBAL METHODS
     method present [api]
       GLRenderer.present
@@ -42,6 +45,7 @@ class Warlock [essential singleton]
     method init
       Global.error = Console
       GLRenderer # instantiates singleton
+}#
 endClass
 
 nativeCode

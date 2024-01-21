@@ -1,5 +1,6 @@
 uses Warlock
 
+#{
 Display.state = DisplayState() subclass
   PROPERTIES
     cards = Image[]
@@ -47,3 +48,4 @@ class FallingCard
       card.rotation += rotation_speed * Display.dt
       card.position += XY(0,240*scale*Display.dt)
 endClass
+}#
