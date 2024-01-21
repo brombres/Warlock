@@ -1,6 +1,6 @@
 //
 //  AppDelegate.swift
-//  Warlock
+//  Project-macOS
 //
 //  Created by Abe Pralle on 1/21/24.
 //
@@ -14,7 +14,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 
   func applicationDidFinishLaunching(_ aNotification: Notification) {
-    // Insert code here to initialize your application
+    RogueInterface_configure()
   }
 
   func applicationWillTerminate(_ aNotification: Notification) {

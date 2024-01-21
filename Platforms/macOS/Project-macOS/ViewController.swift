@@ -1,6 +1,6 @@
 //
 //  ViewController.swift
-//  Warlock
+//  Project-macOS
 //
 //  Created by Abe Pralle on 1/21/24.
 //

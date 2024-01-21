@@ -7,26 +7,29 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		301780632B5D8A950049E367 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 301780622B5D8A950049E367 /* AppDelegate.swift */; };
-		301780652B5D8A950049E367 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 301780642B5D8A950049E367 /* ViewController.swift */; };
-		301780672B5D8A970049E367 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 301780662B5D8A970049E367 /* Assets.xcassets */; };
-		3017806A2B5D8A970049E367 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 301780682B5D8A970049E367 /* Main.storyboard */; };
-		301780732B5D8B440049E367 /* Test.m in Sources */ = {isa = PBXBuildFile; fileRef = 301780722B5D8B440049E367 /* Test.m */; };
+		301780872B5D96590049E367 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 301780862B5D96590049E367 /* AppDelegate.swift */; };
+		301780892B5D96590049E367 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 301780882B5D96590049E367 /* ViewController.swift */; };
+		3017808B2B5D965B0049E367 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3017808A2B5D965B0049E367 /* Assets.xcassets */; };
+		3017808E2B5D965B0049E367 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3017808C2B5D965B0049E367 /* Main.storyboard */; };
+		301780972B5D96910049E367 /* Test.m in Sources */ = {isa = PBXBuildFile; fileRef = 301780962B5D96910049E367 /* Test.m */; };
+		3017809D2B5D98C70049E367 /* RogueInterface.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3017809B2B5D977E0049E367 /* RogueInterface.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		3017805F2B5D8A950049E367 /* Warlock.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Warlock.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		301780622B5D8A950049E367 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		301780642B5D8A950049E367 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		301780662B5D8A970049E367 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		301780692B5D8A970049E367 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		3017806B2B5D8A970049E367 /* Warlock.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Warlock.entitlements; sourceTree = "<group>"; };
-		301780712B5D8B440049E367 /* Warlock-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Warlock-Bridging-Header.h"; sourceTree = "<group>"; };
-		301780722B5D8B440049E367 /* Test.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Test.m; sourceTree = "<group>"; };
+		301780832B5D96590049E367 /* Project-macOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Project-macOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		301780862B5D96590049E367 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		301780882B5D96590049E367 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		3017808A2B5D965B0049E367 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		3017808D2B5D965B0049E367 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		3017808F2B5D965B0049E367 /* Project_macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Project_macOS.entitlements; sourceTree = "<group>"; };
+		301780952B5D96910049E367 /* Warlock-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Warlock-Bridging-Header.h"; sourceTree = "<group>"; };
+		301780962B5D96910049E367 /* Test.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Test.m; sourceTree = "<group>"; };
+		3017809A2B5D977E0049E367 /* RogueInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RogueInterface.h; path = ../../Libraries/Warlock/Libraries/Framework/Swift/RogueInterface.h; sourceTree = "<group>"; };
+		3017809B2B5D977E0049E367 /* RogueInterface.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = RogueInterface.mm; path = ../../Libraries/Warlock/Libraries/Framework/Swift/RogueInterface.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		3017805C2B5D8A950049E367 /* Frameworks */ = {
+		301780802B5D96590049E367 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -36,73 +39,83 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		301780562B5D8A950049E367 = {
+		3017807A2B5D96590049E367 = {
 			isa = PBXGroup;
 			children = (
-				301780612B5D8A950049E367 /* Warlock */,
-				301780602B5D8A950049E367 /* Products */,
+				301780992B5D97140049E367 /* Framework */,
+				301780962B5D96910049E367 /* Test.m */,
+				301780852B5D96590049E367 /* Project-macOS */,
+				301780842B5D96590049E367 /* Products */,
+				301780952B5D96910049E367 /* Warlock-Bridging-Header.h */,
 			);
 			sourceTree = "<group>";
 		};
-		301780602B5D8A950049E367 /* Products */ = {
+		301780842B5D96590049E367 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				3017805F2B5D8A950049E367 /* Warlock.app */,
+				301780832B5D96590049E367 /* Project-macOS.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		301780612B5D8A950049E367 /* Warlock */ = {
+		301780852B5D96590049E367 /* Project-macOS */ = {
 			isa = PBXGroup;
 			children = (
-				301780622B5D8A950049E367 /* AppDelegate.swift */,
-				301780642B5D8A950049E367 /* ViewController.swift */,
-				301780662B5D8A970049E367 /* Assets.xcassets */,
-				301780682B5D8A970049E367 /* Main.storyboard */,
-				3017806B2B5D8A970049E367 /* Warlock.entitlements */,
-				301780722B5D8B440049E367 /* Test.m */,
-				301780712B5D8B440049E367 /* Warlock-Bridging-Header.h */,
+				301780862B5D96590049E367 /* AppDelegate.swift */,
+				301780882B5D96590049E367 /* ViewController.swift */,
+				3017808A2B5D965B0049E367 /* Assets.xcassets */,
+				3017808C2B5D965B0049E367 /* Main.storyboard */,
+				3017808F2B5D965B0049E367 /* Project_macOS.entitlements */,
 			);
-			path = Warlock;
+			path = "Project-macOS";
+			sourceTree = "<group>";
+		};
+		301780992B5D97140049E367 /* Framework */ = {
+			isa = PBXGroup;
+			children = (
+				3017809A2B5D977E0049E367 /* RogueInterface.h */,
+				3017809B2B5D977E0049E367 /* RogueInterface.mm */,
+			);
+			name = Framework;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		3017805E2B5D8A950049E367 /* Warlock */ = {
+		301780822B5D96590049E367 /* Project-macOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 3017806E2B5D8A970049E367 /* Build configuration list for PBXNativeTarget "Warlock" */;
+			buildConfigurationList = 301780922B5D965B0049E367 /* Build configuration list for PBXNativeTarget "Project-macOS" */;
 			buildPhases = (
-				3017805B2B5D8A950049E367 /* Sources */,
-				3017805C2B5D8A950049E367 /* Frameworks */,
-				3017805D2B5D8A950049E367 /* Resources */,
+				3017807F2B5D96590049E367 /* Sources */,
+				301780802B5D96590049E367 /* Frameworks */,
+				301780812B5D96590049E367 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = Warlock;
-			productName = Warlock;
-			productReference = 3017805F2B5D8A950049E367 /* Warlock.app */;
+			name = "Project-macOS";
+			productName = "Project-macOS";
+			productReference = 301780832B5D96590049E367 /* Project-macOS.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		301780572B5D8A950049E367 /* Project object */ = {
+		3017807B2B5D96590049E367 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1520;
 				LastUpgradeCheck = 1520;
 				TargetAttributes = {
-					3017805E2B5D8A950049E367 = {
+					301780822B5D96590049E367 = {
 						CreatedOnToolsVersion = 15.2;
 						LastSwiftMigration = 1520;
 					};
 				};
 			};
-			buildConfigurationList = 3017805A2B5D8A950049E367 /* Build configuration list for PBXProject "Warlock" */;
+			buildConfigurationList = 3017807E2B5D96590049E367 /* Build configuration list for PBXProject "Project-macOS" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -110,46 +123,47 @@
 				en,
 				Base,
 			);
-			mainGroup = 301780562B5D8A950049E367;
-			productRefGroup = 301780602B5D8A950049E367 /* Products */;
+			mainGroup = 3017807A2B5D96590049E367;
+			productRefGroup = 301780842B5D96590049E367 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				3017805E2B5D8A950049E367 /* Warlock */,
+				301780822B5D96590049E367 /* Project-macOS */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		3017805D2B5D8A950049E367 /* Resources */ = {
+		301780812B5D96590049E367 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				301780672B5D8A970049E367 /* Assets.xcassets in Resources */,
-				3017806A2B5D8A970049E367 /* Main.storyboard in Resources */,
+				3017808B2B5D965B0049E367 /* Assets.xcassets in Resources */,
+				3017808E2B5D965B0049E367 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		3017805B2B5D8A950049E367 /* Sources */ = {
+		3017807F2B5D96590049E367 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				301780732B5D8B440049E367 /* Test.m in Sources */,
-				301780652B5D8A950049E367 /* ViewController.swift in Sources */,
-				301780632B5D8A950049E367 /* AppDelegate.swift in Sources */,
+				301780972B5D96910049E367 /* Test.m in Sources */,
+				301780892B5D96590049E367 /* ViewController.swift in Sources */,
+				301780872B5D96590049E367 /* AppDelegate.swift in Sources */,
+				3017809D2B5D98C70049E367 /* RogueInterface.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		301780682B5D8A970049E367 /* Main.storyboard */ = {
+		3017808C2B5D965B0049E367 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				301780692B5D8A970049E367 /* Base */,
+				3017808D2B5D965B0049E367 /* Base */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -157,7 +171,7 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		3017806C2B5D8A970049E367 /* Debug */ = {
+		301780902B5D965B0049E367 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -220,7 +234,7 @@
 			};
 			name = Debug;
 		};
-		3017806D2B5D8A970049E367 /* Release */ = {
+		301780912B5D965B0049E367 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -275,13 +289,13 @@
 			};
 			name = Release;
 		};
-		3017806F2B5D8A970049E367 /* Debug */ = {
+		301780932B5D965B0049E367 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = Warlock/Warlock.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "Project-macOS/Project_macOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -296,22 +310,23 @@
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = dev.warlock.Warlock;
+				PRODUCT_BUNDLE_IDENTIFIER = "dev.warlock.Project-macOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "Warlock/Warlock-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Warlock-Bridging-Header.h";
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "Warlock-macOS-Swift.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
-		301780702B5D8A970049E367 /* Release */ = {
+		301780942B5D965B0049E367 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = Warlock/Warlock.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "Project-macOS/Project_macOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -326,10 +341,11 @@
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = dev.warlock.Warlock;
+				PRODUCT_BUNDLE_IDENTIFIER = "dev.warlock.Project-macOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "Warlock/Warlock-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Warlock-Bridging-Header.h";
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "Warlock-macOS-Swift.h";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
@@ -337,25 +353,25 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		3017805A2B5D8A950049E367 /* Build configuration list for PBXProject "Warlock" */ = {
+		3017807E2B5D96590049E367 /* Build configuration list for PBXProject "Project-macOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				3017806C2B5D8A970049E367 /* Debug */,
-				3017806D2B5D8A970049E367 /* Release */,
+				301780902B5D965B0049E367 /* Debug */,
+				301780912B5D965B0049E367 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		3017806E2B5D8A970049E367 /* Build configuration list for PBXNativeTarget "Warlock" */ = {
+		301780922B5D965B0049E367 /* Build configuration list for PBXNativeTarget "Project-macOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				3017806F2B5D8A970049E367 /* Debug */,
-				301780702B5D8A970049E367 /* Release */,
+				301780932B5D965B0049E367 /* Debug */,
+				301780942B5D965B0049E367 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 301780572B5D8A950049E367 /* Project object */;
+	rootObject = 3017807B2B5D96590049E367 /* Project object */;
 }
