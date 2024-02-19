@@ -1,5 +1,6 @@
 # Libraries
 /Libraries/MoltenVK
+/Libraries/SDL
 
 # Mac
 .DS_Store

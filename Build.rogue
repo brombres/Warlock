@@ -84,7 +84,8 @@ routine build( platform:String, &debug )
 endRoutine
 
 routine rogo_run
-  run( System.os )
+  trace "TODO: run"
+  #run( System.os )
 endRoutine
 
 routine run( platform:String )
@@ -132,6 +133,21 @@ routine deps( &check_for_update )
     if (not (folder/"Package/Release/MoltenVK/MoltenVK.xcframework/ios-arm64_x86_64-simulator").exists)
       banner "Building MoltenVK for iOS Simulator"
       execute "cd $ && make iossim"(folder.esc)
+    endIf
+  endIf
+
+  -------- Libraries/SDL --------
+  if System.is_macos
+    local folder = File("Libraries/SDL")
+    local repo = GitRepo( "https://github.com/libsdl-org/SDL.git", folder )
+
+    if (not repo.exists)
+      banner "Cloning SDL repo"
+      repo.clone( "release-2.28.5", &verbose )
+
+    elseIf (check_for_update and repo.has_remote_changes)
+      banner "Updating SDL repo"
+      repo.pull( &verbose )
     endIf
   endIf
 
