@@ -7,77 +7,362 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		306912B22B5E75C100B14F73 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 306912B12B5E75C100B14F73 /* AppDelegate.m */; };
-		306912B42B5E75C200B14F73 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 306912B32B5E75C200B14F73 /* Assets.xcassets */; };
-		306912B72B5E75C200B14F73 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 306912B52B5E75C200B14F73 /* MainMenu.xib */; };
-		306912B92B5E75C200B14F73 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 306912B82B5E75C200B14F73 /* main.m */; };
-		306912C22B5E76D100B14F73 /* Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 306912C12B5E76D100B14F73 /* Test.swift */; };
+		306912D12B5E7D7400B14F73 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 306912D02B5E7D7400B14F73 /* AppDelegate.m */; };
+		306912D32B5E7D7500B14F73 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 306912D22B5E7D7500B14F73 /* Assets.xcassets */; };
+		306912E12B5E7E1D00B14F73 /* Warlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 306912E02B5E7E1D00B14F73 /* Warlock.swift */; };
+		3069132E2B5E8A1A00B14F73 /* Main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3069132C2B5E8A1A00B14F73 /* Main.cpp */; };
+		306913582B5E98C400B14F73 /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 306913402B5E8D1100B14F73 /* SDL2.framework */; };
+		306913592B5E98C400B14F73 /* SDL2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 306913402B5E8D1100B14F73 /* SDL2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		306913732B5E9D4600B14F73 /* MoltenVK.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 306913672B5E9D4600B14F73 /* MoltenVK.xcframework */; };
+		306913792B5EA06300B14F73 /* VulkanInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 306913762B5EA06300B14F73 /* VulkanInterface.cpp */; };
+		3069137A2B5EA06300B14F73 /* VulkanFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 306913782B5EA06300B14F73 /* VulkanFunctions.cpp */; };
+		306913BC2B5EAFC900B14F73 /* vulkan.cppm in Resources */ = {isa = PBXBuildFile; fileRef = 3069139D2B5EAFC900B14F73 /* vulkan.cppm */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		3069133F2B5E8D1100B14F73 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 306913312B5E8D1100B14F73 /* SDL.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = BECDF66C0761BA81005FE872;
+			remoteInfo = Framework;
+		};
+		306913412B5E8D1100B14F73 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 306913312B5E8D1100B14F73 /* SDL.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = A7D88B5423E2437C00DCD162;
+			remoteInfo = "Framework-iOS";
+		};
+		306913432B5E8D1100B14F73 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 306913312B5E8D1100B14F73 /* SDL.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = A7D88D1523E24BED00DCD162;
+			remoteInfo = "Framework-tvOS";
+		};
+		306913452B5E8D1100B14F73 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 306913312B5E8D1100B14F73 /* SDL.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = E2D187CF28A5673500D2B4F1;
+			remoteInfo = "xcFramework-iOS";
+		};
+		306913472B5E8D1100B14F73 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 306913312B5E8D1100B14F73 /* SDL.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = BECDF6B30761BA81005FE872;
+			remoteInfo = "Static Library";
+		};
+		306913492B5E8D1100B14F73 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 306913312B5E8D1100B14F73 /* SDL.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = A7D88E5423E24D3B00DCD162;
+			remoteInfo = "Static Library-iOS";
+		};
+		3069134B2B5E8D1100B14F73 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 306913312B5E8D1100B14F73 /* SDL.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = A769B23D23E259AE00872273;
+			remoteInfo = "Static Library-tvOS";
+		};
+		3069134D2B5E8D1100B14F73 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 306913312B5E8D1100B14F73 /* SDL.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = DB31407717554B71006C0E22;
+			remoteInfo = "Shared Library";
+		};
+		3069134F2B5E8D1100B14F73 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 306913312B5E8D1100B14F73 /* SDL.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = A75FCEB323E25AB700529352;
+			remoteInfo = "Shared Library-iOS";
+		};
+		306913512B5E8D1100B14F73 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 306913312B5E8D1100B14F73 /* SDL.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = A75FD06C23E25AC700529352;
+			remoteInfo = "Shared Library-tvOS";
+		};
+		306913532B5E8D1100B14F73 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 306913312B5E8D1100B14F73 /* SDL.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = BECDF6BE0761BA81005FE872;
+			remoteInfo = "Standard DMG";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		3069135A2B5E98C400B14F73 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				306913592B5E98C400B14F73 /* SDL2.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
-		306912AD2B5E75C100B14F73 /* Project-macOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Project-macOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		306912B02B5E75C100B14F73 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		306912B12B5E75C100B14F73 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		306912B32B5E75C200B14F73 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		306912B62B5E75C200B14F73 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		306912B82B5E75C200B14F73 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		306912BA2B5E75C200B14F73 /* Project_macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Project_macOS.entitlements; sourceTree = "<group>"; };
-		306912C02B5E76D100B14F73 /* Project-macOS-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Project-macOS-Bridging-Header.h"; sourceTree = "<group>"; };
-		306912C12B5E76D100B14F73 /* Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Test.swift; sourceTree = "<group>"; };
+		306912CC2B5E7D7400B14F73 /* Project-macOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Project-macOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		306912CF2B5E7D7400B14F73 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		306912D02B5E7D7400B14F73 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		306912D22B5E7D7500B14F73 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		306912D92B5E7D7500B14F73 /* Project_macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Project_macOS.entitlements; sourceTree = "<group>"; };
+		306912DF2B5E7E1C00B14F73 /* Warlock-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Warlock-Bridging-Header.h"; sourceTree = "<group>"; };
+		306912E02B5E7E1D00B14F73 /* Warlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Warlock.swift; sourceTree = "<group>"; };
+		3069132C2B5E8A1A00B14F73 /* Main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Main.cpp; sourceTree = "<group>"; };
+		3069132D2B5E8A1A00B14F73 /* Main.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Main.hpp; sourceTree = "<group>"; };
+		306913312B5E8D1100B14F73 /* SDL.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SDL.xcodeproj; path = ../../Libraries/SDL/Xcode/SDL/SDL.xcodeproj; sourceTree = "<group>"; };
+		306913672B5E9D4600B14F73 /* MoltenVK.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MoltenVK.xcframework; path = ../../Libraries/MoltenVK/Package/Release/MoltenVK/MoltenVK.xcframework; sourceTree = "<group>"; };
+		306913752B5EA06300B14F73 /* VulkanInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VulkanInterface.h; path = ../../Libraries/Warlock/Libraries/Framework/Vulkan/VulkanInterface.h; sourceTree = "<group>"; };
+		306913762B5EA06300B14F73 /* VulkanInterface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VulkanInterface.cpp; path = ../../Libraries/Warlock/Libraries/Framework/Vulkan/VulkanInterface.cpp; sourceTree = "<group>"; };
+		306913772B5EA06300B14F73 /* VulkanFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VulkanFunctions.h; path = ../../Libraries/Warlock/Libraries/Framework/Vulkan/VulkanFunctions.h; sourceTree = "<group>"; };
+		306913782B5EA06300B14F73 /* VulkanFunctions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VulkanFunctions.cpp; path = ../../Libraries/Warlock/Libraries/Framework/Vulkan/VulkanFunctions.cpp; sourceTree = "<group>"; };
+		3069138A2B5EAFC900B14F73 /* vulkan_video_codec_h264std.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vulkan_video_codec_h264std.h; sourceTree = "<group>"; };
+		3069138B2B5EAFC900B14F73 /* vulkan_video_codec_h265std.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vulkan_video_codec_h265std.h; sourceTree = "<group>"; };
+		3069138C2B5EAFC900B14F73 /* vulkan_video_codec_h264std_decode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vulkan_video_codec_h264std_decode.h; sourceTree = "<group>"; };
+		3069138D2B5EAFC900B14F73 /* vulkan_video_codec_h264std_encode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vulkan_video_codec_h264std_encode.h; sourceTree = "<group>"; };
+		3069138E2B5EAFC900B14F73 /* vulkan_video_codecs_common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vulkan_video_codecs_common.h; sourceTree = "<group>"; };
+		3069138F2B5EAFC900B14F73 /* vulkan_video_codec_h265std_encode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vulkan_video_codec_h265std_encode.h; sourceTree = "<group>"; };
+		306913902B5EAFC900B14F73 /* vulkan_video_codec_h265std_decode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vulkan_video_codec_h265std_decode.h; sourceTree = "<group>"; };
+		306913922B5EAFC900B14F73 /* mvk_private_api.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mvk_private_api.h; sourceTree = "<group>"; };
+		306913932B5EAFC900B14F73 /* mvk_datatypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mvk_datatypes.h; sourceTree = "<group>"; };
+		306913942B5EAFC900B14F73 /* vk_mvk_moltenvk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vk_mvk_moltenvk.h; sourceTree = "<group>"; };
+		306913952B5EAFC900B14F73 /* mvk_vulkan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mvk_vulkan.h; sourceTree = "<group>"; };
+		306913962B5EAFC900B14F73 /* mvk_config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mvk_config.h; sourceTree = "<group>"; };
+		306913972B5EAFC900B14F73 /* mvk_deprecated_api.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mvk_deprecated_api.h; sourceTree = "<group>"; };
+		306913992B5EAFC900B14F73 /* vk_layer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vk_layer.h; sourceTree = "<group>"; };
+		3069139A2B5EAFC900B14F73 /* vk_icd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vk_icd.h; sourceTree = "<group>"; };
+		3069139B2B5EAFC900B14F73 /* vulkan_vi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vulkan_vi.h; sourceTree = "<group>"; };
+		3069139C2B5EAFC900B14F73 /* vulkan_hash.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = vulkan_hash.hpp; sourceTree = "<group>"; };
+		3069139D2B5EAFC900B14F73 /* vulkan.cppm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = vulkan.cppm; sourceTree = "<group>"; };
+		3069139E2B5EAFC900B14F73 /* vulkan_to_string.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = vulkan_to_string.hpp; sourceTree = "<group>"; };
+		3069139F2B5EAFC900B14F73 /* vulkan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vulkan.h; sourceTree = "<group>"; };
+		306913A02B5EAFC900B14F73 /* vk_platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vk_platform.h; sourceTree = "<group>"; };
+		306913A12B5EAFC900B14F73 /* vulkan.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = vulkan.hpp; sourceTree = "<group>"; };
+		306913A22B5EAFC900B14F73 /* vulkan_enums.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = vulkan_enums.hpp; sourceTree = "<group>"; };
+		306913A32B5EAFC900B14F73 /* vulkan_fuchsia.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vulkan_fuchsia.h; sourceTree = "<group>"; };
+		306913A42B5EAFC900B14F73 /* vulkan_wayland.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vulkan_wayland.h; sourceTree = "<group>"; };
+		306913A52B5EAFC900B14F73 /* vulkan_static_assertions.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = vulkan_static_assertions.hpp; sourceTree = "<group>"; };
+		306913A62B5EAFC900B14F73 /* vulkan_win32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vulkan_win32.h; sourceTree = "<group>"; };
+		306913A72B5EAFC900B14F73 /* vulkan_macos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vulkan_macos.h; sourceTree = "<group>"; };
+		306913A82B5EAFC900B14F73 /* vulkan_xlib_xrandr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vulkan_xlib_xrandr.h; sourceTree = "<group>"; };
+		306913A92B5EAFC900B14F73 /* vulkan_funcs.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = vulkan_funcs.hpp; sourceTree = "<group>"; };
+		306913AA2B5EAFC900B14F73 /* vulkan_xcb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vulkan_xcb.h; sourceTree = "<group>"; };
+		306913AB2B5EAFC900B14F73 /* vulkan_shared.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = vulkan_shared.hpp; sourceTree = "<group>"; };
+		306913AC2B5EAFC900B14F73 /* vulkan_ggp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vulkan_ggp.h; sourceTree = "<group>"; };
+		306913AD2B5EAFC900B14F73 /* vulkan_video.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = vulkan_video.hpp; sourceTree = "<group>"; };
+		306913AE2B5EAFC900B14F73 /* vulkan_hpp_macros.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = vulkan_hpp_macros.hpp; sourceTree = "<group>"; };
+		306913AF2B5EAFC900B14F73 /* vulkan_format_traits.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = vulkan_format_traits.hpp; sourceTree = "<group>"; };
+		306913B02B5EAFC900B14F73 /* vulkan_xlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vulkan_xlib.h; sourceTree = "<group>"; };
+		306913B12B5EAFC900B14F73 /* vulkan_directfb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vulkan_directfb.h; sourceTree = "<group>"; };
+		306913B22B5EAFC900B14F73 /* vulkan_ios.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vulkan_ios.h; sourceTree = "<group>"; };
+		306913B32B5EAFC900B14F73 /* vulkan_extension_inspection.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = vulkan_extension_inspection.hpp; sourceTree = "<group>"; };
+		306913B42B5EAFC900B14F73 /* vulkan_structs.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = vulkan_structs.hpp; sourceTree = "<group>"; };
+		306913B52B5EAFC900B14F73 /* vulkan_core.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vulkan_core.h; sourceTree = "<group>"; };
+		306913B62B5EAFC900B14F73 /* vulkan_raii.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = vulkan_raii.hpp; sourceTree = "<group>"; };
+		306913B72B5EAFC900B14F73 /* vulkan_screen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vulkan_screen.h; sourceTree = "<group>"; };
+		306913B82B5EAFC900B14F73 /* vulkan_android.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vulkan_android.h; sourceTree = "<group>"; };
+		306913B92B5EAFC900B14F73 /* vulkan_metal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vulkan_metal.h; sourceTree = "<group>"; };
+		306913BA2B5EAFC900B14F73 /* vulkan_handles.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = vulkan_handles.hpp; sourceTree = "<group>"; };
+		306913BB2B5EAFC900B14F73 /* vulkan_beta.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vulkan_beta.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		306912AA2B5E75C100B14F73 /* Frameworks */ = {
+		306912C92B5E7D7400B14F73 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				306913582B5E98C400B14F73 /* SDL2.framework in Frameworks */,
+				306913732B5E9D4600B14F73 /* MoltenVK.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		306912A42B5E75C100B14F73 = {
+		306912C32B5E7D7400B14F73 = {
 			isa = PBXGroup;
 			children = (
-				306912AF2B5E75C100B14F73 /* Project-macOS */,
-				306912AE2B5E75C100B14F73 /* Products */,
+				306913872B5EAF0F00B14F73 /* Vulkan */,
+				306913742B5EA02C00B14F73 /* Warlock */,
+				306913312B5E8D1100B14F73 /* SDL.xcodeproj */,
+				306912E02B5E7E1D00B14F73 /* Warlock.swift */,
+				306912CE2B5E7D7400B14F73 /* Project-macOS */,
+				306912CD2B5E7D7400B14F73 /* Products */,
+				306912DF2B5E7E1C00B14F73 /* Warlock-Bridging-Header.h */,
+				306913552B5E8D2300B14F73 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
-		306912AE2B5E75C100B14F73 /* Products */ = {
+		306912CD2B5E7D7400B14F73 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				306912AD2B5E75C100B14F73 /* Project-macOS.app */,
+				306912CC2B5E7D7400B14F73 /* Project-macOS.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		306912AF2B5E75C100B14F73 /* Project-macOS */ = {
+		306912CE2B5E7D7400B14F73 /* Project-macOS */ = {
 			isa = PBXGroup;
 			children = (
-				306912B02B5E75C100B14F73 /* AppDelegate.h */,
-				306912B12B5E75C100B14F73 /* AppDelegate.m */,
-				306912B32B5E75C200B14F73 /* Assets.xcassets */,
-				306912B52B5E75C200B14F73 /* MainMenu.xib */,
-				306912B82B5E75C200B14F73 /* main.m */,
-				306912BA2B5E75C200B14F73 /* Project_macOS.entitlements */,
-				306912C12B5E76D100B14F73 /* Test.swift */,
-				306912C02B5E76D100B14F73 /* Project-macOS-Bridging-Header.h */,
+				306912CF2B5E7D7400B14F73 /* AppDelegate.h */,
+				306912D02B5E7D7400B14F73 /* AppDelegate.m */,
+				306912D22B5E7D7500B14F73 /* Assets.xcassets */,
+				306912D92B5E7D7500B14F73 /* Project_macOS.entitlements */,
+				3069132C2B5E8A1A00B14F73 /* Main.cpp */,
+				3069132D2B5E8A1A00B14F73 /* Main.hpp */,
 			);
 			path = "Project-macOS";
+			sourceTree = "<group>";
+		};
+		306913322B5E8D1100B14F73 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				306913402B5E8D1100B14F73 /* SDL2.framework */,
+				306913422B5E8D1100B14F73 /* SDL2.framework */,
+				306913442B5E8D1100B14F73 /* SDL2.framework */,
+				306913462B5E8D1100B14F73 /* SDL2.framework */,
+				306913482B5E8D1100B14F73 /* libSDL2.a */,
+				3069134A2B5E8D1100B14F73 /* libSDL2.a */,
+				3069134C2B5E8D1100B14F73 /* libSDL2.a */,
+				3069134E2B5E8D1100B14F73 /* libSDL2.dylib */,
+				306913502B5E8D1100B14F73 /* libSDL2.dylib */,
+				306913522B5E8D1100B14F73 /* libSDL2.dylib */,
+				306913542B5E8D1100B14F73 /* SDL2 */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		306913552B5E8D2300B14F73 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				306913672B5E9D4600B14F73 /* MoltenVK.xcframework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		306913742B5EA02C00B14F73 /* Warlock */ = {
+			isa = PBXGroup;
+			children = (
+				306913782B5EA06300B14F73 /* VulkanFunctions.cpp */,
+				306913772B5EA06300B14F73 /* VulkanFunctions.h */,
+				306913762B5EA06300B14F73 /* VulkanInterface.cpp */,
+				306913752B5EA06300B14F73 /* VulkanInterface.h */,
+			);
+			name = Warlock;
+			sourceTree = "<group>";
+		};
+		306913872B5EAF0F00B14F73 /* Vulkan */ = {
+			isa = PBXGroup;
+			children = (
+				306913882B5EAFC900B14F73 /* include */,
+			);
+			name = Vulkan;
+			sourceTree = "<group>";
+		};
+		306913882B5EAFC900B14F73 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				306913892B5EAFC900B14F73 /* vk_video */,
+				306913912B5EAFC900B14F73 /* MoltenVK */,
+				306913982B5EAFC900B14F73 /* vulkan */,
+			);
+			name = include;
+			path = ../../Libraries/MoltenVK/MoltenVK/include;
+			sourceTree = "<group>";
+		};
+		306913892B5EAFC900B14F73 /* vk_video */ = {
+			isa = PBXGroup;
+			children = (
+				3069138A2B5EAFC900B14F73 /* vulkan_video_codec_h264std.h */,
+				3069138B2B5EAFC900B14F73 /* vulkan_video_codec_h265std.h */,
+				3069138C2B5EAFC900B14F73 /* vulkan_video_codec_h264std_decode.h */,
+				3069138D2B5EAFC900B14F73 /* vulkan_video_codec_h264std_encode.h */,
+				3069138E2B5EAFC900B14F73 /* vulkan_video_codecs_common.h */,
+				3069138F2B5EAFC900B14F73 /* vulkan_video_codec_h265std_encode.h */,
+				306913902B5EAFC900B14F73 /* vulkan_video_codec_h265std_decode.h */,
+			);
+			path = vk_video;
+			sourceTree = "<group>";
+		};
+		306913912B5EAFC900B14F73 /* MoltenVK */ = {
+			isa = PBXGroup;
+			children = (
+				306913922B5EAFC900B14F73 /* mvk_private_api.h */,
+				306913932B5EAFC900B14F73 /* mvk_datatypes.h */,
+				306913942B5EAFC900B14F73 /* vk_mvk_moltenvk.h */,
+				306913952B5EAFC900B14F73 /* mvk_vulkan.h */,
+				306913962B5EAFC900B14F73 /* mvk_config.h */,
+				306913972B5EAFC900B14F73 /* mvk_deprecated_api.h */,
+			);
+			path = MoltenVK;
+			sourceTree = "<group>";
+		};
+		306913982B5EAFC900B14F73 /* vulkan */ = {
+			isa = PBXGroup;
+			children = (
+				306913992B5EAFC900B14F73 /* vk_layer.h */,
+				3069139A2B5EAFC900B14F73 /* vk_icd.h */,
+				3069139B2B5EAFC900B14F73 /* vulkan_vi.h */,
+				3069139C2B5EAFC900B14F73 /* vulkan_hash.hpp */,
+				3069139D2B5EAFC900B14F73 /* vulkan.cppm */,
+				3069139E2B5EAFC900B14F73 /* vulkan_to_string.hpp */,
+				3069139F2B5EAFC900B14F73 /* vulkan.h */,
+				306913A02B5EAFC900B14F73 /* vk_platform.h */,
+				306913A12B5EAFC900B14F73 /* vulkan.hpp */,
+				306913A22B5EAFC900B14F73 /* vulkan_enums.hpp */,
+				306913A32B5EAFC900B14F73 /* vulkan_fuchsia.h */,
+				306913A42B5EAFC900B14F73 /* vulkan_wayland.h */,
+				306913A52B5EAFC900B14F73 /* vulkan_static_assertions.hpp */,
+				306913A62B5EAFC900B14F73 /* vulkan_win32.h */,
+				306913A72B5EAFC900B14F73 /* vulkan_macos.h */,
+				306913A82B5EAFC900B14F73 /* vulkan_xlib_xrandr.h */,
+				306913A92B5EAFC900B14F73 /* vulkan_funcs.hpp */,
+				306913AA2B5EAFC900B14F73 /* vulkan_xcb.h */,
+				306913AB2B5EAFC900B14F73 /* vulkan_shared.hpp */,
+				306913AC2B5EAFC900B14F73 /* vulkan_ggp.h */,
+				306913AD2B5EAFC900B14F73 /* vulkan_video.hpp */,
+				306913AE2B5EAFC900B14F73 /* vulkan_hpp_macros.hpp */,
+				306913AF2B5EAFC900B14F73 /* vulkan_format_traits.hpp */,
+				306913B02B5EAFC900B14F73 /* vulkan_xlib.h */,
+				306913B12B5EAFC900B14F73 /* vulkan_directfb.h */,
+				306913B22B5EAFC900B14F73 /* vulkan_ios.h */,
+				306913B32B5EAFC900B14F73 /* vulkan_extension_inspection.hpp */,
+				306913B42B5EAFC900B14F73 /* vulkan_structs.hpp */,
+				306913B52B5EAFC900B14F73 /* vulkan_core.h */,
+				306913B62B5EAFC900B14F73 /* vulkan_raii.hpp */,
+				306913B72B5EAFC900B14F73 /* vulkan_screen.h */,
+				306913B82B5EAFC900B14F73 /* vulkan_android.h */,
+				306913B92B5EAFC900B14F73 /* vulkan_metal.h */,
+				306913BA2B5EAFC900B14F73 /* vulkan_handles.hpp */,
+				306913BB2B5EAFC900B14F73 /* vulkan_beta.h */,
+			);
+			path = vulkan;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		306912AC2B5E75C100B14F73 /* Project-macOS */ = {
+		306912CB2B5E7D7400B14F73 /* Project-macOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 306912BD2B5E75C200B14F73 /* Build configuration list for PBXNativeTarget "Project-macOS" */;
+			buildConfigurationList = 306912DC2B5E7D7500B14F73 /* Build configuration list for PBXNativeTarget "Project-macOS" */;
 			buildPhases = (
-				306912A92B5E75C100B14F73 /* Sources */,
-				306912AA2B5E75C100B14F73 /* Frameworks */,
-				306912AB2B5E75C100B14F73 /* Resources */,
+				306912C82B5E7D7400B14F73 /* Sources */,
+				306912C92B5E7D7400B14F73 /* Frameworks */,
+				306912CA2B5E7D7400B14F73 /* Resources */,
+				3069135A2B5E98C400B14F73 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -85,25 +370,25 @@
 			);
 			name = "Project-macOS";
 			productName = "Project-macOS";
-			productReference = 306912AD2B5E75C100B14F73 /* Project-macOS.app */;
+			productReference = 306912CC2B5E7D7400B14F73 /* Project-macOS.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		306912A52B5E75C100B14F73 /* Project object */ = {
+		306912C42B5E7D7400B14F73 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastUpgradeCheck = 1520;
 				TargetAttributes = {
-					306912AC2B5E75C100B14F73 = {
+					306912CB2B5E7D7400B14F73 = {
 						CreatedOnToolsVersion = 15.2;
 						LastSwiftMigration = 1520;
 					};
 				};
 			};
-			buildConfigurationList = 306912A82B5E75C100B14F73 /* Build configuration list for PBXProject "Project-macOS" */;
+			buildConfigurationList = 306912C72B5E7D7400B14F73 /* Build configuration list for PBXProject "Project-macOS" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -111,54 +396,131 @@
 				en,
 				Base,
 			);
-			mainGroup = 306912A42B5E75C100B14F73;
-			productRefGroup = 306912AE2B5E75C100B14F73 /* Products */;
+			mainGroup = 306912C32B5E7D7400B14F73;
+			productRefGroup = 306912CD2B5E7D7400B14F73 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 306913322B5E8D1100B14F73 /* Products */;
+					ProjectRef = 306913312B5E8D1100B14F73 /* SDL.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
-				306912AC2B5E75C100B14F73 /* Project-macOS */,
+				306912CB2B5E7D7400B14F73 /* Project-macOS */,
 			);
 		};
 /* End PBXProject section */
 
+/* Begin PBXReferenceProxy section */
+		306913402B5E8D1100B14F73 /* SDL2.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = SDL2.framework;
+			remoteRef = 3069133F2B5E8D1100B14F73 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		306913422B5E8D1100B14F73 /* SDL2.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = SDL2.framework;
+			remoteRef = 306913412B5E8D1100B14F73 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		306913442B5E8D1100B14F73 /* SDL2.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = SDL2.framework;
+			remoteRef = 306913432B5E8D1100B14F73 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		306913462B5E8D1100B14F73 /* SDL2.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = SDL2.framework;
+			remoteRef = 306913452B5E8D1100B14F73 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		306913482B5E8D1100B14F73 /* libSDL2.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libSDL2.a;
+			remoteRef = 306913472B5E8D1100B14F73 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		3069134A2B5E8D1100B14F73 /* libSDL2.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libSDL2.a;
+			remoteRef = 306913492B5E8D1100B14F73 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		3069134C2B5E8D1100B14F73 /* libSDL2.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libSDL2.a;
+			remoteRef = 3069134B2B5E8D1100B14F73 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		3069134E2B5E8D1100B14F73 /* libSDL2.dylib */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.dylib";
+			path = libSDL2.dylib;
+			remoteRef = 3069134D2B5E8D1100B14F73 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		306913502B5E8D1100B14F73 /* libSDL2.dylib */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.dylib";
+			path = libSDL2.dylib;
+			remoteRef = 3069134F2B5E8D1100B14F73 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		306913522B5E8D1100B14F73 /* libSDL2.dylib */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.dylib";
+			path = libSDL2.dylib;
+			remoteRef = 306913512B5E8D1100B14F73 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		306913542B5E8D1100B14F73 /* SDL2 */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = SDL2;
+			remoteRef = 306913532B5E8D1100B14F73 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
 /* Begin PBXResourcesBuildPhase section */
-		306912AB2B5E75C100B14F73 /* Resources */ = {
+		306912CA2B5E7D7400B14F73 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				306912B42B5E75C200B14F73 /* Assets.xcassets in Resources */,
-				306912B72B5E75C200B14F73 /* MainMenu.xib in Resources */,
+				306913BC2B5EAFC900B14F73 /* vulkan.cppm in Resources */,
+				306912D32B5E7D7500B14F73 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		306912A92B5E75C100B14F73 /* Sources */ = {
+		306912C82B5E7D7400B14F73 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				306912B92B5E75C200B14F73 /* main.m in Sources */,
-				306912B22B5E75C100B14F73 /* AppDelegate.m in Sources */,
-				306912C22B5E76D100B14F73 /* Test.swift in Sources */,
+				3069132E2B5E8A1A00B14F73 /* Main.cpp in Sources */,
+				3069137A2B5EA06300B14F73 /* VulkanFunctions.cpp in Sources */,
+				306912D12B5E7D7400B14F73 /* AppDelegate.m in Sources */,
+				306913792B5EA06300B14F73 /* VulkanInterface.cpp in Sources */,
+				306912E12B5E7E1D00B14F73 /* Warlock.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXVariantGroup section */
-		306912B52B5E75C200B14F73 /* MainMenu.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				306912B62B5E75C200B14F73 /* Base */,
-			);
-			name = MainMenu.xib;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
-
 /* Begin XCBuildConfiguration section */
-		306912BB2B5E75C200B14F73 /* Debug */ = {
+		306912DA2B5E7D7500B14F73 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -219,7 +581,7 @@
 			};
 			name = Debug;
 		};
-		306912BC2B5E75C200B14F73 /* Release */ = {
+		306912DB2B5E7D7500B14F73 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -273,7 +635,7 @@
 			};
 			name = Release;
 		};
-		306912BE2B5E75C200B14F73 /* Debug */ = {
+		306912DD2B5E7D7500B14F73 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -286,6 +648,7 @@
 				DEVELOPMENT_TEAM = AFP6SAXN8A;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMainNibFile = MainMenu;
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
@@ -297,13 +660,14 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "dev.warlock.Project-macOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "Project-macOS/Project-macOS-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Warlock-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
+				SYSTEM_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../../Libraries/MoltenVK/MoltenVK/include\"";
 			};
 			name = Debug;
 		};
-		306912BF2B5E75C200B14F73 /* Release */ = {
+		306912DE2B5E7D7500B14F73 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -316,6 +680,7 @@
 				DEVELOPMENT_TEAM = AFP6SAXN8A;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMainNibFile = MainMenu;
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
@@ -327,33 +692,34 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "dev.warlock.Project-macOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "Project-macOS/Project-macOS-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Warlock-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
+				SYSTEM_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../../Libraries/MoltenVK/MoltenVK/include\"";
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		306912A82B5E75C100B14F73 /* Build configuration list for PBXProject "Project-macOS" */ = {
+		306912C72B5E7D7400B14F73 /* Build configuration list for PBXProject "Project-macOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				306912BB2B5E75C200B14F73 /* Debug */,
-				306912BC2B5E75C200B14F73 /* Release */,
+				306912DA2B5E7D7500B14F73 /* Debug */,
+				306912DB2B5E7D7500B14F73 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		306912BD2B5E75C200B14F73 /* Build configuration list for PBXNativeTarget "Project-macOS" */ = {
+		306912DC2B5E7D7500B14F73 /* Build configuration list for PBXNativeTarget "Project-macOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				306912BE2B5E75C200B14F73 /* Debug */,
-				306912BF2B5E75C200B14F73 /* Release */,
+				306912DD2B5E7D7500B14F73 /* Debug */,
+				306912DE2B5E7D7500B14F73 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 306912A52B5E75C100B14F73 /* Project object */;
+	rootObject = 306912C42B5E7D7400B14F73 /* Project object */;
 }

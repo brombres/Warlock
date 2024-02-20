@@ -1,9 +1,0 @@
-augment Geometry::Line
-  METHODS
-    method draw( colors:Warlock::Colors )
-      drawable( colors ).draw
-
-    method drawable( colors:Warlock::Colors )->Warlock::DrawableLine
-      return Warlock::DrawableLine( Line(a,b), colors )
-
-endAugment

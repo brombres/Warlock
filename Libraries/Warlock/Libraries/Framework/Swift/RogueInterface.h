@@ -4,25 +4,25 @@
 #if defined(__APPLE__)
   #if defined(TARGET_IPHONE_SIMULATOR)
     #if TARGET_IPHONE_SIMULATOR
-      #define WARLOCK_PLATFORM_IOS 1
-      #define WARLOCK_PLATFORM_IOS_SIMULATOR 1
+      #define PLASMACORE_PLATFORM_IOS 1
+      #define PLASMACORE_PLATFORM_IOS_SIMULATOR 1
     #endif
   #endif
 
-  #if !defined(WARLOCK_PLATFORM_IOS)
+  #if !defined(PLASMACORE_PLATFORM_IOS)
     #if defined(TARGET_OS_IPHONE)
       #if TARGET_OS_IPHONE
-        #define WARLOCK_PLATFORM_IOS 1
+        #define PLASMACORE_PLATFORM_IOS 1
       #endif
     #endif
   #endif
 
-  #if !defined(WARLOCK_PLATFORM_IOS)
-    #define WARLOCK_PLATFORM_MACOS 1
+  #if !defined(PLASMACORE_PLATFORM_IOS)
+    #define PLASMACORE_PLATFORM_MACOS 1
   #endif
 #endif
 
-#ifdef WARLOCK_PLATFORM_MACOS
+#ifdef PLASMACORE_PLATFORM_MACOS
   #import <Cocoa/Cocoa.h>
 #else
   #import <Foundation/Foundation.h>

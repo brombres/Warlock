@@ -1,6 +1,0 @@
-module Warlock
-
-enum FrontFace
-  COUNTER_CLOCKWISE
-  CLOCKWISE
-endEnum

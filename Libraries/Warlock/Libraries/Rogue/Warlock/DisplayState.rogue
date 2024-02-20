@@ -1,9 +1,0 @@
-module Warlock
-
-uses Control/State
-
-class DisplayState : State<<DisplayState>>
-	METHODS
-    method on_draw
-      noAction
-endClass

@@ -1,8 +1,0 @@
-module Warlock
-
-enum TextureFilter
-  NEAREST
-  LINEAR
-  MIPMAP_NEAREST
-  MIPMAP_LINEAR
-endEnum

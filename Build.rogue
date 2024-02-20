@@ -23,6 +23,10 @@ routine rogo_build
   rogo_build_debug
 endRoutine
 
+routine rogo_macos_open
+  execute @|open Platforms/macOS/Project-macOS.xcodeproj
+endRoutine
+
 routine rogo_build_debug
   build( System.os, &debug )
 endRoutine

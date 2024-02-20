@@ -4,7 +4,7 @@
 //#import <AVFoundation/AVAudioPlayer.h>
 
 
-#ifdef WARLOCK_PLATFORM_IOS
+#ifdef PLASMACORE_PLATFORM_IOS
 //  #import <UIKit/UIKit.h>
 //  #import <GLKit/GLKit.h>
   //#import "Project-iOS-Swift.h"
