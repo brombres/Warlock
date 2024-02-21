@@ -40,7 +40,7 @@ routine build( platform:String, &debug )
   block cmd = "roguec Source/Main.rogue Warlock"
     cmd .= appending( "Warlock/Platform/$.rogue"(platform) )
     if (debug) cmd .= appending( "--debug" )
-    cmd .= appending( "--libraries=Libraries/Warlock/Libraries/Rogue" )
+    cmd .= appending( "--libraries=Libraries/Rogue" )
     cmd .= appending( "--target=C++,Warlock,SDL,$"(platform) )
     cmd .= appending( "--gc=manual" )
     cmd .= appending( "--output=$/RogueProgram"(source_folder.esc) )
@@ -172,7 +172,7 @@ routine rogo_build_debug
   File("Build/Web/Source").create_folder
 
   local cmd = "roguec Source/Main.rogue Warlock"
-  cmd .= appending( "--libraries=Libraries/Warlock/Libraries/Rogue" )
+  cmd .= appending( "--libraries=Libraries/Rogue" )
   cmd .= appending( "--target=C,Warlock,SDL,OpenGL,Web" )
   cmd .= appending( "--gc=manual" )
   cmd .= appending( "--output=Build/Web/Source/RogueProgram" )
@@ -207,7 +207,7 @@ endRoutine
 routine rogo_deps
   local index_html = File( "Source/index.html" )
   if (not index_html.exists)
-    File("Libraries/Warlock/Libraries/Framework/Web/index.html").copy_to( index_html )
+    File("Libraries/Framework/Web/index.html").copy_to( index_html )
   endIf
 endRoutine
 }#
