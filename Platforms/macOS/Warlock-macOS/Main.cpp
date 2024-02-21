@@ -14,6 +14,11 @@ using namespace std;
 SDL_Window *window;
 char* window_name = "example SDL2 Vulkan application";
 
+#include <glm/mat4x4.hpp>
+#include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
+using namespace glm;
+
 #include "VulkanInterface.h"
 #include "VulkanFunctions.h"
 Vulkan *vulkan;
@@ -26,6 +31,13 @@ int main(int argc, char *argv[])
 
   vulkan = new Vulkan();
   init_vulkan_extern(vulkan);
+
+	//const array of positions for the triangle
+	const vec3 positions[3] = {
+		vec3(1.f,1.f, 0.0f),
+		vec3(-1.f,1.f, 0.0f),
+		vec3(0.f,-1.f, 0.0f)
+	};
 
   SDL_Event event;
   bool running = true;

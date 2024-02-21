@@ -2,6 +2,9 @@
 # to this folder and type "rogo" at the command line, or "rogo help" for a list
 # of supported commands.
 
+$define GLM_TAG    "1.0.0"
+$define SDL_BRANCH "release-2.30.x"
+
 $requireRogue "2.34"
 
 #$ LIBRARIES(macOS) = sdl2
@@ -97,10 +100,13 @@ routine run( platform:String )
 endRoutine
 
 routine rogo_deps
-  deps
+  # SYNTAX: rogo deps [update|rebuild]*
+  local rebuild = System.command_line_arguments.contains( "rebuild" )
+  local update  = System.command_line_arguments.contains( "update" )
+  deps( &=update, &=rebuild )
 endRoutine
 
-routine deps( &check_for_update )
+routine deps( &update, &rebuild )
   if (not File("Libraries").exists)
     println "> Create Libraries/"
     File("Libraries").create_folder
@@ -113,28 +119,30 @@ routine deps( &check_for_update )
     if (not repo.exists)
       banner "Cloning MoltenVK repo"
       repo.clone( "main", &verbose )
+      rebuild = true
 
-    elseIf (check_for_update and repo.has_remote_changes)
+    elseIf (update and repo.has_remote_changes)
       banner "Updating MoltenVK repo"
       repo.pull( &verbose )
+      rebuild = true
     endIf
 
-    if (not (folder/"External/build/Release").exists)
+    if (rebuild or not (folder/"External/build/Release").exists)
       execute @|cd Libraries/MoltenVK && ./fetchDependencies --macos --ios --iossim
     endIf
 
-    if (not (folder/"Package/Release/MoltenVK/MoltenVK.xcframework/macos-arm64_x86_64").exists)
+    if (rebuild or not (folder/"Package/Release/MoltenVK/MoltenVK.xcframework/macos-arm64_x86_64").exists)
       banner "Building MoltenVK for macOS"
       local cmd = "cd Libraries/MoltenVK"
       execute "cd $ && make macos"(folder.esc)
     endIf
 
-    if (not (folder/"Package/Release/MoltenVK/MoltenVK.xcframework/ios-arm64").exists)
+    if (rebuild or not (folder/"Package/Release/MoltenVK/MoltenVK.xcframework/ios-arm64").exists)
       banner "Building MoltenVK for iOS"
       execute "cd $ && make ios"(folder.esc)
     endIf
 
-    if (not (folder/"Package/Release/MoltenVK/MoltenVK.xcframework/ios-arm64_x86_64-simulator").exists)
+    if (rebuild or not (folder/"Package/Release/MoltenVK/MoltenVK.xcframework/ios-arm64_x86_64-simulator").exists)
       banner "Building MoltenVK for iOS Simulator"
       execute "cd $ && make iossim"(folder.esc)
     endIf
@@ -147,11 +155,34 @@ routine deps( &check_for_update )
 
     if (not repo.exists)
       banner "Cloning SDL repo"
-      repo.clone( "release-2.28.5", &verbose )
+      repo.clone( SDL_BRANCH, &verbose )
 
-    elseIf (check_for_update and repo.has_remote_changes)
-      banner "Updating SDL repo"
-      repo.pull( &verbose )
+    elseIf (update)
+      if (repo.branch != SDL_BRANCH) repo.checkout( SDL_BRANCH, &verbose )
+
+      if (repo.has_remote_changes)
+        banner "Updating SDL repo"
+        repo.pull( &verbose )
+      endIf
+    endIf
+  endIf
+
+  -------- Libraries/glm --------
+  if System.is_macos
+    local folder = File("Libraries/glm")
+    local repo = GitRepo( "https://github.com/g-truc/glm.git", folder )
+
+    if (not repo.exists)
+      banner "Cloning GLM repo"
+      repo.clone( GLM_TAG, &verbose )
+
+    elseIf (update)
+      if (repo.tag != GLM_TAG) repo.checkout( GLM_TAG, &verbose )
+
+      if (repo.has_remote_changes)
+        banner "Updating GLM repo"
+        repo.pull( &verbose )
+      endIf
     endIf
   endIf
 
