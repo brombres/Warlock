@@ -24,7 +24,7 @@ routine rogo_build
 endRoutine
 
 routine rogo_macos_open
-  execute @|open Platforms/macOS/Project-macOS.xcodeproj
+  execute @|open Platforms/macOS/Warlock-macOS.xcodeproj
 endRoutine
 
 routine rogo_build_debug
