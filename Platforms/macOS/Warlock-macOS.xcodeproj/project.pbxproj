@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		302861482B87866800241F25 /* VulkanRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 302861472B87866800241F25 /* VulkanRenderer.cpp */; };
+		3028614B2B87956300241F25 /* SDLDisplayManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3028614A2B87956300241F25 /* SDLDisplayManager.cpp */; };
+		302861502B87957700241F25 /* WarlockDisplayManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3028614E2B87957700241F25 /* WarlockDisplayManager.cpp */; };
+		302861512B87957700241F25 /* WarlockRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3028614F2B87957700241F25 /* WarlockRenderer.cpp */; };
+		302861542B87973C00241F25 /* SDLVulkanDisplayManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 302861532B87973C00241F25 /* SDLVulkanDisplayManager.cpp */; };
+		302861572B87980B00241F25 /* WarlockEngine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 302861552B87980B00241F25 /* WarlockEngine.cpp */; };
 		306912D12B5E7D7400B14F73 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 306912D02B5E7D7400B14F73 /* AppDelegate.m */; };
 		306912D32B5E7D7500B14F73 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 306912D22B5E7D7500B14F73 /* Assets.xcassets */; };
 		306912E12B5E7E1D00B14F73 /* Warlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 306912E02B5E7E1D00B14F73 /* Warlock.swift */; };
@@ -114,6 +120,18 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3028613B2B87866800241F25 /* VulkanRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VulkanRenderer.h; path = ../../Libraries/Framework/Vulkan/VulkanRenderer.h; sourceTree = "<group>"; };
+		302861472B87866800241F25 /* VulkanRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VulkanRenderer.cpp; path = ../../Libraries/Framework/Vulkan/VulkanRenderer.cpp; sourceTree = "<group>"; };
+		302861492B87956300241F25 /* SDLDisplayManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDLDisplayManager.h; path = ../../Libraries/Framework/SDL/SDLDisplayManager.h; sourceTree = "<group>"; };
+		3028614A2B87956300241F25 /* SDLDisplayManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SDLDisplayManager.cpp; path = ../../Libraries/Framework/SDL/SDLDisplayManager.cpp; sourceTree = "<group>"; };
+		3028614C2B87957700241F25 /* WarlockDisplayManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WarlockDisplayManager.h; path = ../../Libraries/Framework/Warlock/WarlockDisplayManager.h; sourceTree = "<group>"; };
+		3028614D2B87957700241F25 /* WarlockRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WarlockRenderer.h; path = ../../Libraries/Framework/Warlock/WarlockRenderer.h; sourceTree = "<group>"; };
+		3028614E2B87957700241F25 /* WarlockDisplayManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WarlockDisplayManager.cpp; path = ../../Libraries/Framework/Warlock/WarlockDisplayManager.cpp; sourceTree = "<group>"; };
+		3028614F2B87957700241F25 /* WarlockRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WarlockRenderer.cpp; path = ../../Libraries/Framework/Warlock/WarlockRenderer.cpp; sourceTree = "<group>"; };
+		302861522B87973C00241F25 /* SDLVulkanDisplayManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDLVulkanDisplayManager.h; path = ../../Libraries/Framework/SDL/SDLVulkanDisplayManager.h; sourceTree = "<group>"; };
+		302861532B87973C00241F25 /* SDLVulkanDisplayManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SDLVulkanDisplayManager.cpp; path = ../../Libraries/Framework/SDL/SDLVulkanDisplayManager.cpp; sourceTree = "<group>"; };
+		302861552B87980B00241F25 /* WarlockEngine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WarlockEngine.cpp; path = ../../Libraries/Framework/Warlock/WarlockEngine.cpp; sourceTree = "<group>"; };
+		302861562B87980B00241F25 /* WarlockEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WarlockEngine.h; path = ../../Libraries/Framework/Warlock/WarlockEngine.h; sourceTree = "<group>"; };
 		306912CC2B5E7D7400B14F73 /* Warlock-macOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Warlock-macOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		306912CF2B5E7D7400B14F73 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		306912D02B5E7D7400B14F73 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -256,6 +274,18 @@
 		306913742B5EA02C00B14F73 /* Warlock */ = {
 			isa = PBXGroup;
 			children = (
+				302861552B87980B00241F25 /* WarlockEngine.cpp */,
+				302861562B87980B00241F25 /* WarlockEngine.h */,
+				302861532B87973C00241F25 /* SDLVulkanDisplayManager.cpp */,
+				302861522B87973C00241F25 /* SDLVulkanDisplayManager.h */,
+				3028614E2B87957700241F25 /* WarlockDisplayManager.cpp */,
+				3028614C2B87957700241F25 /* WarlockDisplayManager.h */,
+				3028614F2B87957700241F25 /* WarlockRenderer.cpp */,
+				3028614D2B87957700241F25 /* WarlockRenderer.h */,
+				3028614A2B87956300241F25 /* SDLDisplayManager.cpp */,
+				302861492B87956300241F25 /* SDLDisplayManager.h */,
+				302861472B87866800241F25 /* VulkanRenderer.cpp */,
+				3028613B2B87866800241F25 /* VulkanRenderer.h */,
 				306913782B5EA06300B14F73 /* VulkanFunctions.cpp */,
 				306913772B5EA06300B14F73 /* VulkanFunctions.h */,
 				306913762B5EA06300B14F73 /* VulkanInterface.cpp */,
@@ -509,11 +539,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				302861512B87957700241F25 /* WarlockRenderer.cpp in Sources */,
 				30804D332B865E9600E8EF3E /* VulkanFunctions.cpp in Sources */,
 				30804D342B865E9600E8EF3E /* VulkanInterface.cpp in Sources */,
 				3069132E2B5E8A1A00B14F73 /* Main.cpp in Sources */,
+				302861482B87866800241F25 /* VulkanRenderer.cpp in Sources */,
+				302861542B87973C00241F25 /* SDLVulkanDisplayManager.cpp in Sources */,
 				306912D12B5E7D7400B14F73 /* AppDelegate.m in Sources */,
 				306912E12B5E7E1D00B14F73 /* Warlock.swift in Sources */,
+				302861572B87980B00241F25 /* WarlockEngine.cpp in Sources */,
+				302861502B87957700241F25 /* WarlockDisplayManager.cpp in Sources */,
+				3028614B2B87956300241F25 /* SDLDisplayManager.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

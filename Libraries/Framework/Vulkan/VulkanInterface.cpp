@@ -1,3 +1,4 @@
+/*
 #include "VulkanInterface.h"
 
 void init_vulkan_extern(Vulkan *vulkan)
@@ -551,3 +552,4 @@ void Vulkan::createFences()
  vkCreateFence(device, &createInfo, nullptr, &fences[i]);
  }
 }
+*/

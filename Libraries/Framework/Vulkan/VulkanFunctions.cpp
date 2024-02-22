@@ -1,3 +1,4 @@
+/*
 #include "VulkanFunctions.h"
 
 #include "VulkanInterface.h"
@@ -119,3 +120,4 @@ void SetScissor(int width,int height)
  scissor.offset.y = 0;
  vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
 }
+*/

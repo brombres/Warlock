@@ -7,6 +7,20 @@
 
 #include "Main.hpp"
 
+#include "SDLVulkanDisplayManager.h"
+#include "WarlockEngine.h"
+#include "VulkanRenderer.h"
+using namespace Warlock;
+
+int main( int argc, char *argv[] )
+{
+  Engine engine;
+  engine.configure( new SDLVulkanDisplayManager() );
+
+  return 0;
+}
+
+/*
 #include <iostream>
 using namespace std;
 
@@ -79,3 +93,4 @@ int main(int argc, char *argv[])
   SDL_Quit();
   return 0;
 }
+*/
