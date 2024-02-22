@@ -132,6 +132,7 @@
 		302861532B87973C00241F25 /* SDLVulkanDisplay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SDLVulkanDisplay.cpp; path = ../../Libraries/Framework/SDL/SDLVulkanDisplay.cpp; sourceTree = "<group>"; };
 		302861552B87980B00241F25 /* WarlockEngine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WarlockEngine.cpp; path = ../../Libraries/Framework/Warlock/WarlockEngine.cpp; sourceTree = "<group>"; };
 		302861562B87980B00241F25 /* WarlockEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WarlockEngine.h; path = ../../Libraries/Framework/Warlock/WarlockEngine.h; sourceTree = "<group>"; };
+		302861592B87AF4400241F25 /* RefCounted.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RefCounted.h; path = ../../Libraries/Framework/General/RefCounted.h; sourceTree = "<group>"; };
 		306912CC2B5E7D7400B14F73 /* Warlock-macOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Warlock-macOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		306912CF2B5E7D7400B14F73 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		306912D02B5E7D7400B14F73 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -274,6 +275,7 @@
 		306913742B5EA02C00B14F73 /* Warlock */ = {
 			isa = PBXGroup;
 			children = (
+				302861592B87AF4400241F25 /* RefCounted.h */,
 				302861552B87980B00241F25 /* WarlockEngine.cpp */,
 				302861562B87980B00241F25 /* WarlockEngine.h */,
 				302861532B87973C00241F25 /* SDLVulkanDisplay.cpp */,

@@ -1,5 +1,6 @@
 #include "SDLVulkanDisplay.h"
 #include "VulkanRenderer.h"
+using namespace Warlock;
 
 SDLVulkanDisplay::~SDLVulkanDisplay()
 {

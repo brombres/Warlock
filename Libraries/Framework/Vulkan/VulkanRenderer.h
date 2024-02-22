@@ -7,11 +7,16 @@
 
 #include <vulkan/vulkan.h>
 
-struct VulkanRenderer : Warlock::Renderer
+namespace Warlock
+{
+
+struct VulkanRenderer : Renderer
 {
   // Adapted from: https://vkguide.dev
 };
 
 static const char* vkResult_to_c_string( VkResult result );
+
+}; // namespace Warlock
 
 #endif // VULKAN_RENDERER_H

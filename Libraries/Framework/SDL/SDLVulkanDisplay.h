@@ -5,10 +5,15 @@
 
 #include "SDLDisplay.h"
 
+namespace Warlock
+{
+
 struct SDLVulkanDisplay : SDLDisplay
 {
   ~SDLVulkanDisplay();
   virtual void configure();
 };
+
+}; // namespace Warlock
 
 #endif // SDL_VULKAN_DISPLAY

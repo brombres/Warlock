@@ -5,8 +5,13 @@
 
 #include "WarlockDisplay.h"
 
-struct SDLDisplay : Warlock::Display
+namespace Warlock
+{
+
+struct SDLDisplay : Display
 {
 };
+
+}; // namespace Warlock
 
 #endif // SDL_DISPLAY
