@@ -1,4 +1,4 @@
-#include "WarlockRenderer.h"
+#include "Renderer.h"
 using namespace Warlock;
 
 Renderer::~Renderer()

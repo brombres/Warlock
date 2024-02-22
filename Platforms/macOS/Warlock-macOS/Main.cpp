@@ -8,7 +8,7 @@
 #include "Main.hpp"
 
 #include "SDLVulkanDisplay.h"
-#include "WarlockEngine.h"
+#include "Engine.h"
 #include "VulkanRenderer.h"
 using namespace Warlock;
 

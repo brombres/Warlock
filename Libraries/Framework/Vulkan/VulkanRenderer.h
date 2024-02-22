@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "WarlockRenderer.h"
+#include "Renderer.h"
 
 #include <vulkan/vulkan.h>
 

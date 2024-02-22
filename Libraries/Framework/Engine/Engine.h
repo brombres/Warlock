@@ -3,8 +3,8 @@
 
 #pragma once
 
-#include "WarlockDisplay.h"
-#include "WarlockRenderer.h"
+#include "Display.h"
+#include "Renderer.h"
 
 namespace Warlock
 {

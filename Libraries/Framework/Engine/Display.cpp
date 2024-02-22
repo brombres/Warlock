@@ -1,4 +1,4 @@
-#include "WarlockDisplay.h"
+#include "Display.h"
 using namespace Warlock;
 
 Display::~Display()

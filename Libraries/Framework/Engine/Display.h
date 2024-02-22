@@ -3,8 +3,8 @@
 
 #pragma once
 
-#include "SmartPointer.h"
-#include "WarlockRenderer.h"
+#include "RefCounted.h"
+#include "Renderer.h"
 
 namespace Warlock
 {

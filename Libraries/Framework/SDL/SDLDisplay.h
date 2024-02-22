@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "WarlockDisplay.h"
+#include "Display.h"
 
 namespace Warlock
 {
