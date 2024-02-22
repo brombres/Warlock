@@ -3,22 +3,22 @@ using namespace Warlock;
 
 Engine::~Engine()
 {
-  if (display_manager)
+  if (display)
   {
-    delete display_manager;
-    display_manager = nullptr;
+    delete display;
+    display = nullptr;
   }
 }
 
-void Engine::configure( Warlock::DisplayManager* manager )
+void Engine::configure( Warlock::Display* manager )
 {
-  if (this->display_manager) delete this->display_manager;
+  if (this->display) delete this->display;
 
-  this->display_manager = display_manager;
+  this->display = display;
 
-  if (display_manager)
+  if (display)
   {
-    display_manager->configure();
+    display->configure();
   }
 }
 

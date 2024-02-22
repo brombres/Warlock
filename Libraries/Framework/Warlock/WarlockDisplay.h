@@ -1,5 +1,5 @@
-#ifndef WARLOCK_DISPLAY_MANAGER
-#define WARLOCK_DISPLAY_MANAGER
+#ifndef WARLOCK_DISPLAY
+#define WARLOCK_DISPLAY
 
 #pragma once
 
@@ -7,14 +7,14 @@
 
 namespace Warlock
 {
-  struct DisplayManager
+  struct Display
   {
     Warlock::Renderer* renderer = nullptr;
 
-    ~DisplayManager();
+    ~Display();
 
     virtual void configure() {}
   };
 };
 
-#endif // WARLOCK_DISPLAY_MANAGER
+#endif // WARLOCK_DISPLAY

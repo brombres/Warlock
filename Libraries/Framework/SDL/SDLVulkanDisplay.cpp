@@ -1,7 +1,7 @@
-#include "SDLVulkanDisplayManager.h"
+#include "SDLVulkanDisplay.h"
 #include "VulkanRenderer.h"
 
-SDLVulkanDisplayManager::~SDLVulkanDisplayManager()
+SDLVulkanDisplay::~SDLVulkanDisplay()
 {
   if (renderer)
   {
@@ -10,7 +10,7 @@ SDLVulkanDisplayManager::~SDLVulkanDisplayManager()
   }
 }
 
-void SDLVulkanDisplayManager::configure()
+void SDLVulkanDisplay::configure()
 {
   renderer = new VulkanRenderer();
 }
