@@ -5,6 +5,7 @@
 
 #include "Display.h"
 #include "Renderer.h"
+#include "Window.h"
 
 namespace Warlock
 {
@@ -14,7 +15,9 @@ namespace Warlock
 
     ~Engine();
 
-    virtual void configure( Warlock::Display* manager );
+    virtual void configure( Warlock::Display* display );
+
+    virtual Window create_window();
   };
 };
 

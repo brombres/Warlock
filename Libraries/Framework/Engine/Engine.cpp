@@ -10,15 +10,15 @@ Engine::~Engine()
   }
 }
 
-void Engine::configure( Warlock::Display* manager )
+void Engine::configure( Warlock::Display* new_display )
 {
-  if (this->display) delete this->display;
-
-  this->display = display;
-
-  if (display)
-  {
-    display->configure();
-  }
+  if (display == new_display) return;
+  if (display) delete display;
+  display = new_display;
+  if (new_display) new_display->configure();
 }
 
+Window Engine::create_window()
+{
+  return Window();
+}

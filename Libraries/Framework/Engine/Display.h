@@ -3,7 +3,6 @@
 
 #pragma once
 
-#include "RefCounted.h"
 #include "Renderer.h"
 
 namespace Warlock

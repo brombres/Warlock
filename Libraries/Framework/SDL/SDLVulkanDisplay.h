@@ -11,7 +11,8 @@ namespace Warlock
 struct SDLVulkanDisplay : SDLDisplay
 {
   ~SDLVulkanDisplay();
-  virtual void configure();
+  virtual void            configure();
+  virtual SDL_WindowFlags window_creation_flags();
 };
 
 }; // namespace Warlock
