@@ -20,5 +20,6 @@ void Engine::configure( Warlock::Display* new_display )
 
 Window Engine::create_window()
 {
+  if (display) return display->create_window();
   return Window();
 }

@@ -4,6 +4,7 @@
 #pragma once
 
 #include "Renderer.h"
+#include "Window.h"
 
 namespace Warlock
 {
@@ -14,6 +15,7 @@ namespace Warlock
     ~Display();
 
     virtual void configure() {}
+    virtual Window create_window();
   };
 };
 
