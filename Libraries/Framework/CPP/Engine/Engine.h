@@ -5,7 +5,6 @@
 
 #include "Display.h"
 #include "Renderer.h"
-#include "Window.h"
 
 namespace Warlock
 {

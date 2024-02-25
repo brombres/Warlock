@@ -41,6 +41,11 @@ struct ArrayList
     return *this;
   }
 
+  DataType& last()
+  {
+    return data[count-1];
+  }
+
   int locate( DataType value )
   {
     for (int i=0, n=count; --n>=0; ++i)

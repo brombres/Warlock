@@ -18,7 +18,7 @@ int main( int argc, char *argv[] )
   engine.configure( new SDLVulkanDisplay() );
 
   Window window = engine.create_window();
-  printf("window: %llx\n",window.data);
+  printf("window: %d\n",window);
 
   bool bQuit = false;
 

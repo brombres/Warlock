@@ -6,23 +6,17 @@
 #include <SDL2/SDL.h>
 
 #include "Display.h"
-#include "Window.h"
+#include "ResourceBank.h"
 
 namespace Warlock
 {
 
 struct SDLDisplay : Display
 {
+  ResourceBank<Window,SDL_Window*> windows;
+
   virtual Window          create_window();
   virtual SDL_WindowFlags window_creation_flags();
-};
-
-struct SDLWindowData : WindowData
-{
-  SDL_Window* sdl_window = nullptr;
-
-  SDLWindowData( SDL_Window* sdl_window ) { this->sdl_window = sdl_window; }
-  ~SDLWindowData() { if (sdl_window) SDL_DestroyWindow(sdl_window); }
 };
 
 }; // namespace Warlock

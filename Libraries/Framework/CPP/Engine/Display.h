@@ -4,10 +4,11 @@
 #pragma once
 
 #include "Renderer.h"
-#include "Window.h"
 
 namespace Warlock
 {
+  typedef int Window;
+
   struct Display
   {
     Warlock::Renderer* renderer = nullptr;
