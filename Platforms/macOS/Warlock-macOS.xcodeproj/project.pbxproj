@@ -135,6 +135,7 @@
 		302861592B87AF4400241F25 /* RefCounted.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RefCounted.h; path = ../../Libraries/Framework/CPP/Engine/RefCounted.h; sourceTree = "<group>"; };
 		3028617B2B89086200241F25 /* ResourceBank.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ResourceBank.h; path = ../../Libraries/Framework/CPP/Engine/ResourceBank.h; sourceTree = "<group>"; };
 		302861872B89086300241F25 /* ArrayList.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ArrayList.h; path = ../../Libraries/Framework/CPP/Engine/ArrayList.h; sourceTree = "<group>"; };
+		302861A02B8BA10700241F25 /* VkBootstrap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = VkBootstrap.h; path = ../../Libraries/Framework/CPP/Engine/Vulkan/VkBootstrap.h; sourceTree = "<group>"; };
 		306912CC2B5E7D7400B14F73 /* Warlock-macOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Warlock-macOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		306912CF2B5E7D7400B14F73 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		306912D02B5E7D7400B14F73 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -277,6 +278,7 @@
 		306913742B5EA02C00B14F73 /* Warlock */ = {
 			isa = PBXGroup;
 			children = (
+				302861A02B8BA10700241F25 /* VkBootstrap.h */,
 				302861872B89086300241F25 /* ArrayList.h */,
 				3028617B2B89086200241F25 /* ResourceBank.h */,
 				302861592B87AF4400241F25 /* RefCounted.h */,

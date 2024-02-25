@@ -1,6 +1,8 @@
 #include "VulkanRenderer.h"
 using namespace Warlock;
 
+#include "VkBootstrap.h"
+
 // https://www.reddit.com/r/vulkan/comments/zxgst4/comment/j29a1kl/?utm_source=share&utm_medium=web2x&context=3
 static const char* vkResult_to_c_string( VkResult result )
 {
