@@ -15,6 +15,8 @@ struct SDLDisplay : Display
 {
   ResourceBank<Window,SDL_Window*> windows;
 
+  ~SDLDisplay();
+
   virtual Window          create_window();
   virtual SDL_WindowFlags window_creation_flags();
 };

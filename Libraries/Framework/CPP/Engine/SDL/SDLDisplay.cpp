@@ -1,6 +1,14 @@
 #include "SDLDisplay.h"
 using namespace Warlock;
 
+SDLDisplay::~SDLDisplay()
+{
+  while (windows.count)
+  {
+    SDL_DestroyWindow( windows.remove_last() );
+  }
+}
+
 Window SDLDisplay::create_window()
 {
   SDL_WindowFlags flags = window_creation_flags();

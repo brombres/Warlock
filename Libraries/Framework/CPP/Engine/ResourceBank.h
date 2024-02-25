@@ -62,7 +62,7 @@ struct ResourceBank
     return result;
   }
 
-  ResourceType remove_last( IDType id )
+  ResourceType remove_last()
   {
     return remove( ids.last() );
   }
