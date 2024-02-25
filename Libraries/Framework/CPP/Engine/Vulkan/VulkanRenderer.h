@@ -18,6 +18,11 @@ struct VulkanRenderer : Renderer
 	VkPhysicalDevice         gpu;
 	VkDevice                 device;
 	VkSurfaceKHR             surface;
+
+  VulkanRenderer();
+  ~VulkanRenderer();
+
+  virtual void configure( Display* display );
 };
 
 static const char* vkResult_to_c_string( VkResult result );

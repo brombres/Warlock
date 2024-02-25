@@ -3,6 +3,66 @@ using namespace Warlock;
 
 #include "VkBootstrap.h"
 
+VulkanRenderer::VulkanRenderer()
+{
+}
+
+VulkanRenderer::~VulkanRenderer()
+{
+}
+
+void VulkanRenderer::configure( Display* display )
+{
+  /*
+	vkb::InstanceBuilder builder;
+
+	//make the vulkan instance, with basic debug features
+	auto inst_ret = builder.set_app_name( "Warlock" )
+		.request_validation_layers( false )
+		.use_default_debug_messenger()
+		.require_api_version(1, 3, 0)
+		.build();
+
+	vkb::Instance vkb_inst = inst_ret.value();
+
+	instance = vkb_inst.instance;
+	debug_messenger = vkb_inst.debug_messenger;
+
+  SDL_Vulkan_CreateSurface(_window, instance, &surface);
+
+	//vulkan 1.3 features
+	VkPhysicalDeviceVulkan13Features features{};
+	features.dynamicRendering = true;
+	features.synchronization2 = true;
+
+	//vulkan 1.2 features
+	VkPhysicalDeviceVulkan12Features features12{};
+	features12.bufferDeviceAddress = true;
+	features12.descriptorIndexing = true;
+
+	//use vkbootstrap to select a gpu.
+	//We want a gpu that can write to the SDL surface and supports vulkan 1.3 with the correct features
+	vkb::PhysicalDeviceSelector selector{ vkb_inst };
+	vkb::PhysicalDevice physicalDevice = selector
+		.set_minimum_version(1, 3)
+		.set_required_features_13(features)
+		.set_required_features_12(features12)
+		.set_surface(surface)
+		.select()
+		.value();
+
+
+	//create the final vulkan device
+	vkb::DeviceBuilder deviceBuilder{ physicalDevice };
+
+	vkb::Device vkbDevice = deviceBuilder.build().value();
+
+	// Get the VkDevice handle used in the rest of a vulkan application
+	_device = vkbDevice.device;
+	_chosenGPU = physicalDevice.physical_device;
+  */
+}
+
 // https://www.reddit.com/r/vulkan/comments/zxgst4/comment/j29a1kl/?utm_source=share&utm_medium=web2x&context=3
 static const char* vkResult_to_c_string( VkResult result )
 {

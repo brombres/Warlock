@@ -3,11 +3,15 @@
 
 #pragma once
 
+#include "Display.h"
+
 namespace Warlock
 {
   struct Renderer
   {
     ~Renderer();
+
+    virtual void configure( Display* display ) {}
   };
 };
 

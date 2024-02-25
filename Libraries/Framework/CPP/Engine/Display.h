@@ -3,15 +3,15 @@
 
 #pragma once
 
-#include "Renderer.h"
-
 namespace Warlock
 {
+  struct Renderer;
+
   typedef int Window;
 
   struct Display
   {
-    Warlock::Renderer* renderer = nullptr;
+    Renderer* renderer = nullptr;
 
     ~Display();
 
