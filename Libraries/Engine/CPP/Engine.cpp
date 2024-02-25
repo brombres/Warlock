@@ -10,7 +10,7 @@ Engine::~Engine()
   }
 }
 
-void Engine::configure( Warlock::Display* new_display )
+void Engine::configure( Warlock::Framework* new_display )
 {
   if (display == new_display) return;
   if (display) delete display;

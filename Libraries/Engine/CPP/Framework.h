@@ -9,11 +9,11 @@ namespace Warlock
 
   typedef int Window;
 
-  struct Display
+  struct Framework
   {
     Renderer* renderer = nullptr;
 
-    ~Display();
+    ~Framework();
 
     virtual void configure() {}
     virtual Window create_window();

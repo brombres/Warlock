@@ -11,7 +11,7 @@ VulkanRenderer::~VulkanRenderer()
 {
 }
 
-void VulkanRenderer::configure( Display* display )
+void VulkanRenderer::configure( Framework* display )
 {
   /*
 	vkb::InstanceBuilder builder;

@@ -3,18 +3,18 @@
 
 #pragma once
 
-#include "Display.h"
+#include "Framework.h"
 #include "Renderer.h"
 
 namespace Warlock
 {
   struct Engine
   {
-    Warlock::Display* display = nullptr;
+    Warlock::Framework* display = nullptr;
 
     ~Engine();
 
-    virtual void configure( Warlock::Display* display );
+    virtual void configure( Warlock::Framework* display );
 
     virtual Window create_window();
   };

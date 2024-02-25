@@ -1,7 +1,7 @@
-#include "SDLDisplay.h"
+#include "SDLFramework.h"
 using namespace Warlock;
 
-SDLDisplay::~SDLDisplay()
+SDLFramework::~SDLFramework()
 {
   while (windows.count)
   {
@@ -9,7 +9,7 @@ SDLDisplay::~SDLDisplay()
   }
 }
 
-Window SDLDisplay::create_window()
+Window SDLFramework::create_window()
 {
   SDL_WindowFlags flags = window_creation_flags();
   if (flags & SDL_WINDOW_VULKAN) printf("SDL_WINDOW_VULKAN:%08x\n",SDL_WINDOW_SHOWN);
@@ -28,7 +28,7 @@ Window SDLDisplay::create_window()
   );
 }
 
-SDL_WindowFlags SDLDisplay::window_creation_flags()
+SDL_WindowFlags SDLFramework::window_creation_flags()
 {
   return (SDL_WindowFlags)SDL_WINDOW_SHOWN;
 }

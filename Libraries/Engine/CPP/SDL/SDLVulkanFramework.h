@@ -3,14 +3,14 @@
 
 #pragma once
 
-#include "SDLDisplay.h"
+#include "SDLFramework.h"
 
 namespace Warlock
 {
 
-struct SDLVulkanDisplay : SDLDisplay
+struct SDLVulkanFramework : SDLFramework
 {
-  ~SDLVulkanDisplay();
+  ~SDLVulkanFramework();
   virtual void            configure();
   virtual SDL_WindowFlags window_creation_flags();
 };

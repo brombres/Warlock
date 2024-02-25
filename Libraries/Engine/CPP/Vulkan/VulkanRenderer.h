@@ -22,7 +22,7 @@ struct VulkanRenderer : Renderer
   VulkanRenderer();
   ~VulkanRenderer();
 
-  virtual void configure( Display* display );
+  virtual void configure( Framework* display );
 };
 
 static const char* vkResult_to_c_string( VkResult result );

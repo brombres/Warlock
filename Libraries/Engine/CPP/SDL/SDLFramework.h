@@ -5,17 +5,17 @@
 
 #include <SDL2/SDL.h>
 
-#include "Display.h"
+#include "Framework.h"
 #include "ResourceBank.h"
 
 namespace Warlock
 {
 
-struct SDLDisplay : Display
+struct SDLFramework : Framework
 {
   ResourceBank<Window,SDL_Window*> windows;
 
-  ~SDLDisplay();
+  ~SDLFramework();
 
   virtual Window          create_window();
   virtual SDL_WindowFlags window_creation_flags();

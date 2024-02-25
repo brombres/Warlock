@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "Display.h"
+#include "Framework.h"
 
 namespace Warlock
 {
@@ -11,7 +11,7 @@ namespace Warlock
   {
     ~Renderer();
 
-    virtual void configure( Display* display ) {}
+    virtual void configure( Framework* display ) {}
   };
 };
 

@@ -7,7 +7,7 @@
 
 #include "Main.hpp"
 
-#include "SDLVulkanDisplay.h"
+#include "SDLVulkanFramework.h"
 #include "Engine.h"
 #include "VulkanRenderer.h"
 using namespace Warlock;
@@ -15,7 +15,7 @@ using namespace Warlock;
 int main( int argc, char *argv[] )
 {
   Engine engine;
-  engine.configure( new SDLVulkanDisplay() );
+  engine.configure( new SDLVulkanFramework() );
 
   Window window = engine.create_window();
   printf("window: %d\n",window);
