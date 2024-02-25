@@ -11,23 +11,24 @@ VulkanRenderer::~VulkanRenderer()
 {
 }
 
-void VulkanRenderer::configure( Framework* display )
+void VulkanRenderer::configure()
 {
-  /*
-	vkb::InstanceBuilder builder;
+	vkb::InstanceBuilder builder( vkGetInstanceProcAddr );
 
 	//make the vulkan instance, with basic debug features
 	auto inst_ret = builder.set_app_name( "Warlock" )
-		.request_validation_layers( false )
+		.request_validation_layers( true )
 		.use_default_debug_messenger()
-		.require_api_version(1, 3, 0)
+		.require_api_version(1, 2, 0)
 		.build();
 
 	vkb::Instance vkb_inst = inst_ret.value();
 
 	instance = vkb_inst.instance;
 	debug_messenger = vkb_inst.debug_messenger;
+}
 
+  /*
   SDL_Vulkan_CreateSurface(_window, instance, &surface);
 
 	//vulkan 1.3 features
@@ -61,7 +62,6 @@ void VulkanRenderer::configure( Framework* display )
 	_device = vkbDevice.device;
 	_chosenGPU = physicalDevice.physical_device;
   */
-}
 
 // https://www.reddit.com/r/vulkan/comments/zxgst4/comment/j29a1kl/?utm_source=share&utm_medium=web2x&context=3
 static const char* vkResult_to_c_string( VkResult result )

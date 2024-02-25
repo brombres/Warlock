@@ -13,8 +13,11 @@ SDLVulkanFramework::~SDLVulkanFramework()
 
 void SDLVulkanFramework::configure()
 {
-  renderer = new VulkanRenderer();
   SDL_Init( SDL_INIT_VIDEO );
+  int error = SDL_Vulkan_LoadLibrary( NULL );
+  printf("LOAD ERROR: %d\n",error);
+  renderer = new VulkanRenderer();
+  renderer->configure();
 }
 
 SDL_WindowFlags SDLVulkanFramework::window_creation_flags()

@@ -11,7 +11,7 @@ namespace Warlock
   {
     ~Renderer();
 
-    virtual void configure( Framework* display ) {}
+    virtual void configure() {}
   };
 };
 

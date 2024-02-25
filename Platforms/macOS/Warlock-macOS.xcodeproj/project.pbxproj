@@ -13,6 +13,7 @@
 		302861512B87957700241F25 /* Renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3028614F2B87957700241F25 /* Renderer.cpp */; };
 		302861542B87973C00241F25 /* SDLVulkanFramework.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 302861532B87973C00241F25 /* SDLVulkanFramework.cpp */; };
 		302861572B87980B00241F25 /* Engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 302861552B87980B00241F25 /* Engine.cpp */; };
+		302861B22B8BB3CC00241F25 /* VkBootstrap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 302861A62B8BB38A00241F25 /* VkBootstrap.cpp */; };
 		306912D12B5E7D7400B14F73 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 306912D02B5E7D7400B14F73 /* AppDelegate.m */; };
 		306912D32B5E7D7500B14F73 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 306912D22B5E7D7500B14F73 /* Assets.xcassets */; };
 		306912E12B5E7E1D00B14F73 /* Warlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 306912E02B5E7E1D00B14F73 /* Warlock.swift */; };
@@ -136,6 +137,8 @@
 		3028617B2B89086200241F25 /* ResourceBank.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ResourceBank.h; path = ../../Libraries/Engine/CPP/ResourceBank.h; sourceTree = "<group>"; };
 		302861872B89086300241F25 /* ArrayList.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ArrayList.h; path = ../../Libraries/Engine/CPP/ArrayList.h; sourceTree = "<group>"; };
 		302861A02B8BA10700241F25 /* VkBootstrap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = VkBootstrap.h; path = ../../Libraries/Engine/CPP/Vulkan/VkBootstrap.h; sourceTree = "<group>"; };
+		302861A62B8BB38A00241F25 /* VkBootstrap.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = VkBootstrap.cpp; path = ../../Libraries/Engine/CPP/Vulkan/VkBootstrap.cpp; sourceTree = "<group>"; };
+		302861B32B8BB7C100241F25 /* VkBootstrapDispatch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = VkBootstrapDispatch.h; path = ../../Libraries/Engine/CPP/Vulkan/VkBootstrapDispatch.h; sourceTree = "<group>"; };
 		306912CC2B5E7D7400B14F73 /* Warlock-macOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Warlock-macOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		306912CF2B5E7D7400B14F73 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		306912D02B5E7D7400B14F73 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -278,6 +281,8 @@
 		306913742B5EA02C00B14F73 /* Warlock */ = {
 			isa = PBXGroup;
 			children = (
+				302861B32B8BB7C100241F25 /* VkBootstrapDispatch.h */,
+				302861A62B8BB38A00241F25 /* VkBootstrap.cpp */,
 				302861A02B8BA10700241F25 /* VkBootstrap.h */,
 				302861872B89086300241F25 /* ArrayList.h */,
 				3028617B2B89086200241F25 /* ResourceBank.h */,
@@ -547,6 +552,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				302861B22B8BB3CC00241F25 /* VkBootstrap.cpp in Sources */,
 				302861512B87957700241F25 /* Renderer.cpp in Sources */,
 				30804D332B865E9600E8EF3E /* VulkanFunctions.cpp in Sources */,
 				30804D342B865E9600E8EF3E /* VulkanInterface.cpp in Sources */,

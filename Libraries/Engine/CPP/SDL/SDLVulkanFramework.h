@@ -4,6 +4,7 @@
 #pragma once
 
 #include "SDLFramework.h"
+#include <SDL2/SDL_vulkan.h>
 
 namespace Warlock
 {
