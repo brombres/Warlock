@@ -1,5 +1,5 @@
-#ifndef SDL_VULKAN_DISPLAY
-#define SDL_VULKAN_DISPLAY
+#ifndef SDL_VULKAN_FRAMEWORK
+#define SDL_VULKAN_FRAMEWORK
 
 #pragma once
 
@@ -18,4 +18,4 @@ struct SDLVulkanFramework : SDLFramework
 
 }; // namespace Warlock
 
-#endif // SDL_VULKAN_DISPLAY
+#endif // SDL_VULKAN_FRAMEWORK

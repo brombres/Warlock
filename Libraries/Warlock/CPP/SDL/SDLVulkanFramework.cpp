@@ -14,8 +14,8 @@ SDLVulkanFramework::~SDLVulkanFramework()
 void SDLVulkanFramework::configure()
 {
   SDL_Init( SDL_INIT_VIDEO );
-  int error = SDL_Vulkan_LoadLibrary( NULL );
-  printf("LOAD ERROR: %d\n",error);
+  //int error = SDL_Vulkan_LoadLibrary( NULL );
+  //printf("LOAD ERROR: %d\n",error);
   renderer = new VulkanRenderer();
   renderer->configure();
 }
