@@ -15,6 +15,8 @@ struct SDLVulkanRenderer : VulkanRenderer
   SDLVulkanFramework* framework;
 
   SDLVulkanRenderer( SDLVulkanFramework* framework );
+
+  virtual void configure_window( Window window );
 };
 
 }; // namespace Warlock

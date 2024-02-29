@@ -12,6 +12,7 @@ namespace Warlock
     ~Renderer();
 
     virtual void configure() {}
+    virtual void configure_window( Window window ) {}
   };
 };
 
