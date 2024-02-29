@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include "SDLVulkanFramework.h"
 #include "VulkanRenderer.h"
 #include <SDL2/SDL_vulkan.h>
 
@@ -11,6 +12,9 @@ namespace Warlock
 
 struct SDLVulkanRenderer : VulkanRenderer
 {
+  SDLVulkanFramework* framework;
+
+  SDLVulkanRenderer( SDLVulkanFramework* framework );
 };
 
 }; // namespace Warlock

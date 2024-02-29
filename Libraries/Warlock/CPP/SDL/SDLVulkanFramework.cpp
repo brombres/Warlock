@@ -1,5 +1,5 @@
 #include "SDLVulkanFramework.h"
-#include "VulkanRenderer.h"
+#include "SDLVulkanRenderer.h"
 using namespace Warlock;
 
 SDLVulkanFramework::~SDLVulkanFramework()
@@ -16,7 +16,7 @@ void SDLVulkanFramework::configure()
   SDL_Init( SDL_INIT_VIDEO );
   //int error = SDL_Vulkan_LoadLibrary( NULL );
   //printf("LOAD ERROR: %d\n",error);
-  renderer = new VulkanRenderer();
+  renderer = new SDLVulkanRenderer( this );
   renderer->configure();
 }
 
