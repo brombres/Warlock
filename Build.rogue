@@ -13,6 +13,10 @@ $requireRogue "2.34"
 uses Utility/GitRepo
 uses Utility/VersionNumber
 
+routine rogo_t
+  execute @|g++ Test.cpp -Wall -fno-strict-aliasing -std=c++11 -o test -I Libraries/Balefire/CPP/Core && ./test
+endRoutine
+
 routine rogo_default
   rogo_debug
 endRoutine
