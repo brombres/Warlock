@@ -7,16 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		302862132B90DA4700241F25 /* Renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3028620F2B90DA4700241F25 /* Renderer.cpp */; };
-		302862142B90DA4700241F25 /* Framework.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 302862112B90DA4700241F25 /* Framework.cpp */; };
-		302862152B90DA4700241F25 /* Engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 302862122B90DA4700241F25 /* Engine.cpp */; };
-		302862282B90DA7F00241F25 /* VulkanRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 302862202B90DA7F00241F25 /* VulkanRenderer.cpp */; };
-		302862292B90DA7F00241F25 /* VulkanFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 302862212B90DA7F00241F25 /* VulkanFunctions.cpp */; };
-		3028622A2B90DA7F00241F25 /* VulkanInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 302862232B90DA7F00241F25 /* VulkanInterface.cpp */; };
-		3028622B2B90DA7F00241F25 /* VkBootstrap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 302862252B90DA7F00241F25 /* VkBootstrap.cpp */; };
-		302862342B90DAC700241F25 /* SDLVulkanFramework.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3028622D2B90DAC700241F25 /* SDLVulkanFramework.cpp */; };
-		302862352B90DAC700241F25 /* SDLFramework.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3028622F2B90DAC700241F25 /* SDLFramework.cpp */; };
-		302862372B90DAC700241F25 /* SDLVulkanRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 302862332B90DAC700241F25 /* SDLVulkanRenderer.cpp */; };
+		302862942B93EB9600241F25 /* .Renderer.h.swp in Resources */ = {isa = PBXBuildFile; fileRef = 3028627F2B93EB9600241F25 /* .Renderer.h.swp */; };
+		302862952B93EB9600241F25 /* .WindowSDL.h.swp in Resources */ = {isa = PBXBuildFile; fileRef = 302862822B93EB9600241F25 /* .WindowSDL.h.swp */; };
+		302862962B93EB9600241F25 /* Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 302862892B93EB9600241F25 /* Window.cpp */; };
+		302862972B93EB9600241F25 /* Balefire.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3028628A2B93EB9600241F25 /* Balefire.cpp */; };
+		302862982B93EB9600241F25 /* String.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3028628B2B93EB9600241F25 /* String.cpp */; };
+		302862992B93EB9600241F25 /* Renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3028628C2B93EB9600241F25 /* Renderer.cpp */; };
+		3028629A2B93EB9600241F25 /* .WindowSDL.cpp.swp in Resources */ = {isa = PBXBuildFile; fileRef = 3028628E2B93EB9600241F25 /* .WindowSDL.cpp.swp */; };
+		3028629B2B93EB9600241F25 /* WindowSDL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3028628F2B93EB9600241F25 /* WindowSDL.cpp */; };
+		3028629C2B93EB9600241F25 /* BalefireSDL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 302862902B93EB9600241F25 /* BalefireSDL.cpp */; };
+		3028629D2B93EB9600241F25 /* RendererVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 302862922B93EB9600241F25 /* RendererVulkan.cpp */; };
+		3028629E2B93EB9600241F25 /* .RendererVulkan.cpp.swp in Resources */ = {isa = PBXBuildFile; fileRef = 302862932B93EB9600241F25 /* .RendererVulkan.cpp.swp */; };
 		306912D12B5E7D7400B14F73 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 306912D02B5E7D7400B14F73 /* AppDelegate.m */; };
 		306912D32B5E7D7500B14F73 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 306912D22B5E7D7500B14F73 /* Assets.xcassets */; };
 		306912E12B5E7E1D00B14F73 /* Warlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 306912E02B5E7E1D00B14F73 /* Warlock.swift */; };
@@ -122,30 +123,30 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		3028620A2B90DA4600241F25 /* RefCounted.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RefCounted.h; path = ../../Libraries/Warlock/CPP/Core/RefCounted.h; sourceTree = "<group>"; };
-		3028620B2B90DA4600241F25 /* Renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Renderer.h; path = ../../Libraries/Warlock/CPP/Core/Renderer.h; sourceTree = "<group>"; };
-		3028620C2B90DA4700241F25 /* ResourceBank.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ResourceBank.h; path = ../../Libraries/Warlock/CPP/Core/ResourceBank.h; sourceTree = "<group>"; };
-		3028620D2B90DA4700241F25 /* Engine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Engine.h; path = ../../Libraries/Warlock/CPP/Core/Engine.h; sourceTree = "<group>"; };
-		3028620E2B90DA4700241F25 /* ArrayList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ArrayList.h; path = ../../Libraries/Warlock/CPP/Core/ArrayList.h; sourceTree = "<group>"; };
-		3028620F2B90DA4700241F25 /* Renderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Renderer.cpp; path = ../../Libraries/Warlock/CPP/Core/Renderer.cpp; sourceTree = "<group>"; };
-		302862102B90DA4700241F25 /* Framework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Framework.h; path = ../../Libraries/Warlock/CPP/Core/Framework.h; sourceTree = "<group>"; };
-		302862112B90DA4700241F25 /* Framework.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Framework.cpp; path = ../../Libraries/Warlock/CPP/Core/Framework.cpp; sourceTree = "<group>"; };
-		302862122B90DA4700241F25 /* Engine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Engine.cpp; path = ../../Libraries/Warlock/CPP/Core/Engine.cpp; sourceTree = "<group>"; };
-		3028621F2B90DA7F00241F25 /* VulkanRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VulkanRenderer.h; path = ../../Libraries/Warlock/CPP/Vulkan/VulkanRenderer.h; sourceTree = "<group>"; };
-		302862202B90DA7F00241F25 /* VulkanRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VulkanRenderer.cpp; path = ../../Libraries/Warlock/CPP/Vulkan/VulkanRenderer.cpp; sourceTree = "<group>"; };
-		302862212B90DA7F00241F25 /* VulkanFunctions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VulkanFunctions.cpp; path = ../../Libraries/Warlock/CPP/Vulkan/VulkanFunctions.cpp; sourceTree = "<group>"; };
-		302862222B90DA7F00241F25 /* VulkanFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VulkanFunctions.h; path = ../../Libraries/Warlock/CPP/Vulkan/VulkanFunctions.h; sourceTree = "<group>"; };
-		302862232B90DA7F00241F25 /* VulkanInterface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VulkanInterface.cpp; path = ../../Libraries/Warlock/CPP/Vulkan/VulkanInterface.cpp; sourceTree = "<group>"; };
-		302862242B90DA7F00241F25 /* VkBootstrapDispatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VkBootstrapDispatch.h; path = ../../Libraries/Warlock/CPP/Vulkan/VkBootstrapDispatch.h; sourceTree = "<group>"; };
-		302862252B90DA7F00241F25 /* VkBootstrap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VkBootstrap.cpp; path = ../../Libraries/Warlock/CPP/Vulkan/VkBootstrap.cpp; sourceTree = "<group>"; };
-		302862262B90DA7F00241F25 /* VkBootstrap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VkBootstrap.h; path = ../../Libraries/Warlock/CPP/Vulkan/VkBootstrap.h; sourceTree = "<group>"; };
-		302862272B90DA7F00241F25 /* VulkanInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VulkanInterface.h; path = ../../Libraries/Warlock/CPP/Vulkan/VulkanInterface.h; sourceTree = "<group>"; };
-		3028622D2B90DAC700241F25 /* SDLVulkanFramework.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SDLVulkanFramework.cpp; sourceTree = "<group>"; };
-		3028622E2B90DAC700241F25 /* SDLFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDLFramework.h; sourceTree = "<group>"; };
-		3028622F2B90DAC700241F25 /* SDLFramework.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SDLFramework.cpp; sourceTree = "<group>"; };
-		302862302B90DAC700241F25 /* SDLVulkanFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDLVulkanFramework.h; sourceTree = "<group>"; };
-		302862322B90DAC700241F25 /* SDLVulkanRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDLVulkanRenderer.h; sourceTree = "<group>"; };
-		302862332B90DAC700241F25 /* SDLVulkanRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SDLVulkanRenderer.cpp; sourceTree = "<group>"; };
+		302862762B93EB9600241F25 /* DiscreteData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DiscreteData.h; sourceTree = "<group>"; };
+		302862772B93EB9600241F25 /* Types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Types.h; sourceTree = "<group>"; };
+		302862782B93EB9600241F25 /* Renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Renderer.h; sourceTree = "<group>"; };
+		302862792B93EB9600241F25 /* Window.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Window.h; sourceTree = "<group>"; };
+		3028627A2B93EB9600241F25 /* Balefire.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Balefire.h; sourceTree = "<group>"; };
+		3028627B2B93EB9600241F25 /* BulkData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BulkData.h; sourceTree = "<group>"; };
+		3028627C2B93EB9600241F25 /* RefCounted.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RefCounted.h; sourceTree = "<group>"; };
+		3028627D2B93EB9600241F25 /* ResourceBank.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResourceBank.h; sourceTree = "<group>"; };
+		3028627E2B93EB9600241F25 /* Ref.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Ref.h; sourceTree = "<group>"; };
+		3028627F2B93EB9600241F25 /* .Renderer.h.swp */ = {isa = PBXFileReference; lastKnownFileType = file; path = .Renderer.h.swp; sourceTree = "<group>"; };
+		302862802B93EB9600241F25 /* String.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = String.h; sourceTree = "<group>"; };
+		302862822B93EB9600241F25 /* .WindowSDL.h.swp */ = {isa = PBXFileReference; lastKnownFileType = file; path = .WindowSDL.h.swp; sourceTree = "<group>"; };
+		302862832B93EB9600241F25 /* BalefireSDL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BalefireSDL.h; sourceTree = "<group>"; };
+		302862842B93EB9600241F25 /* WindowSDL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WindowSDL.h; sourceTree = "<group>"; };
+		302862862B93EB9600241F25 /* RendererVulkan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RendererVulkan.h; sourceTree = "<group>"; };
+		302862892B93EB9600241F25 /* Window.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Window.cpp; sourceTree = "<group>"; };
+		3028628A2B93EB9600241F25 /* Balefire.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Balefire.cpp; sourceTree = "<group>"; };
+		3028628B2B93EB9600241F25 /* String.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = String.cpp; sourceTree = "<group>"; };
+		3028628C2B93EB9600241F25 /* Renderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Renderer.cpp; sourceTree = "<group>"; };
+		3028628E2B93EB9600241F25 /* .WindowSDL.cpp.swp */ = {isa = PBXFileReference; lastKnownFileType = file; path = .WindowSDL.cpp.swp; sourceTree = "<group>"; };
+		3028628F2B93EB9600241F25 /* WindowSDL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WindowSDL.cpp; sourceTree = "<group>"; };
+		302862902B93EB9600241F25 /* BalefireSDL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BalefireSDL.cpp; sourceTree = "<group>"; };
+		302862922B93EB9600241F25 /* RendererVulkan.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RendererVulkan.cpp; sourceTree = "<group>"; };
+		302862932B93EB9600241F25 /* .RendererVulkan.cpp.swp */ = {isa = PBXFileReference; lastKnownFileType = file; path = .RendererVulkan.cpp.swp; sourceTree = "<group>"; };
 		306912CC2B5E7D7400B14F73 /* Warlock-macOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Warlock-macOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		306912CF2B5E7D7400B14F73 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		306912D02B5E7D7400B14F73 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -220,57 +221,116 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		302862072B90D9ED00241F25 /* Core */ = {
+		302862722B93EAF700241F25 /* Balefire */ = {
 			isa = PBXGroup;
 			children = (
-				3028620E2B90DA4700241F25 /* ArrayList.h */,
-				302862122B90DA4700241F25 /* Engine.cpp */,
-				3028620D2B90DA4700241F25 /* Engine.h */,
-				302862112B90DA4700241F25 /* Framework.cpp */,
-				302862102B90DA4700241F25 /* Framework.h */,
-				3028620A2B90DA4600241F25 /* RefCounted.h */,
-				3028620F2B90DA4700241F25 /* Renderer.cpp */,
-				3028620B2B90DA4600241F25 /* Renderer.h */,
-				3028620C2B90DA4700241F25 /* ResourceBank.h */,
+				302862732B93EB9600241F25 /* Headers */,
+				302862872B93EB9600241F25 /* Source */,
 			);
-			name = Core;
+			path = Balefire;
 			sourceTree = "<group>";
 		};
-		302862092B90DA2500241F25 /* Vulkan */ = {
+		302862732B93EB9600241F25 /* Headers */ = {
 			isa = PBXGroup;
 			children = (
-				302862252B90DA7F00241F25 /* VkBootstrap.cpp */,
-				302862262B90DA7F00241F25 /* VkBootstrap.h */,
-				302862242B90DA7F00241F25 /* VkBootstrapDispatch.h */,
-				302862212B90DA7F00241F25 /* VulkanFunctions.cpp */,
-				302862222B90DA7F00241F25 /* VulkanFunctions.h */,
-				302862232B90DA7F00241F25 /* VulkanInterface.cpp */,
-				302862272B90DA7F00241F25 /* VulkanInterface.h */,
-				302862202B90DA7F00241F25 /* VulkanRenderer.cpp */,
-				3028621F2B90DA7F00241F25 /* VulkanRenderer.h */,
+				302862742B93EB9600241F25 /* Balefire */,
 			);
-			name = Vulkan;
+			name = Headers;
+			path = ../../../Libraries/Balefire/CPP/Headers;
 			sourceTree = "<group>";
 		};
-		3028622C2B90DAC700241F25 /* SDL */ = {
+		302862742B93EB9600241F25 /* Balefire */ = {
 			isa = PBXGroup;
 			children = (
-				3028622D2B90DAC700241F25 /* SDLVulkanFramework.cpp */,
-				3028622E2B90DAC700241F25 /* SDLFramework.h */,
-				3028622F2B90DAC700241F25 /* SDLFramework.cpp */,
-				302862302B90DAC700241F25 /* SDLVulkanFramework.h */,
-				302862322B90DAC700241F25 /* SDLVulkanRenderer.h */,
-				302862332B90DAC700241F25 /* SDLVulkanRenderer.cpp */,
+				302862752B93EB9600241F25 /* Core */,
+				302862812B93EB9600241F25 /* SDL */,
+				302862852B93EB9600241F25 /* Vulkan */,
 			);
-			name = SDL;
-			path = ../../Libraries/Warlock/CPP/SDL;
+			path = Balefire;
+			sourceTree = "<group>";
+		};
+		302862752B93EB9600241F25 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				302862762B93EB9600241F25 /* DiscreteData.h */,
+				302862772B93EB9600241F25 /* Types.h */,
+				302862782B93EB9600241F25 /* Renderer.h */,
+				302862792B93EB9600241F25 /* Window.h */,
+				3028627A2B93EB9600241F25 /* Balefire.h */,
+				3028627B2B93EB9600241F25 /* BulkData.h */,
+				3028627C2B93EB9600241F25 /* RefCounted.h */,
+				3028627D2B93EB9600241F25 /* ResourceBank.h */,
+				3028627E2B93EB9600241F25 /* Ref.h */,
+				3028627F2B93EB9600241F25 /* .Renderer.h.swp */,
+				302862802B93EB9600241F25 /* String.h */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		302862812B93EB9600241F25 /* SDL */ = {
+			isa = PBXGroup;
+			children = (
+				302862822B93EB9600241F25 /* .WindowSDL.h.swp */,
+				302862832B93EB9600241F25 /* BalefireSDL.h */,
+				302862842B93EB9600241F25 /* WindowSDL.h */,
+			);
+			path = SDL;
+			sourceTree = "<group>";
+		};
+		302862852B93EB9600241F25 /* Vulkan */ = {
+			isa = PBXGroup;
+			children = (
+				302862862B93EB9600241F25 /* RendererVulkan.h */,
+			);
+			path = Vulkan;
+			sourceTree = "<group>";
+		};
+		302862872B93EB9600241F25 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				302862882B93EB9600241F25 /* Core */,
+				3028628D2B93EB9600241F25 /* SDL */,
+				302862912B93EB9600241F25 /* Vulkan */,
+			);
+			name = Source;
+			path = ../../../Libraries/Balefire/CPP/Source;
+			sourceTree = "<group>";
+		};
+		302862882B93EB9600241F25 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				302862892B93EB9600241F25 /* Window.cpp */,
+				3028628A2B93EB9600241F25 /* Balefire.cpp */,
+				3028628B2B93EB9600241F25 /* String.cpp */,
+				3028628C2B93EB9600241F25 /* Renderer.cpp */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		3028628D2B93EB9600241F25 /* SDL */ = {
+			isa = PBXGroup;
+			children = (
+				3028628E2B93EB9600241F25 /* .WindowSDL.cpp.swp */,
+				3028628F2B93EB9600241F25 /* WindowSDL.cpp */,
+				302862902B93EB9600241F25 /* BalefireSDL.cpp */,
+			);
+			path = SDL;
+			sourceTree = "<group>";
+		};
+		302862912B93EB9600241F25 /* Vulkan */ = {
+			isa = PBXGroup;
+			children = (
+				302862922B93EB9600241F25 /* RendererVulkan.cpp */,
+				302862932B93EB9600241F25 /* .RendererVulkan.cpp.swp */,
+			);
+			path = Vulkan;
 			sourceTree = "<group>";
 		};
 		306912C32B5E7D7400B14F73 = {
 			isa = PBXGroup;
 			children = (
+				302862722B93EAF700241F25 /* Balefire */,
 				306913872B5EAF0F00B14F73 /* Vulkan */,
-				306913742B5EA02C00B14F73 /* Warlock */,
 				306913312B5E8D1100B14F73 /* SDL.xcodeproj */,
 				306912E02B5E7E1D00B14F73 /* Warlock.swift */,
 				306912CE2B5E7D7400B14F73 /* Warlock-macOS */,
@@ -325,16 +385,6 @@
 				306913672B5E9D4600B14F73 /* MoltenVK.xcframework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		306913742B5EA02C00B14F73 /* Warlock */ = {
-			isa = PBXGroup;
-			children = (
-				3028622C2B90DAC700241F25 /* SDL */,
-				302862072B90D9ED00241F25 /* Core */,
-				302862092B90DA2500241F25 /* Vulkan */,
-			);
-			name = Warlock;
 			sourceTree = "<group>";
 		};
 		306913872B5EAF0F00B14F73 /* Vulkan */ = {
@@ -432,6 +482,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 306912DC2B5E7D7500B14F73 /* Build configuration list for PBXNativeTarget "Warlock-macOS" */;
 			buildPhases = (
+				302862712B93EA4000241F25 /* ShellScript */,
 				306912C82B5E7D7400B14F73 /* Sources */,
 				306912C92B5E7D7400B14F73 /* Frameworks */,
 				306912CA2B5E7D7400B14F73 /* Resources */,
@@ -570,31 +621,53 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				302862942B93EB9600241F25 /* .Renderer.h.swp in Resources */,
 				306913BC2B5EAFC900B14F73 /* vulkan.cppm in Resources */,
+				3028629A2B93EB9600241F25 /* .WindowSDL.cpp.swp in Resources */,
 				306912D32B5E7D7500B14F73 /* Assets.xcassets in Resources */,
+				3028629E2B93EB9600241F25 /* .RendererVulkan.cpp.swp in Resources */,
+				302862952B93EB9600241F25 /* .WindowSDL.h.swp in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		302862712B93EA4000241F25 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "pwd
+";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		306912C82B5E7D7400B14F73 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				302862132B90DA4700241F25 /* Renderer.cpp in Sources */,
-				302862282B90DA7F00241F25 /* VulkanRenderer.cpp in Sources */,
-				302862372B90DAC700241F25 /* SDLVulkanRenderer.cpp in Sources */,
-				302862152B90DA4700241F25 /* Engine.cpp in Sources */,
-				3028622B2B90DA7F00241F25 /* VkBootstrap.cpp in Sources */,
-				302862292B90DA7F00241F25 /* VulkanFunctions.cpp in Sources */,
+				3028629C2B93EB9600241F25 /* BalefireSDL.cpp in Sources */,
 				3069132E2B5E8A1A00B14F73 /* Main.cpp in Sources */,
-				302862342B90DAC700241F25 /* SDLVulkanFramework.cpp in Sources */,
-				3028622A2B90DA7F00241F25 /* VulkanInterface.cpp in Sources */,
-				302862142B90DA4700241F25 /* Framework.cpp in Sources */,
+				3028629B2B93EB9600241F25 /* WindowSDL.cpp in Sources */,
 				306912D12B5E7D7400B14F73 /* AppDelegate.m in Sources */,
-				302862352B90DAC700241F25 /* SDLFramework.cpp in Sources */,
+				302862972B93EB9600241F25 /* Balefire.cpp in Sources */,
 				306912E12B5E7E1D00B14F73 /* Warlock.swift in Sources */,
+				302862992B93EB9600241F25 /* Renderer.cpp in Sources */,
+				302862982B93EB9600241F25 /* String.cpp in Sources */,
+				302862962B93EB9600241F25 /* Window.cpp in Sources */,
+				3028629D2B93EB9600241F25 /* RendererVulkan.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -729,7 +802,7 @@
 				DEVELOPMENT_TEAM = AFP6SAXN8A;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				HEADER_SEARCH_PATHS = "";
+				HEADER_SEARCH_PATHS = ../../Libraries/Balefire/CPP/Headers;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMainNibFile = MainMenu;
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
@@ -764,7 +837,7 @@
 				DEVELOPMENT_TEAM = AFP6SAXN8A;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				HEADER_SEARCH_PATHS = "";
+				HEADER_SEARCH_PATHS = ../../Libraries/Balefire/CPP/Headers;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMainNibFile = MainMenu;
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;

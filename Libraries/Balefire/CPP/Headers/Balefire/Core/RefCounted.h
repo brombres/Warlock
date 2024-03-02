@@ -4,6 +4,7 @@
 #pragma once
 
 #include <cstdio>
+#include "Balefire/Core/Types.h"
 
 namespace Balefire
 {

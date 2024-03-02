@@ -3,10 +3,15 @@
 
 #pragma once
 
+#include "Balefire/Core/RefCounted.h"
+
 typedef int WindowID;
 
 namespace Balefire
 {
+  struct Window : RefCounted
+  {
+  };
 };
 
 #endif // BALEFIRE_WINDOW_H
