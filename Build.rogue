@@ -14,7 +14,12 @@ uses Utility/GitRepo
 uses Utility/VersionNumber
 
 routine rogo_t
-  execute @|g++ Test.cpp -Wall -fno-strict-aliasing -std=c++11 -o test -I Libraries/Balefire/CPP/Core && ./test
+  local cmd =  "g++ Test.cpp"
+  cmd .= appending( "Libraries/Balefire/CPP/Source/Core/String.cpp" )
+  cmd .= appending( "-I Libraries/Balefire/CPP/Header" )
+  cmd .= appending( "-Wall -fno-strict-aliasing -std=c++11 -o test" )
+  cmd .= appending( "&& ./test" )
+  execute cmd
 endRoutine
 
 routine rogo_default

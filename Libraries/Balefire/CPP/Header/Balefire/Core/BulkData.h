@@ -4,7 +4,7 @@
 #pragma once
 
 #include <cstring>
-#include "Types.h"
+#include "Balefire/Core/Types.h"
 
 namespace Balefire
 {
@@ -15,13 +15,12 @@ struct BulkData
   Int64 count    = 0;
   Int64 capacity = 0;
   DataType* data = nullptr;
-  Byte internal_data[200];
+  Byte internal_data[176];
 
   BulkData()
   {
     data = (DataType*)internal_data;
     capacity = (Int64)(sizeof(internal_data) / sizeof(DataType));
-    printf("sizeof internal_data:%d\n",(int)sizeof(internal_data));
   }
 
   BulkData( Int64 initial_capacity ) : BulkData()
