@@ -23,6 +23,11 @@ namespace BALEFIRE
 	  std::vector<VkImage>     swapchain_images;
     std::vector<VkImageView> swapchain_image_views;
 
+    VkQueue         graphics_queue;
+    uint32_t        graphics_queue_family;
+    VkCommandPool   command_pool;
+    VkCommandBuffer main_command_buffer;
+
     WindowRendererContextVulkan( RendererVulkan* renderer ) : renderer(renderer) {}
     virtual ~WindowRendererContextVulkan();
   };

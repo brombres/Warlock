@@ -77,5 +77,42 @@ void RendererVulkan::configure_window( Window* window )
 	renderer_context->swapchain_images       = vkbSwapchain.get_images().value();
 	renderer_context->swapchain_image_views  = vkbSwapchain.get_image_views().value();
 	renderer_context->swapchain_image_format = vkbSwapchain.image_format;
+
+  // Graphics Queue
+	renderer_context->graphics_queue = vkbDevice.get_queue( vkb::QueueType::graphics ).value();
+	renderer_context->graphics_queue_family = vkbDevice.get_queue_index( vkb::QueueType::graphics ).value();
+
+  // Command Pool
+	VkCommandPoolCreateInfo commandPoolInfo = {};
+	commandPoolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+	commandPoolInfo.pNext = nullptr;
+
+	commandPoolInfo.queueFamilyIndex = renderer_context->graphics_queue_family;
+	commandPoolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
+
+	VK_CHECK(
+    vkCreateCommandPool(
+      renderer_context->device,
+      &commandPoolInfo,
+      nullptr,
+      &renderer_context->command_pool
+    )
+  );
+
+  // Command Buffer
+	VkCommandBufferAllocateInfo cmd_alloc_info = {};
+	cmd_alloc_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+	cmd_alloc_info.pNext = nullptr;
+
+	cmd_alloc_info.commandPool = renderer_context->command_pool;
+	cmd_alloc_info.commandBufferCount = 1;
+	cmd_alloc_info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+
+	VK_CHECK(
+    vkAllocateCommandBuffers(
+      renderer_context->device, &cmd_alloc_info, &renderer_context->main_command_buffer
+    )
+  );
+
 	renderer_context->initialized = true;
 }

@@ -8,6 +8,17 @@
 #include "Balefire/Core/Framework.h"
 #include "Balefire/Core/Renderer.h"
 
+#define VK_CHECK(cmd)                                            \
+	{                                                              \
+		VkResult err = cmd;                                          \
+		if ((err=cmd))                                               \
+		{                                                            \
+      fprintf( stderr, "[ERROR] Error initializing Vulkan.\n" ); \
+			/*std::cout << err << std::endl;*/                         \
+			abort();                                                   \
+		}                                                            \
+	}
+
 namespace BALEFIRE
 {
   struct RendererVulkan : Renderer

@@ -7,6 +7,8 @@ WindowRendererContextVulkan::~WindowRendererContextVulkan()
   {
     initialized = false;
 
+		vkDestroyCommandPool( device, command_pool, nullptr );
+
 		vkDestroySwapchainKHR( device, swapchain, nullptr );
 
 		for (int i=0; i<swapchain_image_views.size(); ++i)
