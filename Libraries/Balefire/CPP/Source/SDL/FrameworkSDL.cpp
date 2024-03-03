@@ -1,13 +1,13 @@
-#include "Balefire/SDL/BalefireSDL.h"
+#include "Balefire/SDL/FrameworkSDL.h"
 #include "Balefire/SDL/WindowSDLVulkan.h"
 using namespace BALEFIRE;
 
-void BalefireSDL::configure()
+void FrameworkSDL::configure()
 {
   SDL_Init( SDL_INIT_VIDEO );
 }
 
-WindowID BalefireSDL::create_window( String name )
+WindowID FrameworkSDL::create_window( String name )
 {
   SDL_WindowFlags flags = (SDL_WindowFlags)(SDL_WINDOW_SHOWN);
 
@@ -22,7 +22,7 @@ WindowID BalefireSDL::create_window( String name )
     )
   );
 
-  window->id = windows.add( window );
+  //window->id = windows.add( window );
   renderer->configure_window( window );
 
   return window->id;

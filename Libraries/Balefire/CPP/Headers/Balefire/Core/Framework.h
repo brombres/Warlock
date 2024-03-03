@@ -1,5 +1,5 @@
-#ifndef BALEFIRE_H
-#define BALEFIRE_H
+#ifndef BALEFIRE_FRAMEWORK_H
+#define BALEFIRE_FRAMEWORK_H
 
 #pragma once
 
@@ -12,15 +12,14 @@
 
 namespace BALEFIRE
 {
-  struct Balefire : RefCounted
+  struct Framework : RefCounted
   {
-    ResourceBank<WindowID,Ref<Window>> windows;
+    Ref<Renderer> renderer;
 
-    virtual ~Balefire();
+    virtual ~Framework();
     virtual void configure();
     virtual WindowID create_window( String name ) { return (WindowID)0; }
-    virtual void configure_window( Window* window ) {}
   };
 };
 
-#endif // BALEFIRE_H
+#endif // BALEFIRE_FRAMEWORK_H

@@ -7,16 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		302862962B93EB9600241F25 /* Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 302862892B93EB9600241F25 /* Window.cpp */; };
-		302862972B93EB9600241F25 /* Balefire.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3028628A2B93EB9600241F25 /* Balefire.cpp */; };
-		302862982B93EB9600241F25 /* String.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3028628B2B93EB9600241F25 /* String.cpp */; };
-		302862992B93EB9600241F25 /* Renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3028628C2B93EB9600241F25 /* Renderer.cpp */; };
-		3028629B2B93EB9600241F25 /* WindowSDL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3028628F2B93EB9600241F25 /* WindowSDL.cpp */; };
-		3028629C2B93EB9600241F25 /* BalefireSDL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 302862902B93EB9600241F25 /* BalefireSDL.cpp */; };
-		3028629D2B93EB9600241F25 /* RendererVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 302862922B93EB9600241F25 /* RendererVulkan.cpp */; };
-		302862A32B93ED8E00241F25 /* WindowSDLVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 302862A12B93ED8E00241F25 /* WindowSDLVulkan.cpp */; };
-		302862A42B93ED8E00241F25 /* BalefireSDLVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 302862A22B93ED8E00241F25 /* BalefireSDLVulkan.cpp */; };
-		302862A82B93F91300241F25 /* VkBootstrap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 302862A72B93F91300241F25 /* VkBootstrap.cpp */; };
+		301985302B94DC6000CBECCB /* Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3019850D2B94DC6000CBECCB /* Window.cpp */; };
+		301985312B94DC6000CBECCB /* Balefire.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3019850E2B94DC6000CBECCB /* Balefire.cpp */; };
+		301985322B94DC6000CBECCB /* String.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3019850F2B94DC6000CBECCB /* String.cpp */; };
+		301985332B94DC6000CBECCB /* Renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 301985102B94DC6000CBECCB /* Renderer.cpp */; };
+		301985342B94DC6000CBECCB /* WindowSDL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 301985122B94DC6000CBECCB /* WindowSDL.cpp */; };
+		301985352B94DC6000CBECCB /* WindowSDLVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 301985132B94DC6000CBECCB /* WindowSDLVulkan.cpp */; };
+		301985362B94DC6000CBECCB /* FrameworkSDL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 301985142B94DC6000CBECCB /* FrameworkSDL.cpp */; };
+		301985372B94DC6000CBECCB /* FrameworkSDLVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 301985152B94DC6000CBECCB /* FrameworkSDLVulkan.cpp */; };
+		301985382B94DC6000CBECCB /* VkBootstrap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 301985172B94DC6000CBECCB /* VkBootstrap.cpp */; };
+		301985392B94DC6000CBECCB /* RendererVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 301985182B94DC6000CBECCB /* RendererVulkan.cpp */; };
+		3019853B2B94DDBB00CBECCB /* Framework.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3019853A2B94DDBB00CBECCB /* Framework.cpp */; };
 		306912D12B5E7D7400B14F73 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 306912D02B5E7D7400B14F73 /* AppDelegate.m */; };
 		306912D32B5E7D7500B14F73 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 306912D22B5E7D7500B14F73 /* Assets.xcassets */; };
 		306912E12B5E7E1D00B14F73 /* Warlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 306912E02B5E7E1D00B14F73 /* Warlock.swift */; };
@@ -122,33 +123,35 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		302862762B93EB9600241F25 /* DiscreteData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DiscreteData.h; sourceTree = "<group>"; };
-		302862772B93EB9600241F25 /* Types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Types.h; sourceTree = "<group>"; };
-		302862782B93EB9600241F25 /* Renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Renderer.h; sourceTree = "<group>"; };
-		302862792B93EB9600241F25 /* Window.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Window.h; sourceTree = "<group>"; };
-		3028627A2B93EB9600241F25 /* Balefire.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Balefire.h; sourceTree = "<group>"; };
-		3028627B2B93EB9600241F25 /* BulkData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BulkData.h; sourceTree = "<group>"; };
-		3028627C2B93EB9600241F25 /* RefCounted.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RefCounted.h; sourceTree = "<group>"; };
-		3028627D2B93EB9600241F25 /* ResourceBank.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResourceBank.h; sourceTree = "<group>"; };
-		3028627E2B93EB9600241F25 /* Ref.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Ref.h; sourceTree = "<group>"; };
-		302862802B93EB9600241F25 /* String.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = String.h; sourceTree = "<group>"; };
-		302862832B93EB9600241F25 /* BalefireSDL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BalefireSDL.h; sourceTree = "<group>"; };
-		302862842B93EB9600241F25 /* WindowSDL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WindowSDL.h; sourceTree = "<group>"; };
-		302862862B93EB9600241F25 /* RendererVulkan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RendererVulkan.h; sourceTree = "<group>"; };
-		302862892B93EB9600241F25 /* Window.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Window.cpp; sourceTree = "<group>"; };
-		3028628A2B93EB9600241F25 /* Balefire.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Balefire.cpp; sourceTree = "<group>"; };
-		3028628B2B93EB9600241F25 /* String.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = String.cpp; sourceTree = "<group>"; };
-		3028628C2B93EB9600241F25 /* Renderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Renderer.cpp; sourceTree = "<group>"; };
-		3028628F2B93EB9600241F25 /* WindowSDL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WindowSDL.cpp; sourceTree = "<group>"; };
-		302862902B93EB9600241F25 /* BalefireSDL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BalefireSDL.cpp; sourceTree = "<group>"; };
-		302862922B93EB9600241F25 /* RendererVulkan.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RendererVulkan.cpp; sourceTree = "<group>"; };
-		3028629F2B93ED8300241F25 /* BalefireSDLVulkan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BalefireSDLVulkan.h; sourceTree = "<group>"; };
-		302862A02B93ED8300241F25 /* WindowSDLVulkan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WindowSDLVulkan.h; sourceTree = "<group>"; };
-		302862A12B93ED8E00241F25 /* WindowSDLVulkan.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WindowSDLVulkan.cpp; sourceTree = "<group>"; };
-		302862A22B93ED8E00241F25 /* BalefireSDLVulkan.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BalefireSDLVulkan.cpp; sourceTree = "<group>"; };
-		302862A52B93F90900241F25 /* VkBootstrap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VkBootstrap.h; sourceTree = "<group>"; };
-		302862A62B93F90900241F25 /* VkBootstrapDispatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VkBootstrapDispatch.h; sourceTree = "<group>"; };
-		302862A72B93F91300241F25 /* VkBootstrap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VkBootstrap.cpp; sourceTree = "<group>"; };
+		3019850D2B94DC6000CBECCB /* Window.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Window.cpp; sourceTree = "<group>"; };
+		3019850E2B94DC6000CBECCB /* Balefire.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Balefire.cpp; sourceTree = "<group>"; };
+		3019850F2B94DC6000CBECCB /* String.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = String.cpp; sourceTree = "<group>"; };
+		301985102B94DC6000CBECCB /* Renderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Renderer.cpp; sourceTree = "<group>"; };
+		301985122B94DC6000CBECCB /* WindowSDL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WindowSDL.cpp; sourceTree = "<group>"; };
+		301985132B94DC6000CBECCB /* WindowSDLVulkan.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WindowSDLVulkan.cpp; sourceTree = "<group>"; };
+		301985142B94DC6000CBECCB /* FrameworkSDL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FrameworkSDL.cpp; sourceTree = "<group>"; };
+		301985152B94DC6000CBECCB /* FrameworkSDLVulkan.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FrameworkSDLVulkan.cpp; sourceTree = "<group>"; };
+		301985172B94DC6000CBECCB /* VkBootstrap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VkBootstrap.cpp; sourceTree = "<group>"; };
+		301985182B94DC6000CBECCB /* RendererVulkan.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RendererVulkan.cpp; sourceTree = "<group>"; };
+		3019851C2B94DC6000CBECCB /* DiscreteData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DiscreteData.h; sourceTree = "<group>"; };
+		3019851D2B94DC6000CBECCB /* Types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Types.h; sourceTree = "<group>"; };
+		3019851E2B94DC6000CBECCB /* Renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Renderer.h; sourceTree = "<group>"; };
+		3019851F2B94DC6000CBECCB /* Window.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Window.h; sourceTree = "<group>"; };
+		301985202B94DC6000CBECCB /* Balefire.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Balefire.h; sourceTree = "<group>"; };
+		301985212B94DC6000CBECCB /* BulkData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BulkData.h; sourceTree = "<group>"; };
+		301985222B94DC6000CBECCB /* Framework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Framework.h; sourceTree = "<group>"; };
+		301985232B94DC6000CBECCB /* RefCounted.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RefCounted.h; sourceTree = "<group>"; };
+		301985242B94DC6000CBECCB /* ResourceBank.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResourceBank.h; sourceTree = "<group>"; };
+		301985252B94DC6000CBECCB /* Ref.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Ref.h; sourceTree = "<group>"; };
+		301985262B94DC6000CBECCB /* String.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = String.h; sourceTree = "<group>"; };
+		301985282B94DC6000CBECCB /* WindowSDLVulkan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WindowSDLVulkan.h; sourceTree = "<group>"; };
+		301985292B94DC6000CBECCB /* FrameworkSDL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FrameworkSDL.h; sourceTree = "<group>"; };
+		3019852A2B94DC6000CBECCB /* FrameworkSDLVulkan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FrameworkSDLVulkan.h; sourceTree = "<group>"; };
+		3019852B2B94DC6000CBECCB /* WindowSDL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WindowSDL.h; sourceTree = "<group>"; };
+		3019852D2B94DC6000CBECCB /* VkBootstrap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VkBootstrap.h; sourceTree = "<group>"; };
+		3019852E2B94DC6000CBECCB /* VkBootstrapDispatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VkBootstrapDispatch.h; sourceTree = "<group>"; };
+		3019852F2B94DC6000CBECCB /* RendererVulkan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RendererVulkan.h; sourceTree = "<group>"; };
+		3019853A2B94DDBB00CBECCB /* Framework.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Framework.cpp; sourceTree = "<group>"; };
 		306912CC2B5E7D7400B14F73 /* Warlock-macOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Warlock-macOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		306912CF2B5E7D7400B14F73 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		306912D02B5E7D7400B14F73 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -223,110 +226,112 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		302862722B93EAF700241F25 /* Balefire */ = {
+		3019850A2B94DC3700CBECCB /* Balefire */ = {
 			isa = PBXGroup;
 			children = (
-				302862732B93EB9600241F25 /* Headers */,
-				302862872B93EB9600241F25 /* Source */,
+				301985192B94DC6000CBECCB /* Headers */,
+				3019850B2B94DC6000CBECCB /* Source */,
 			);
-			path = Balefire;
+			name = Balefire;
 			sourceTree = "<group>";
 		};
-		302862732B93EB9600241F25 /* Headers */ = {
+		3019850B2B94DC6000CBECCB /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				302862742B93EB9600241F25 /* Balefire */,
+				3019850C2B94DC6000CBECCB /* Core */,
+				301985112B94DC6000CBECCB /* SDL */,
+				301985162B94DC6000CBECCB /* Vulkan */,
 			);
-			name = Headers;
-			path = ../../../Libraries/Balefire/CPP/Headers;
+			name = Source;
+			path = ../../Libraries/Balefire/CPP/Source;
 			sourceTree = "<group>";
 		};
-		302862742B93EB9600241F25 /* Balefire */ = {
+		3019850C2B94DC6000CBECCB /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				302862752B93EB9600241F25 /* Core */,
-				302862812B93EB9600241F25 /* SDL */,
-				302862852B93EB9600241F25 /* Vulkan */,
-			);
-			path = Balefire;
-			sourceTree = "<group>";
-		};
-		302862752B93EB9600241F25 /* Core */ = {
-			isa = PBXGroup;
-			children = (
-				302862762B93EB9600241F25 /* DiscreteData.h */,
-				302862772B93EB9600241F25 /* Types.h */,
-				302862782B93EB9600241F25 /* Renderer.h */,
-				302862792B93EB9600241F25 /* Window.h */,
-				3028627A2B93EB9600241F25 /* Balefire.h */,
-				3028627B2B93EB9600241F25 /* BulkData.h */,
-				3028627C2B93EB9600241F25 /* RefCounted.h */,
-				3028627D2B93EB9600241F25 /* ResourceBank.h */,
-				3028627E2B93EB9600241F25 /* Ref.h */,
-				302862802B93EB9600241F25 /* String.h */,
+				3019853A2B94DDBB00CBECCB /* Framework.cpp */,
+				3019850D2B94DC6000CBECCB /* Window.cpp */,
+				3019850E2B94DC6000CBECCB /* Balefire.cpp */,
+				3019850F2B94DC6000CBECCB /* String.cpp */,
+				301985102B94DC6000CBECCB /* Renderer.cpp */,
 			);
 			path = Core;
 			sourceTree = "<group>";
 		};
-		302862812B93EB9600241F25 /* SDL */ = {
+		301985112B94DC6000CBECCB /* SDL */ = {
 			isa = PBXGroup;
 			children = (
-				3028629F2B93ED8300241F25 /* BalefireSDLVulkan.h */,
-				302862A02B93ED8300241F25 /* WindowSDLVulkan.h */,
-				302862832B93EB9600241F25 /* BalefireSDL.h */,
-				302862842B93EB9600241F25 /* WindowSDL.h */,
+				301985122B94DC6000CBECCB /* WindowSDL.cpp */,
+				301985132B94DC6000CBECCB /* WindowSDLVulkan.cpp */,
+				301985142B94DC6000CBECCB /* FrameworkSDL.cpp */,
+				301985152B94DC6000CBECCB /* FrameworkSDLVulkan.cpp */,
 			);
 			path = SDL;
 			sourceTree = "<group>";
 		};
-		302862852B93EB9600241F25 /* Vulkan */ = {
+		301985162B94DC6000CBECCB /* Vulkan */ = {
 			isa = PBXGroup;
 			children = (
-				302862A52B93F90900241F25 /* VkBootstrap.h */,
-				302862A62B93F90900241F25 /* VkBootstrapDispatch.h */,
-				302862862B93EB9600241F25 /* RendererVulkan.h */,
+				301985172B94DC6000CBECCB /* VkBootstrap.cpp */,
+				301985182B94DC6000CBECCB /* RendererVulkan.cpp */,
 			);
 			path = Vulkan;
 			sourceTree = "<group>";
 		};
-		302862872B93EB9600241F25 /* Source */ = {
+		301985192B94DC6000CBECCB /* Headers */ = {
 			isa = PBXGroup;
 			children = (
-				302862882B93EB9600241F25 /* Core */,
-				3028628D2B93EB9600241F25 /* SDL */,
-				302862912B93EB9600241F25 /* Vulkan */,
+				3019851A2B94DC6000CBECCB /* Balefire */,
 			);
-			name = Source;
-			path = ../../../Libraries/Balefire/CPP/Source;
+			name = Headers;
+			path = ../../Libraries/Balefire/CPP/Headers;
 			sourceTree = "<group>";
 		};
-		302862882B93EB9600241F25 /* Core */ = {
+		3019851A2B94DC6000CBECCB /* Balefire */ = {
 			isa = PBXGroup;
 			children = (
-				302862892B93EB9600241F25 /* Window.cpp */,
-				3028628A2B93EB9600241F25 /* Balefire.cpp */,
-				3028628B2B93EB9600241F25 /* String.cpp */,
-				3028628C2B93EB9600241F25 /* Renderer.cpp */,
+				3019851B2B94DC6000CBECCB /* Core */,
+				301985272B94DC6000CBECCB /* SDL */,
+				3019852C2B94DC6000CBECCB /* Vulkan */,
+			);
+			path = Balefire;
+			sourceTree = "<group>";
+		};
+		3019851B2B94DC6000CBECCB /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				3019851C2B94DC6000CBECCB /* DiscreteData.h */,
+				3019851D2B94DC6000CBECCB /* Types.h */,
+				3019851E2B94DC6000CBECCB /* Renderer.h */,
+				3019851F2B94DC6000CBECCB /* Window.h */,
+				301985202B94DC6000CBECCB /* Balefire.h */,
+				301985212B94DC6000CBECCB /* BulkData.h */,
+				301985222B94DC6000CBECCB /* Framework.h */,
+				301985232B94DC6000CBECCB /* RefCounted.h */,
+				301985242B94DC6000CBECCB /* ResourceBank.h */,
+				301985252B94DC6000CBECCB /* Ref.h */,
+				301985262B94DC6000CBECCB /* String.h */,
 			);
 			path = Core;
 			sourceTree = "<group>";
 		};
-		3028628D2B93EB9600241F25 /* SDL */ = {
+		301985272B94DC6000CBECCB /* SDL */ = {
 			isa = PBXGroup;
 			children = (
-				302862A22B93ED8E00241F25 /* BalefireSDLVulkan.cpp */,
-				302862A12B93ED8E00241F25 /* WindowSDLVulkan.cpp */,
-				3028628F2B93EB9600241F25 /* WindowSDL.cpp */,
-				302862902B93EB9600241F25 /* BalefireSDL.cpp */,
+				301985282B94DC6000CBECCB /* WindowSDLVulkan.h */,
+				301985292B94DC6000CBECCB /* FrameworkSDL.h */,
+				3019852A2B94DC6000CBECCB /* FrameworkSDLVulkan.h */,
+				3019852B2B94DC6000CBECCB /* WindowSDL.h */,
 			);
 			path = SDL;
 			sourceTree = "<group>";
 		};
-		302862912B93EB9600241F25 /* Vulkan */ = {
+		3019852C2B94DC6000CBECCB /* Vulkan */ = {
 			isa = PBXGroup;
 			children = (
-				302862A72B93F91300241F25 /* VkBootstrap.cpp */,
-				302862922B93EB9600241F25 /* RendererVulkan.cpp */,
+				3019852D2B94DC6000CBECCB /* VkBootstrap.h */,
+				3019852E2B94DC6000CBECCB /* VkBootstrapDispatch.h */,
+				3019852F2B94DC6000CBECCB /* RendererVulkan.h */,
 			);
 			path = Vulkan;
 			sourceTree = "<group>";
@@ -334,7 +339,7 @@
 		306912C32B5E7D7400B14F73 = {
 			isa = PBXGroup;
 			children = (
-				302862722B93EAF700241F25 /* Balefire */,
+				3019850A2B94DC3700CBECCB /* Balefire */,
 				306913872B5EAF0F00B14F73 /* Vulkan */,
 				306913312B5E8D1100B14F73 /* SDL.xcodeproj */,
 				306912E02B5E7E1D00B14F73 /* Warlock.swift */,
@@ -659,19 +664,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3028629C2B93EB9600241F25 /* BalefireSDL.cpp in Sources */,
+				3019853B2B94DDBB00CBECCB /* Framework.cpp in Sources */,
 				3069132E2B5E8A1A00B14F73 /* Main.cpp in Sources */,
-				3028629B2B93EB9600241F25 /* WindowSDL.cpp in Sources */,
-				302862A82B93F91300241F25 /* VkBootstrap.cpp in Sources */,
+				301985372B94DC6000CBECCB /* FrameworkSDLVulkan.cpp in Sources */,
+				301985342B94DC6000CBECCB /* WindowSDL.cpp in Sources */,
+				301985362B94DC6000CBECCB /* FrameworkSDL.cpp in Sources */,
 				306912D12B5E7D7400B14F73 /* AppDelegate.m in Sources */,
-				302862972B93EB9600241F25 /* Balefire.cpp in Sources */,
+				301985312B94DC6000CBECCB /* Balefire.cpp in Sources */,
 				306912E12B5E7E1D00B14F73 /* Warlock.swift in Sources */,
-				302862A32B93ED8E00241F25 /* WindowSDLVulkan.cpp in Sources */,
-				302862992B93EB9600241F25 /* Renderer.cpp in Sources */,
-				302862A42B93ED8E00241F25 /* BalefireSDLVulkan.cpp in Sources */,
-				302862982B93EB9600241F25 /* String.cpp in Sources */,
-				302862962B93EB9600241F25 /* Window.cpp in Sources */,
-				3028629D2B93EB9600241F25 /* RendererVulkan.cpp in Sources */,
+				301985332B94DC6000CBECCB /* Renderer.cpp in Sources */,
+				301985322B94DC6000CBECCB /* String.cpp in Sources */,
+				301985392B94DC6000CBECCB /* RendererVulkan.cpp in Sources */,
+				301985352B94DC6000CBECCB /* WindowSDLVulkan.cpp in Sources */,
+				301985302B94DC6000CBECCB /* Window.cpp in Sources */,
+				301985382B94DC6000CBECCB /* VkBootstrap.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
