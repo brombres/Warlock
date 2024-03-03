@@ -22,5 +22,35 @@ void RendererVulkan::configure()
 
 void RendererVulkan::configure_window( Window* window )
 {
-  printf( "TODO: RendererVulkan::configure_window()\n" );
+  /*
+  WindowSDLVulkan* window_sdl_vulkan = (WindowSDLVulkan*)window;
+
+	//vulkan 1.3 features
+	//VkPhysicalDeviceVulkan13Features features{};
+	//features.dynamicRendering = true;
+	//features.synchronization2 = true;
+
+	//vulkan 1.2 features
+	VkPhysicalDeviceVulkan12Features features12{};
+	features12.bufferDeviceAddress = true;
+	features12.descriptorIndexing = true;
+
+	vkb::PhysicalDeviceSelector selector{ vkb_inst };
+	vkb::PhysicalDevice physicalDevice = selector
+		.set_minimum_version(1, 3)
+		//.set_required_features_13(features)
+		.set_required_features_12(features12)
+		.set_surface(surface)
+		.select()
+		.value();
+
+	//create the final vulkan device
+	vkb::DeviceBuilder deviceBuilder{ physicalDevice };
+
+	vkb::Device vkbDevice = deviceBuilder.build().value();
+
+	// Get the VkDevice handle used in the rest of a vulkan application
+	_device = vkbDevice.device;
+	_chosenGPU = physicalDevice.physical_device;
+  */
 }

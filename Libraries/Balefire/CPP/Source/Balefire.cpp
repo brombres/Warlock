@@ -12,6 +12,7 @@ Balefire::~Balefire()
 
 void Balefire::configure( Framework* framework )
 {
+  framework->balefire = this;
   this->framework = framework;
   if (framework) framework->configure();
 }

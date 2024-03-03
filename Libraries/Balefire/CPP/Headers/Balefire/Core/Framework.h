@@ -12,8 +12,11 @@
 
 namespace BALEFIRE
 {
+  struct Balefire;
+
   struct Framework : RefCounted
   {
+    Balefire* balefire = nullptr;
     Ref<Renderer> renderer;
 
     virtual ~Framework();
