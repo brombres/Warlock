@@ -15,10 +15,11 @@ namespace BALEFIRE
     Framework*               framework = nullptr;
     vkb::Instance            vkb_instance;
     VkInstance               vulkan_instance;
-    VkDebugUtilsMessengerEXT vulkan_debug_messenger;
+    VkDebugUtilsMessengerEXT debug_messenger;
+    bool                     configured = false;
 
     RendererVulkan( Framework* framework ) : framework(framework) {}
-    virtual ~RendererVulkan() {}
+    virtual ~RendererVulkan();
     virtual void configure();
     virtual void configure_window( Window* window );
   };

@@ -14,9 +14,20 @@ namespace BALEFIRE
 {
   struct Window : RefCounted
   {
-    WindowID id;
+    WindowID id = 0;
+    int width;
+    int height;
+
     Ref<WindowFrameworkContext> framework_context;
     Ref<WindowRendererContext>  renderer_context;
+
+    Window( int width, int height ) : width(width), height(height) {}
+
+    ~Window()
+    {
+      renderer_context = nullptr;
+      framework_context = nullptr;
+    }
   };
 };
 

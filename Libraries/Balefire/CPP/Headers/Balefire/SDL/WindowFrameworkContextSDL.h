@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include <SDL2/SDL.h>
 #include "Balefire/Core/WindowFrameworkContext.h"
 
 namespace BALEFIRE
@@ -12,6 +13,7 @@ namespace BALEFIRE
     SDL_Window* sdl_window;
 
     WindowFrameworkContextSDL( SDL_Window* sdl_window ) : sdl_window(sdl_window) {}
+    virtual ~WindowFrameworkContextSDL();
   };
 };
 

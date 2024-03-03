@@ -3,10 +3,13 @@
 
 #pragma once
 
+#include "Balefire/Core/RefCounted.h"
+
 namespace BALEFIRE
 {
   struct WindowRendererContext : RefCounted
   {
+    bool initialized = false;
   };
 };
 

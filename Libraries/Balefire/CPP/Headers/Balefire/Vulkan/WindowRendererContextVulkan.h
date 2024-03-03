@@ -3,15 +3,28 @@
 
 #pragma once
 
+#include <vector>
+#include <vulkan/vulkan.h>
 #include "Balefire/Core/WindowRendererContext.h"
+#include "Balefire/Vulkan/RendererVulkan.h"
 
 namespace BALEFIRE
 {
   struct WindowRendererContextVulkan : WindowRendererContext
   {
+    RendererVulkan*  renderer;
+
     VkPhysicalDevice gpu;
     VkDevice         device;
     VkSurfaceKHR     surface;
+
+    VkSwapchainKHR           swapchain;
+    VkFormat                 swapchain_image_format;
+	  std::vector<VkImage>     swapchain_images;
+    std::vector<VkImageView> swapchain_image_views;
+
+    WindowRendererContextVulkan( RendererVulkan* renderer ) : renderer(renderer) {}
+    virtual ~WindowRendererContextVulkan();
   };
 };
 

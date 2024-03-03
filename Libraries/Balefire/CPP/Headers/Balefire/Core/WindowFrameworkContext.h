@@ -3,6 +3,8 @@
 
 #pragma once
 
+#include "Balefire/Core/RefCounted.h"
+
 namespace BALEFIRE
 {
   struct WindowFrameworkContext : RefCounted

@@ -8,6 +8,8 @@ Balefire::Balefire( Framework* framework )
 
 Balefire::~Balefire()
 {
+
+  windows.clear();
 }
 
 void Balefire::configure( Framework* framework )

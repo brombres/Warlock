@@ -3,6 +3,15 @@
 #include "Balefire/Vulkan/WindowRendererContextVulkan.h"
 using namespace BALEFIRE;
 
+RendererVulkan::~RendererVulkan()
+{
+  if (configured)
+  {
+    configured = false;
+    vkb::destroy_debug_utils_messenger( vulkan_instance, debug_messenger );
+    vkDestroyInstance( vulkan_instance, nullptr );
+  }
+}
 
 void RendererVulkan::configure()
 {
@@ -18,7 +27,8 @@ void RendererVulkan::configure()
 	vkb_instance = inst_ret.value();
 
 	vulkan_instance = vkb_instance.instance;
-	vulkan_debug_messenger = vkb_instance.debug_messenger;
+	debug_messenger = vkb_instance.debug_messenger;
+  configured = true;
 }
 
 void RendererVulkan::configure_window( Window* window )
@@ -45,12 +55,27 @@ void RendererVulkan::configure_window( Window* window )
 		.select()
 		.value();
 
-	//create the final vulkan device
 	vkb::DeviceBuilder deviceBuilder{ physicalDevice };
 
 	vkb::Device vkbDevice = deviceBuilder.build().value();
 
-	// Get the VkDevice handle used in the rest of a vulkan application
 	renderer_context->device = vkbDevice.device;
 	renderer_context->gpu    = physicalDevice.physical_device;
+
+  // Create swapchain
+	vkb::SwapchainBuilder swapchainBuilder
+      { renderer_context->gpu, renderer_context->device, renderer_context->surface };
+
+	vkb::Swapchain vkbSwapchain = swapchainBuilder
+		.use_default_format_selection()
+		.set_desired_present_mode( VK_PRESENT_MODE_FIFO_KHR )
+		.set_desired_extent( window->width, window->height )
+		.build()
+		.value();
+
+	renderer_context->swapchain              = vkbSwapchain.swapchain;
+	renderer_context->swapchain_images       = vkbSwapchain.get_images().value();
+	renderer_context->swapchain_image_views  = vkbSwapchain.get_image_views().value();
+	renderer_context->swapchain_image_format = vkbSwapchain.image_format;
+	renderer_context->initialized = true;
 }

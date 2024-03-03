@@ -15,27 +15,30 @@ void FrameworkSDLVulkan::configure()
 WindowID FrameworkSDLVulkan::create_window( String name )
 {
   SDL_WindowFlags flags = (SDL_WindowFlags)(SDL_WINDOW_SHOWN | SDL_WINDOW_VULKAN);
+  int w = 1024;
+  int h = 768;
 
   SDL_Window* sdl_window =
     SDL_CreateWindow(
       name,
       SDL_WINDOWPOS_CENTERED,
       SDL_WINDOWPOS_CENTERED,
-      1024,
-      768,
+      w,
+      h,
       flags
     );
 
-  Window* window = new Window();
+  RendererVulkan* renderer = (RendererVulkan*)this->renderer.data;
+
+  Window* window = new Window( w, h );
   WindowFrameworkContextSDL* framework_context = new WindowFrameworkContextSDL( sdl_window );
-  WindowRendererContextVulkan* renderer_context = new WindowRendererContextVulkan();
+  WindowRendererContextVulkan* renderer_context = new WindowRendererContextVulkan( renderer );
   window->framework_context = framework_context;
   window->renderer_context = renderer_context;
 
   window->id = balefire->windows.add( window );
   printf("window id:%d\n",window->id);
 
-  RendererVulkan* renderer = (RendererVulkan*)this->renderer.data;
   if (SDL_TRUE != SDL_Vulkan_CreateSurface(
       framework_context->sdl_window,
       renderer->vulkan_instance,
