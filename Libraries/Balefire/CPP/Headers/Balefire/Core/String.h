@@ -25,6 +25,10 @@ namespace BALEFIRE
 
   struct String : Ref<StringData>
   {
+    const char* external_string    = nullptr;
+    Int64 external_byte_count      = -1;
+    Int64 external_character_count = -1;
+
     String();
     String( String const &existing );
     String( const char* utf8 );

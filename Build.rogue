@@ -16,7 +16,7 @@ uses Utility/VersionNumber
 routine rogo_t
   local cmd =  "g++ Test.cpp"
   cmd .= appending( "Libraries/Balefire/CPP/Source/Core/String.cpp" )
-  cmd .= appending( "-I Libraries/Balefire/CPP/Header" )
+  cmd .= appending( "-I Libraries/Balefire/CPP/Headers" )
   cmd .= appending( "-Wall -fno-strict-aliasing -std=c++11 -o test" )
   cmd .= appending( "&& ./test" )
   execute cmd

@@ -89,11 +89,14 @@ String::String() : Ref<StringData>()
 
 String::String( String const &existing ) : Ref<StringData>(existing)
 {
+  external_string = existing.external_string;
+  external_byte_count = existing.external_byte_count;
+  external_character_count = existing.external_character_count;
 }
 
 String::String( const char* utf8 ) : Ref<StringData>()
 {
-  *this = utf8;
+  external_string = utf8;
 }
 
 String::String( StringData* data ) : Ref<StringData>(data)
@@ -102,12 +105,29 @@ String::String( StringData* data ) : Ref<StringData>(data)
 
 Int64 String::count()
 {
+  if (external_string)
+  {
+    if (external_character_count == -1)
+    {
+      external_byte_count = strlen( external_string );
+      external_character_count = StringData::utf8_character_count( external_string, external_byte_count );
+      if (external_character_count == -1) external_character_count = 0;
+    }
+    return external_character_count;
+  }
+
   if (data) return data->count;
   return 0;
 }
 
 Int64 String::hashcode() {
-  if ( !data ) return 1;
+  if (external_string)
+  {
+    if (external_byte_count == -1) count();
+    return compute_hash_code( external_string, external_byte_count );
+  }
+
+  if ( !data ) return 0;
 
   Int64 hash;
   if ((hash=data->hashcode)) return hash;
@@ -119,36 +139,75 @@ Int64 String::hashcode() {
 
 String& String::operator=( const char* utf8 )
 {
-  *this = new StringData( utf8 );
+  external_string = utf8;
+  if (data)
+  {
+    data->release();
+    data = nullptr;
+  }
+
   return *this;
 }
 
 String& String::operator=( String& other )
 {
   Ref<StringData>::operator=( other );
+  external_string = other.external_string;
+  external_byte_count = other.external_byte_count;
+  external_character_count = other.external_character_count;
   return *this;
 }
 
 String& String::operator=( StringData* new_data )
 {
+  if (external_string)
+  {
+    external_string = nullptr;
+    external_byte_count = external_character_count = -1;
+  }
   Ref<StringData>::operator=( new_data );
   return *this;
 }
 
 bool String::operator==( const char* utf8 )
 {
+  if (external_string)
+  {
+    if (external_byte_count == -1) count();
+    Int64 utf8_byte_count = (Int64)strlen(utf8);
+    if (external_byte_count != utf8_byte_count) return false;
+    return 0 == strcmp( external_string, utf8 );
+  }
+
   if ( !data ) return !utf8[0];
 
   Int64 byte_count = (Int64)strlen( utf8 );
   if (data->utf8.count != byte_count) return false;
-
-  if (hashcode() != compute_hash_code(utf8,byte_count)) return false;
 
   return 0 == memcmp( data->utf8.data, utf8, byte_count );
 }
 
 bool String::operator==( String& other )
 {
+  if (external_string)
+  {
+    if (other.external_string)
+    {
+      if (external_byte_count == -1) count();
+      if (other.external_byte_count == -1) other.count();
+      if (external_byte_count != other.external_byte_count) return false;
+      return 0 == strcmp( external_string, other.external_string );
+    }
+    else
+    {
+      return other == external_string;  // invoke other.operator==(const char*)
+    }
+  }
+  else if (other.external_string)
+  {
+    return other == *this;  // invoke other.operator==(String&)
+  }
+
   if ( !data ) return !other.data;
   if ( !other.data ) return false;
 
@@ -169,13 +228,9 @@ Int64 String::compute_hash_code( const char* utf8, Int64 byte_count )
   else      return 1;
 }
 
-String::operator char*()
-{
-  return (char*)((const char*)*this);
-}
-
 String::operator const char*()
 {
+  if (external_string) return external_string;
   if ( !data ) return "";
   return data->utf8.data;
 }
