@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include "Balefire/Core/Framework.h"
 #include "Balefire/Core/Ref.h"
 #include "Balefire/Core/RefCounted.h"
 #include "Balefire/Core/Renderer.h"
@@ -16,10 +17,14 @@ namespace BALEFIRE
   {
     ResourceBank<WindowID,Ref<Window>> windows;
 
-    virtual ~Balefire();
-    virtual void configure();
-    virtual WindowID create_window( String name ) { return (WindowID)0; }
-    virtual void configure_window( Window* window ) {}
+    Ref<Framework> framework;
+
+    Balefire() {}
+    Balefire( Framework* framework );
+
+    ~Balefire();
+    void configure( Framework* framework );
+    WindowID create_window( String name );
   };
 };
 

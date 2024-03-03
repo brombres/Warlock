@@ -7,6 +7,7 @@
 
 #include <cstdio>
 
+#include "Balefire/Core/Balefire.h"
 #include "Balefire/SDL/FrameworkSDLVulkan.h"
 using namespace BALEFIRE;
 
@@ -19,8 +20,7 @@ using namespace BALEFIRE;
 
 int main( int argc, char *argv[] )
 {
-  FrameworkSDLVulkan balefire;
-  balefire.configure();
+  Balefire balefire( new FrameworkSDLVulkan() );
   balefire.create_window( "Warlock Engine" );
 
   //Engine engine;

@@ -173,6 +173,8 @@ bool String::operator==( const char* utf8 )
 {
   if (external_string)
   {
+    if (external_string == utf8) return true;
+
     if (external_byte_count == -1) count();
     Int64 utf8_byte_count = (Int64)strlen(utf8);
     if (external_byte_count != utf8_byte_count) return false;
@@ -193,6 +195,8 @@ bool String::operator==( String& other )
   {
     if (other.external_string)
     {
+      if (external_string == other.external_string) return true;
+
       if (external_byte_count == -1) count();
       if (other.external_byte_count == -1) other.count();
       if (external_byte_count != other.external_byte_count) return false;
