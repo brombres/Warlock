@@ -16,6 +16,11 @@ void RendererVulkan::configure()
 
 	vkb::Instance vkb_inst = inst_ret.value();
 
-	instance = vkb_inst.instance;
-	debug_messenger = vkb_inst.debug_messenger;
+	vulkan_instance = vkb_inst.instance;
+	vulkan_debug_messenger = vkb_inst.debug_messenger;
+}
+
+void RendererVulkan::configure_window( Window* window )
+{
+  printf( "TODO: RendererVulkan::configure_window()\n" );
 }

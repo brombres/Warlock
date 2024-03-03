@@ -53,6 +53,11 @@ struct Ref
     return *this;
   }
 
+  operator DataType*()
+  {
+    return data;
+  }
+
   DataType* operator->()
   {
     return data;

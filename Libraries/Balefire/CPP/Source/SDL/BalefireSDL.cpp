@@ -9,6 +9,8 @@ void BalefireSDL::configure()
 
 WindowID BalefireSDL::create_window( String name )
 {
+  SDL_WindowFlags flags = (SDL_WindowFlags)(SDL_WINDOW_SHOWN);
+
   Window* window = new WindowSDL(
     SDL_CreateWindow(
       name,
@@ -16,11 +18,12 @@ WindowID BalefireSDL::create_window( String name )
       SDL_WINDOWPOS_CENTERED,
       1024,
       768,
-      //window_creation_flags()
-      SDL_WINDOW_SHOWN
+      flags
     )
   );
 
-  //renderer->configure_window( window_id );
-  return windows.add( window );
+  window->id = windows.add( window );
+  renderer->configure_window( window );
+
+  return window->id;
 }

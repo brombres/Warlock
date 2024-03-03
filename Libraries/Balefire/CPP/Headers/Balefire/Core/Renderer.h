@@ -4,6 +4,7 @@
 #pragma once
 
 #include "Balefire/Core/RefCounted.h"
+#include "Balefire/Core/Window.h"
 
 namespace BALEFIRE
 {
@@ -11,6 +12,7 @@ namespace BALEFIRE
   {
     virtual ~Renderer(){}
     virtual void configure() {}
+    virtual void configure_window( Window* window ) {}
   };
 };
 

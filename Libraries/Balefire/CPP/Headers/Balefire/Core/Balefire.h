@@ -20,6 +20,7 @@ namespace BALEFIRE
     virtual ~Balefire();
     virtual void configure();
     virtual WindowID create_window( String name ) { return (WindowID)0; }
+    virtual void configure_window( Window* window ) {}
   };
 };
 

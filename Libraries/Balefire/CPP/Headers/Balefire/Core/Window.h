@@ -11,6 +11,7 @@ namespace BALEFIRE
 {
   struct Window : RefCounted
   {
+    WindowID id;
   };
 };
 

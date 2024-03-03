@@ -9,6 +9,7 @@ namespace BALEFIRE
   struct BalefireSDLVulkan : BalefireSDL
   {
     virtual void configure();
+    virtual WindowID create_window( String name );
   };
 };
 

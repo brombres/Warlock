@@ -12,12 +12,13 @@ namespace BALEFIRE
   struct RendererVulkan : Renderer
   {
     Balefire*                balefire = nullptr;
-    VkInstance               instance;
-    VkDebugUtilsMessengerEXT debug_messenger;
+    VkInstance               vulkan_instance;
+    VkDebugUtilsMessengerEXT vulkan_debug_messenger;
 
     RendererVulkan( Balefire* balefire ) : balefire(balefire) {}
     virtual ~RendererVulkan() {}
     virtual void configure();
+    virtual void configure_window( Window* window );
   };
 };
 
