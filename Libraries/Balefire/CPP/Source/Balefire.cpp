@@ -1,4 +1,4 @@
-#include "Balefire/Core/Balefire.h"
+#include "Balefire/Balefire.h"
 using namespace BALEFIRE;
 
 Balefire::Balefire( Framework* framework )

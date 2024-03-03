@@ -7,7 +7,7 @@
 
 #include <cstdio>
 
-#include "Balefire/Core/Balefire.h"
+#include "Balefire/Balefire.h"
 #include "Balefire/SDL/FrameworkSDLVulkan.h"
 using namespace BALEFIRE;
 
