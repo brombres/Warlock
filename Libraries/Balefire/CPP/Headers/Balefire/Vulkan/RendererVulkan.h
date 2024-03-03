@@ -4,6 +4,7 @@
 #pragma once
 
 #include <vulkan/vulkan.h>
+#include "VkBootstrap.h"
 #include "Balefire/Core/Framework.h"
 #include "Balefire/Core/Renderer.h"
 
@@ -12,6 +13,7 @@ namespace BALEFIRE
   struct RendererVulkan : Renderer
   {
     Framework*               framework = nullptr;
+    vkb::Instance            vkb_instance;
     VkInstance               vulkan_instance;
     VkDebugUtilsMessengerEXT vulkan_debug_messenger;
 
