@@ -3,17 +3,23 @@
 
 #pragma once
 
+#include "Balefire/Core/Ref.h"
 #include "Balefire/Core/RefCounted.h"
+#include "Balefire/Core/Renderer.h"
 #include "Balefire/Core/ResourceBank.h"
+#include "Balefire/Core/String.h"
 #include "Balefire/Core/Window.h"
 
-namespace Balefire
+namespace BALEFIRE
 {
   struct Balefire : RefCounted
   {
-    ResourceBank<WindowID,Window*> windows;
+    ResourceBank<WindowID,Ref<Window>> windows;
+    Ref<Renderer> renderer;
 
-    //virtual WindowID create_window( const
+    virtual ~Balefire();
+    virtual void configure();
+    virtual WindowID create_window( String name ) { return (WindowID)0; }
   };
 };
 

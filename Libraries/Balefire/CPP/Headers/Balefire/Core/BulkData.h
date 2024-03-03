@@ -6,7 +6,7 @@
 #include <cstring>
 #include "Balefire/Core/Types.h"
 
-namespace Balefire
+namespace BALEFIRE
 {
 
 template <typename DataType>

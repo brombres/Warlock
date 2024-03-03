@@ -3,12 +3,14 @@
 
 #pragma once
 
-#include "Balefire/Core/Balefire.h"
+#include "Balefire/Core/RefCounted.h"
 
-namespace Balefire
+namespace BALEFIRE
 {
   struct Renderer : RefCounted
   {
+    virtual ~Renderer(){}
+    virtual void configure() {}
   };
 };
 

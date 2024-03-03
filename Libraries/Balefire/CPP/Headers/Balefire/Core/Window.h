@@ -7,7 +7,7 @@
 
 typedef int WindowID;
 
-namespace Balefire
+namespace BALEFIRE
 {
   struct Window : RefCounted
   {

@@ -1,6 +1,6 @@
 #include "Balefire/Core/String.h"
 #include <cstring>
-using namespace Balefire;
+using namespace BALEFIRE;
 using namespace std;
 
 //==============================================================================

@@ -3,18 +3,18 @@
 
 #pragma once
 
-#include "BulkData.h"
+#include "DiscreteData.h"
 
-namespace Balefire
+namespace BALEFIRE
 {
 
 template <typename IDType, typename ResourceType>
 struct ResourceBank
 {
-  BulkData<ResourceType> resources;
-  BulkData<IDType>       ids;
-  BulkData<IDType>       free_ids;
-  int                     count = 0;
+  DiscreteData<ResourceType> resources;
+  DiscreteData<IDType>       ids;
+  DiscreteData<IDType>       free_ids;
+  int                        count = 0;
 
   ResourceBank()
   {

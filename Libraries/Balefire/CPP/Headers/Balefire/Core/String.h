@@ -6,7 +6,7 @@
 #include "Balefire/Core/Ref.h"
 #include "Balefire/Core/RefCounted.h"
 
-namespace Balefire
+namespace BALEFIRE
 {
   struct StringData : RefCounted
   {

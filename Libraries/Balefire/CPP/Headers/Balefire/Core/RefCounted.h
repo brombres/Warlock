@@ -6,14 +6,14 @@
 #include <cstdio>
 #include "Balefire/Core/Types.h"
 
-namespace Balefire
+namespace BALEFIRE
 {
 
 struct RefCounted
 {
   Int64 refcount = 0;
 
-  ~RefCounted()
+  virtual ~RefCounted()
   {
     if (refcount)
     {
@@ -35,6 +35,6 @@ struct RefCounted
   }
 };
 
-}; // namespace Balefire
+}; // namespace BALEFIRE
 
 #endif // BALEFIRE_REF_COUNTED_H

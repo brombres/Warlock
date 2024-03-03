@@ -3,7 +3,7 @@
 
 #pragma once
 
-namespace Balefire
+namespace BALEFIRE
 {
 
 template <typename DataType>

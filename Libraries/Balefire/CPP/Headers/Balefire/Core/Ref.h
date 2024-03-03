@@ -5,7 +5,7 @@
 
 #include <cstdio>
 
-namespace Balefire
+namespace BALEFIRE
 {
 
 template <typename DataType>
@@ -13,7 +13,9 @@ struct Ref
 {
   DataType* data = nullptr;
 
-  Ref<DataType>() {}
+  Ref<DataType>()
+  {
+  }
 
   Ref<DataType>( DataType* data )
   {
@@ -26,7 +28,7 @@ struct Ref
     if ((data=existing.data)) data->retain();
   }
 
-  ~Ref()
+  ~Ref<DataType>()
   {
     if (data)
     {
@@ -57,6 +59,6 @@ struct Ref
   }
 };
 
-}; // namespace Balefire
+}; // namespace BALEFIRE
 
 #endif // BALEFIRE_REF_H

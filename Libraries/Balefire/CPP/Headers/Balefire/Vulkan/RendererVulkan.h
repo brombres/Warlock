@@ -3,12 +3,21 @@
 
 #pragma once
 
+#include <vulkan/vulkan.h>
+#include "Balefire/Core/Balefire.h"
 #include "Balefire/Core/Renderer.h"
 
-namespace Balefire
+namespace BALEFIRE
 {
   struct RendererVulkan : Renderer
   {
+    Balefire*                balefire = nullptr;
+    VkInstance               instance;
+    VkDebugUtilsMessengerEXT debug_messenger;
+
+    RendererVulkan( Balefire* balefire ) : balefire(balefire) {}
+    virtual ~RendererVulkan() {}
+    virtual void configure();
   };
 };
 
