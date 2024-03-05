@@ -8,3 +8,8 @@ Framework::~Framework()
 void Framework::configure()
 {
 }
+
+void Framework::render( Window* window )
+{
+}
+

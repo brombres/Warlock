@@ -28,6 +28,8 @@ namespace BALEFIRE
       renderer_context = nullptr;
       framework_context = nullptr;
     }
+
+    void render();
   };
 };
 

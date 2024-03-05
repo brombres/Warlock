@@ -31,6 +31,9 @@ namespace BALEFIRE
     VkRenderPass               render_pass;
     std::vector<VkFramebuffer> framebuffers;
 
+    VkSemaphore semaphore_present, semaphore_render;
+    VkFence     render_fence;
+
     WindowRendererContextVulkan( RendererVulkan* renderer ) : renderer(renderer) {}
     virtual ~WindowRendererContextVulkan();
   };

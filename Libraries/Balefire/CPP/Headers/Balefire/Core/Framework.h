@@ -22,6 +22,7 @@ namespace BALEFIRE
     virtual ~Framework();
     virtual void configure();
     virtual WindowID create_window( String name ) { return (WindowID)0; }
+    virtual void     render( Window* window );
   };
 };
 

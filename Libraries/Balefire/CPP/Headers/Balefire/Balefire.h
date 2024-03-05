@@ -23,8 +23,9 @@ namespace BALEFIRE
     Balefire( Framework* framework );
 
     ~Balefire();
-    void configure( Framework* framework );
+    void     configure( Framework* framework );
     WindowID create_window( String name );
+    void     render();
   };
 };
 

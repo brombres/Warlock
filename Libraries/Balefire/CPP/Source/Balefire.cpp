@@ -8,7 +8,6 @@ Balefire::Balefire( Framework* framework )
 
 Balefire::~Balefire()
 {
-
   windows.clear();
 }
 
@@ -31,3 +30,13 @@ WindowID Balefire::create_window( String name )
     return 0;
   }
 }
+
+void Balefire::render()
+{
+  for (int i=0; i<windows.ids.count; ++i)
+  {
+    Window* window = windows[windows.ids[i]];
+    framework->render( window );
+  }
+}
+

@@ -33,7 +33,7 @@ void RendererVulkan::configure()
 
 void RendererVulkan::configure_window( Window* window )
 {
-  WindowRendererContextVulkan* renderer_context =
+  WindowRendererContextVulkan* context =
       (WindowRendererContextVulkan*) window->renderer_context.data;
 
 	//vulkan 1.3 features
@@ -51,7 +51,7 @@ void RendererVulkan::configure_window( Window* window )
 		.set_minimum_version(1,2)
 		//.set_required_features_13(features)
 		.set_required_features_12( features12 )
-		.set_surface( renderer_context->surface )
+		.set_surface( context->surface )
 		.select()
 		.value();
 
@@ -59,12 +59,12 @@ void RendererVulkan::configure_window( Window* window )
 
 	vkb::Device vkbDevice = deviceBuilder.build().value();
 
-	renderer_context->device = vkbDevice.device;
-	renderer_context->gpu    = physicalDevice.physical_device;
+	context->device = vkbDevice.device;
+	context->gpu    = physicalDevice.physical_device;
 
   // Create swapchain
 	vkb::SwapchainBuilder swapchainBuilder
-      { renderer_context->gpu, renderer_context->device, renderer_context->surface };
+      { context->gpu, context->device, context->surface };
 
 	vkb::Swapchain vkbSwapchain = swapchainBuilder
 		.use_default_format_selection()
@@ -73,29 +73,29 @@ void RendererVulkan::configure_window( Window* window )
 		.build()
 		.value();
 
-	renderer_context->swapchain              = vkbSwapchain.swapchain;
-	renderer_context->swapchain_images       = vkbSwapchain.get_images().value();
-	renderer_context->swapchain_image_views  = vkbSwapchain.get_image_views().value();
-	renderer_context->swapchain_image_format = vkbSwapchain.image_format;
+	context->swapchain              = vkbSwapchain.swapchain;
+	context->swapchain_images       = vkbSwapchain.get_images().value();
+	context->swapchain_image_views  = vkbSwapchain.get_image_views().value();
+	context->swapchain_image_format = vkbSwapchain.image_format;
 
   // Graphics Queue
-	renderer_context->graphics_queue = vkbDevice.get_queue( vkb::QueueType::graphics ).value();
-	renderer_context->graphics_queue_family = vkbDevice.get_queue_index( vkb::QueueType::graphics ).value();
+	context->graphics_queue = vkbDevice.get_queue( vkb::QueueType::graphics ).value();
+	context->graphics_queue_family = vkbDevice.get_queue_index( vkb::QueueType::graphics ).value();
 
   // Command Pool
 	VkCommandPoolCreateInfo commandPoolInfo = {};
 	commandPoolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
 	commandPoolInfo.pNext = nullptr;
 
-	commandPoolInfo.queueFamilyIndex = renderer_context->graphics_queue_family;
+	commandPoolInfo.queueFamilyIndex = context->graphics_queue_family;
 	commandPoolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
 
 	VK_CHECK(
     vkCreateCommandPool(
-      renderer_context->device,
+      context->device,
       &commandPoolInfo,
       nullptr,
-      &renderer_context->command_pool
+      &context->command_pool
     )
   );
 
@@ -104,19 +104,19 @@ void RendererVulkan::configure_window( Window* window )
 	cmd_alloc_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
 	cmd_alloc_info.pNext = nullptr;
 
-	cmd_alloc_info.commandPool = renderer_context->command_pool;
+	cmd_alloc_info.commandPool = context->command_pool;
 	cmd_alloc_info.commandBufferCount = 1;
 	cmd_alloc_info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
 
 	VK_CHECK(
     vkAllocateCommandBuffers(
-      renderer_context->device, &cmd_alloc_info, &renderer_context->main_command_buffer
+      context->device, &cmd_alloc_info, &context->main_command_buffer
     )
   );
 
   // RenderPass
 	VkAttachmentDescription color_attachment = {};
-	color_attachment.format  = renderer_context->swapchain_image_format;
+	color_attachment.format  = context->swapchain_image_format;
 	color_attachment.samples = VK_SAMPLE_COUNT_1_BIT;
 	color_attachment.loadOp  = VK_ATTACHMENT_LOAD_OP_CLEAR;
 	color_attachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
@@ -146,10 +146,10 @@ void RendererVulkan::configure_window( Window* window )
 
 	VK_CHECK(
     vkCreateRenderPass(
-      renderer_context->device,
+      context->device,
       &render_pass_info,
       nullptr,
-      &renderer_context->render_pass
+      &context->render_pass
     )
   );
 
@@ -158,27 +158,53 @@ void RendererVulkan::configure_window( Window* window )
 	fb_info.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
 	fb_info.pNext = nullptr;
 
-	fb_info.renderPass = renderer_context->render_pass;
+	fb_info.renderPass = context->render_pass;
 	fb_info.attachmentCount = 1;
 	fb_info.width = window->width;
 	fb_info.height = window->height;
 	fb_info.layers = 1;
 
-	const uint32_t swapchain_image_count = renderer_context->swapchain_images.size();
-	renderer_context->framebuffers = std::vector<VkFramebuffer>( swapchain_image_count );
+	const uint32_t swapchain_image_count = context->swapchain_images.size();
+	context->framebuffers = std::vector<VkFramebuffer>( swapchain_image_count );
 
 	for (int i=0; i<swapchain_image_count; i++)
   {
-		fb_info.pAttachments = &renderer_context->swapchain_image_views[i];
+		fb_info.pAttachments = &context->swapchain_image_views[i];
 		VK_CHECK(
       vkCreateFramebuffer(
-        renderer_context->device,
+        context->device,
         &fb_info,
         nullptr,
-        &renderer_context->framebuffers[i]
+        &context->framebuffers[i]
       )
     );
 	}
 
-	renderer_context->initialized = true;
+  // Synchronization
+	VkFenceCreateInfo fenceCreateInfo = {};
+	fenceCreateInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+	fenceCreateInfo.pNext = nullptr;
+	fenceCreateInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
+	VK_CHECK(
+    vkCreateFence(
+      context->device,
+      &fenceCreateInfo,
+      nullptr,
+      &context->render_fence
+    )
+  );
+
+	VkSemaphoreCreateInfo semaphoreCreateInfo = {};
+	semaphoreCreateInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+	semaphoreCreateInfo.pNext = nullptr;
+	semaphoreCreateInfo.flags = 0;
+
+	VK_CHECK(
+    vkCreateSemaphore( context->device, &semaphoreCreateInfo, nullptr, &context->semaphore_present )
+  );
+	VK_CHECK(
+    vkCreateSemaphore( context->device, &semaphoreCreateInfo, nullptr, &context->semaphore_render )
+  );
+
+	context->initialized = true;
 }

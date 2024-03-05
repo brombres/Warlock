@@ -59,7 +59,7 @@ int main( int argc, char *argv[] )
     //  continue;
     //}
 
-    //draw();
+    balefire.render();
   }
 
   printf("Success\n");
