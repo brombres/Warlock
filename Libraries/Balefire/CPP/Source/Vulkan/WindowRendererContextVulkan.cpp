@@ -10,9 +10,11 @@ WindowRendererContextVulkan::~WindowRendererContextVulkan()
 		vkDestroyCommandPool( device, command_pool, nullptr );
 
 		vkDestroySwapchainKHR( device, swapchain, nullptr );
+		vkDestroyRenderPass(device, render_pass, nullptr);
 
-		for (int i=0; i<swapchain_image_views.size(); ++i)
+		for (int i=0; i<framebuffers.size(); i++)
     {
+			vkDestroyFramebuffer( device, framebuffers[i], nullptr );
 			vkDestroyImageView( device, swapchain_image_views[i], nullptr );
 		}
 

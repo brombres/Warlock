@@ -114,5 +114,71 @@ void RendererVulkan::configure_window( Window* window )
     )
   );
 
+  // RenderPass
+	VkAttachmentDescription color_attachment = {};
+	color_attachment.format  = renderer_context->swapchain_image_format;
+	color_attachment.samples = VK_SAMPLE_COUNT_1_BIT;
+	color_attachment.loadOp  = VK_ATTACHMENT_LOAD_OP_CLEAR;
+	color_attachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+	color_attachment.stencilLoadOp  = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+	color_attachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+
+	color_attachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+	color_attachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+
+  // Subpass
+	VkAttachmentReference color_attachment_ref = {};
+	color_attachment_ref.attachment = 0;
+	color_attachment_ref.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+	VkSubpassDescription subpass = {};
+	subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+	subpass.colorAttachmentCount = 1;
+	subpass.pColorAttachments = &color_attachment_ref;
+
+  // Main attachment
+	VkRenderPassCreateInfo render_pass_info = {};
+	render_pass_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+
+	render_pass_info.attachmentCount = 1;
+	render_pass_info.pAttachments = &color_attachment;
+	render_pass_info.subpassCount = 1;
+	render_pass_info.pSubpasses = &subpass;
+
+	VK_CHECK(
+    vkCreateRenderPass(
+      renderer_context->device,
+      &render_pass_info,
+      nullptr,
+      &renderer_context->render_pass
+    )
+  );
+
+  // Framebuffers
+	VkFramebufferCreateInfo fb_info = {};
+	fb_info.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+	fb_info.pNext = nullptr;
+
+	fb_info.renderPass = renderer_context->render_pass;
+	fb_info.attachmentCount = 1;
+	fb_info.width = window->width;
+	fb_info.height = window->height;
+	fb_info.layers = 1;
+
+	const uint32_t swapchain_image_count = renderer_context->swapchain_images.size();
+	renderer_context->framebuffers = std::vector<VkFramebuffer>( swapchain_image_count );
+
+	for (int i=0; i<swapchain_image_count; i++)
+  {
+		fb_info.pAttachments = &renderer_context->swapchain_image_views[i];
+		VK_CHECK(
+      vkCreateFramebuffer(
+        renderer_context->device,
+        &fb_info,
+        nullptr,
+        &renderer_context->framebuffers[i]
+      )
+    );
+	}
+
 	renderer_context->initialized = true;
 }

@@ -28,6 +28,9 @@ namespace BALEFIRE
     VkCommandPool   command_pool;
     VkCommandBuffer main_command_buffer;
 
+    VkRenderPass               render_pass;
+    std::vector<VkFramebuffer> framebuffers;
+
     WindowRendererContextVulkan( RendererVulkan* renderer ) : renderer(renderer) {}
     virtual ~WindowRendererContextVulkan();
   };
