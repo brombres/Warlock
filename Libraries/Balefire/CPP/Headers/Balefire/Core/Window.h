@@ -6,7 +6,7 @@
 #include "Balefire/Core/Ref.h"
 #include "Balefire/Core/RefCounted.h"
 #include "Balefire/Core/WindowFrameworkContext.h"
-#include "Balefire/Core/WindowRendererContext.h"
+#include "Balefire/Core/WindowRenderContext.h"
 
 typedef int WindowID;
 
@@ -19,13 +19,13 @@ namespace BALEFIRE
     int height;
 
     Ref<WindowFrameworkContext> framework_context;
-    Ref<WindowRendererContext>  renderer_context;
+    Ref<WindowRenderContext>  render_context;
 
     Window( int width, int height ) : width(width), height(height) {}
 
     ~Window()
     {
-      renderer_context = nullptr;
+      render_context = nullptr;
       framework_context = nullptr;
     }
 

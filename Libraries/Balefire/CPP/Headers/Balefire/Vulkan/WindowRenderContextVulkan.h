@@ -1,16 +1,16 @@
-#ifndef BALEFIRE_WINDOW_RENDERER_CONTEXT_VULKAN_H
-#define BALEFIRE_WINDOW_RENDERER_CONTEXT_VULKAN_H
+#ifndef BALEFIRE_WINDOW_RENDER_CONTEXT_VULKAN_H
+#define BALEFIRE_WINDOW_RENDER_CONTEXT_VULKAN_H
 
 #pragma once
 
 #include <vector>
 #include <vulkan/vulkan.h>
-#include "Balefire/Core/WindowRendererContext.h"
+#include "Balefire/Core/WindowRenderContext.h"
 #include "Balefire/Vulkan/RendererVulkan.h"
 
 namespace BALEFIRE
 {
-  struct WindowRendererContextVulkan : WindowRendererContext
+  struct WindowRenderContextVulkan : WindowRenderContext
   {
     // PROPERTIES
     RendererVulkan*  renderer;
@@ -39,9 +39,9 @@ namespace BALEFIRE
     int frame_count = 0;  // FIXME
 
     // CONSTRUCTORS
-    WindowRendererContextVulkan( Window* window, RendererVulkan* renderer )
-      : WindowRendererContext(window), renderer(renderer) {}
-    virtual ~WindowRendererContextVulkan();
+    WindowRenderContextVulkan( Window* window, RendererVulkan* renderer )
+      : WindowRenderContext(window), renderer(renderer) {}
+    virtual ~WindowRenderContextVulkan();
 
     // METHODS
     virtual void configure();
@@ -49,4 +49,4 @@ namespace BALEFIRE
   };
 };
 
-#endif // BALEFIRE_WINDOW_RENDERER_CONTEXT_VULKAN_H
+#endif // BALEFIRE_WINDOW_RENDER_CONTEXT_VULKAN_H

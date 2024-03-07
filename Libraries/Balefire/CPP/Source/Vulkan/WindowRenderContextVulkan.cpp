@@ -1,7 +1,7 @@
-#include "Balefire/Vulkan/WindowRendererContextVulkan.h"
+#include "Balefire/Vulkan/WindowRenderContextVulkan.h"
 using namespace BALEFIRE;
 
-WindowRendererContextVulkan::~WindowRendererContextVulkan()
+WindowRenderContextVulkan::~WindowRenderContextVulkan()
 {
   if (initialized)
   {
@@ -26,7 +26,7 @@ WindowRendererContextVulkan::~WindowRendererContextVulkan()
   }
 }
 
-void WindowRendererContextVulkan::configure()
+void WindowRenderContextVulkan::configure()
 {
 	//vulkan 1.3 features
 	//VkPhysicalDeviceVulkan13Features features{};
@@ -270,7 +270,7 @@ void WindowRendererContextVulkan::configure()
 	initialized = true;
 }
 
-void WindowRendererContextVulkan::render()
+void WindowRenderContextVulkan::render()
 {
   uint32_t swapchain_index;
 	VK_CHECK(

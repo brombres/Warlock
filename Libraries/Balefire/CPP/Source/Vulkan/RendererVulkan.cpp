@@ -1,6 +1,6 @@
 #include "Balefire/Core/Window.h"
 #include "Balefire/Vulkan/RendererVulkan.h"
-#include "Balefire/Vulkan/WindowRendererContextVulkan.h"
+#include "Balefire/Vulkan/WindowRenderContextVulkan.h"
 using namespace BALEFIRE;
 
 #include <vector>
@@ -36,7 +36,7 @@ void RendererVulkan::configure()
 
 void RendererVulkan::configure_window( Window* window )
 {
-  window->renderer_context->configure();
+  window->render_context->configure();
 }
 
 // https://www.reddit.com/r/vulkan/comments/zxgst4/comment/j29a1kl/?utm_source=share&utm_medium=web2x&context=3
