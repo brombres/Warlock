@@ -50,7 +50,8 @@ void BeginRenderPass(VkClearColorValue clear_color,VkClearDepthStencilValue clea
 {
  VkRenderPassBeginInfo render_pass_info = {};
  render_pass_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
- render_pass_info.renderPass = vulkan->render_pass;render_pass_info.framebuffer = vulkan->swapchainFramebuffers[frameIndex];
+ render_pass_info.renderPass = vulkan->render_pass;
+ render_pass_info.framebuffer = vulkan->swapchainFramebuffers[frameIndex];
  render_pass_info.renderArea.offset = {0, 0};
  render_pass_info.renderArea.extent = vulkan->swapchainSize;
  render_pass_info.clearValueCount = 1;

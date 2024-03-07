@@ -8,8 +8,9 @@ namespace BALEFIRE
 {
   struct FrameworkSDLVulkan : FrameworkSDL
   {
-    virtual void configure();
+    virtual void     configure();
     virtual WindowID create_window( String name );
+    virtual void     render( Window* window );
   };
 };
 

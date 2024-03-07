@@ -7,9 +7,17 @@
 
 namespace BALEFIRE
 {
+  struct Window;
+
   struct WindowRendererContext : RefCounted
   {
+    Window* window;
     bool initialized = false;
+
+    WindowRendererContext( Window* window ) : window(window) {}
+
+    virtual void configure() {}
+    virtual void render() {}
   };
 };
 

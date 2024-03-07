@@ -32,7 +32,7 @@ WindowID FrameworkSDLVulkan::create_window( String name )
 
   Window* window = new Window( w, h );
   WindowFrameworkContextSDL* framework_context = new WindowFrameworkContextSDL( sdl_window );
-  WindowRendererContextVulkan* renderer_context = new WindowRendererContextVulkan( renderer );
+  WindowRendererContextVulkan* renderer_context = new WindowRendererContextVulkan( window, renderer );
   window->framework_context = framework_context;
   window->renderer_context = renderer_context;
 
@@ -51,5 +51,10 @@ WindowID FrameworkSDLVulkan::create_window( String name )
   renderer->configure_window( window );
 
   return window->id;
+}
+
+void FrameworkSDLVulkan::render( Window* window )
+{
+  window->render();
 }
 

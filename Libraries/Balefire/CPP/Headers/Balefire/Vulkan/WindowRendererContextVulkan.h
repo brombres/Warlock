@@ -12,6 +12,7 @@ namespace BALEFIRE
 {
   struct WindowRendererContextVulkan : WindowRendererContext
   {
+    // PROPERTIES
     RendererVulkan*  renderer;
 
     VkPhysicalDevice gpu;
@@ -23,19 +24,28 @@ namespace BALEFIRE
 	  std::vector<VkImage>     swapchain_images;
     std::vector<VkImageView> swapchain_image_views;
 
-    VkQueue         graphics_queue;
-    uint32_t        graphics_queue_family;
-    VkCommandPool   command_pool;
-    VkCommandBuffer main_command_buffer;
+    uint32_t         graphics_queue_family;
+    VkQueue          graphics_queue;
+    VkQueue          present_queue;
+    VkCommandPool    command_pool;
+    VkCommandBuffer* command_buffers = nullptr;
 
     VkRenderPass               render_pass;
     std::vector<VkFramebuffer> framebuffers;
 
-    VkSemaphore semaphore_present, semaphore_render;
-    VkFence     render_fence;
+    VkSemaphore present_semaphore, render_semaphore;
+    VkFence*    render_fences;
 
-    WindowRendererContextVulkan( RendererVulkan* renderer ) : renderer(renderer) {}
+    int frame_count = 0;  // FIXME
+
+    // CONSTRUCTORS
+    WindowRendererContextVulkan( Window* window, RendererVulkan* renderer )
+      : WindowRendererContext(window), renderer(renderer) {}
     virtual ~WindowRendererContextVulkan();
+
+    // METHODS
+    virtual void configure();
+    virtual void render();
   };
 };
 

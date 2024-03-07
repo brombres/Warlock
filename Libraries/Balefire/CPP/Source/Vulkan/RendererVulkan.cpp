@@ -3,6 +3,9 @@
 #include "Balefire/Vulkan/WindowRendererContextVulkan.h"
 using namespace BALEFIRE;
 
+#include <vector>
+using namespace std;
+
 RendererVulkan::~RendererVulkan()
 {
   if (configured)
@@ -33,178 +36,45 @@ void RendererVulkan::configure()
 
 void RendererVulkan::configure_window( Window* window )
 {
-  WindowRendererContextVulkan* context =
-      (WindowRendererContextVulkan*) window->renderer_context.data;
+  window->renderer_context->configure();
+}
 
-	//vulkan 1.3 features
-	//VkPhysicalDeviceVulkan13Features features{};
-	//features.dynamicRendering = true;
-	//features.synchronization2 = true;
-
-	//vulkan 1.2 features
-	VkPhysicalDeviceVulkan12Features features12{};
-	features12.bufferDeviceAddress = true;
-	features12.descriptorIndexing = true;
-
-	vkb::PhysicalDeviceSelector selector{ vkb_instance };
-	vkb::PhysicalDevice physicalDevice = selector
-		.set_minimum_version(1,2)
-		//.set_required_features_13(features)
-		.set_required_features_12( features12 )
-		.set_surface( context->surface )
-		.select()
-		.value();
-
-	vkb::DeviceBuilder deviceBuilder{ physicalDevice };
-
-	vkb::Device vkbDevice = deviceBuilder.build().value();
-
-	context->device = vkbDevice.device;
-	context->gpu    = physicalDevice.physical_device;
-
-  // Create swapchain
-	vkb::SwapchainBuilder swapchainBuilder
-      { context->gpu, context->device, context->surface };
-
-	vkb::Swapchain vkbSwapchain = swapchainBuilder
-		.use_default_format_selection()
-		.set_desired_present_mode( VK_PRESENT_MODE_FIFO_KHR )
-		.set_desired_extent( window->width, window->height )
-		.build()
-		.value();
-
-	context->swapchain              = vkbSwapchain.swapchain;
-	context->swapchain_images       = vkbSwapchain.get_images().value();
-	context->swapchain_image_views  = vkbSwapchain.get_image_views().value();
-	context->swapchain_image_format = vkbSwapchain.image_format;
-
-  // Graphics Queue
-	context->graphics_queue = vkbDevice.get_queue( vkb::QueueType::graphics ).value();
-	context->graphics_queue_family = vkbDevice.get_queue_index( vkb::QueueType::graphics ).value();
-
-  // Command Pool
-	VkCommandPoolCreateInfo commandPoolInfo = {};
-	commandPoolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-	commandPoolInfo.pNext = nullptr;
-
-	commandPoolInfo.queueFamilyIndex = context->graphics_queue_family;
-	commandPoolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
-
-	VK_CHECK(
-    vkCreateCommandPool(
-      context->device,
-      &commandPoolInfo,
-      nullptr,
-      &context->command_pool
-    )
-  );
-
-  // Command Buffer
-	VkCommandBufferAllocateInfo cmd_alloc_info = {};
-	cmd_alloc_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-	cmd_alloc_info.pNext = nullptr;
-
-	cmd_alloc_info.commandPool = context->command_pool;
-	cmd_alloc_info.commandBufferCount = 1;
-	cmd_alloc_info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-
-	VK_CHECK(
-    vkAllocateCommandBuffers(
-      context->device, &cmd_alloc_info, &context->main_command_buffer
-    )
-  );
-
-  // RenderPass
-	VkAttachmentDescription color_attachment = {};
-	color_attachment.format  = context->swapchain_image_format;
-	color_attachment.samples = VK_SAMPLE_COUNT_1_BIT;
-	color_attachment.loadOp  = VK_ATTACHMENT_LOAD_OP_CLEAR;
-	color_attachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
-	color_attachment.stencilLoadOp  = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-	color_attachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-
-	color_attachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-	color_attachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-
-  // Subpass
-	VkAttachmentReference color_attachment_ref = {};
-	color_attachment_ref.attachment = 0;
-	color_attachment_ref.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-	VkSubpassDescription subpass = {};
-	subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
-	subpass.colorAttachmentCount = 1;
-	subpass.pColorAttachments = &color_attachment_ref;
-
-  // Main attachment
-	VkRenderPassCreateInfo render_pass_info = {};
-	render_pass_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
-
-	render_pass_info.attachmentCount = 1;
-	render_pass_info.pAttachments = &color_attachment;
-	render_pass_info.subpassCount = 1;
-	render_pass_info.pSubpasses = &subpass;
-
-	VK_CHECK(
-    vkCreateRenderPass(
-      context->device,
-      &render_pass_info,
-      nullptr,
-      &context->render_pass
-    )
-  );
-
-  // Framebuffers
-	VkFramebufferCreateInfo fb_info = {};
-	fb_info.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-	fb_info.pNext = nullptr;
-
-	fb_info.renderPass = context->render_pass;
-	fb_info.attachmentCount = 1;
-	fb_info.width = window->width;
-	fb_info.height = window->height;
-	fb_info.layers = 1;
-
-	const uint32_t swapchain_image_count = context->swapchain_images.size();
-	context->framebuffers = std::vector<VkFramebuffer>( swapchain_image_count );
-
-	for (int i=0; i<swapchain_image_count; i++)
+// https://www.reddit.com/r/vulkan/comments/zxgst4/comment/j29a1kl/?utm_source=share&utm_medium=web2x&context=3
+const char* RendererVulkan::vkResult_to_c_string( VkResult result )
+{
+	switch (result)
   {
-		fb_info.pAttachments = &context->swapchain_image_views[i];
-		VK_CHECK(
-      vkCreateFramebuffer(
-        context->device,
-        &fb_info,
-        nullptr,
-        &context->framebuffers[i]
-      )
-    );
+#define VK_RESULT_CASE(x) case VK_##x: return #x;
+	VK_RESULT_CASE(SUCCESS)                        VK_RESULT_CASE(NOT_READY)
+	VK_RESULT_CASE(TIMEOUT)                        VK_RESULT_CASE(EVENT_SET)
+	VK_RESULT_CASE(EVENT_RESET)                    VK_RESULT_CASE(INCOMPLETE)
+	VK_RESULT_CASE(ERROR_OUT_OF_HOST_MEMORY)       VK_RESULT_CASE(ERROR_OUT_OF_DEVICE_MEMORY)
+	VK_RESULT_CASE(ERROR_INITIALIZATION_FAILED)    VK_RESULT_CASE(ERROR_DEVICE_LOST)
+	VK_RESULT_CASE(ERROR_MEMORY_MAP_FAILED)        VK_RESULT_CASE(ERROR_LAYER_NOT_PRESENT)
+	VK_RESULT_CASE(ERROR_EXTENSION_NOT_PRESENT)    VK_RESULT_CASE(ERROR_FEATURE_NOT_PRESENT)
+	VK_RESULT_CASE(ERROR_INCOMPATIBLE_DRIVER)      VK_RESULT_CASE(ERROR_TOO_MANY_OBJECTS)
+	VK_RESULT_CASE(ERROR_FORMAT_NOT_SUPPORTED)     VK_RESULT_CASE(ERROR_FRAGMENTED_POOL)
+	VK_RESULT_CASE(ERROR_UNKNOWN)                  VK_RESULT_CASE(ERROR_OUT_OF_POOL_MEMORY)
+	VK_RESULT_CASE(ERROR_INVALID_EXTERNAL_HANDLE)  VK_RESULT_CASE(ERROR_FRAGMENTATION)
+	VK_RESULT_CASE(ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS)
+	VK_RESULT_CASE(PIPELINE_COMPILE_REQUIRED)      VK_RESULT_CASE(ERROR_SURFACE_LOST_KHR)
+	VK_RESULT_CASE(ERROR_NATIVE_WINDOW_IN_USE_KHR) VK_RESULT_CASE(SUBOPTIMAL_KHR)
+	VK_RESULT_CASE(ERROR_OUT_OF_DATE_KHR)          VK_RESULT_CASE(ERROR_INCOMPATIBLE_DISPLAY_KHR)
+	VK_RESULT_CASE(ERROR_VALIDATION_FAILED_EXT)    VK_RESULT_CASE(ERROR_INVALID_SHADER_NV)
+#ifdef VK_ENABLE_BETA_EXTENSIONS
+	VK_RESULT_CASE(ERROR_IMAGE_USAGE_NOT_SUPPORTED_KHR)
+	VK_RESULT_CASE(ERROR_VIDEO_PICTURE_LAYOUT_NOT_SUPPORTED_KHR)
+	VK_RESULT_CASE(ERROR_VIDEO_PROFILE_OPERATION_NOT_SUPPORTED_KHR)
+	VK_RESULT_CASE(ERROR_VIDEO_PROFILE_FORMAT_NOT_SUPPORTED_KHR)
+	VK_RESULT_CASE(ERROR_VIDEO_PROFILE_CODEC_NOT_SUPPORTED_KHR)
+	VK_RESULT_CASE(ERROR_VIDEO_STD_VERSION_NOT_SUPPORTED_KHR)
+#endif
+	VK_RESULT_CASE(ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT)
+	VK_RESULT_CASE(ERROR_NOT_PERMITTED_KHR)
+	VK_RESULT_CASE(ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT)
+	VK_RESULT_CASE(THREAD_IDLE_KHR)        VK_RESULT_CASE(THREAD_DONE_KHR)
+	VK_RESULT_CASE(OPERATION_DEFERRED_KHR) VK_RESULT_CASE(OPERATION_NOT_DEFERRED_KHR)
+	default: return "unknown";
 	}
-
-  // Synchronization
-	VkFenceCreateInfo fenceCreateInfo = {};
-	fenceCreateInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-	fenceCreateInfo.pNext = nullptr;
-	fenceCreateInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
-	VK_CHECK(
-    vkCreateFence(
-      context->device,
-      &fenceCreateInfo,
-      nullptr,
-      &context->render_fence
-    )
-  );
-
-	VkSemaphoreCreateInfo semaphoreCreateInfo = {};
-	semaphoreCreateInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
-	semaphoreCreateInfo.pNext = nullptr;
-	semaphoreCreateInfo.flags = 0;
-
-	VK_CHECK(
-    vkCreateSemaphore( context->device, &semaphoreCreateInfo, nullptr, &context->semaphore_present )
-  );
-	VK_CHECK(
-    vkCreateSemaphore( context->device, &semaphoreCreateInfo, nullptr, &context->semaphore_render )
-  );
-
-	context->initialized = true;
+#undef VK_RESULT_CASE
 }
