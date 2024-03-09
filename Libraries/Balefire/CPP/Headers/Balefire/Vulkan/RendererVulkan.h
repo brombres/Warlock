@@ -3,18 +3,20 @@
 
 #pragma once
 
-#include <iostream>
+#include <cstdio>
 #include <vulkan/vulkan.h>
 #include "VkBootstrap.h"
 #include "Balefire/Core/Framework.h"
 #include "Balefire/Core/Renderer.h"
 
-#define VK_CHECK(cmd)                                            \
+#define VK_CHECK(stage,cmd)                                      \
 	{                                                              \
 		VkResult err = cmd;                                          \
 		if ((err=cmd))                                               \
 		{                                                            \
-      fprintf( stderr, "[ERROR] Vulkan error: %s.\n", RendererVulkan::vkResult_to_c_string(err) ); \
+      fprintf( stderr,                                           \
+          "[ERROR] Balefire Vulkan: error %s (%s).\n",           \
+          stage, RendererVulkan::vkResult_to_c_string(err) );    \
       abort();                                                   \
 		}                                                            \
 	}
@@ -24,8 +26,7 @@ namespace BALEFIRE
   struct RendererVulkan : Renderer
   {
     Framework*               framework = nullptr;
-    vkb::Instance            vkb_instance;
-    VkInstance               vulkan_instance;
+    vkb::Instance            vulkan_instance;
     VkDebugUtilsMessengerEXT debug_messenger;
     bool                     configured = false;
 
@@ -36,6 +37,17 @@ namespace BALEFIRE
 
     static const char* vkResult_to_c_string( VkResult result );
   };
+
+  template <typename DataType>
+  DataType vkb_require( vkb::Result<DataType> result )
+  {
+    if ( !result )
+    {
+      fprintf( stderr, "[ERROR] %s\n", result.error().message().c_str() );
+      abort();
+    }
+    return result.value();
+  }
 };
 
 #endif // BALEFIRE_RENDERER_VULKAN_H

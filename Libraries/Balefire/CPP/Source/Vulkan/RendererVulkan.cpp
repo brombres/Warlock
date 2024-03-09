@@ -11,8 +11,7 @@ RendererVulkan::~RendererVulkan()
   if (configured)
   {
     configured = false;
-    vkb::destroy_debug_utils_messenger( vulkan_instance, debug_messenger );
-    vkDestroyInstance( vulkan_instance, nullptr );
+    vkb::destroy_instance( vulkan_instance );
   }
 }
 
@@ -21,16 +20,18 @@ void RendererVulkan::configure()
 	vkb::InstanceBuilder builder( vkGetInstanceProcAddr );
 
 	//make the vulkan instance, with basic debug features
-	auto inst_ret = builder.set_app_name( "Warlock" )
-		.request_validation_layers( true )
-		.use_default_debug_messenger()
-		.require_api_version(1, 2, 0)
-		.build();
+	vulkan_instance = vkb_require(
+    builder
+    .set_app_name( "Warlock" )
+    //.request_validation_layers( true )
+    .use_default_debug_messenger()
+    .require_api_version(1, 2, 0)
+    //.enable_extension( "VK_KHR_surface" )
+    //.enable_extension( "VK_EXT_metal_surface" )
+    .build()
+  );
 
-	vkb_instance = inst_ret.value();
-
-	vulkan_instance = vkb_instance.instance;
-	debug_messenger = vkb_instance.debug_messenger;
+	debug_messenger = vulkan_instance.debug_messenger;
   configured = true;
 }
 

@@ -5,6 +5,8 @@
 #include "Balefire/Vulkan/WindowRenderContextVulkan.h"
 using namespace BALEFIRE;
 
+#include <vector>
+
 void FrameworkSDLVulkan::configure()
 {
   SDL_Init( SDL_INIT_VIDEO );
@@ -27,6 +29,17 @@ WindowID FrameworkSDLVulkan::create_window( String name )
       h,
       flags
     );
+
+  //unsigned int extensionCount = 0;
+  //SDL_Vulkan_GetInstanceExtensions(sdl_window, &extensionCount, nullptr);
+  //std::vector<const char *> extensionNames(extensionCount);
+  //SDL_Vulkan_GetInstanceExtensions(sdl_window, &extensionCount, extensionNames.data());
+  //printf("SDL REQUIRED VULKAN INSTANCE EXTENSIONS:%d\n",extensionCount);
+  //for (int i=0; i<extensionCount; ++i)
+  //{
+  //  printf( "%d %s\n",i,extensionNames[i] );
+  //}
+
 
   RendererVulkan* renderer = (RendererVulkan*)this->renderer.data;
 

@@ -12,31 +12,44 @@ namespace BALEFIRE
 {
   struct WindowRenderContextVulkan : WindowRenderContext
   {
+    const int MAX_FRAMES_IN_FLIGHT = 2;
+
     // PROPERTIES
     RendererVulkan*  renderer;
+    VkSurfaceKHR     surface = nullptr;
 
-    VkPhysicalDevice gpu;
-    VkDevice         device;
-    VkSurfaceKHR     surface;
+    vkb::Device        device;
+    vkb::DispatchTable device_dispatch;
+    vkb::Swapchain     swapchain;
 
-    VkSwapchainKHR           swapchain;
-    VkFormat                 swapchain_image_format;
-	  std::vector<VkImage>     swapchain_images;
-    std::vector<VkImageView> swapchain_image_views;
+    VkQueue graphics_queue;
+    VkQueue present_queue;
 
-    uint32_t         graphics_queue_family;
-    VkQueue          graphics_queue;
-    VkQueue          present_queue;
-    VkCommandPool    command_pool;
-    VkCommandBuffer* command_buffers = nullptr;
+    VkRenderPass     render_pass;
 
-    VkRenderPass               render_pass;
+    VkPipelineLayout pipeline_layout;
+    VkPipeline       graphics_pipeline;
+
+    //VkFormat                 swapchain_image_format;
+	  std::vector<VkImage>       swapchain_images;
+    std::vector<VkImageView>   swapchain_image_views;
     std::vector<VkFramebuffer> framebuffers;
 
-    VkSemaphore present_semaphore, render_semaphore;
-    VkFence*    render_fences;
+    VkCommandPool                command_pool;
+    std::vector<VkCommandBuffer> command_buffers;
 
-    int frame_count = 0;  // FIXME
+    std::vector<VkSemaphore> available_semaphores;
+    std::vector<VkSemaphore> finished_semaphores;
+    std::vector<VkFence> in_flight_fences;
+    std::vector<VkFence> image_in_flight;
+
+    size_t current_frame = 0;
+
+
+    //VkSemaphore present_semaphore, render_semaphore;
+    //VkFence*    render_fences;
+
+    //int frame_count = 0;  // FIXME
 
     // CONSTRUCTORS
     WindowRenderContextVulkan( Window* window, RendererVulkan* renderer )
@@ -46,6 +59,19 @@ namespace BALEFIRE
     // METHODS
     virtual void configure();
     virtual void render();
+
+    void _configure_device();
+    void _configure_swapchain();
+    void _configure_queues();
+    void _configure_render_pass();
+    void _configure_graphics_pipeline();
+    void _configure_framebuffers();
+    void _configure_command_pool();
+    void _configure_command_buffers();
+    void _configure_sync_objects();
+    void _recreate_swapchain();
+
+    VkShaderModule _create_shader_module( const Byte* code, int count );
   };
 };
 
