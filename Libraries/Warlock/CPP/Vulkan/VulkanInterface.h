@@ -2,6 +2,7 @@
 #define VULKAN_INTERFACE_H
 
 #include <vulkan/vulkan.h>
+#include "VkBootstrap.h"
 
 #include <iostream>
 #include <vector>
@@ -24,24 +25,25 @@ class Vulkan
 ////////////////////////////////////////////////////
 /////// [Core]
 //////////////////////////////////////////
- VkInstance instance;
+ vkb::Instance instance;
  vector<VkExtensionProperties> instance_extension;
  void Create_Instance();
 
- VkDebugReportCallbackEXT debugCallback;
+ VkDebugUtilsMessengerEXT debug_messenger;
+ //VkDebugReportCallbackEXT debugCallback;
  void Create_Debug();
 
  VkSurfaceKHR surface;
  void Create_Surface();
 
- VkPhysicalDevice physical_devices;
+ vkb::PhysicalDevice physical_device;
  void Select_PhysicalDevice();
 
  uint32_t graphics_QueueFamilyIndex;
  uint32_t present_QueueFamilyIndex;
  void Select_QueueFamily();
 
- VkDevice device;
+ vkb::Device device;
  VkQueue graphicsQueue;
  VkQueue presentQueue;
  void Create_Device();
@@ -49,13 +51,14 @@ class Vulkan
 ////////////////////////////////////////////////////
 /////// [Screen]
 //////////////////////////////////////////
- VkSwapchainKHR swapchain;//
+ //VkSwapchainKHR swapchain;
+ vkb::Swapchain swapchain;
 
  VkSurfaceCapabilitiesKHR surfaceCapabilities;//
  VkSurfaceFormatKHR surfaceFormat;//
  VkExtent2D swapchainSize;//
 
- vector<VkImage> swapchainImages;//
+ vector<VkImage> swapchain_images;
  uint32_t swapchainImageCount;//
  bool Create_Swapchain(bool resize);
 

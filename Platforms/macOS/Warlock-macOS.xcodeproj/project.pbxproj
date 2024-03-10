@@ -26,6 +26,8 @@
 		306913592B5E98C400B14F73 /* SDL2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 306913402B5E8D1100B14F73 /* SDL2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		306913732B5E9D4600B14F73 /* MoltenVK.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 306913672B5E9D4600B14F73 /* MoltenVK.xcframework */; };
 		306913BC2B5EAFC900B14F73 /* vulkan.cppm in Resources */ = {isa = PBXBuildFile; fileRef = 3069139D2B5EAFC900B14F73 /* vulkan.cppm */; };
+		30903CF62B9CBE9200419514 /* VulkanInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30903CF22B9CBE9200419514 /* VulkanInterface.cpp */; };
+		30903CF72B9CBE9200419514 /* VulkanFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30903CF52B9CBE9200419514 /* VulkanFunctions.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -213,6 +215,10 @@
 		306913B92B5EAFC900B14F73 /* vulkan_metal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vulkan_metal.h; sourceTree = "<group>"; };
 		306913BA2B5EAFC900B14F73 /* vulkan_handles.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = vulkan_handles.hpp; sourceTree = "<group>"; };
 		306913BB2B5EAFC900B14F73 /* vulkan_beta.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vulkan_beta.h; sourceTree = "<group>"; };
+		30903CF22B9CBE9200419514 /* VulkanInterface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VulkanInterface.cpp; path = ../../Libraries/Warlock/CPP/Vulkan/VulkanInterface.cpp; sourceTree = "<group>"; };
+		30903CF32B9CBE9200419514 /* VulkanFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VulkanFunctions.h; path = ../../Libraries/Warlock/CPP/Vulkan/VulkanFunctions.h; sourceTree = "<group>"; };
+		30903CF42B9CBE9200419514 /* VulkanInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VulkanInterface.h; path = ../../Libraries/Warlock/CPP/Vulkan/VulkanInterface.h; sourceTree = "<group>"; };
+		30903CF52B9CBE9200419514 /* VulkanFunctions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VulkanFunctions.cpp; path = ../../Libraries/Warlock/CPP/Vulkan/VulkanFunctions.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -343,6 +349,7 @@
 		306912C32B5E7D7400B14F73 = {
 			isa = PBXGroup;
 			children = (
+				30903CE62B9CBE7000419514 /* SampleFramework */,
 				3019850A2B94DC3700CBECCB /* Balefire */,
 				306913872B5EAF0F00B14F73 /* Vulkan */,
 				306913312B5E8D1100B14F73 /* SDL.xcodeproj */,
@@ -487,6 +494,17 @@
 				306913BB2B5EAFC900B14F73 /* vulkan_beta.h */,
 			);
 			path = vulkan;
+			sourceTree = "<group>";
+		};
+		30903CE62B9CBE7000419514 /* SampleFramework */ = {
+			isa = PBXGroup;
+			children = (
+				30903CF52B9CBE9200419514 /* VulkanFunctions.cpp */,
+				30903CF32B9CBE9200419514 /* VulkanFunctions.h */,
+				30903CF22B9CBE9200419514 /* VulkanInterface.cpp */,
+				30903CF42B9CBE9200419514 /* VulkanInterface.h */,
+			);
+			name = SampleFramework;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -674,6 +692,7 @@
 				301985372B94DC6000CBECCB /* FrameworkSDLVulkan.cpp in Sources */,
 				301985362B94DC6000CBECCB /* FrameworkSDL.cpp in Sources */,
 				306912D12B5E7D7400B14F73 /* AppDelegate.m in Sources */,
+				30903CF62B9CBE9200419514 /* VulkanInterface.cpp in Sources */,
 				306912E12B5E7E1D00B14F73 /* Warlock.swift in Sources */,
 				3049E6AE2B952FBE008554DD /* WindowRenderContextVulkan.cpp in Sources */,
 				3049E6A72B94FBF4008554DD /* Balefire.cpp in Sources */,
@@ -681,6 +700,7 @@
 				301985322B94DC6000CBECCB /* String.cpp in Sources */,
 				301985392B94DC6000CBECCB /* RendererVulkan.cpp in Sources */,
 				301985302B94DC6000CBECCB /* Window.cpp in Sources */,
+				30903CF72B9CBE9200419514 /* VulkanFunctions.cpp in Sources */,
 				301985382B94DC6000CBECCB /* VkBootstrap.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

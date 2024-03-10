@@ -5,29 +5,17 @@
 //  Created by Abe Pralle on 1/22/24.
 //
 
+/*
 #include <cstdio>
 
 #include "Balefire/Balefire.h"
 #include "Balefire/SDL/FrameworkSDLVulkan.h"
 using namespace BALEFIRE;
 
-//#include "Main.hpp"
-
-//#include "SDLVulkanFramework.h"
-//#include "Engine.h"
-//#include "VulkanRenderer.h"
-//using namespace Warlock;
-
 int main( int argc, char *argv[] )
 {
   Balefire balefire( new FrameworkSDLVulkan() );
   balefire.create_window( "Warlock Engine" );
-
-  //Engine engine;
-  //engine.configure( new SDLVulkanFramework() );
-
-  //Window window = engine.create_window();
-  //printf("window: %d\n",window);
 
   bool bQuit = false;
 
@@ -66,8 +54,8 @@ int main( int argc, char *argv[] )
 
   return 0;
 }
+*/
 
-/*
 #include <iostream>
 using namespace std;
 
@@ -140,4 +128,3 @@ int main(int argc, char *argv[])
   SDL_Quit();
   return 0;
 }
-*/
