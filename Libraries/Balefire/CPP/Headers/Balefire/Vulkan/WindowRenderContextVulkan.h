@@ -18,32 +18,37 @@ namespace BALEFIRE
     RendererVulkan*  renderer;
     VkSurfaceKHR     surface = nullptr;
 
-    vkb::Device        device;
-    vkb::DispatchTable device_dispatch;
-    vkb::Swapchain     swapchain;
+    vkb::PhysicalDevice  physical_device;
+    vkb::Device          device;
+    //vkb::DispatchTable device_dispatch;
 
-    VkQueue graphics_queue;
-    VkQueue present_queue;
+    VkExtent2D     swapchain_size;
+    vkb::Swapchain swapchain;
 
-    VkRenderPass     render_pass;
+    uint32_t graphics_QueueFamilyIndex;
+    uint32_t present_QueueFamilyIndex;
+    VkQueue  graphics_queue;
+    VkQueue  present_queue;
 
-    VkPipelineLayout pipeline_layout;
-    VkPipeline       graphics_pipeline;
+    //VkRenderPass     render_pass;
 
-    //VkFormat                 swapchain_image_format;
-	  std::vector<VkImage>       swapchain_images;
-    std::vector<VkImageView>   swapchain_image_views;
-    std::vector<VkFramebuffer> framebuffers;
+    //VkPipelineLayout pipeline_layout;
+    //VkPipeline       graphics_pipeline;
 
-    VkCommandPool                command_pool;
-    std::vector<VkCommandBuffer> command_buffers;
+    ////VkFormat                 swapchain_image_format;
+	  //std::vector<VkImage>       swapchain_images;
+    //std::vector<VkImageView>   swapchain_image_views;
+    //std::vector<VkFramebuffer> framebuffers;
 
-    std::vector<VkSemaphore> available_semaphores;
-    std::vector<VkSemaphore> finished_semaphores;
-    std::vector<VkFence> in_flight_fences;
-    std::vector<VkFence> image_in_flight;
+    //VkCommandPool                command_pool;
+    //std::vector<VkCommandBuffer> command_buffers;
 
-    size_t current_frame = 0;
+    //std::vector<VkSemaphore> available_semaphores;
+    //std::vector<VkSemaphore> finished_semaphores;
+    //std::vector<VkFence> in_flight_fences;
+    //std::vector<VkFence> image_in_flight;
+
+    //size_t current_frame = 0;
 
 
     //VkSemaphore present_semaphore, render_semaphore;

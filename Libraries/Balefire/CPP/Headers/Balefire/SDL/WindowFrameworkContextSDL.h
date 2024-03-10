@@ -10,7 +10,7 @@ namespace BALEFIRE
 {
   struct WindowFrameworkContextSDL : WindowFrameworkContext
   {
-    SDL_Window* sdl_window;
+    SDL_Window* sdl_window = nullptr;
 
     WindowFrameworkContextSDL( SDL_Window* sdl_window ) : sdl_window(sdl_window) {}
     virtual ~WindowFrameworkContextSDL();

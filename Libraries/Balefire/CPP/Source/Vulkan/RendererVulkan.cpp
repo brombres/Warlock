@@ -17,17 +17,13 @@ RendererVulkan::~RendererVulkan()
 
 void RendererVulkan::configure()
 {
-	vkb::InstanceBuilder builder( vkGetInstanceProcAddr );
-
 	//make the vulkan instance, with basic debug features
 	vulkan_instance = vkb_require(
-    builder
+    vkb::InstanceBuilder( vkGetInstanceProcAddr )
     .set_app_name( "Warlock" )
-    //.request_validation_layers( true )
+    .request_validation_layers( true )
     .use_default_debug_messenger()
     .require_api_version(1, 2, 0)
-    //.enable_extension( "VK_KHR_surface" )
-    //.enable_extension( "VK_EXT_metal_surface" )
     .build()
   );
 

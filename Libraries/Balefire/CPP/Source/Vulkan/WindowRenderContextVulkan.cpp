@@ -142,6 +142,7 @@ WindowRenderContextVulkan::~WindowRenderContextVulkan()
   {
     initialized = false;
 
+    /*
     for (size_t i=0; i<MAX_FRAMES_IN_FLIGHT; ++i)
     {
       device_dispatch.destroySemaphore( finished_semaphores[i], nullptr );
@@ -161,6 +162,7 @@ WindowRenderContextVulkan::~WindowRenderContextVulkan()
 		}
 
     swapchain.destroy_image_views( swapchain_image_views );
+    */
 
     vkb::destroy_swapchain( swapchain );
     vkb::destroy_device( device );
@@ -282,18 +284,13 @@ void WindowRenderContextVulkan::configure()
 
 void WindowRenderContextVulkan::_configure_device()
 {
-	//vulkan 1.3 features
-	//VkPhysicalDeviceVulkan13Features features{};
-	//features.dynamicRendering = true;
-	//features.synchronization2 = true;
-
 	//vulkan 1.2 features
 	VkPhysicalDeviceVulkan12Features features12{};
 	//features12.bufferDeviceAddress = true;
 	//features12.descriptorIndexing = true;
 
 	vkb::PhysicalDeviceSelector selector{ renderer->vulkan_instance };
-	vkb::PhysicalDevice physical_device = vkb_require(
+	physical_device = vkb_require(
     selector
 		.set_minimum_version(1,2)
 		//.set_required_features_13(features)
@@ -302,21 +299,29 @@ void WindowRenderContextVulkan::_configure_device()
 		.select()
   );
 
-	vkb::DeviceBuilder deviceBuilder{ physical_device };
-	device = vkb_require( deviceBuilder.build() );
-  device_dispatch = device.make_table();
+	device = vkb_require( vkb::DeviceBuilder{physical_device}.build() );
+  //device_dispatch = device.make_table();
 }
 
+#define BFCLAMP(x, lo, hi) ((x) < (lo) ? (lo) : (x) > (hi) ? (hi) : (x))
 void WindowRenderContextVulkan::_configure_swapchain()
 {
-  // Create swapchain
-	vkb::SwapchainBuilder swapchainBuilder{ device };
+  int width = window->pixel_width;
+  int height = window->pixel_height;
 
-	auto swapchain_build_result = swapchainBuilder
+  VkSurfaceCapabilitiesKHR surface_capabilities;
+  vkGetPhysicalDeviceSurfaceCapabilitiesKHR( physical_device, surface, &surface_capabilities );
+  width = BFCLAMP( width, surface_capabilities.minImageExtent.width, surface_capabilities.maxImageExtent.width );
+  height = BFCLAMP( height, surface_capabilities.minImageExtent.height, surface_capabilities.maxImageExtent.height );
+  swapchain_size.width = width;
+  swapchain_size.height = height;
+
+	vkb::SwapchainBuilder swapchain_builder{ device };
+	auto swapchain_build_result = swapchain_builder
     //.set_desired_format( VK_FORMAT_B8G8R8A8_UNORM )
 		.use_default_format_selection()
 		.set_desired_present_mode( VK_PRESENT_MODE_FIFO_KHR )
-		.set_desired_extent( window->width, window->height )
+		.set_desired_extent( width, height )
     .set_old_swapchain( swapchain )
 		.build();
   vkb::destroy_swapchain( swapchain );
@@ -325,7 +330,9 @@ void WindowRenderContextVulkan::_configure_swapchain()
 
 void WindowRenderContextVulkan::_configure_queues()
 {
-  // Graphics Queue
+  graphics_QueueFamilyIndex = device.get_queue_index( vkb::QueueType::graphics ).value();
+  present_QueueFamilyIndex  = device.get_queue_index( vkb::QueueType::present ).value();
+
 	graphics_queue = vkb_require( device.get_queue(vkb::QueueType::graphics) );
 	present_queue  = vkb_require( device.get_queue(vkb::QueueType::present) );
 }
@@ -333,6 +340,7 @@ void WindowRenderContextVulkan::_configure_queues()
 void WindowRenderContextVulkan::_configure_render_pass()
 {
   // RenderPass
+  /*
 	VkAttachmentDescription color_attachment = {};
 	color_attachment.format  = swapchain.image_format;
 	color_attachment.samples = VK_SAMPLE_COUNT_1_BIT;
@@ -376,10 +384,12 @@ void WindowRenderContextVulkan::_configure_render_pass()
       &render_pass
     )
   );
+  */
 }
 
 void WindowRenderContextVulkan::_configure_graphics_pipeline()
 {
+  /*
   VkShaderModule vertex_module =
       _create_shader_module( vertex_spv, sizeof(vertex_spv) );
   VkShaderModule fragment_module =
@@ -515,10 +525,12 @@ void WindowRenderContextVulkan::_configure_graphics_pipeline()
 
   device_dispatch.destroyShaderModule( fragment_module, nullptr );
   device_dispatch.destroyShaderModule( vertex_module, nullptr );
+  */
 }
 
 void WindowRenderContextVulkan::_configure_framebuffers()
 {
+  /*
   swapchain_images = swapchain.get_images().value();
   swapchain_image_views = swapchain.get_image_views().value();
 
@@ -543,10 +555,12 @@ void WindowRenderContextVulkan::_configure_framebuffers()
         &framebuffer_info, nullptr, &framebuffers[i] )
     );
   }
+  */
 }
 
 void WindowRenderContextVulkan::_configure_command_pool()
 {
+  /*
   VkCommandPoolCreateInfo pool_info = {};
   pool_info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
   pool_info.queueFamilyIndex =
@@ -556,10 +570,12 @@ void WindowRenderContextVulkan::_configure_command_pool()
     "creating command pool",
     device_dispatch.createCommandPool( &pool_info, nullptr, &command_pool )
   );
+  */
 }
 
 void WindowRenderContextVulkan::_configure_command_buffers()
 {
+  /*
   command_buffers.resize( framebuffers.size() );
 
   VkCommandBufferAllocateInfo allocInfo = {};
@@ -628,10 +644,12 @@ void WindowRenderContextVulkan::_configure_command_buffers()
       device_dispatch.endCommandBuffer( command_buffers[i] )
     );
   }
+  */
 }
 
 void WindowRenderContextVulkan::_configure_sync_objects()
 {
+  /*
   available_semaphores.resize( MAX_FRAMES_IN_FLIGHT );
   finished_semaphores.resize( MAX_FRAMES_IN_FLIGHT );
   in_flight_fences.resize( MAX_FRAMES_IN_FLIGHT );
@@ -667,10 +685,12 @@ void WindowRenderContextVulkan::_configure_sync_objects()
       device_dispatch.createFence( &fence_info, nullptr, &in_flight_fences[i] )
     );
   }
+  */
 }
 
 void WindowRenderContextVulkan::_recreate_swapchain()
 {
+  /*
   device_dispatch.deviceWaitIdle();
   device_dispatch.destroyCommandPool( command_pool, nullptr );
 
@@ -685,27 +705,33 @@ void WindowRenderContextVulkan::_recreate_swapchain()
   _configure_framebuffers();
   _configure_command_pool();
   _configure_command_buffers();
+  */
 }
 
 VkShaderModule WindowRenderContextVulkan::_create_shader_module( const Byte* code, int count )
 {
+  /*
   VkShaderModuleCreateInfo create_info = {};
   create_info.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
   create_info.codeSize = count;
   create_info.pCode = (const uint32_t*)code;
+  */
 
   VkShaderModule shader_module;
+  /*
   if (VK_SUCCESS !=
       device_dispatch.createShaderModule(&create_info, nullptr, &shader_module))
   {
     return VK_NULL_HANDLE; // failed to create shader module
   }
+  */
 
   return shader_module;
 }
 
 void WindowRenderContextVulkan::render()
 {
+  /*
 printf("1 wait for fences\n");
   device_dispatch.waitForFences(
     1,
@@ -817,6 +843,7 @@ printf("2 after fences\n");
 printf("8 wait idle\n");
   device_dispatch.deviceWaitIdle();
 printf("8 after idle\n");
+*/
 
   /*
   uint32_t swapchain_index;

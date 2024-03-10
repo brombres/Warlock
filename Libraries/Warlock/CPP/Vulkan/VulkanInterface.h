@@ -8,6 +8,14 @@
 #include <vector>
 using namespace std;
 
+#include "Balefire/SDL/FrameworkSDLVulkan.h"
+#include "Balefire/Vulkan/RendererVulkan.h"
+#include "Balefire/Vulkan/WindowRenderContextVulkan.h"
+
+extern BALEFIRE::FrameworkSDLVulkan* g_framework;
+extern BALEFIRE::RendererVulkan* g_renderer;
+extern BALEFIRE::WindowRenderContextVulkan* g_context;
+
 class Vulkan
 {
  private:
@@ -25,44 +33,20 @@ class Vulkan
 ////////////////////////////////////////////////////
 /////// [Core]
 //////////////////////////////////////////
- vkb::Instance instance;
- vector<VkExtensionProperties> instance_extension;
- void Create_Instance();
 
- VkDebugUtilsMessengerEXT debug_messenger;
  //VkDebugReportCallbackEXT debugCallback;
- void Create_Debug();
-
- VkSurfaceKHR surface;
- void Create_Surface();
-
- vkb::PhysicalDevice physical_device;
- void Select_PhysicalDevice();
-
- uint32_t graphics_QueueFamilyIndex;
- uint32_t present_QueueFamilyIndex;
- void Select_QueueFamily();
-
- vkb::Device device;
- VkQueue graphicsQueue;
- VkQueue presentQueue;
- void Create_Device();
 
 ////////////////////////////////////////////////////
 /////// [Screen]
 //////////////////////////////////////////
- //VkSwapchainKHR swapchain;
- vkb::Swapchain swapchain;
 
- VkSurfaceCapabilitiesKHR surfaceCapabilities;//
  VkSurfaceFormatKHR surfaceFormat;//
- VkExtent2D swapchainSize;//
 
  vector<VkImage> swapchain_images;
  uint32_t swapchainImageCount;//
  bool Create_Swapchain(bool resize);
 
- vector<VkImageView> swapchainImageViews;
+ vector<VkImageView> swapchain_image_views;
  void Create_ImageViews();
 
  VkFormat depthFormat;//
@@ -74,7 +58,7 @@ class Vulkan
  VkRenderPass render_pass;//
  void Create_RenderPass();//
 
- vector<VkFramebuffer> swapchainFramebuffers;
+ vector<VkFramebuffer> framebuffers;
  void Create_Framebuffers();
 
 ///////////////////////////////////////////////////////////

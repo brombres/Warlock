@@ -15,13 +15,13 @@ namespace BALEFIRE
   struct Window : RefCounted
   {
     WindowID id = 0;
-    int width;
-    int height;
+    int width, height;
+    int pixel_width, pixel_height;
 
     Ref<WindowFrameworkContext> framework_context;
     Ref<WindowRenderContext>  render_context;
 
-    Window( int width, int height ) : width(width), height(height) {}
+    Window( int width, int height ) : width(width), height(height), pixel_width(width), pixel_height(height) {}
 
     ~Window()
     {

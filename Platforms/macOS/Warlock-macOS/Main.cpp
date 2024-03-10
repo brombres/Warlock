@@ -5,13 +5,13 @@
 //  Created by Abe Pralle on 1/22/24.
 //
 
-/*
 #include <cstdio>
 
 #include "Balefire/Balefire.h"
 #include "Balefire/SDL/FrameworkSDLVulkan.h"
 using namespace BALEFIRE;
 
+/*
 int main( int argc, char *argv[] )
 {
   Balefire balefire( new FrameworkSDLVulkan() );
@@ -74,9 +74,8 @@ Vulkan *vulkan;
 
 int main(int argc, char *argv[])
 {
-  SDL_Init(SDL_INIT_EVERYTHING);
-  window = SDL_CreateWindow( window_name, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600,
-    SDL_WINDOW_VULKAN | SDL_WINDOW_SHOWN);
+  Balefire balefire( new FrameworkSDLVulkan() );
+  balefire.create_window( "Warlock Engine" );
 
   vulkan = new Vulkan();
   init_vulkan_extern(vulkan);
@@ -117,13 +116,14 @@ int main(int argc, char *argv[])
 
     QueueSubmit();
     QueuePresent();
+    balefire.render();
   }
 
   delete vulkan;
   vulkan = nullptr;
 
-  SDL_DestroyWindow(window);
-  window = nullptr;
+  //SDL_DestroyWindow(window);
+  //window = nullptr;
 
   SDL_Quit();
   return 0;

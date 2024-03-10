@@ -3,6 +3,9 @@ using namespace BALEFIRE;
 
 WindowFrameworkContextSDL::~WindowFrameworkContextSDL()
 {
-  SDL_DestroyWindow( sdl_window );
-  sdl_window = nullptr;
+  if (sdl_window)
+  {
+    SDL_DestroyWindow( sdl_window );
+    sdl_window = nullptr;
+  }
 }
