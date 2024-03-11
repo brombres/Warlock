@@ -19,7 +19,7 @@ void AcquireNextImage()
   vkResetFences(g_context->device, 1, &vulkan->fences[frameIndex]);
 
   commandBuffer = vulkan->commandBuffers[frameIndex];
-  image = vulkan->swapchain_images[frameIndex];
+  image = g_context->swapchain_images[frameIndex];
 }
 
 void ResetCommandBuffer()

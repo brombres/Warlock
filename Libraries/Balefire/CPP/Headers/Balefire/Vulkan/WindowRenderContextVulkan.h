@@ -22,8 +22,10 @@ namespace BALEFIRE
     vkb::Device          device;
     //vkb::DispatchTable device_dispatch;
 
-    VkExtent2D     swapchain_size;
-    vkb::Swapchain swapchain;
+    VkExtent2D               swapchain_size;
+    vkb::Swapchain           swapchain;
+	  std::vector<VkImage>     swapchain_images;
+    std::vector<VkImageView> swapchain_image_views;
 
     uint32_t graphics_QueueFamilyIndex;
     uint32_t present_QueueFamilyIndex;
@@ -36,8 +38,6 @@ namespace BALEFIRE
     //VkPipeline       graphics_pipeline;
 
     ////VkFormat                 swapchain_image_format;
-	  //std::vector<VkImage>       swapchain_images;
-    //std::vector<VkImageView>   swapchain_image_views;
     //std::vector<VkFramebuffer> framebuffers;
 
     //VkCommandPool                command_pool;
@@ -74,6 +74,12 @@ namespace BALEFIRE
     void _configure_command_pool();
     void _configure_command_buffers();
     void _configure_sync_objects();
+    void _destroy_image( VkImage image );
+    /*
+    void _create_image( uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling,
+                        VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image,
+                        VkDeviceMemory& imageMemory );
+    */
     void _recreate_swapchain();
 
     VkShaderModule _create_shader_module( const Byte* code, int count );

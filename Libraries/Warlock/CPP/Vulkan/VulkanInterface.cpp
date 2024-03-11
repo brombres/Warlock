@@ -7,8 +7,6 @@ void init_vulkan_extern(Vulkan *vulkan)
   ////////////////////////////////////////////////////
   /////// [Screen]
   //////////////////////////////////////////
-  bool test = vulkan->Create_Swapchain(false);
-  vulkan->Create_ImageViews();
   vulkan->Setup_DepthStencil();
   vulkan->Create_RenderPass();
   vulkan->Create_Framebuffers();
@@ -64,39 +62,6 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL VulkanReportFunc(
 ////////////////////////////////////////////////////
 /////// [Screen]
 //////////////////////////////////////////
-#define CLAMP(x, lo, hi) ((x) < (lo) ? (lo) : (x) > (hi) ? (hi) : (x))
-bool Vulkan::Create_Swapchain(bool resize)
-{
-  /*
-  int width,height = 0;
-  SDL_Vulkan_GetDrawableSize(window, &width, &height);
-  VkSurfaceCapabilitiesKHR surfaceCapabilities;//
-  vkGetPhysicalDeviceSurfaceCapabilitiesKHR( g_context->physical_device, g_context->surface, &surfaceCapabilities );
-  width = CLAMP( width, surfaceCapabilities.minImageExtent.width, surfaceCapabilities.maxImageExtent.width );
-  height = CLAMP( height, surfaceCapabilities.minImageExtent.height, surfaceCapabilities.maxImageExtent.height );
-  g_context->swapchain_size.width = width;
-  g_context->swapchain_size.height = height;
-
-	vkb::SwapchainBuilder swapchainBuilder{ g_context->device };
-
-	auto swapchain_build_result = swapchainBuilder
-    //.set_desired_format( VK_FORMAT_B8G8R8A8_UNORM )
-		.use_default_format_selection()
-		.set_desired_present_mode( VK_PRESENT_MODE_FIFO_KHR )
-		.set_desired_extent( width, height )
-    .set_old_swapchain( swapchain )
-		.build();
-  vkb::destroy_swapchain( swapchain );
-  swapchain = swapchain_build_result.value();
-  */
-
-  surfaceFormat = VkSurfaceFormatKHR{ g_context->swapchain.image_format, g_context->swapchain.color_space };
-
-  swapchain_images = g_context->swapchain.get_images().value();
-  swapchainImageCount = swapchain_images.size();
-
-  return true;
-}
 
 //global createImageView
 VkImageView Vulkan::createImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags)
@@ -119,17 +84,6 @@ VkImageView Vulkan::createImageView(VkImage image, VkFormat format, VkImageAspec
   }
 
   return imageView;
-}
-
-void Vulkan::Create_ImageViews()
-{
-  swapchain_image_views = g_context->swapchain.get_image_views().value();
-  //swapchain_image_views.resize(swapchain_images.size());
-
-  //for (uint32_t i = 0; i < swapchain_images.size(); i++)
-  //{
-  //  swapchain_image_views[i] = createImageView(swapchain_images[i], surfaceFormat.format, VK_IMAGE_ASPECT_COLOR_BIT);
-  //}
 }
 
 VkBool32 getSupportedDepthFormat(VkPhysicalDevice physicalDevice, VkFormat *depthFormat)
@@ -227,7 +181,7 @@ void Vulkan::Create_RenderPass()
 {
   vector<VkAttachmentDescription> attachments(2);
 
-  attachments[0].format = surfaceFormat.format;
+  attachments[0].format = g_context->swapchain.image_format;
   attachments[0].samples = VK_SAMPLE_COUNT_1_BIT;
   attachments[0].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
   attachments[0].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
@@ -288,12 +242,12 @@ void Vulkan::Create_RenderPass()
 
 void Vulkan::Create_Framebuffers()
 {
-  framebuffers.resize(swapchain_image_views.size());
+  framebuffers.resize(g_context->swapchain_image_views.size());
 
-  for (size_t i = 0; i < swapchain_image_views.size(); i++)
+  for (size_t i = 0; i < g_context->swapchain_image_views.size(); i++)
   {
     std::vector<VkImageView> attachments(2);
-    attachments[0] = swapchain_image_views[i];
+    attachments[0] = g_context->swapchain_image_views[i];
     attachments[1] = depthImageView;
 
     VkFramebufferCreateInfo framebufferInfo = {};
@@ -331,9 +285,9 @@ void Vulkan::createCommandBuffers()
   allocateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
   allocateInfo.commandPool = commandPool;
   allocateInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-  allocateInfo.commandBufferCount = swapchainImageCount;
+  allocateInfo.commandBufferCount = g_context->swapchain_images.size();
 
-  commandBuffers.resize(swapchainImageCount);
+  commandBuffers.resize(g_context->swapchain_images.size());
   vkAllocateCommandBuffers(g_context->device, &allocateInfo, commandBuffers.data());
 }
 
@@ -355,8 +309,8 @@ void Vulkan::create_semaphores()
 void Vulkan::createFences()
 {
   uint32_t i;
-  fences.resize(swapchainImageCount);
-  for(i = 0; i < swapchainImageCount; i++)
+  fences.resize(g_context->swapchain_images.size());
+  for(i = 0; i < g_context->swapchain_images.size(); i++)
   {
     VkResult result;
 

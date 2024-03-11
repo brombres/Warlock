@@ -40,15 +40,6 @@ class Vulkan
 /////// [Screen]
 //////////////////////////////////////////
 
- VkSurfaceFormatKHR surfaceFormat;//
-
- vector<VkImage> swapchain_images;
- uint32_t swapchainImageCount;//
- bool Create_Swapchain(bool resize);
-
- vector<VkImageView> swapchain_image_views;
- void Create_ImageViews();
-
  VkFormat depthFormat;//
  VkImage depthImage;//
  VkDeviceMemory depthImageMemory;//

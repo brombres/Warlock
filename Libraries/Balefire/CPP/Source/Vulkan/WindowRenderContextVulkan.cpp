@@ -160,9 +160,9 @@ WindowRenderContextVulkan::~WindowRenderContextVulkan()
     {
 			device_dispatch.destroyFramebuffer( framebuffers[i], nullptr );
 		}
+    */
 
     swapchain.destroy_image_views( swapchain_image_views );
-    */
 
     vkb::destroy_swapchain( swapchain );
     vkb::destroy_device( device );
@@ -326,6 +326,9 @@ void WindowRenderContextVulkan::_configure_swapchain()
 		.build();
   vkb::destroy_swapchain( swapchain );
   swapchain = swapchain_build_result.value();
+
+  swapchain_images = swapchain.get_images().value();
+  swapchain_image_views = swapchain.get_image_views().value();
 }
 
 void WindowRenderContextVulkan::_configure_queues()
@@ -530,10 +533,8 @@ void WindowRenderContextVulkan::_configure_graphics_pipeline()
 
 void WindowRenderContextVulkan::_configure_framebuffers()
 {
-  /*
-  swapchain_images = swapchain.get_images().value();
-  swapchain_image_views = swapchain.get_image_views().value();
 
+  /*
   framebuffers.resize( swapchain_image_views.size() );
 
   for (size_t i=0; i<swapchain_image_views.size(); ++i)
@@ -686,6 +687,11 @@ void WindowRenderContextVulkan::_configure_sync_objects()
     );
   }
   */
+}
+
+void WindowRenderContextVulkan::_destroy_image( VkImage image )
+{
+  vkDestroyImage( device, image, renderer->vulkan_instance.allocation_callbacks );
 }
 
 void WindowRenderContextVulkan::_recreate_swapchain()
