@@ -11,14 +11,14 @@ void AcquireNextImage()
   vkAcquireNextImageKHR( g_context->device,
       g_context->swapchain,
       UINT64_MAX,
-      vulkan->imageAvailableSemaphore,
+      g_context->image_available_semaphore,
       VK_NULL_HANDLE,
       &frameIndex);
 
-  vkWaitForFences(g_context->device, 1, &vulkan->fences[frameIndex], VK_FALSE, UINT64_MAX);
-  vkResetFences(g_context->device, 1, &vulkan->fences[frameIndex]);
+  vkWaitForFences(g_context->device, 1, &g_context->fences[frameIndex], VK_FALSE, UINT64_MAX);
+  vkResetFences(g_context->device, 1, &g_context->fences[frameIndex]);
 
-  commandBuffer = vulkan->commandBuffers[frameIndex];
+  commandBuffer = g_context->command_buffers[frameIndex];
   image = g_context->swapchain_images[frameIndex];
 }
 
@@ -42,15 +42,15 @@ void EndCommandBuffer()
 
 void FreeCommandBuffers()
 {
-  vkFreeCommandBuffers(g_context->device, vulkan->commandPool, 1, &commandBuffer);
+  vkFreeCommandBuffers(g_context->device, g_context->command_pool, 1, &commandBuffer);
 }
 
 void BeginRenderPass(VkClearColorValue clear_color,VkClearDepthStencilValue clear_depth_stencil)
 {
   VkRenderPassBeginInfo render_pass_info = {};
   render_pass_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-  render_pass_info.renderPass = vulkan->render_pass;
-  render_pass_info.framebuffer = vulkan->framebuffers[frameIndex];
+  render_pass_info.renderPass = g_context->render_pass;
+  render_pass_info.framebuffer = g_context->framebuffers[frameIndex];
   render_pass_info.renderArea.offset = {0, 0};
   render_pass_info.renderArea.extent = g_context->swapchain_size;
   render_pass_info.clearValueCount = 1;
@@ -76,13 +76,13 @@ void QueueSubmit()
   VkSubmitInfo submitInfo = {};
   submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
   submitInfo.waitSemaphoreCount = 1;
-  submitInfo.pWaitSemaphores = &vulkan->imageAvailableSemaphore;
+  submitInfo.pWaitSemaphores = &g_context->image_available_semaphore;
   submitInfo.pWaitDstStageMask = &waitDestStageMask;
   submitInfo.commandBufferCount = 1;
   submitInfo.pCommandBuffers = &commandBuffer;
   submitInfo.signalSemaphoreCount = 1;
-  submitInfo.pSignalSemaphores = &vulkan->renderingFinishedSemaphore;
-  vkQueueSubmit(g_context->graphics_queue, 1, &submitInfo, vulkan->fences[frameIndex]);
+  submitInfo.pSignalSemaphores = &g_context->rendering_finished_semaphore;
+  vkQueueSubmit(g_context->graphics_queue, 1, &submitInfo, g_context->fences[frameIndex]);
 }
 
 void QueuePresent()
@@ -90,7 +90,7 @@ void QueuePresent()
   VkPresentInfoKHR presentInfo = {};
   presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
   presentInfo.waitSemaphoreCount = 1;
-  presentInfo.pWaitSemaphores = &vulkan->renderingFinishedSemaphore;
+  presentInfo.pWaitSemaphores = &g_context->rendering_finished_semaphore;
   presentInfo.swapchainCount = 1;
   presentInfo.pSwapchains = &g_context->swapchain.swapchain;
   presentInfo.pImageIndices = &frameIndex;

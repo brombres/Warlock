@@ -6,6 +6,7 @@
 #include <vector>
 #include <vulkan/vulkan.h>
 #include "Balefire/Core/WindowRenderContext.h"
+#include "Balefire/Vulkan/BVKImage.h"
 #include "Balefire/Vulkan/RendererVulkan.h"
 
 namespace BALEFIRE
@@ -20,7 +21,7 @@ namespace BALEFIRE
 
     vkb::PhysicalDevice  physical_device;
     vkb::Device          device;
-    //vkb::DispatchTable device_dispatch;
+    vkb::DispatchTable   device_dispatch;
 
     VkExtent2D               swapchain_size;
     vkb::Swapchain           swapchain;
@@ -32,28 +33,25 @@ namespace BALEFIRE
     VkQueue  graphics_queue;
     VkQueue  present_queue;
 
-    //VkRenderPass     render_pass;
+    BVKImage depth_buffer;
+
+    VkRenderPass render_pass;
 
     //VkPipelineLayout pipeline_layout;
     //VkPipeline       graphics_pipeline;
 
     ////VkFormat                 swapchain_image_format;
-    //std::vector<VkFramebuffer> framebuffers;
+    std::vector<VkFramebuffer> framebuffers;
 
-    //VkCommandPool                command_pool;
-    //std::vector<VkCommandBuffer> command_buffers;
+    VkCommandPool                command_pool;
+    std::vector<VkCommandBuffer> command_buffers;
 
-    //std::vector<VkSemaphore> available_semaphores;
-    //std::vector<VkSemaphore> finished_semaphores;
-    //std::vector<VkFence> in_flight_fences;
-    //std::vector<VkFence> image_in_flight;
+    VkSemaphore image_available_semaphore;
+    VkSemaphore rendering_finished_semaphore;
+
+    std::vector<VkFence> fences;
 
     //size_t current_frame = 0;
-
-
-    //VkSemaphore present_semaphore, render_semaphore;
-    //VkFence*    render_fences;
-
     //int frame_count = 0;  // FIXME
 
     // CONSTRUCTORS
@@ -63,23 +61,22 @@ namespace BALEFIRE
 
     // METHODS
     virtual void configure();
+    int          find_memory_type( uint32_t typeFilter, VkMemoryPropertyFlags properties );
     virtual void render();
 
     void _configure_device();
     void _configure_swapchain();
     void _configure_queues();
-    void _configure_render_pass();
     void _configure_graphics_pipeline();
+    void _configure_depth_stencil();
+    void _configure_render_pass();
     void _configure_framebuffers();
     void _configure_command_pool();
     void _configure_command_buffers();
-    void _configure_sync_objects();
-    void _destroy_image( VkImage image );
-    /*
-    void _create_image( uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling,
-                        VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image,
-                        VkDeviceMemory& imageMemory );
-    */
+    void _configure_semaphores();
+    void _configure_fences();
+    void _create_semaphore( VkSemaphore *semaphore );
+    bool _find_supported_depth_format( VkFormat* depth_format );
     void _recreate_swapchain();
 
     VkShaderModule _create_shader_module( const Byte* code, int count );

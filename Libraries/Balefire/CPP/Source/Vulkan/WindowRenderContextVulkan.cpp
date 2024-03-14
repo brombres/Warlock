@@ -142,6 +142,9 @@ WindowRenderContextVulkan::~WindowRenderContextVulkan()
   {
     initialized = false;
 
+    device_dispatch.destroySemaphore( image_available_semaphore, nullptr );
+    device_dispatch.destroySemaphore( rendering_finished_semaphore, nullptr );
+
     /*
     for (size_t i=0; i<MAX_FRAMES_IN_FLIGHT; ++i)
     {
@@ -149,18 +152,22 @@ WindowRenderContextVulkan::~WindowRenderContextVulkan()
       device_dispatch.destroySemaphore( available_semaphores[i], nullptr );
       device_dispatch.destroyFence( in_flight_fences[i], nullptr );
     }
+    */
 
-		device_dispatch.destroyCommandPool( command_pool, nullptr );
-
+    /*
     device_dispatch.destroyPipeline( graphics_pipeline, nullptr );
     device_dispatch.destroyPipelineLayout( pipeline_layout, nullptr );
+    */
+
+		device_dispatch.destroyCommandPool( command_pool, nullptr );
     device_dispatch.destroyRenderPass( render_pass, nullptr );
 
-		for (int i=0; i<framebuffers.size(); i++)
+    for (auto framebuffer : framebuffers)
     {
-			device_dispatch.destroyFramebuffer( framebuffers[i], nullptr );
+			device_dispatch.destroyFramebuffer( framebuffer, nullptr );
 		}
-    */
+
+    depth_buffer.destroy();
 
     swapchain.destroy_image_views( swapchain_image_views );
 
@@ -175,12 +182,14 @@ void WindowRenderContextVulkan::configure()
   _configure_device();
   _configure_swapchain();
   _configure_queues();
-  _configure_render_pass();
   _configure_graphics_pipeline();
+  _configure_depth_stencil();
+  _configure_render_pass();
   _configure_framebuffers();
   _configure_command_pool();
   _configure_command_buffers();
-  _configure_sync_objects();
+  _configure_semaphores();
+  _configure_fences();
 
   /*
 	swapchain_images       = swapchain.get_images().value();
@@ -282,6 +291,24 @@ void WindowRenderContextVulkan::configure()
 	initialized = true;
 }
 
+int WindowRenderContextVulkan::find_memory_type( uint32_t typeFilter, VkMemoryPropertyFlags properties )
+{
+  VkPhysicalDeviceMemoryProperties memory_properties;
+  vkGetPhysicalDeviceMemoryProperties( physical_device, &memory_properties );
+
+  for (uint32_t i=0; i<memory_properties.memoryTypeCount; ++i)
+  {
+    if ( (typeFilter & (1 << i)) &&
+        (memory_properties.memoryTypes[i].propertyFlags & properties) == properties)
+    {
+      return i;
+    }
+  }
+
+  return -1;
+}
+
+
 void WindowRenderContextVulkan::_configure_device()
 {
 	//vulkan 1.2 features
@@ -300,7 +327,7 @@ void WindowRenderContextVulkan::_configure_device()
   );
 
 	device = vkb_require( vkb::DeviceBuilder{physical_device}.build() );
-  //device_dispatch = device.make_table();
+  device_dispatch = device.make_table();
 }
 
 #define BFCLAMP(x, lo, hi) ((x) < (lo) ? (lo) : (x) > (hi) ? (hi) : (x))
@@ -338,56 +365,6 @@ void WindowRenderContextVulkan::_configure_queues()
 
 	graphics_queue = vkb_require( device.get_queue(vkb::QueueType::graphics) );
 	present_queue  = vkb_require( device.get_queue(vkb::QueueType::present) );
-}
-
-void WindowRenderContextVulkan::_configure_render_pass()
-{
-  // RenderPass
-  /*
-	VkAttachmentDescription color_attachment = {};
-	color_attachment.format  = swapchain.image_format;
-	color_attachment.samples = VK_SAMPLE_COUNT_1_BIT;
-	color_attachment.loadOp  = VK_ATTACHMENT_LOAD_OP_CLEAR;
-	color_attachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
-	color_attachment.stencilLoadOp  = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-	color_attachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-	color_attachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-	color_attachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-
-  // Subpass
-	VkAttachmentReference color_attachment_ref = {};
-	color_attachment_ref.attachment = 0;
-	color_attachment_ref.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-
-	VkSubpassDescription subpass = {};
-	subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
-	subpass.colorAttachmentCount = 1;
-	subpass.pColorAttachments = &color_attachment_ref;
-
-  VkSubpassDependency dependency = {};
-  dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
-  dependency.dstSubpass = 0;
-  dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-  dependency.srcAccessMask = 0;
-  dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-  dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-
-	VkRenderPassCreateInfo render_pass_info = {};
-	render_pass_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
-	render_pass_info.attachmentCount = 1;
-	render_pass_info.pAttachments = &color_attachment;
-	render_pass_info.subpassCount = 1;
-	render_pass_info.pSubpasses = &subpass;
-	render_pass_info.pDependencies = &dependency;
-
-	VK_CHECK( "creating render pass",
-    device_dispatch.createRenderPass(
-      &render_pass_info,
-      nullptr,
-      &render_pass
-    )
-  );
-  */
 }
 
 void WindowRenderContextVulkan::_configure_graphics_pipeline()
@@ -531,8 +508,120 @@ void WindowRenderContextVulkan::_configure_graphics_pipeline()
   */
 }
 
+void WindowRenderContextVulkan::_configure_depth_stencil()
+{
+  VkFormat depth_format;
+  if ( !_find_supported_depth_format( &depth_format ) )
+  {
+    VK_LOG_ERROR( "finding supported depth format" );
+    abort();
+  }
+
+  depth_buffer.create(
+    this,
+    swapchain_size.width,
+    swapchain_size.height,
+    depth_format,
+    VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT,
+    VK_IMAGE_ASPECT_DEPTH_BIT,
+    VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT
+  );
+}
+
+void WindowRenderContextVulkan::_configure_render_pass()
+{
+  std::vector<VkAttachmentDescription> attachments(2);
+
+  attachments[0].format = swapchain.image_format;
+  attachments[0].samples = VK_SAMPLE_COUNT_1_BIT;
+  attachments[0].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+  attachments[0].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+  attachments[0].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+  attachments[0].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+  attachments[0].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+  attachments[0].finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+
+  attachments[1].format = depth_buffer.format;
+  attachments[1].samples = VK_SAMPLE_COUNT_1_BIT;
+  attachments[1].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+  attachments[1].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+  attachments[1].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+  attachments[1].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+  attachments[1].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+  attachments[1].finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+
+  VkAttachmentReference color_reference = {};
+  color_reference.attachment = 0;
+  color_reference.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+
+  VkAttachmentReference depth_reference = {};
+  depth_reference.attachment = 1;
+  depth_reference.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+
+  VkSubpassDescription subpassDescription = {};
+  subpassDescription.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+  subpassDescription.colorAttachmentCount = 1;
+  subpassDescription.pColorAttachments = &color_reference;
+  subpassDescription.pDepthStencilAttachment = &depth_reference;
+  subpassDescription.inputAttachmentCount = 0;
+  subpassDescription.pInputAttachments = nullptr;
+  subpassDescription.preserveAttachmentCount = 0;
+  subpassDescription.pPreserveAttachments = nullptr;
+  subpassDescription.pResolveAttachments = nullptr;
+
+  std::vector<VkSubpassDependency> dependencies(1);
+
+  dependencies[0].srcSubpass = VK_SUBPASS_EXTERNAL;
+  dependencies[0].dstSubpass = 0;
+  dependencies[0].srcStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
+  dependencies[0].dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+  dependencies[0].srcAccessMask = VK_ACCESS_MEMORY_READ_BIT;
+  dependencies[0].dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+  dependencies[0].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
+
+  VkRenderPassCreateInfo render_pass_info = {};
+  render_pass_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+  render_pass_info.attachmentCount = static_cast<uint32_t>(attachments.size());
+  render_pass_info.pAttachments = attachments.data();
+  render_pass_info.subpassCount = 1;
+  render_pass_info.pSubpasses = &subpassDescription;
+  render_pass_info.dependencyCount = static_cast<uint32_t>(dependencies.size());
+  render_pass_info.pDependencies = dependencies.data();
+
+	VK_CHECK(
+    "creating render pass",
+    device_dispatch.createRenderPass(
+      &render_pass_info,
+      nullptr,
+      &render_pass
+    )
+  );
+}
+
 void WindowRenderContextVulkan::_configure_framebuffers()
 {
+  framebuffers.resize( swapchain_image_views.size() );
+
+  for (size_t i=0; i<swapchain_image_views.size(); ++i)
+  {
+    std::vector<VkImageView> attachments(2);
+    attachments[0] = swapchain_image_views[i];
+    attachments[1] = depth_buffer.view;
+
+    VkFramebufferCreateInfo framebuffer_info = {};
+    framebuffer_info.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+    framebuffer_info.renderPass = render_pass;
+    framebuffer_info.attachmentCount = static_cast<uint32_t>(attachments.size());
+    framebuffer_info.pAttachments = attachments.data();
+    framebuffer_info.width = swapchain_size.width;
+    framebuffer_info.height = swapchain_size.height;
+    framebuffer_info.layers = 1;
+
+    VK_CHECK(
+      "creating framebuffer",
+      device_dispatch.createFramebuffer( &framebuffer_info, nullptr, &framebuffers[i] )
+    );
+  }
 
   /*
   framebuffers.resize( swapchain_image_views.size() );
@@ -561,6 +650,12 @@ void WindowRenderContextVulkan::_configure_framebuffers()
 
 void WindowRenderContextVulkan::_configure_command_pool()
 {
+  VkCommandPoolCreateInfo pool_info = {};
+  pool_info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+  pool_info.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT | VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
+  pool_info.queueFamilyIndex = graphics_QueueFamilyIndex;
+  device_dispatch.createCommandPool( &pool_info, nullptr, &command_pool );
+
   /*
   VkCommandPoolCreateInfo pool_info = {};
   pool_info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
@@ -576,6 +671,15 @@ void WindowRenderContextVulkan::_configure_command_pool()
 
 void WindowRenderContextVulkan::_configure_command_buffers()
 {
+  VkCommandBufferAllocateInfo allocateInfo = {};
+  allocateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+  allocateInfo.commandPool = command_pool;
+  allocateInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+  allocateInfo.commandBufferCount = swapchain_images.size();
+
+  command_buffers.resize( swapchain_images.size() );
+  device_dispatch.allocateCommandBuffers( &allocateInfo, command_buffers.data() );
+
   /*
   command_buffers.resize( framebuffers.size() );
 
@@ -648,55 +752,61 @@ void WindowRenderContextVulkan::_configure_command_buffers()
   */
 }
 
-void WindowRenderContextVulkan::_configure_sync_objects()
+void WindowRenderContextVulkan::_configure_semaphores()
 {
-  /*
-  available_semaphores.resize( MAX_FRAMES_IN_FLIGHT );
-  finished_semaphores.resize( MAX_FRAMES_IN_FLIGHT );
-  in_flight_fences.resize( MAX_FRAMES_IN_FLIGHT );
-  image_in_flight.resize( swapchain.image_count, VK_NULL_HANDLE );
-
-  VkSemaphoreCreateInfo semaphore_info = {};
-  semaphore_info.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
-
-  VkFenceCreateInfo fence_info = {};
-  fence_info.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-  fence_info.flags = VK_FENCE_CREATE_SIGNALED_BIT;
-
-  for (size_t i=0; i<MAX_FRAMES_IN_FLIGHT; ++i)
-  {
-    VK_CHECK(
-      "creating available semaphore",
-      device_dispatch.createSemaphore(
-        &semaphore_info,
-        nullptr,
-        &available_semaphores[i]
-      )
-    );
-    VK_CHECK(
-      "creating finished semaphore",
-      device_dispatch.createSemaphore(
-        &semaphore_info,
-        nullptr,
-        &finished_semaphores[i]
-      )
-    );
-    VK_CHECK(
-      "creating fence",
-      device_dispatch.createFence( &fence_info, nullptr, &in_flight_fences[i] )
-    );
-  }
-  */
+  _create_semaphore( &image_available_semaphore );
+  _create_semaphore( &rendering_finished_semaphore );
 }
 
-void WindowRenderContextVulkan::_destroy_image( VkImage image )
+void WindowRenderContextVulkan::_configure_fences()
 {
-  vkDestroyImage( device, image, renderer->vulkan_instance.allocation_callbacks );
+  uint32_t i;
+  fences.resize( swapchain_images.size() );
+  for (uint32_t i=0; i<swapchain_images.size(); ++i)
+  {
+    VkFenceCreateInfo fence_info = {};
+    fence_info.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+    fence_info.flags = VK_FENCE_CREATE_SIGNALED_BIT;
+    VK_CHECK(
+      "creating fence",
+      device_dispatch.createFence( &fence_info, nullptr, &fences[i] )
+    );
+  }
+}
+
+void WindowRenderContextVulkan::_create_semaphore( VkSemaphore *semaphore )
+{
+  VkSemaphoreCreateInfo semaphore_info = {};
+  semaphore_info.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+  device_dispatch.createSemaphore( &semaphore_info, nullptr, semaphore );
+}
+
+bool WindowRenderContextVulkan::_find_supported_depth_format( VkFormat* depth_format )
+{
+  std::vector<VkFormat> depth_format_candidates = {
+    VK_FORMAT_D32_SFLOAT_S8_UINT,
+    VK_FORMAT_D32_SFLOAT,
+    VK_FORMAT_D24_UNORM_S8_UINT,
+    VK_FORMAT_D16_UNORM_S8_UINT,
+    VK_FORMAT_D16_UNORM
+  };
+
+  for (auto& format_candidate : depth_format_candidates)
+  {
+    VkFormatProperties format_properties;
+    vkGetPhysicalDeviceFormatProperties( physical_device, format_candidate, &format_properties );
+    if (format_properties.optimalTilingFeatures & VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT)
+    {
+      *depth_format = format_candidate;
+      return true;
+    }
+  }
+
+  return false;
 }
 
 void WindowRenderContextVulkan::_recreate_swapchain()
 {
-  /*
   device_dispatch.deviceWaitIdle();
   device_dispatch.destroyCommandPool( command_pool, nullptr );
 
@@ -705,13 +815,14 @@ void WindowRenderContextVulkan::_recreate_swapchain()
     device_dispatch.destroyFramebuffer( framebuffer, nullptr );
   }
 
+  /*
   swapchain.destroy_image_views( swapchain_image_views );
+  */
 
-  _configure_swapchain();
-  _configure_framebuffers();
+  _configure_swapchain();  // utilizes existing swapchain to create new swapchain
+  //_configure_framebuffers();
   _configure_command_pool();
   _configure_command_buffers();
-  */
 }
 
 VkShaderModule WindowRenderContextVulkan::_create_shader_module( const Byte* code, int count )
