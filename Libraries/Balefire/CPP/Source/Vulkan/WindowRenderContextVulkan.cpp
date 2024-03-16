@@ -145,20 +145,17 @@ WindowRenderContextVulkan::~WindowRenderContextVulkan()
     device_dispatch.destroySemaphore( image_available_semaphore, nullptr );
     device_dispatch.destroySemaphore( rendering_finished_semaphore, nullptr );
 
-    /*
-    for (size_t i=0; i<MAX_FRAMES_IN_FLIGHT; ++i)
+    for (auto fence : fences)
     {
-      device_dispatch.destroySemaphore( finished_semaphores[i], nullptr );
-      device_dispatch.destroySemaphore( available_semaphores[i], nullptr );
-      device_dispatch.destroyFence( in_flight_fences[i], nullptr );
+      device_dispatch.destroyFence( fence, nullptr );
     }
-    */
 
-    /*
-    device_dispatch.destroyPipeline( graphics_pipeline, nullptr );
-    device_dispatch.destroyPipelineLayout( pipeline_layout, nullptr );
-    */
+/*
+    //device_dispatch.destroyPipeline( graphics_pipeline, nullptr );
+    //device_dispatch.destroyPipelineLayout( pipeline_layout, nullptr );
+*/
 
+    device_dispatch.freeCommandBuffers( command_pool, command_buffers.size(), command_buffers.data() );
 		device_dispatch.destroyCommandPool( command_pool, nullptr );
     device_dispatch.destroyRenderPass( render_pass, nullptr );
 
@@ -848,6 +845,81 @@ VkShaderModule WindowRenderContextVulkan::_create_shader_module( const Byte* cod
 
 void WindowRenderContextVulkan::render()
 {
+  device_dispatch.acquireNextImageKHR(
+    swapchain,
+    UINT64_MAX,
+    image_available_semaphore,
+    VK_NULL_HANDLE,
+    &frame_index
+  );
+
+  device_dispatch.waitForFences( 1, &fences[frame_index], VK_FALSE, UINT64_MAX );
+  device_dispatch.resetFences( 1, &fences[frame_index] );
+
+  cmd = command_buffers[ frame_index ];
+
+  device_dispatch.resetCommandBuffer( cmd, 0 );
+
+  VkCommandBufferBeginInfo begin_info = {};
+  begin_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+  begin_info.flags = VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT;
+  device_dispatch.beginCommandBuffer( cmd, &begin_info );
+
+  VkClearColorValue clear_color = { 0.0f, 0.0f, 1.0f, 1.0f };
+  VkClearDepthStencilValue clear_depth_stencil = { 1.0f, 0 };
+
+  // Begin render pass
+  VkRenderPassBeginInfo render_pass_info = {};
+  render_pass_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+  render_pass_info.renderPass = render_pass;
+  render_pass_info.framebuffer = framebuffers[frame_index];
+  render_pass_info.renderArea.offset = {0, 0};
+  render_pass_info.renderArea.extent = swapchain_size;
+  render_pass_info.clearValueCount = 1;
+
+  std::vector<VkClearValue> clear_values(2);
+  clear_values[0].color = clear_color;
+  clear_values[1].depthStencil = clear_depth_stencil;
+
+  render_pass_info.clearValueCount = static_cast<uint32_t>( clear_values.size() );
+  render_pass_info.pClearValues = clear_values.data();
+
+  device_dispatch.cmdBeginRenderPass( cmd, &render_pass_info, VK_SUBPASS_CONTENTS_INLINE );
+
+
+  // Render
+
+  // End render pass
+  device_dispatch.cmdEndRenderPass( cmd );
+  device_dispatch.endCommandBuffer( cmd );
+
+  VkPipelineStageFlags wait_dest_stage_mask = VK_PIPELINE_STAGE_TRANSFER_BIT;
+  VkSubmitInfo submitInfo = {};
+  submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+  submitInfo.waitSemaphoreCount = 1;
+  submitInfo.pWaitSemaphores = &image_available_semaphore;
+  submitInfo.pWaitDstStageMask = &wait_dest_stage_mask;
+  submitInfo.commandBufferCount = 1;
+  submitInfo.pCommandBuffers = &cmd;
+  submitInfo.signalSemaphoreCount = 1;
+  submitInfo.pSignalSemaphores = &rendering_finished_semaphore;
+  device_dispatch.queueSubmit( graphics_queue, 1, &submitInfo, fences[frame_index] );
+
+  VkPresentInfoKHR present_info = {};
+  present_info.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+  present_info.waitSemaphoreCount = 1;
+  present_info.pWaitSemaphores = &rendering_finished_semaphore;
+  present_info.swapchainCount = 1;
+  present_info.pSwapchains = &swapchain.swapchain;
+  present_info.pImageIndices = &frame_index;
+  vkQueuePresentKHR(present_queue, &present_info);
+
+  vkQueueWaitIdle(present_queue);
+
+  static int frame_count = 0;
+  printf( "frame %d\n", ++frame_count );
+
+
   /*
 printf("1 wait for fences\n");
   device_dispatch.waitForFences(

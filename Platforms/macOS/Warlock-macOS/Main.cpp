@@ -68,17 +68,10 @@ char* window_name = "example SDL2 Vulkan application";
 #include <glm/vec4.hpp>
 using namespace glm;
 
-#include "VulkanInterface.h"
-#include "VulkanFunctions.h"
-Vulkan *vulkan;
-
 int main(int argc, char *argv[])
 {
   Balefire balefire( new FrameworkSDLVulkan() );
   balefire.create_window( "Warlock Engine" );
-
-  vulkan = new Vulkan();
-  init_vulkan_extern(vulkan);
 
 	//const array of positions for the triangle
 	const vec3 positions[3] = {
@@ -99,28 +92,10 @@ int main(int argc, char *argv[])
       }
     }
 
-    AcquireNextImage();
-
-    ResetCommandBuffer();
-    BeginCommandBuffer();
-    {
-      VkClearColorValue clear_color = {0.0f, 0.0f, 1.0f, 1.0f};
-      VkClearDepthStencilValue clear_depth_stencil = {1.0f, 0};
-      BeginRenderPass(clear_color,clear_depth_stencil);
-      {
-
-      }
-      EndRenderPass();
-    }
-    EndCommandBuffer();
-
-    QueueSubmit();
-    QueuePresent();
+    //AcquireNextImage();
     balefire.render();
-  }
 
-  delete vulkan;
-  vulkan = nullptr;
+  }
 
   //SDL_DestroyWindow(window);
   //window = nullptr;

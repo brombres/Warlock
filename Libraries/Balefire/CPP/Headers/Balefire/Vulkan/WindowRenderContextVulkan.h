@@ -45,12 +45,14 @@ namespace BALEFIRE
 
     VkCommandPool                command_pool;
     std::vector<VkCommandBuffer> command_buffers;
+    VkCommandBuffer              cmd;
 
     VkSemaphore image_available_semaphore;
     VkSemaphore rendering_finished_semaphore;
 
     std::vector<VkFence> fences;
 
+    uint32_t frame_index;
     //size_t current_frame = 0;
     //int frame_count = 0;  // FIXME
 

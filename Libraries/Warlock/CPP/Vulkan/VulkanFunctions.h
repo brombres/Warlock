@@ -1,7 +1,17 @@
 #ifndef VULKAN_FUNCTION_H
 #define VULKAN_FUNCTION_H
 
+#include <iostream>
+#include <vector>
+using namespace std;
+
 #include <vulkan/vulkan.h>
+
+#include "Balefire/SDL/FrameworkSDLVulkan.h"
+#include "Balefire/Vulkan/RendererVulkan.h"
+#include "Balefire/Vulkan/WindowRenderContextVulkan.h"
+
+extern BALEFIRE::WindowRenderContextVulkan* g_context;
 
 void AcquireNextImage();
 
