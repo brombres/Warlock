@@ -13,8 +13,6 @@ namespace BALEFIRE
 {
   struct WindowRenderContextVulkan : WindowRenderContext
   {
-    const int MAX_FRAMES_IN_FLIGHT = 2;
-
     // PROPERTIES
     RendererVulkan*  renderer;
     VkSurfaceKHR     surface = nullptr;
@@ -33,15 +31,13 @@ namespace BALEFIRE
     VkQueue  graphics_queue;
     VkQueue  present_queue;
 
-    BVKImage depth_buffer;
-
+    BVKImage     depth_stencil;
     VkRenderPass render_pass;
 
-    //VkPipelineLayout pipeline_layout;
-    //VkPipeline       graphics_pipeline;
+    VkPipelineLayout pipeline_layout;
+    VkPipeline       graphics_pipeline;
 
-    ////VkFormat                 swapchain_image_format;
-    std::vector<VkFramebuffer> framebuffers;
+    std::vector<VkFramebuffer>   framebuffers;
 
     VkCommandPool                command_pool;
     std::vector<VkCommandBuffer> command_buffers;

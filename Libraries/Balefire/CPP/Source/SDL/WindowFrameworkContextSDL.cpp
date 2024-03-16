@@ -1,6 +1,11 @@
 #include "Balefire/SDL/WindowFrameworkContextSDL.h"
 using namespace BALEFIRE;
 
+WindowFrameworkContextSDL::WindowFrameworkContextSDL( Window* window, SDL_Window* sdl_window )
+  : WindowFrameworkContext(window), sdl_window(sdl_window)
+{
+}
+
 WindowFrameworkContextSDL::~WindowFrameworkContextSDL()
 {
   if (sdl_window)
@@ -9,3 +14,4 @@ WindowFrameworkContextSDL::~WindowFrameworkContextSDL()
     sdl_window = nullptr;
   }
 }
+

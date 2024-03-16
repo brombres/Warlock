@@ -12,16 +12,20 @@ typedef int WindowID;
 
 namespace BALEFIRE
 {
+  struct Framework;
+
   struct Window : RefCounted
   {
-    WindowID id = 0;
+    Framework* framework;
+    WindowID   id = 0;
     int width, height;
     int pixel_width, pixel_height;
 
     Ref<WindowFrameworkContext> framework_context;
     Ref<WindowRenderContext>  render_context;
 
-    Window( int width, int height ) : width(width), height(height), pixel_width(width), pixel_height(height) {}
+    Window( Framework* framework, int width, int height ) : framework(framework),
+        width(width), height(height), pixel_width(width), pixel_height(height) {}
 
     ~Window()
     {
@@ -30,6 +34,7 @@ namespace BALEFIRE
     }
 
     void render();
+    void update_pixel_size();
   };
 };
 

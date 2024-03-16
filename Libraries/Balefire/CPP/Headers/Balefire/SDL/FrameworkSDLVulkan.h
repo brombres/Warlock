@@ -11,6 +11,7 @@ namespace BALEFIRE
     virtual void     configure();
     virtual WindowID create_window( String name );
     virtual void     render( Window* window );
+    virtual void     update_pixel_size( Window* window );
   };
 };
 

@@ -7,14 +7,8 @@ using namespace BALEFIRE;
 
 #include <vector>
 
-FrameworkSDLVulkan* g_framework = nullptr;
-RendererVulkan* g_renderer = nullptr;
-WindowRenderContextVulkan* g_context = nullptr;
-extern SDL_Window *window;
-
 void FrameworkSDLVulkan::configure()
 {
-g_framework = this;
   SDL_Init( SDL_INIT_VIDEO );
   renderer = new RendererVulkan( this );
   renderer->configure();
@@ -25,7 +19,8 @@ WindowID FrameworkSDLVulkan::create_window( String name )
   int w = 1024;
   int h = 768;
 
-  SDL_WindowFlags flags = (SDL_WindowFlags)(SDL_WINDOW_SHOWN | SDL_WINDOW_VULKAN);
+  int flags = SDL_WINDOW_SHOWN | SDL_WINDOW_VULKAN | SDL_WINDOW_RESIZABLE;
+
   SDL_Window* sdl_window =
     SDL_CreateWindow(
       name,
@@ -35,7 +30,6 @@ WindowID FrameworkSDLVulkan::create_window( String name )
       h,
       flags
     );
-window = sdl_window;
 
   //unsigned int extensionCount = 0;
   //SDL_Vulkan_GetInstanceExtensions(sdl_window, &extensionCount, nullptr);
@@ -49,14 +43,12 @@ window = sdl_window;
 
 
   RendererVulkan* renderer = (RendererVulkan*)this->renderer.data;
-g_renderer = renderer;
 
-  Window* window = new Window( w, h );
+  Window* window = new Window( this, w, h );
   SDL_Vulkan_GetDrawableSize( sdl_window, &window->pixel_width, &window->pixel_height );
 
-  WindowFrameworkContextSDL* framework_context = new WindowFrameworkContextSDL( sdl_window );
+  WindowFrameworkContextSDL* framework_context = new WindowFrameworkContextSDL( window, sdl_window );
   WindowRenderContextVulkan* render_context = new WindowRenderContextVulkan( window, renderer );
-g_context = render_context;
   window->framework_context = framework_context;
   window->render_context = render_context;
 
@@ -80,5 +72,15 @@ g_context = render_context;
 void FrameworkSDLVulkan::render( Window* window )
 {
   window->render();
+}
+
+void FrameworkSDLVulkan::update_pixel_size( Window* window )
+{
+  WindowFrameworkContext* context = (WindowFrameworkContext*)window->framework_context;
+  WindowFrameworkContextSDL* context_sdl = (WindowFrameworkContextSDL*)context;
+  SDL_Vulkan_GetDrawableSize(
+    context_sdl->sdl_window,
+    &window->pixel_width, &window->pixel_height
+  );
 }
 

@@ -28,6 +28,7 @@ void RendererVulkan::configure()
   );
 
 	debug_messenger = vulkan_instance.debug_messenger;
+  instance_dispatch = vulkan_instance.make_table();
   configured = true;
 }
 

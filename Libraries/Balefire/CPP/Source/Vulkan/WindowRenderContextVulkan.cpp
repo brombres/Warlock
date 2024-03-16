@@ -142,6 +142,7 @@ WindowRenderContextVulkan::~WindowRenderContextVulkan()
   {
     initialized = false;
 
+    device_dispatch.deviceWaitIdle();
     device_dispatch.destroySemaphore( image_available_semaphore, nullptr );
     device_dispatch.destroySemaphore( rendering_finished_semaphore, nullptr );
 
@@ -150,10 +151,8 @@ WindowRenderContextVulkan::~WindowRenderContextVulkan()
       device_dispatch.destroyFence( fence, nullptr );
     }
 
-/*
-    //device_dispatch.destroyPipeline( graphics_pipeline, nullptr );
-    //device_dispatch.destroyPipelineLayout( pipeline_layout, nullptr );
-*/
+    device_dispatch.destroyPipeline( graphics_pipeline, nullptr );
+    device_dispatch.destroyPipelineLayout( pipeline_layout, nullptr );
 
     device_dispatch.freeCommandBuffers( command_pool, command_buffers.size(), command_buffers.data() );
 		device_dispatch.destroyCommandPool( command_pool, nullptr );
@@ -164,11 +163,12 @@ WindowRenderContextVulkan::~WindowRenderContextVulkan()
 			device_dispatch.destroyFramebuffer( framebuffer, nullptr );
 		}
 
-    depth_buffer.destroy();
+    depth_stencil.destroy();
 
     swapchain.destroy_image_views( swapchain_image_views );
 
     vkb::destroy_swapchain( swapchain );
+    device_dispatch.deviceWaitIdle();
     vkb::destroy_device( device );
     vkb::destroy_surface( renderer->vulkan_instance, surface );
   }
@@ -188,110 +188,13 @@ void WindowRenderContextVulkan::configure()
   _configure_semaphores();
   _configure_fences();
 
-  /*
-	swapchain_images       = swapchain.get_images().value();
-	swapchain_image_views  = swapchain.get_image_views().value();
-	swapchain_image_format = swapchain.image_format;
-	const uint32_t swapchain_count = swapchain_images.size();
-  //TODO
-  */
-
-  /*
-  // Command Pool
-	VkCommandPoolCreateInfo cmd_pool_info = {};
-	cmd_pool_info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-	cmd_pool_info.pNext = nullptr;
-
-	cmd_pool_info.queueFamilyIndex = graphics_queue_family;
-	cmd_pool_info.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT | VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
-
-	VK_CHECK(
-    vkCreateCommandPool(
-      device,
-      &cmd_pool_info,
-      nullptr,
-      &command_pool
-    )
-  );
-
-  // Command Buffer
-  VkCommandBufferAllocateInfo cmd_alloc_info = {};
-  cmd_alloc_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-  cmd_alloc_info.pNext = nullptr;
-
-  cmd_alloc_info.commandPool = command_pool;
-  cmd_alloc_info.commandBufferCount = swapchain_count;
-  cmd_alloc_info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-  command_buffers = new VkCommandBuffer[ swapchain_count ];
-  VK_CHECK(
-    vkAllocateCommandBuffers(
-      device, &cmd_alloc_info, command_buffers
-    )
-  );
-  */
-
-  /*
-  // Framebuffers
-	VkFramebufferCreateInfo fb_info = {};
-	fb_info.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-	fb_info.pNext = nullptr;
-
-	fb_info.renderPass = render_pass;
-	fb_info.attachmentCount = 1;
-	fb_info.width = window->width;
-	fb_info.height = window->height;
-	fb_info.layers = 1;
-
-	framebuffers = std::vector<VkFramebuffer>( swapchain_count );
-  render_fences = new VkFence[ swapchain_count ];
-
-	for (int i=0; i<swapchain_count; i++)
-  {
-		fb_info.pAttachments = &swapchain_image_views[i];
-		VK_CHECK(
-      vkCreateFramebuffer(
-        device,
-        &fb_info,
-        nullptr,
-        &framebuffers[i]
-      )
-    );
-
-    VkFenceCreateInfo fenceCreateInfo = {};
-    fenceCreateInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-    fenceCreateInfo.pNext = nullptr;
-    fenceCreateInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
-    VK_CHECK(
-      vkCreateFence(
-        device,
-        &fenceCreateInfo,
-        nullptr,
-        &render_fences[i]
-      )
-    );
-	}
-
-  // Synchronization
-
-	VkSemaphoreCreateInfo semaphoreCreateInfo = {};
-	semaphoreCreateInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
-	semaphoreCreateInfo.pNext = nullptr;
-	semaphoreCreateInfo.flags = 0;
-
-	VK_CHECK(
-    vkCreateSemaphore( device, &semaphoreCreateInfo, nullptr, &present_semaphore )
-  );
-	VK_CHECK(
-    vkCreateSemaphore( device, &semaphoreCreateInfo, nullptr, &render_semaphore )
-  );
-  */
 	initialized = true;
 }
 
 int WindowRenderContextVulkan::find_memory_type( uint32_t typeFilter, VkMemoryPropertyFlags properties )
 {
   VkPhysicalDeviceMemoryProperties memory_properties;
-  vkGetPhysicalDeviceMemoryProperties( physical_device, &memory_properties );
+  renderer->instance_dispatch.getPhysicalDeviceMemoryProperties( physical_device, &memory_properties );
 
   for (uint32_t i=0; i<memory_properties.memoryTypeCount; ++i)
   {
@@ -330,16 +233,17 @@ void WindowRenderContextVulkan::_configure_device()
 #define BFCLAMP(x, lo, hi) ((x) < (lo) ? (lo) : (x) > (hi) ? (hi) : (x))
 void WindowRenderContextVulkan::_configure_swapchain()
 {
+  window->update_pixel_size();
   int width = window->pixel_width;
   int height = window->pixel_height;
 
   VkSurfaceCapabilitiesKHR surface_capabilities;
-  vkGetPhysicalDeviceSurfaceCapabilitiesKHR( physical_device, surface, &surface_capabilities );
+  renderer->instance_dispatch.getPhysicalDeviceSurfaceCapabilitiesKHR( physical_device, surface, &surface_capabilities );
   width = BFCLAMP( width, surface_capabilities.minImageExtent.width, surface_capabilities.maxImageExtent.width );
   height = BFCLAMP( height, surface_capabilities.minImageExtent.height, surface_capabilities.maxImageExtent.height );
   swapchain_size.width = width;
   swapchain_size.height = height;
-
+printf( "CONFIGURE SWAPCHAIN %dx%d\n",width,height);
 	vkb::SwapchainBuilder swapchain_builder{ device };
 	auto swapchain_build_result = swapchain_builder
     //.set_desired_format( VK_FORMAT_B8G8R8A8_UNORM )
@@ -366,7 +270,6 @@ void WindowRenderContextVulkan::_configure_queues()
 
 void WindowRenderContextVulkan::_configure_graphics_pipeline()
 {
-  /*
   VkShaderModule vertex_module =
       _create_shader_module( vertex_spv, sizeof(vertex_spv) );
   VkShaderModule fragment_module =
@@ -502,7 +405,6 @@ void WindowRenderContextVulkan::_configure_graphics_pipeline()
 
   device_dispatch.destroyShaderModule( fragment_module, nullptr );
   device_dispatch.destroyShaderModule( vertex_module, nullptr );
-  */
 }
 
 void WindowRenderContextVulkan::_configure_depth_stencil()
@@ -514,7 +416,7 @@ void WindowRenderContextVulkan::_configure_depth_stencil()
     abort();
   }
 
-  depth_buffer.create(
+  depth_stencil.create(
     this,
     swapchain_size.width,
     swapchain_size.height,
@@ -538,7 +440,7 @@ void WindowRenderContextVulkan::_configure_render_pass()
   attachments[0].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
   attachments[0].finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
 
-  attachments[1].format = depth_buffer.format;
+  attachments[1].format = depth_stencil.format;
   attachments[1].samples = VK_SAMPLE_COUNT_1_BIT;
   attachments[1].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
   attachments[1].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
@@ -603,7 +505,7 @@ void WindowRenderContextVulkan::_configure_framebuffers()
   {
     std::vector<VkImageView> attachments(2);
     attachments[0] = swapchain_image_views[i];
-    attachments[1] = depth_buffer.view;
+    attachments[1] = depth_stencil.view;
 
     VkFramebufferCreateInfo framebuffer_info = {};
     framebuffer_info.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
@@ -619,30 +521,6 @@ void WindowRenderContextVulkan::_configure_framebuffers()
       device_dispatch.createFramebuffer( &framebuffer_info, nullptr, &framebuffers[i] )
     );
   }
-
-  /*
-  framebuffers.resize( swapchain_image_views.size() );
-
-  for (size_t i=0; i<swapchain_image_views.size(); ++i)
-  {
-    VkImageView attachments[] = { swapchain_image_views[i] };
-
-    VkFramebufferCreateInfo framebuffer_info = {};
-    framebuffer_info.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-    framebuffer_info.renderPass = render_pass;
-    framebuffer_info.attachmentCount = 1;
-    framebuffer_info.pAttachments = attachments;
-    framebuffer_info.width = swapchain.extent.width;
-    framebuffer_info.height = swapchain.extent.height;
-    framebuffer_info.layers = 1;
-
-    VK_CHECK(
-      "creating framebuffer",
-      device_dispatch.createFramebuffer(
-        &framebuffer_info, nullptr, &framebuffers[i] )
-    );
-  }
-  */
 }
 
 void WindowRenderContextVulkan::_configure_command_pool()
@@ -651,19 +529,11 @@ void WindowRenderContextVulkan::_configure_command_pool()
   pool_info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
   pool_info.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT | VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
   pool_info.queueFamilyIndex = graphics_QueueFamilyIndex;
-  device_dispatch.createCommandPool( &pool_info, nullptr, &command_pool );
-
-  /*
-  VkCommandPoolCreateInfo pool_info = {};
-  pool_info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-  pool_info.queueFamilyIndex =
-      device.get_queue_index(vkb::QueueType::graphics).value();
 
   VK_CHECK(
     "creating command pool",
     device_dispatch.createCommandPool( &pool_info, nullptr, &command_pool )
   );
-  */
 }
 
 void WindowRenderContextVulkan::_configure_command_buffers()
@@ -678,19 +548,6 @@ void WindowRenderContextVulkan::_configure_command_buffers()
   device_dispatch.allocateCommandBuffers( &allocateInfo, command_buffers.data() );
 
   /*
-  command_buffers.resize( framebuffers.size() );
-
-  VkCommandBufferAllocateInfo allocInfo = {};
-  allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-  allocInfo.commandPool = command_pool;
-  allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-  allocInfo.commandBufferCount = (uint32_t)command_buffers.size();
-
-  VK_CHECK(
-    "creating command buffers",
-    device_dispatch.allocateCommandBuffers( &allocInfo, command_buffers.data() )
-  );
-
   for (size_t i=0; i<command_buffers.size(); ++i)
   {
     VkCommandBufferBeginInfo begin_info = {};
@@ -788,10 +645,11 @@ bool WindowRenderContextVulkan::_find_supported_depth_format( VkFormat* depth_fo
     VK_FORMAT_D16_UNORM
   };
 
+  auto instance_dispatch = renderer->instance_dispatch;
   for (auto& format_candidate : depth_format_candidates)
   {
     VkFormatProperties format_properties;
-    vkGetPhysicalDeviceFormatProperties( physical_device, format_candidate, &format_properties );
+    instance_dispatch.getPhysicalDeviceFormatProperties( physical_device, format_candidate, &format_properties );
     if (format_properties.optimalTilingFeatures & VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT)
     {
       *depth_format = format_candidate;
@@ -805,6 +663,7 @@ bool WindowRenderContextVulkan::_find_supported_depth_format( VkFormat* depth_fo
 void WindowRenderContextVulkan::_recreate_swapchain()
 {
   device_dispatch.deviceWaitIdle();
+  device_dispatch.freeCommandBuffers( command_pool, command_buffers.size(), command_buffers.data() );
   device_dispatch.destroyCommandPool( command_pool, nullptr );
 
   for (auto framebuffer : framebuffers)
@@ -812,46 +671,59 @@ void WindowRenderContextVulkan::_recreate_swapchain()
     device_dispatch.destroyFramebuffer( framebuffer, nullptr );
   }
 
-  /*
   swapchain.destroy_image_views( swapchain_image_views );
-  */
 
   _configure_swapchain();  // utilizes existing swapchain to create new swapchain
-  //_configure_framebuffers();
+  _configure_framebuffers();
   _configure_command_pool();
   _configure_command_buffers();
 }
 
 VkShaderModule WindowRenderContextVulkan::_create_shader_module( const Byte* code, int count )
 {
-  /*
   VkShaderModuleCreateInfo create_info = {};
   create_info.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
   create_info.codeSize = count;
   create_info.pCode = (const uint32_t*)code;
-  */
 
   VkShaderModule shader_module;
-  /*
   if (VK_SUCCESS !=
       device_dispatch.createShaderModule(&create_info, nullptr, &shader_module))
   {
     return VK_NULL_HANDLE; // failed to create shader module
   }
-  */
 
   return shader_module;
 }
 
 void WindowRenderContextVulkan::render()
 {
-  device_dispatch.acquireNextImageKHR(
+
+  VkResult result = device_dispatch.acquireNextImageKHR(
     swapchain,
     UINT64_MAX,
     image_available_semaphore,
     VK_NULL_HANDLE,
     &frame_index
   );
+
+  switch (result)
+  {
+    case VK_SUCCESS:
+      break;
+    case VK_ERROR_OUT_OF_DATE_KHR:
+    case VK_SUBOPTIMAL_KHR:
+      _recreate_swapchain();
+      return;
+    default:
+      fprintf(
+        stderr,
+        "[ERROR] Balefire Vulkan: % (%s).\n",
+        "error acquiring swapchain image",
+        RendererVulkan::vkResult_to_c_string(result)
+      );
+      return;
+  }
 
   device_dispatch.waitForFences( 1, &fences[frame_index], VK_FALSE, UINT64_MAX );
   device_dispatch.resetFences( 1, &fences[frame_index] );
@@ -912,25 +784,29 @@ void WindowRenderContextVulkan::render()
   present_info.swapchainCount = 1;
   present_info.pSwapchains = &swapchain.swapchain;
   present_info.pImageIndices = &frame_index;
-  vkQueuePresentKHR(present_queue, &present_info);
 
-  vkQueueWaitIdle(present_queue);
+  result = device_dispatch.queuePresentKHR( present_queue, &present_info );
+  switch (result)
+  {
+    case VK_SUCCESS:
+      break;
+    case VK_ERROR_OUT_OF_DATE_KHR:
+    case VK_SUBOPTIMAL_KHR:
+      _recreate_swapchain();
+      return;
+    default:
+      fprintf(
+        stderr,
+        "[ERROR] Balefire Vulkan: % (%s).\n",
+        "error presenting swapchain image",
+        RendererVulkan::vkResult_to_c_string(result)
+      );
+      return;
+  }
 
-  static int frame_count = 0;
-  printf( "frame %d\n", ++frame_count );
-
+  device_dispatch.queueWaitIdle( present_queue );
 
   /*
-printf("1 wait for fences\n");
-  device_dispatch.waitForFences(
-    1,
-    &in_flight_fences[current_frame],
-    VK_TRUE,
-    UINT64_MAX
-  );
-printf("2 after fences\n");
-
-  uint32_t image_index = 0;
   VkResult result = device_dispatch.acquireNextImageKHR(
     swapchain,
     UINT64_MAX,
@@ -1026,8 +902,6 @@ printf("2 after fences\n");
       );
       return;
   }
-
-  current_frame = (current_frame + 1) % MAX_FRAMES_IN_FLIGHT;
 
 printf("8 wait idle\n");
   device_dispatch.deviceWaitIdle();

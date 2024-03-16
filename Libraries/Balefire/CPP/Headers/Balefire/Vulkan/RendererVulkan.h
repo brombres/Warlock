@@ -29,10 +29,11 @@ namespace BALEFIRE
 {
   struct RendererVulkan : Renderer
   {
-    Framework*               framework = nullptr;
-    vkb::Instance            vulkan_instance;
-    VkDebugUtilsMessengerEXT debug_messenger;
-    bool                     configured = false;
+    Framework*                 framework = nullptr;
+    vkb::Instance              vulkan_instance;
+    vkb::InstanceDispatchTable instance_dispatch;
+    VkDebugUtilsMessengerEXT   debug_messenger;
+    bool                       configured = false;
 
     RendererVulkan( Framework* framework ) : framework(framework) {}
     virtual ~RendererVulkan();

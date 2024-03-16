@@ -7,8 +7,13 @@
 
 namespace BALEFIRE
 {
+  struct Window;
+
   struct WindowFrameworkContext : RefCounted
   {
+    Window* window;
+
+    WindowFrameworkContext( Window* window ) : window(window) {}
   };
 };
 
