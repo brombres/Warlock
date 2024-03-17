@@ -179,9 +179,9 @@ void WindowRenderContextVulkan::configure()
   _configure_device();
   _configure_swapchain();
   _configure_queues();
-  _configure_graphics_pipeline();
   _configure_depth_stencil();
   _configure_render_pass();
+  _configure_graphics_pipeline();
   _configure_framebuffers();
   _configure_command_pool();
   _configure_command_buffers();
@@ -213,8 +213,8 @@ void WindowRenderContextVulkan::_configure_device()
 {
 	//vulkan 1.2 features
 	VkPhysicalDeviceVulkan12Features features12{};
-	//features12.bufferDeviceAddress = true;
-	//features12.descriptorIndexing = true;
+	features12.bufferDeviceAddress = true;
+	features12.descriptorIndexing = true;
 
 	vkb::PhysicalDeviceSelector selector{ renderer->vulkan_instance };
 	physical_device = vkb_require(
@@ -243,11 +243,11 @@ void WindowRenderContextVulkan::_configure_swapchain()
   height = BFCLAMP( height, surface_capabilities.minImageExtent.height, surface_capabilities.maxImageExtent.height );
   swapchain_size.width = width;
   swapchain_size.height = height;
-printf( "CONFIGURE SWAPCHAIN %dx%d\n",width,height);
 	vkb::SwapchainBuilder swapchain_builder{ device };
 	auto swapchain_build_result = swapchain_builder
     //.set_desired_format( VK_FORMAT_B8G8R8A8_UNORM )
-		.use_default_format_selection()
+    .set_desired_format( {VK_FORMAT_B8G8R8A8_UNORM, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR} )
+		//.use_default_format_selection()
 		.set_desired_present_mode( VK_PRESENT_MODE_FIFO_KHR )
 		.set_desired_extent( width, height )
     .set_old_swapchain( swapchain )
@@ -711,10 +711,11 @@ void WindowRenderContextVulkan::render()
   {
     case VK_SUCCESS:
       break;
-    case VK_ERROR_OUT_OF_DATE_KHR:
     case VK_SUBOPTIMAL_KHR:
+    case VK_ERROR_OUT_OF_DATE_KHR:
       _recreate_swapchain();
       return;
+    //case VK_ERROR_SURFACE_LOST_KHR: destroy & recreate surface
     default:
       fprintf(
         stderr,
@@ -756,10 +757,31 @@ void WindowRenderContextVulkan::render()
   render_pass_info.clearValueCount = static_cast<uint32_t>( clear_values.size() );
   render_pass_info.pClearValues = clear_values.data();
 
+
   device_dispatch.cmdBeginRenderPass( cmd, &render_pass_info, VK_SUBPASS_CONTENTS_INLINE );
 
-
   // Render
+  device_dispatch.cmdBindPipeline(
+    cmd,
+    VK_PIPELINE_BIND_POINT_GRAPHICS,
+    graphics_pipeline
+  );
+
+  VkViewport viewport = {};
+  viewport.x = 0.0f;
+  viewport.y = 0.0f;
+  viewport.width = swapchain_size.width;
+  viewport.height = swapchain_size.height;
+  viewport.minDepth = 0.0f;
+  viewport.maxDepth = 1.0f;
+
+  VkRect2D scissor = {};
+  scissor.offset = { 0, 0 };
+  scissor.extent = swapchain_size;
+  device_dispatch.cmdSetViewport( cmd, 0, 1, &viewport );
+  device_dispatch.cmdSetScissor(  cmd, 0, 1, &scissor );
+
+  device_dispatch.cmdDraw( cmd, 3, 1, 0, 0 );
 
   // End render pass
   device_dispatch.cmdEndRenderPass( cmd );
@@ -794,6 +816,15 @@ void WindowRenderContextVulkan::render()
     case VK_SUBOPTIMAL_KHR:
       _recreate_swapchain();
       return;
+        // SUBOPTIMAL could be due to resize
+        //VkSurfaceCapabilitiesKHR surface_capabilities;
+        //vkGetPhysicalDeviceSurfaceCapabilitiesKHR( physical_device, surface, &surface_capabilities );
+        //if (surface_capabilities.currentExtent.width != swapchain_size.width ||
+        //    surface_capabilities.currentExtent.height != swapchain_size.height)
+        //{
+        //  _recreate_swapchain();
+        //}
+        //return;
     default:
       fprintf(
         stderr,
