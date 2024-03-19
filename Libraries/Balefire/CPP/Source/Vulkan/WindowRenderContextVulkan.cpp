@@ -1,6 +1,9 @@
 #include "Balefire/Vulkan/WindowRenderContextVulkan.h"
 using namespace BALEFIRE;
 
+#include "Vulkanize/Vulkanize.h"
+using namespace VULKANIZE;
+
 const Byte fragment_spv[] =
 {
   3, 2, 35, 7, 0, 5, 1, 0, 11, 0, 8, 0, 19, 0, 0, 0,
@@ -142,25 +145,25 @@ WindowRenderContextVulkan::~WindowRenderContextVulkan()
   {
     initialized = false;
 
-    device_dispatch.deviceWaitIdle();
-    device_dispatch.destroySemaphore( image_available_semaphore, nullptr );
-    device_dispatch.destroySemaphore( rendering_finished_semaphore, nullptr );
+    context->device_dispatch.deviceWaitIdle();
+    context->device_dispatch.destroySemaphore( image_available_semaphore, nullptr );
+    context->device_dispatch.destroySemaphore( rendering_finished_semaphore, nullptr );
 
     for (auto fence : fences)
     {
-      device_dispatch.destroyFence( fence, nullptr );
+      context->device_dispatch.destroyFence( fence, nullptr );
     }
 
-    device_dispatch.destroyPipeline( graphics_pipeline, nullptr );
-    device_dispatch.destroyPipelineLayout( pipeline_layout, nullptr );
+    context->device_dispatch.destroyPipeline( graphics_pipeline, nullptr );
+    context->device_dispatch.destroyPipelineLayout( pipeline_layout, nullptr );
 
-    device_dispatch.freeCommandBuffers( command_pool, command_buffers.size(), command_buffers.data() );
-		device_dispatch.destroyCommandPool( command_pool, nullptr );
-    device_dispatch.destroyRenderPass( render_pass, nullptr );
+    context->device_dispatch.freeCommandBuffers( command_pool, command_buffers.size(), command_buffers.data() );
+		context->device_dispatch.destroyCommandPool( command_pool, nullptr );
+    context->device_dispatch.destroyRenderPass( render_pass, nullptr );
 
     for (auto framebuffer : framebuffers)
     {
-			device_dispatch.destroyFramebuffer( framebuffer, nullptr );
+			context->device_dispatch.destroyFramebuffer( framebuffer, nullptr );
 		}
 
     depth_stencil.destroy();
@@ -168,15 +171,25 @@ WindowRenderContextVulkan::~WindowRenderContextVulkan()
     swapchain.destroy_image_views( swapchain_image_views );
 
     vkb::destroy_swapchain( swapchain );
-    device_dispatch.deviceWaitIdle();
-    vkb::destroy_device( device );
-    vkb::destroy_surface( renderer->vulkan_instance, surface );
+    context->device_dispatch.deviceWaitIdle();
+
+    if (context)
+    {
+      delete context;
+      context = nullptr;
+    }
   }
 }
 
 void WindowRenderContextVulkan::configure()
 {
-  _configure_device();
+  // noAction
+}
+
+void WindowRenderContextVulkan::configure( VkSurfaceKHR surface )
+{
+  context = new VkzContext( surface );
+  context->configure();
   _configure_swapchain();
   _configure_queues();
   _configure_depth_stencil();
@@ -194,7 +207,7 @@ void WindowRenderContextVulkan::configure()
 int WindowRenderContextVulkan::find_memory_type( uint32_t typeFilter, VkMemoryPropertyFlags properties )
 {
   VkPhysicalDeviceMemoryProperties memory_properties;
-  renderer->instance_dispatch.getPhysicalDeviceMemoryProperties( physical_device, &memory_properties );
+  vulkanize.instance_dispatch.getPhysicalDeviceMemoryProperties( context->physical_device, &memory_properties );
 
   for (uint32_t i=0; i<memory_properties.memoryTypeCount; ++i)
   {
@@ -209,27 +222,6 @@ int WindowRenderContextVulkan::find_memory_type( uint32_t typeFilter, VkMemoryPr
 }
 
 
-void WindowRenderContextVulkan::_configure_device()
-{
-	//vulkan 1.2 features
-	VkPhysicalDeviceVulkan12Features features12{};
-	features12.bufferDeviceAddress = true;
-	features12.descriptorIndexing = true;
-
-	vkb::PhysicalDeviceSelector selector{ renderer->vulkan_instance };
-	physical_device = vkb_require(
-    selector
-		.set_minimum_version(1,2)
-		//.set_required_features_13(features)
-		.set_required_features_12( features12 )
-		.set_surface( surface )
-		.select()
-  );
-
-	device = vkb_require( vkb::DeviceBuilder{physical_device}.build() );
-  device_dispatch = device.make_table();
-}
-
 #define BFCLAMP(x, lo, hi) ((x) < (lo) ? (lo) : (x) > (hi) ? (hi) : (x))
 void WindowRenderContextVulkan::_configure_swapchain()
 {
@@ -238,12 +230,12 @@ void WindowRenderContextVulkan::_configure_swapchain()
   int height = window->pixel_height;
 
   VkSurfaceCapabilitiesKHR surface_capabilities;
-  renderer->instance_dispatch.getPhysicalDeviceSurfaceCapabilitiesKHR( physical_device, surface, &surface_capabilities );
+  vulkanize.instance_dispatch.getPhysicalDeviceSurfaceCapabilitiesKHR( context->physical_device, context->surface, &surface_capabilities );
   width = BFCLAMP( width, surface_capabilities.minImageExtent.width, surface_capabilities.maxImageExtent.width );
   height = BFCLAMP( height, surface_capabilities.minImageExtent.height, surface_capabilities.maxImageExtent.height );
   swapchain_size.width = width;
   swapchain_size.height = height;
-	vkb::SwapchainBuilder swapchain_builder{ device };
+	vkb::SwapchainBuilder swapchain_builder{ context->device };
 	auto swapchain_build_result = swapchain_builder
     //.set_desired_format( VK_FORMAT_B8G8R8A8_UNORM )
     .set_desired_format( {VK_FORMAT_B8G8R8A8_UNORM, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR} )
@@ -261,11 +253,11 @@ void WindowRenderContextVulkan::_configure_swapchain()
 
 void WindowRenderContextVulkan::_configure_queues()
 {
-  graphics_QueueFamilyIndex = device.get_queue_index( vkb::QueueType::graphics ).value();
-  present_QueueFamilyIndex  = device.get_queue_index( vkb::QueueType::present ).value();
+  graphics_QueueFamilyIndex = context->device.get_queue_index( vkb::QueueType::graphics ).value();
+  present_QueueFamilyIndex  = context->device.get_queue_index( vkb::QueueType::present ).value();
 
-	graphics_queue = vkb_require( device.get_queue(vkb::QueueType::graphics) );
-	present_queue  = vkb_require( device.get_queue(vkb::QueueType::present) );
+	graphics_queue = vkb_require( context->device.get_queue(vkb::QueueType::graphics) );
+	present_queue  = vkb_require( context->device.get_queue(vkb::QueueType::present) );
 }
 
 void WindowRenderContextVulkan::_configure_graphics_pipeline()
@@ -362,7 +354,7 @@ void WindowRenderContextVulkan::_configure_graphics_pipeline()
   pipeline_layout_info.setLayoutCount = 0;
   pipeline_layout_info.pushConstantRangeCount = 0;
 
-  if (VK_SUCCESS != device_dispatch.createPipelineLayout(
+  if (VK_SUCCESS != context->device_dispatch.createPipelineLayout(
       &pipeline_layout_info, nullptr, &pipeline_layout))
   {
     fprintf( stderr, "[ERROR] Balefire Vulkan: failed to create pipeline layout.\n" );
@@ -398,13 +390,13 @@ void WindowRenderContextVulkan::_configure_graphics_pipeline()
   pipeline_info.basePipelineHandle = VK_NULL_HANDLE;
 
   VK_CHECK( "creating graphics pipeline",
-    device_dispatch.createGraphicsPipelines(
+    context->device_dispatch.createGraphicsPipelines(
       VK_NULL_HANDLE, 1, &pipeline_info, nullptr, &graphics_pipeline
     )
   );
 
-  device_dispatch.destroyShaderModule( fragment_module, nullptr );
-  device_dispatch.destroyShaderModule( vertex_module, nullptr );
+  context->device_dispatch.destroyShaderModule( fragment_module, nullptr );
+  context->device_dispatch.destroyShaderModule( vertex_module, nullptr );
 }
 
 void WindowRenderContextVulkan::_configure_depth_stencil()
@@ -489,7 +481,7 @@ void WindowRenderContextVulkan::_configure_render_pass()
 
 	VK_CHECK(
     "creating render pass",
-    device_dispatch.createRenderPass(
+    context->device_dispatch.createRenderPass(
       &render_pass_info,
       nullptr,
       &render_pass
@@ -518,7 +510,7 @@ void WindowRenderContextVulkan::_configure_framebuffers()
 
     VK_CHECK(
       "creating framebuffer",
-      device_dispatch.createFramebuffer( &framebuffer_info, nullptr, &framebuffers[i] )
+      context->device_dispatch.createFramebuffer( &framebuffer_info, nullptr, &framebuffers[i] )
     );
   }
 }
@@ -532,7 +524,7 @@ void WindowRenderContextVulkan::_configure_command_pool()
 
   VK_CHECK(
     "creating command pool",
-    device_dispatch.createCommandPool( &pool_info, nullptr, &command_pool )
+    context->device_dispatch.createCommandPool( &pool_info, nullptr, &command_pool )
   );
 }
 
@@ -545,7 +537,7 @@ void WindowRenderContextVulkan::_configure_command_buffers()
   allocateInfo.commandBufferCount = swapchain_images.size();
 
   command_buffers.resize( swapchain_images.size() );
-  device_dispatch.allocateCommandBuffers( &allocateInfo, command_buffers.data() );
+  context->device_dispatch.allocateCommandBuffers( &allocateInfo, command_buffers.data() );
 
   /*
   for (size_t i=0; i<command_buffers.size(); ++i)
@@ -555,7 +547,7 @@ void WindowRenderContextVulkan::_configure_command_buffers()
 
     VK_CHECK(
       "beginning command buffer",
-      device_dispatch.beginCommandBuffer( command_buffers[i], &begin_info )
+      context->device_dispatch.beginCommandBuffer( command_buffers[i], &begin_info )
     );
 
     VkRenderPassBeginInfo render_pass_info = {};
@@ -580,27 +572,27 @@ void WindowRenderContextVulkan::_configure_command_buffers()
     scissor.offset = { 0, 0 };
     scissor.extent = swapchain.extent;
 
-    device_dispatch.cmdSetViewport(command_buffers[i], 0, 1, &viewport);
-    device_dispatch.cmdSetScissor(command_buffers[i], 0, 1, &scissor);
+    context->device_dispatch.cmdSetViewport(command_buffers[i], 0, 1, &viewport);
+    context->device_dispatch.cmdSetScissor(command_buffers[i], 0, 1, &scissor);
 
-    device_dispatch.cmdBeginRenderPass(
+    context->device_dispatch.cmdBeginRenderPass(
       command_buffers[i],
       &render_pass_info,
       VK_SUBPASS_CONTENTS_INLINE
     );
 
-    device_dispatch.cmdBindPipeline(
+    context->device_dispatch.cmdBindPipeline(
       command_buffers[i],
       VK_PIPELINE_BIND_POINT_GRAPHICS,
       graphics_pipeline
     );
 
-    device_dispatch.cmdDraw( command_buffers[i], 3, 1, 0, 0 );
-    device_dispatch.cmdEndRenderPass(command_buffers[i]);
+    context->device_dispatch.cmdDraw( command_buffers[i], 3, 1, 0, 0 );
+    context->device_dispatch.cmdEndRenderPass(command_buffers[i]);
 
     VK_CHECK(
       "ending command buffer",
-      device_dispatch.endCommandBuffer( command_buffers[i] )
+      context->device_dispatch.endCommandBuffer( command_buffers[i] )
     );
   }
   */
@@ -623,7 +615,7 @@ void WindowRenderContextVulkan::_configure_fences()
     fence_info.flags = VK_FENCE_CREATE_SIGNALED_BIT;
     VK_CHECK(
       "creating fence",
-      device_dispatch.createFence( &fence_info, nullptr, &fences[i] )
+      context->device_dispatch.createFence( &fence_info, nullptr, &fences[i] )
     );
   }
 }
@@ -632,7 +624,7 @@ void WindowRenderContextVulkan::_create_semaphore( VkSemaphore *semaphore )
 {
   VkSemaphoreCreateInfo semaphore_info = {};
   semaphore_info.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
-  device_dispatch.createSemaphore( &semaphore_info, nullptr, semaphore );
+  context->device_dispatch.createSemaphore( &semaphore_info, nullptr, semaphore );
 }
 
 bool WindowRenderContextVulkan::_find_supported_depth_format( VkFormat* depth_format )
@@ -645,11 +637,11 @@ bool WindowRenderContextVulkan::_find_supported_depth_format( VkFormat* depth_fo
     VK_FORMAT_D16_UNORM
   };
 
-  auto instance_dispatch = renderer->instance_dispatch;
+  auto instance_dispatch = vulkanize.instance_dispatch;
   for (auto& format_candidate : depth_format_candidates)
   {
     VkFormatProperties format_properties;
-    instance_dispatch.getPhysicalDeviceFormatProperties( physical_device, format_candidate, &format_properties );
+    instance_dispatch.getPhysicalDeviceFormatProperties( context->physical_device, format_candidate, &format_properties );
     if (format_properties.optimalTilingFeatures & VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT)
     {
       *depth_format = format_candidate;
@@ -662,13 +654,13 @@ bool WindowRenderContextVulkan::_find_supported_depth_format( VkFormat* depth_fo
 
 void WindowRenderContextVulkan::_recreate_swapchain()
 {
-  device_dispatch.deviceWaitIdle();
-  device_dispatch.freeCommandBuffers( command_pool, command_buffers.size(), command_buffers.data() );
-  device_dispatch.destroyCommandPool( command_pool, nullptr );
+  context->device_dispatch.deviceWaitIdle();
+  context->device_dispatch.freeCommandBuffers( command_pool, command_buffers.size(), command_buffers.data() );
+  context->device_dispatch.destroyCommandPool( command_pool, nullptr );
 
   for (auto framebuffer : framebuffers)
   {
-    device_dispatch.destroyFramebuffer( framebuffer, nullptr );
+    context->device_dispatch.destroyFramebuffer( framebuffer, nullptr );
   }
 
   swapchain.destroy_image_views( swapchain_image_views );
@@ -688,7 +680,7 @@ VkShaderModule WindowRenderContextVulkan::_create_shader_module( const Byte* cod
 
   VkShaderModule shader_module;
   if (VK_SUCCESS !=
-      device_dispatch.createShaderModule(&create_info, nullptr, &shader_module))
+      context->device_dispatch.createShaderModule(&create_info, nullptr, &shader_module))
   {
     return VK_NULL_HANDLE; // failed to create shader module
   }
@@ -699,7 +691,7 @@ VkShaderModule WindowRenderContextVulkan::_create_shader_module( const Byte* cod
 void WindowRenderContextVulkan::render()
 {
 
-  VkResult result = device_dispatch.acquireNextImageKHR(
+  VkResult result = context->device_dispatch.acquireNextImageKHR(
     swapchain,
     UINT64_MAX,
     image_available_semaphore,
@@ -726,17 +718,17 @@ void WindowRenderContextVulkan::render()
       return;
   }
 
-  device_dispatch.waitForFences( 1, &fences[frame_index], VK_FALSE, UINT64_MAX );
-  device_dispatch.resetFences( 1, &fences[frame_index] );
+  context->device_dispatch.waitForFences( 1, &fences[frame_index], VK_FALSE, UINT64_MAX );
+  context->device_dispatch.resetFences( 1, &fences[frame_index] );
 
   cmd = command_buffers[ frame_index ];
 
-  device_dispatch.resetCommandBuffer( cmd, 0 );
+  context->device_dispatch.resetCommandBuffer( cmd, 0 );
 
   VkCommandBufferBeginInfo begin_info = {};
   begin_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
   begin_info.flags = VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT;
-  device_dispatch.beginCommandBuffer( cmd, &begin_info );
+  context->device_dispatch.beginCommandBuffer( cmd, &begin_info );
 
   VkClearColorValue clear_color = { 0.0f, 0.0f, 1.0f, 1.0f };
   VkClearDepthStencilValue clear_depth_stencil = { 1.0f, 0 };
@@ -758,10 +750,10 @@ void WindowRenderContextVulkan::render()
   render_pass_info.pClearValues = clear_values.data();
 
 
-  device_dispatch.cmdBeginRenderPass( cmd, &render_pass_info, VK_SUBPASS_CONTENTS_INLINE );
+  context->device_dispatch.cmdBeginRenderPass( cmd, &render_pass_info, VK_SUBPASS_CONTENTS_INLINE );
 
   // Render
-  device_dispatch.cmdBindPipeline(
+  context->device_dispatch.cmdBindPipeline(
     cmd,
     VK_PIPELINE_BIND_POINT_GRAPHICS,
     graphics_pipeline
@@ -778,14 +770,14 @@ void WindowRenderContextVulkan::render()
   VkRect2D scissor = {};
   scissor.offset = { 0, 0 };
   scissor.extent = swapchain_size;
-  device_dispatch.cmdSetViewport( cmd, 0, 1, &viewport );
-  device_dispatch.cmdSetScissor(  cmd, 0, 1, &scissor );
+  context->device_dispatch.cmdSetViewport( cmd, 0, 1, &viewport );
+  context->device_dispatch.cmdSetScissor(  cmd, 0, 1, &scissor );
 
-  device_dispatch.cmdDraw( cmd, 3, 1, 0, 0 );
+  context->device_dispatch.cmdDraw( cmd, 3, 1, 0, 0 );
 
   // End render pass
-  device_dispatch.cmdEndRenderPass( cmd );
-  device_dispatch.endCommandBuffer( cmd );
+  context->device_dispatch.cmdEndRenderPass( cmd );
+  context->device_dispatch.endCommandBuffer( cmd );
 
   VkPipelineStageFlags wait_dest_stage_mask = VK_PIPELINE_STAGE_TRANSFER_BIT;
   VkSubmitInfo submitInfo = {};
@@ -797,7 +789,7 @@ void WindowRenderContextVulkan::render()
   submitInfo.pCommandBuffers = &cmd;
   submitInfo.signalSemaphoreCount = 1;
   submitInfo.pSignalSemaphores = &rendering_finished_semaphore;
-  device_dispatch.queueSubmit( graphics_queue, 1, &submitInfo, fences[frame_index] );
+  context->device_dispatch.queueSubmit( graphics_queue, 1, &submitInfo, fences[frame_index] );
 
   VkPresentInfoKHR present_info = {};
   present_info.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
@@ -807,7 +799,7 @@ void WindowRenderContextVulkan::render()
   present_info.pSwapchains = &swapchain.swapchain;
   present_info.pImageIndices = &frame_index;
 
-  result = device_dispatch.queuePresentKHR( present_queue, &present_info );
+  result = context->device_dispatch.queuePresentKHR( present_queue, &present_info );
   switch (result)
   {
     case VK_SUCCESS:
@@ -818,7 +810,7 @@ void WindowRenderContextVulkan::render()
       return;
         // SUBOPTIMAL could be due to resize
         //VkSurfaceCapabilitiesKHR surface_capabilities;
-        //vkGetPhysicalDeviceSurfaceCapabilitiesKHR( physical_device, surface, &surface_capabilities );
+        //vkGetPhysicalDeviceSurfaceCapabilitiesKHR( context->physical_device, surface, &surface_capabilities );
         //if (surface_capabilities.currentExtent.width != swapchain_size.width ||
         //    surface_capabilities.currentExtent.height != swapchain_size.height)
         //{
@@ -835,184 +827,5 @@ void WindowRenderContextVulkan::render()
       return;
   }
 
-  device_dispatch.queueWaitIdle( present_queue );
-
-  /*
-  VkResult result = device_dispatch.acquireNextImageKHR(
-    swapchain,
-    UINT64_MAX,
-    available_semaphores[current_frame],
-    VK_NULL_HANDLE,
-    &image_index
-  );
-
-  switch (result)
-  {
-    case VK_ERROR_OUT_OF_DATE_KHR:
-      _recreate_swapchain();
-      return;
-    case VK_SUCCESS:
-    case VK_SUBOPTIMAL_KHR:
-      break;
-    default:
-      fprintf(
-        stderr,
-        "[ERROR] Balefire Vulkan: % (%s).\n",
-        "error acquiring swapchain image",
-        RendererVulkan::vkResult_to_c_string(result)
-      );
-      return;
-  }
-
-  if (image_in_flight[image_index] != VK_NULL_HANDLE)
-  {
-    device_dispatch.waitForFences(
-      1,
-      &image_in_flight[image_index],
-      VK_TRUE,
-      UINT64_MAX
-    );
-  }
-  image_in_flight[image_index] = in_flight_fences[current_frame];
-
-  VkSubmitInfo submitInfo = {};
-  submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-
-  VkSemaphore wait_semaphores[] = { available_semaphores[current_frame] };
-  VkPipelineStageFlags wait_stages[] =
-    { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
-  submitInfo.waitSemaphoreCount = 1;
-  submitInfo.pWaitSemaphores = wait_semaphores;
-  submitInfo.pWaitDstStageMask = wait_stages;
-
-  submitInfo.commandBufferCount = 1;
-  submitInfo.pCommandBuffers = &command_buffers[image_index];
-
-  VkSemaphore signal_semaphores[] = { finished_semaphores[current_frame] };
-  submitInfo.signalSemaphoreCount = 1;
-  submitInfo.pSignalSemaphores = signal_semaphores;
-
-  device_dispatch.resetFences(1, &in_flight_fences[current_frame]);
-
-  VK_CHECK(
-    "submitting draw command buffer",
-    device_dispatch.queueSubmit(
-      graphics_queue,
-      1, &submitInfo,
-      in_flight_fences[current_frame]
-    )
-  );
-
-  VkPresentInfoKHR present_info = {};
-  present_info.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
-
-  present_info.waitSemaphoreCount = 1;
-  present_info.pWaitSemaphores = signal_semaphores;
-
-  VkSwapchainKHR swapChains[] = { swapchain };
-  present_info.swapchainCount = 1;
-  present_info.pSwapchains = swapChains;
-
-  present_info.pImageIndices = &image_index;
-
-  result = device_dispatch.queuePresentKHR(present_queue, &present_info);
-  switch (result)
-  {
-    case VK_ERROR_OUT_OF_DATE_KHR:
-    case VK_SUBOPTIMAL_KHR:
-      _recreate_swapchain();
-      return;
-    case VK_SUCCESS:
-      break;
-    default:
-      fprintf(
-        stderr,
-        "[ERROR] Balefire Vulkan: % (%s).\n",
-        "error presenting swapchain image",
-        RendererVulkan::vkResult_to_c_string(result)
-      );
-      return;
-  }
-
-printf("8 wait idle\n");
-  device_dispatch.deviceWaitIdle();
-printf("8 after idle\n");
-*/
-
-  /*
-  uint32_t swapchain_index;
-	VK_CHECK(
-    vkAcquireNextImageKHR(
-      device, swapchain, 2000000000, present_semaphore, nullptr, &swapchain_index
-    )
-  );
-
-  VK_CHECK( vkWaitForFences( device, 1, &render_fences[swapchain_index], false, 2000000000 ) );
-  VK_CHECK( vkResetFences( device, 1, &render_fences[swapchain_index] ) );
-
-  if (frame_count % 100000 == 0) printf( "Render %d [%d]\n",frame_count,swapchain_index);
-
-  VkCommandBuffer cmd_buffer = command_buffers[swapchain_index];
-  VK_CHECK( vkResetCommandBuffer(cmd_buffer, 0) );
-  VkCommandBufferBeginInfo cmd_begin_info = {};
-	cmd_begin_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-	//cmd_begin_info.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-	cmd_begin_info.flags = VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT;
-	cmd_begin_info.pNext = nullptr;
-	cmd_begin_info.pInheritanceInfo = nullptr;
-	VK_CHECK( vkBeginCommandBuffer(cmd_buffer, &cmd_begin_info) );
-
-  //make a clear-color from frame number. This will flash with a 120*pi frame period.
-	VkClearValue clear_value;
-	float flash = abs(sin(frame_count / 120.f));
-	clear_value.color = { { 0.0f, 0.0f, flash, 1.0f } };
-
-	//start the main renderpass.
-	VkRenderPassBeginInfo rp_info = {};
-	rp_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-	rp_info.pNext = nullptr;
-
-	rp_info.renderPass = render_pass;
-	rp_info.renderArea.offset.x = 0;
-	rp_info.renderArea.offset.y = 0;
-	rp_info.renderArea.extent.width = window->width;
-	rp_info.renderArea.extent.height = window->height;
-	rp_info.framebuffer = framebuffers[swapchain_index];
-
-	//connect clear values
-	rp_info.clearValueCount = 1;
-	rp_info.pClearValues = &clear_value;
-
-	vkCmdBeginRenderPass( cmd_buffer, &rp_info, VK_SUBPASS_CONTENTS_INLINE );
-
-  vkCmdEndRenderPass( cmd_buffer );
-	VK_CHECK( vkEndCommandBuffer( cmd_buffer) );
-
-  VkSubmitInfo submit_info = {};
-	submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-	submit_info.pNext = nullptr;
-	//VkPipelineStageFlags waitStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-  VkPipelineStageFlags waitStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
-	submit_info.pWaitDstStageMask = &waitStage;
-	submit_info.waitSemaphoreCount = 1;
-	submit_info.pWaitSemaphores = &present_semaphore;
-	submit_info.signalSemaphoreCount = 1;
-	submit_info.pSignalSemaphores = &render_semaphore;
-	submit_info.commandBufferCount = 1;
-	submit_info.pCommandBuffers = &cmd_buffer;
-	VK_CHECK( vkQueueSubmit(graphics_queue, 1, &submit_info, render_fences[swapchain_index]) );
-
-	VkPresentInfoKHR present_info = {};
-	present_info.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
-	present_info.pNext = nullptr;
-	present_info.pSwapchains = &swapchain;
-	present_info.swapchainCount = 1;
-	present_info.pWaitSemaphores = &render_semaphore;
-	present_info.waitSemaphoreCount = 1;
-	present_info.pImageIndices = &swapchain_index;
-	VK_CHECK( vkQueuePresentKHR(present_queue, &present_info) );
-  vkQueueWaitIdle( present_queue );
-
-  ++frame_count;
-  */
+  context->device_dispatch.queueWaitIdle( present_queue );
 }

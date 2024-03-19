@@ -5,21 +5,22 @@
 
 #include <vector>
 #include <vulkan/vulkan.h>
+
 #include "Balefire/Core/WindowRenderContext.h"
 #include "Balefire/Vulkan/BVKImage.h"
 #include "Balefire/Vulkan/RendererVulkan.h"
+
+#include "Vulkanize/Vulkanize.h"
+
 
 namespace BALEFIRE
 {
   struct WindowRenderContextVulkan : WindowRenderContext
   {
     // PROPERTIES
-    RendererVulkan*  renderer;
-    VkSurfaceKHR     surface = nullptr;
-
-    vkb::PhysicalDevice  physical_device;
-    vkb::Device          device;
-    vkb::DispatchTable   device_dispatch;
+    RendererVulkan*        renderer;
+    VULKANIZE::VkzContext* context = nullptr;
+    VkSurfaceKHR           surface = nullptr;
 
     VkExtent2D               swapchain_size;
     vkb::Swapchain           swapchain;
@@ -59,10 +60,10 @@ namespace BALEFIRE
 
     // METHODS
     virtual void configure();
+    virtual void configure( VkSurfaceKHR surface );
     int          find_memory_type( uint32_t typeFilter, VkMemoryPropertyFlags properties );
     virtual void render();
 
-    void _configure_device();
     void _configure_swapchain();
     void _configure_queues();
     void _configure_graphics_pipeline();

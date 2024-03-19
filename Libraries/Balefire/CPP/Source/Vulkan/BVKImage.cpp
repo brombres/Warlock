@@ -40,13 +40,13 @@ bool BVKImage::create( WindowRenderContextVulkan* context, int width, int height
 
   ON_VK_ERROR(
     "creating image",
-    context->device_dispatch.createImage( &image_info, nullptr, &image ),
+    context->context->device_dispatch.createImage( &image_info, nullptr, &image ),
     return false;
   )
   image_created = true;
 
   VkMemoryRequirements memory_requirements;
-  context->device_dispatch.getImageMemoryRequirements( image, &memory_requirements );
+  context->context->device_dispatch.getImageMemoryRequirements( image, &memory_requirements );
 
   int memory_type_index = context->find_memory_type( memory_requirements.memoryTypeBits, properties );
 
@@ -57,13 +57,13 @@ bool BVKImage::create( WindowRenderContextVulkan* context, int width, int height
 
   ON_VK_ERROR(
     "allocating image memory",
-    context->device_dispatch.allocateMemory( &alloc_info, nullptr, &memory ),
+    context->context->device_dispatch.allocateMemory( &alloc_info, nullptr, &memory ),
     destroy();
     return false;
   );
   memory_allocated = true;
 
-  context->device_dispatch.bindImageMemory( image, memory, 0 );
+  context->context->device_dispatch.bindImageMemory( image, memory, 0 );
 
   VkImageViewCreateInfo view_info = {};
   view_info.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
@@ -78,7 +78,7 @@ bool BVKImage::create( WindowRenderContextVulkan* context, int width, int height
 
   ON_VK_ERROR(
     "creating image view",
-    context->device_dispatch.createImageView( &view_info, nullptr, &view ),
+    context->context->device_dispatch.createImageView( &view_info, nullptr, &view ),
     destroy();
     return false;
   );
@@ -93,19 +93,19 @@ void BVKImage::destroy()
   if (view_created)
   {
     view_created = false;
-    context->device_dispatch.destroyImageView( view, nullptr );
+    context->context->device_dispatch.destroyImageView( view, nullptr );
   }
 
   if (memory_allocated)
   {
     memory_allocated = false;
-    context->device_dispatch.freeMemory( memory, nullptr );
+    context->context->device_dispatch.freeMemory( memory, nullptr );
   }
 
   if (image_created)
   {
     image_created = false;
-    context->device_dispatch.destroyImage( image, nullptr );
+    context->context->device_dispatch.destroyImage( image, nullptr );
   }
 
   exists = false;

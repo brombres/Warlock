@@ -1,3 +1,5 @@
+#include <vector>
+
 #include "Balefire/Balefire.h"
 #include "Balefire/SDL/FrameworkSDLVulkan.h"
 #include "Balefire/SDL/WindowFrameworkContextSDL.h"
@@ -5,7 +7,8 @@
 #include "Balefire/Vulkan/WindowRenderContextVulkan.h"
 using namespace BALEFIRE;
 
-#include <vector>
+#include "Vulkanize/Vulkanize.h"
+using namespace VULKANIZE;
 
 void FrameworkSDLVulkan::configure()
 {
@@ -55,14 +58,18 @@ WindowID FrameworkSDLVulkan::create_window( String name )
   window->id = balefire->windows.add( window );
   printf("window id:%d\n",window->id);
 
+  VkSurfaceKHR surface;
   if (SDL_TRUE != SDL_Vulkan_CreateSurface(
       framework_context->sdl_window,
-      renderer->vulkan_instance,
-      &render_context->surface
+      vulkanize.vulkan_instance,
+      &surface
     ))
   {
     fprintf( stderr, "[ERROR] SDL_Vulkan_CreateSurface() failed.\n" );
   }
+
+  render_context->surface = surface;
+  render_context->configure( surface );
 
   renderer->configure_window( window );
 

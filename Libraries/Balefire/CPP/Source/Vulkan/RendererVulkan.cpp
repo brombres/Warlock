@@ -3,6 +3,9 @@
 #include "Balefire/Vulkan/WindowRenderContextVulkan.h"
 using namespace BALEFIRE;
 
+#include "Vulkanize/Vulkanize.h"
+using namespace VULKANIZE;
+
 #include <vector>
 using namespace std;
 
@@ -11,24 +14,16 @@ RendererVulkan::~RendererVulkan()
   if (configured)
   {
     configured = false;
-    vkb::destroy_instance( vulkan_instance );
   }
 }
 
 void RendererVulkan::configure()
 {
-	//make the vulkan instance, with basic debug features
-	vulkan_instance = vkb_require(
-    vkb::InstanceBuilder( vkGetInstanceProcAddr )
+  vulkanize
     .set_app_name( "Warlock" )
-    .request_validation_layers( true )
-    .use_default_debug_messenger()
-    .require_api_version(1, 2, 0)
-    .build()
-  );
+    .request_validation_layers()
+    .configure( vkGetInstanceProcAddr );
 
-	debug_messenger = vulkan_instance.debug_messenger;
-  instance_dispatch = vulkan_instance.make_table();
   configured = true;
 }
 
