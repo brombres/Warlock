@@ -4,12 +4,8 @@
 #include <vulkan/vulkan.h>
 #include "VkBootstrap.h"
 
-#include "Vulkanize/Context.h"
-
 namespace VULKANIZE
 {
-  struct Context;
-
   struct Vulkanize
   {
     // PROPERTIES
@@ -36,8 +32,6 @@ namespace VULKANIZE
     Vulkanize&  set_app_name( const char* app_name );
     Vulkanize&  use_default_debug_messenger();
     vkb::InstanceBuilder& vulkan_instance_builder( PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr );
-
-    Context* create_context( VkSurfaceKHR surface );
   };
 
   extern Vulkanize vulkanize;
@@ -59,3 +53,6 @@ namespace VULKANIZE
     on_error;                                                  \
   }                                                            \
 }
+
+#include "Vulkanize/Context.h"
+#include "Vulkanize/ExtendedContext.h"

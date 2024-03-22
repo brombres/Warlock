@@ -18,9 +18,9 @@ namespace BALEFIRE
   struct WindowRenderContextVulkan : WindowRenderContext
   {
     // PROPERTIES
-    RendererVulkan*        renderer;
+    RendererVulkan*     renderer;
     VULKANIZE::Context* context = nullptr;
-    VkSurfaceKHR           surface = nullptr;
+    VkSurfaceKHR        surface = nullptr;
 
     VkExtent2D               swapchain_size;
     vkb::Swapchain           swapchain;

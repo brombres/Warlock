@@ -2,6 +2,7 @@
 using namespace BALEFIRE;
 
 #include "Vulkanize/Vulkanize.h"
+#include "Vulkanize/StandardContext.h"
 using namespace VULKANIZE;
 
 const Byte fragment_spv[] =
@@ -188,7 +189,7 @@ void WindowRenderContextVulkan::configure()
 
 void WindowRenderContextVulkan::configure( VkSurfaceKHR surface )
 {
-  context = new Context( surface );
+  context = new StandardContext( surface );
   context->configure();
   _configure_swapchain();
   _configure_queues();

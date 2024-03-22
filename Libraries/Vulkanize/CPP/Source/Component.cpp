@@ -1,12 +1,20 @@
-#include "Vulkanize/Node.h"
+#include "Vulkanize/Component.h"
+#include "Vulkanize/Context.h"
 using namespace VULKANIZE;
 
-Node::~Node()
+Component::Component( Context* context ) : context(context)
 {
-  destroy();
 }
 
-void Node::add( Node* child )
+Component::~Component()
+{
+  if (parent) parent->remove_child( this );
+
+  while (last_child) delete last_child;
+  on_destroy();
+}
+
+void Component::add( Component* child )
 {
   child->parent = this;
 
@@ -22,15 +30,7 @@ void Node::add( Node* child )
   }
 }
 
-void Node::destroy()
-{
-  if (parent) parent->remove_child( this );
-
-  while (last_child) delete last_child;
-  on_destroy();
-}
-
-void Node::remove_child( Node* child )
+void Component::remove_child( Component* child )
 {
   if (child->parent != this) return;
   child->parent = nullptr;
@@ -54,7 +54,7 @@ void Node::remove_child( Node* child )
   }
   else
   {
-    Node* cur = child->first_child;
+    Component* cur = child->first_child;
     while (cur->next_sibling != child)
     {
       cur = cur->next_sibling;
