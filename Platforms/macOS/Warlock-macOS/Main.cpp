@@ -61,7 +61,7 @@ using namespace std;
 
 #include <SDL2/SDL.h>
 SDL_Window *window;
-char* window_name = "example SDL2 Vulkan application";
+const char* window_name = "example SDL2 Vulkan application";
 
 #include <glm/mat4x4.hpp>
 #include <glm/vec3.hpp>

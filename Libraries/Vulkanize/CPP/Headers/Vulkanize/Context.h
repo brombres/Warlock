@@ -4,7 +4,7 @@
 
 namespace VULKANIZE
 {
-  struct VkzContext
+  struct Context
   {
     VkSurfaceKHR        surface = nullptr;
 
@@ -13,8 +13,8 @@ namespace VULKANIZE
     vkb::Device         device;
     vkb::DispatchTable  device_dispatch;
 
-    VkzContext( VkSurfaceKHR surface );
-    ~VkzContext();
+    Context( VkSurfaceKHR surface );
+    ~Context();
     bool destroy();
 
     bool configure();

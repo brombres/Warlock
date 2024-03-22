@@ -157,7 +157,7 @@ WindowRenderContextVulkan::~WindowRenderContextVulkan()
     context->device_dispatch.destroyPipeline( graphics_pipeline, nullptr );
     context->device_dispatch.destroyPipelineLayout( pipeline_layout, nullptr );
 
-    context->device_dispatch.freeCommandBuffers( command_pool, command_buffers.size(), command_buffers.data() );
+    context->device_dispatch.freeCommandBuffers( command_pool, (uint32_t)command_buffers.size(), command_buffers.data() );
 		context->device_dispatch.destroyCommandPool( command_pool, nullptr );
     context->device_dispatch.destroyRenderPass( render_pass, nullptr );
 
@@ -188,7 +188,7 @@ void WindowRenderContextVulkan::configure()
 
 void WindowRenderContextVulkan::configure( VkSurfaceKHR surface )
 {
-  context = new VkzContext( surface );
+  context = new Context( surface );
   context->configure();
   _configure_swapchain();
   _configure_queues();
@@ -534,7 +534,7 @@ void WindowRenderContextVulkan::_configure_command_buffers()
   allocateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
   allocateInfo.commandPool = command_pool;
   allocateInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-  allocateInfo.commandBufferCount = swapchain_images.size();
+  allocateInfo.commandBufferCount = (uint32_t)swapchain_images.size();
 
   command_buffers.resize( swapchain_images.size() );
   context->device_dispatch.allocateCommandBuffers( &allocateInfo, command_buffers.data() );
@@ -606,7 +606,6 @@ void WindowRenderContextVulkan::_configure_semaphores()
 
 void WindowRenderContextVulkan::_configure_fences()
 {
-  uint32_t i;
   fences.resize( swapchain_images.size() );
   for (uint32_t i=0; i<swapchain_images.size(); ++i)
   {
@@ -655,7 +654,7 @@ bool WindowRenderContextVulkan::_find_supported_depth_format( VkFormat* depth_fo
 void WindowRenderContextVulkan::_recreate_swapchain()
 {
   context->device_dispatch.deviceWaitIdle();
-  context->device_dispatch.freeCommandBuffers( command_pool, command_buffers.size(), command_buffers.data() );
+  context->device_dispatch.freeCommandBuffers( command_pool, (uint32_t)command_buffers.size(), command_buffers.data() );
   context->device_dispatch.destroyCommandPool( command_pool, nullptr );
 
   for (auto framebuffer : framebuffers)
@@ -711,7 +710,7 @@ void WindowRenderContextVulkan::render()
     default:
       fprintf(
         stderr,
-        "[ERROR] Balefire Vulkan: % (%s).\n",
+        "[ERROR] Balefire Vulkan: %s (%s).\n",
         "error acquiring swapchain image",
         RendererVulkan::vkResult_to_c_string(result)
       );
@@ -820,7 +819,7 @@ void WindowRenderContextVulkan::render()
     default:
       fprintf(
         stderr,
-        "[ERROR] Balefire Vulkan: % (%s).\n",
+        "[ERROR] Balefire Vulkan: %s (%s).\n",
         "error presenting swapchain image",
         RendererVulkan::vkResult_to_c_string(result)
       );

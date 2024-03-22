@@ -3,16 +3,16 @@
 #include "Vulkanize/Vulkanize.h"
 using namespace VULKANIZE;
 
-VkzContext::VkzContext( VkSurfaceKHR surface ) : surface(surface)
+Context::Context( VkSurfaceKHR surface ) : surface(surface)
 {
 }
 
-VkzContext::~VkzContext()
+Context::~Context()
 {
   destroy();
 }
 
-bool VkzContext::destroy()
+bool Context::destroy()
 {
   if (surface)
   {
@@ -29,14 +29,14 @@ bool VkzContext::destroy()
   return false;
 }
 
-bool VkzContext::configure()
+bool Context::configure()
 {
   _configure_device();
   configured = true;
   return true;
 }
 
-bool VkzContext::_configure_device()
+bool Context::_configure_device()
 {
 	//vulkan 1.2 features
 	VkPhysicalDeviceVulkan12Features features12{};

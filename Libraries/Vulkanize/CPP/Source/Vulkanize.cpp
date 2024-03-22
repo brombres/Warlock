@@ -77,9 +77,9 @@ vkb::InstanceBuilder& Vulkanize::vulkan_instance_builder( PFN_vkGetInstanceProcA
   return *instance_builder;
 }
 
-VkzContext* Vulkanize::create_context( VkSurfaceKHR surface )
+Context* Vulkanize::create_context( VkSurfaceKHR surface )
 {
-  VkzContext* context = new VkzContext( surface );
+  Context* context = new Context( surface );
   return context;
 }
 
