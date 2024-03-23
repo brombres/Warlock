@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		30089BC02BAC919700AE818B /* Component.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30089BBF2BAC919700AE818B /* Component.cpp */; };
 		301985302B94DC6000CBECCB /* Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3019850D2B94DC6000CBECCB /* Window.cpp */; };
 		301985322B94DC6000CBECCB /* String.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3019850F2B94DC6000CBECCB /* String.cpp */; };
 		301985332B94DC6000CBECCB /* Renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 301985102B94DC6000CBECCB /* Renderer.cpp */; };
@@ -19,6 +18,8 @@
 		3049E6A72B94FBF4008554DD /* Balefire.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3049E6A62B94FBF4008554DD /* Balefire.cpp */; };
 		3049E6AE2B952FBE008554DD /* WindowRenderContextVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3049E6AD2B952FBE008554DD /* WindowRenderContextVulkan.cpp */; };
 		3049E6B02B953545008554DD /* WindowFrameworkContextSDL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3049E6AF2B953545008554DD /* WindowFrameworkContextSDL.cpp */; };
+		305AA2AF2BAF48E200BDAE68 /* StandardConfigureDeviceComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 305AA2AE2BAF48E200BDAE68 /* StandardConfigureDeviceComponent.cpp */; };
+		305AA2B12BAF4B5600BDAE68 /* Component.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 305AA2B02BAF4B5600BDAE68 /* Component.cpp */; };
 		306912D12B5E7D7400B14F73 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 306912D02B5E7D7400B14F73 /* AppDelegate.m */; };
 		306912D32B5E7D7500B14F73 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 306912D22B5E7D7500B14F73 /* Assets.xcassets */; };
 		306912E12B5E7E1D00B14F73 /* Warlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 306912E02B5E7E1D00B14F73 /* Warlock.swift */; };
@@ -129,7 +130,6 @@
 /* Begin PBXFileReference section */
 		30089BB22BAC918B00AE818B /* Component.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Component.h; sourceTree = "<group>"; };
 		30089BBE2BAC918B00AE818B /* Optional.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Optional.h; sourceTree = "<group>"; };
-		30089BBF2BAC919700AE818B /* Component.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Component.cpp; sourceTree = "<group>"; };
 		3019850D2B94DC6000CBECCB /* Window.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Window.cpp; sourceTree = "<group>"; };
 		3019850F2B94DC6000CBECCB /* String.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = String.cpp; sourceTree = "<group>"; };
 		301985102B94DC6000CBECCB /* Renderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Renderer.cpp; sourceTree = "<group>"; };
@@ -161,6 +161,9 @@
 		3049E6AC2B9518D9008554DD /* WindowRenderContextVulkan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WindowRenderContextVulkan.h; sourceTree = "<group>"; };
 		3049E6AD2B952FBE008554DD /* WindowRenderContextVulkan.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WindowRenderContextVulkan.cpp; sourceTree = "<group>"; };
 		3049E6AF2B953545008554DD /* WindowFrameworkContextSDL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WindowFrameworkContextSDL.cpp; sourceTree = "<group>"; };
+		305AA2AD2BAF48CB00BDAE68 /* StandardConfigureDeviceComponent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StandardConfigureDeviceComponent.h; sourceTree = "<group>"; };
+		305AA2AE2BAF48E200BDAE68 /* StandardConfigureDeviceComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StandardConfigureDeviceComponent.cpp; sourceTree = "<group>"; };
+		305AA2B02BAF4B5600BDAE68 /* Component.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Component.cpp; sourceTree = "<group>"; };
 		306912CC2B5E7D7400B14F73 /* Warlock-macOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Warlock-macOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		306912CF2B5E7D7400B14F73 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		306912D02B5E7D7400B14F73 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -517,6 +520,7 @@
 		3077062D2BA896D500122E50 /* Vulkanize */ = {
 			isa = PBXGroup;
 			children = (
+				305AA2AD2BAF48CB00BDAE68 /* StandardConfigureDeviceComponent.h */,
 				30089BB22BAC918B00AE818B /* Component.h */,
 				30089BBE2BAC918B00AE818B /* Optional.h */,
 				307706342BA8B39C00122E50 /* Context.h */,
@@ -537,7 +541,8 @@
 		307706312BA896D500122E50 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				30089BBF2BAC919700AE818B /* Component.cpp */,
+				305AA2B02BAF4B5600BDAE68 /* Component.cpp */,
+				305AA2AE2BAF48E200BDAE68 /* StandardConfigureDeviceComponent.cpp */,
 				307706352BA8B3AC00122E50 /* Context.cpp */,
 				307706302BA896D500122E50 /* Vulkanize.cpp */,
 			);
@@ -733,7 +738,7 @@
 				306912D12B5E7D7400B14F73 /* AppDelegate.m in Sources */,
 				307706332BA896D500122E50 /* Vulkanize.cpp in Sources */,
 				306912E12B5E7E1D00B14F73 /* Warlock.swift in Sources */,
-				30089BC02BAC919700AE818B /* Component.cpp in Sources */,
+				305AA2B12BAF4B5600BDAE68 /* Component.cpp in Sources */,
 				3049E6AE2B952FBE008554DD /* WindowRenderContextVulkan.cpp in Sources */,
 				3049E6A72B94FBF4008554DD /* Balefire.cpp in Sources */,
 				301985332B94DC6000CBECCB /* Renderer.cpp in Sources */,
@@ -742,6 +747,7 @@
 				307706362BA8B3AC00122E50 /* Context.cpp in Sources */,
 				301985302B94DC6000CBECCB /* Window.cpp in Sources */,
 				301985382B94DC6000CBECCB /* VkBootstrap.cpp in Sources */,
+				305AA2AF2BAF48E200BDAE68 /* StandardConfigureDeviceComponent.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

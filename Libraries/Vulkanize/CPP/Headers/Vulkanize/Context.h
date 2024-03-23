@@ -2,8 +2,11 @@
 
 #include <string>
 #include <vector>
+#include <unordered_map>
 #include <vulkan/vulkan.h>
 #include "VkBootstrap.h"
+
+#include "Vulkanize.h"
 
 #define VKZ_CONFIGURE_DEVICE             "device"
 #define VKZ_CONFIGURE_SWAPCHAIN          "swapchain"
@@ -23,11 +26,13 @@ namespace VULKANIZE
   {
     bool                configured = false;
 
-    std::vector<std::string> configuration_steps;
-    VkSurfaceKHR             surface;
-    vkb::PhysicalDevice      physical_device;
-    vkb::Device              device;
-    vkb::DispatchTable       device_dispatch;
+    std::vector<std::string>                                process;
+    std::unordered_map<std::string,std::vector<Component*>> components;
+
+    VkSurfaceKHR        surface;
+    vkb::PhysicalDevice physical_device;
+    vkb::Device         device;
+    vkb::DispatchTable  device_dispatch;
 
     Context( VkSurfaceKHR surface );
 
@@ -36,6 +41,9 @@ namespace VULKANIZE
     virtual bool _configure_device();
     virtual bool destroy();
 
-    virtual void set_configuration_steps( std::vector<std::string>& steps );
+    virtual void add_component( std::string step_name, Component* component );
+    virtual void configure_components();
+    virtual void configure_process();
+    virtual void set_component( std::string step_name, Component* component );
   };
 };

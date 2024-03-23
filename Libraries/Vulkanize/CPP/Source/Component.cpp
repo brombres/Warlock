@@ -2,19 +2,15 @@
 #include "Vulkanize/Context.h"
 using namespace VULKANIZE;
 
-Component::Component( Context* context ) : context(context)
-{
-}
-
 Component::~Component()
 {
   if (parent) parent->remove_child( this );
 
   while (last_child) delete last_child;
-  on_destroy();
+  if (configured) destroy();
 }
 
-void Component::add( Component* child )
+void Component::add_child( Component* child )
 {
   child->parent = this;
 
@@ -64,4 +60,3 @@ void Component::remove_child( Component* child )
     child->next_sibling = child->previous_sibling = nullptr;
   }
 }
-

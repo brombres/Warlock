@@ -2,35 +2,46 @@
 
 #include "Vulkanize/Vulkanize.h"
 #include "Vulkanize/Context.h"
+#include "Vulkanize/StandardConfigureDeviceComponent.h"
 using namespace VULKANIZE;
 
 Context::Context( VkSurfaceKHR surface ) : surface(surface)
 {
-  // Set up default configuration steps
-  std::vector<std::string> steps;
-  steps.push_back( VKZ_CONFIGURE_DEVICE );
-  steps.push_back( VKZ_CONFIGURE_SWAPCHAIN );
-  steps.push_back( VKZ_CONFIGURE_QUEUES );
-  steps.push_back( VKZ_CONFIGURE_DEPTH_STENCIL );
-  steps.push_back( VKZ_CONFIGURE_RENDER_PASS );
-  steps.push_back( VKZ_CONFIGURE_GRAPHICS_PIPELINES );
-  steps.push_back( VKZ_CONFIGURE_FRAMEBUFFERS );
-  steps.push_back( VKZ_CONFIGURE_COMMAND_POOL );
-  steps.push_back( VKZ_CONFIGURE_COMMAND_BUFFERS );
-  steps.push_back( VKZ_CONFIGURE_SEMAPHORES );
-  steps.push_back( VKZ_CONFIGURE_FENCES );
-  set_configuration_steps( steps );
 }
 
 Context::~Context()
 {
   destroy();
+
+  for (int i=(int)process.size(); --i>=0; )
+  {
+    auto& list = components[process[i]];
+    while (list.size())
+    {
+      Component* component = list.back();
+      list.pop_back();
+      delete component;
+    }
+  }
+
   vkb::destroy_surface( vulkanize.vulkan_instance, surface );
   surface = nullptr;
 }
 
 bool Context::configure()
 {
+  configure_process();
+  configure_components();
+
+  for (auto step : process)
+  {
+    auto list = components[step];
+    for (auto component : list)
+    {
+      component->configure();
+    }
+  }
+
   _configure_device();
   configured = true;
   return true;
@@ -38,40 +49,47 @@ bool Context::configure()
 
 bool Context::_configure_device()
 {
-  //vulkan 1.2 features
-  VkPhysicalDeviceVulkan12Features features12{};
-  features12.bufferDeviceAddress = true;
-  features12.descriptorIndexing = true;
-
-  vkb::PhysicalDeviceSelector selector{ vulkanize.vulkan_instance };
-  VKB_SET( physical_device,
-    selector
-      .set_minimum_version(1,2)
-      //.set_required_features_13(features)
-      .set_required_features_12( features12 )
-      .set_surface( surface )
-      .select(),
-    "selecting physical device",
-    return destroy()
-  );
-
-  VKB_SET( device, vkb::DeviceBuilder{physical_device}.build(), "building device", return destroy() );
-  device_dispatch = device.make_table();
   return true;
 }
+
 bool Context::destroy()
 {
-  if (configured)
-  {
-    configured = false;
-    vkb::destroy_device( device );
-  }
-
   return false;
 }
 
-void Context::set_configuration_steps( std::vector<std::string>& steps )
+void Context::add_component( std::string step_name, Component* component )
 {
-  configuration_steps.clear();
-  for (auto step : steps) configuration_steps.push_back( step );
+  components[step_name].push_back( component );
+}
+
+void Context::configure_components()
+{
+  set_component( VKZ_CONFIGURE_DEVICE, new StandardConfigureDeviceComponent(this) );
+}
+
+void Context::configure_process()
+{
+  process.clear();
+  process.push_back( VKZ_CONFIGURE_DEVICE );
+  process.push_back( VKZ_CONFIGURE_SWAPCHAIN );
+  process.push_back( VKZ_CONFIGURE_QUEUES );
+  process.push_back( VKZ_CONFIGURE_DEPTH_STENCIL );
+  process.push_back( VKZ_CONFIGURE_RENDER_PASS );
+  process.push_back( VKZ_CONFIGURE_GRAPHICS_PIPELINES );
+  process.push_back( VKZ_CONFIGURE_FRAMEBUFFERS );
+  process.push_back( VKZ_CONFIGURE_COMMAND_POOL );
+  process.push_back( VKZ_CONFIGURE_COMMAND_BUFFERS );
+  process.push_back( VKZ_CONFIGURE_SEMAPHORES );
+  process.push_back( VKZ_CONFIGURE_FENCES );
+}
+
+void Context::set_component( std::string step_name, Component* component )
+{
+  std::vector<Component*>& list = components[step_name];
+  while (list.size())
+  {
+    delete list.back();
+    list.pop_back();
+  }
+  list.push_back( component );
 }

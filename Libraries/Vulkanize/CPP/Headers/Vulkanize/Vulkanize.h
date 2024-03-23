@@ -39,7 +39,7 @@ namespace VULKANIZE
 
 #define LOG_VULKANIZE_ERROR(message) fprintf( stderr, "[Vulkanize] %s.\n", message );
 
-#define VKB_SET( variable, expression, description, on_error ) \
+#define VKZ_SET( variable, expression, description, on_error ) \
 {                                                              \
   auto result = expression;                                    \
   if (result)                                                  \
@@ -54,4 +54,5 @@ namespace VULKANIZE
   }                                                            \
 }
 
+#include "Vulkanize/Component.h"
 #include "Vulkanize/Context.h"

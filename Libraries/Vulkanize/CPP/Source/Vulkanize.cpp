@@ -37,7 +37,7 @@ bool Vulkanize::configure( PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr )
   builder.set_app_name( _app_name.c_str() );
   if (_use_default_debug_messenger) builder.use_default_debug_messenger();
 
-  VKB_SET( vulkan_instance, builder.build(), "creating Vulkan instance", return reset() );
+  VKZ_SET( vulkan_instance, builder.build(), "creating Vulkan instance", return reset() );
 	debug_messenger = vulkan_instance.debug_messenger;
   instance_dispatch = vulkan_instance.make_table();
 
