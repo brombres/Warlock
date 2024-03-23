@@ -55,4 +55,3 @@ namespace VULKANIZE
 }
 
 #include "Vulkanize/Context.h"
-#include "Vulkanize/ExtendedContext.h"
