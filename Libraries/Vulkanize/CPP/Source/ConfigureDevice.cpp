@@ -1,6 +1,11 @@
 #include "VkBootstrap.h"
-#include "Vulkanize/ConfigureDevice.h"
+#include "Vulkanize/Vulkanize.h"
 using namespace VULKANIZE;
+
+ConfigureDevice::ConfigureDevice( Context* context, int major_version, int minor_version )
+  : Component(), context(context), major_version(major_version), minor_version(minor_version)
+{
+}
 
 bool ConfigureDevice::configure()
 {
@@ -12,7 +17,7 @@ bool ConfigureDevice::configure()
   vkb::PhysicalDeviceSelector selector{ vulkanize.vulkan_instance };
   VKZ_SET( context->physical_device,
     selector
-      .set_minimum_version(1,2)
+      .set_minimum_version(major_version,minor_version)
       //.set_required_features_13(features)
       .set_required_features_12( features12 )
       .set_surface( context->surface )

@@ -28,7 +28,7 @@ Context::~Context()
 
 bool Context::configure()
 {
-  configure_components();
+  if ( !process.size() ) configure_components();
 
   bool error = false;
   for (auto step : process)
@@ -79,7 +79,7 @@ void Context::add_component( std::string step_name, Component* component )
 
 void Context::configure_components()
 {
-  set_component( VKZ_CONFIGURE_DEVICE, new ConfigureDevice(this) );
+  set_component( VKZ_CONFIGURE_DEVICE, new ConfigureDevice(this,1,2) );
 }
 
 void Context::set_component( std::string step_name, Component* component )

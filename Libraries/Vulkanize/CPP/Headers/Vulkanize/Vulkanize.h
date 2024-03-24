@@ -56,3 +56,4 @@ namespace VULKANIZE
 
 #include "Vulkanize/Component.h"
 #include "Vulkanize/Context.h"
+#include "Vulkanize/ConfigureDevice.h"

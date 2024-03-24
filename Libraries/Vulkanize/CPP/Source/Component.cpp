@@ -1,5 +1,4 @@
-#include "Vulkanize/Component.h"
-#include "Vulkanize/Context.h"
+#include "Vulkanize/Vulkanize.h"
 using namespace VULKANIZE;
 
 Component::~Component()
