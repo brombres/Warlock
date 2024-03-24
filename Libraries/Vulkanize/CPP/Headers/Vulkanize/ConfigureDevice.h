@@ -4,11 +4,11 @@
 
 namespace VULKANIZE
 {
-  struct StandardConfigureDeviceComponent : Component
+  struct ConfigureDevice : Component
   {
     Context* context;
 
-    StandardConfigureDeviceComponent( Context* context ) : Component(), context(context) {}
+    ConfigureDevice( Context* context ) : Component(), context(context) {}
     virtual bool configure();
     virtual bool destroy();
   };

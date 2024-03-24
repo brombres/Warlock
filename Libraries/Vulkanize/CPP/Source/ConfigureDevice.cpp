@@ -1,8 +1,8 @@
 #include "VkBootstrap.h"
-#include "Vulkanize/StandardConfigureDeviceComponent.h"
+#include "Vulkanize/ConfigureDevice.h"
 using namespace VULKANIZE;
 
-bool StandardConfigureDeviceComponent::configure()
+bool ConfigureDevice::configure()
 {
   //vulkan 1.2 features
   VkPhysicalDeviceVulkan12Features features12{};
@@ -12,7 +12,7 @@ bool StandardConfigureDeviceComponent::configure()
   vkb::PhysicalDeviceSelector selector{ vulkanize.vulkan_instance };
   VKZ_SET( context->physical_device,
     selector
-      .set_minimum_version(1,3)
+      .set_minimum_version(1,2)
       //.set_required_features_13(features)
       .set_required_features_12( features12 )
       .set_surface( context->surface )
@@ -34,7 +34,7 @@ bool StandardConfigureDeviceComponent::configure()
   return true;
 }
 
-bool StandardConfigureDeviceComponent::destroy()
+bool ConfigureDevice::destroy()
 {
   vkb::destroy_device( context->device );
 

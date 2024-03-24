@@ -4,7 +4,7 @@
 
 #include "Vulkanize/Vulkanize.h"
 #include "Vulkanize/Context.h"
-#include "Vulkanize/StandardConfigureDeviceComponent.h"
+#include "Vulkanize/ConfigureDevice.h"
 using namespace VULKANIZE;
 
 Context::Context( VkSurfaceKHR surface ) : surface(surface)
@@ -79,7 +79,7 @@ void Context::add_component( std::string step_name, Component* component )
 
 void Context::configure_components()
 {
-  set_component( VKZ_CONFIGURE_DEVICE, new StandardConfigureDeviceComponent(this) );
+  set_component( VKZ_CONFIGURE_DEVICE, new ConfigureDevice(this) );
 }
 
 void Context::set_component( std::string step_name, Component* component )
