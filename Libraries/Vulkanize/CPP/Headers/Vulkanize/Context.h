@@ -24,10 +24,10 @@ namespace VULKANIZE
 {
   struct Context
   {
-    bool                configured = false;
+    bool configured = false;
 
-    std::vector<std::string>                                process;
-    std::unordered_map<std::string,std::vector<Component*>> components;
+    std::vector<std::string>                   process;
+    std::unordered_map<std::string,Component*> components;
 
     VkSurfaceKHR        surface;
     vkb::PhysicalDevice physical_device;
@@ -37,13 +37,12 @@ namespace VULKANIZE
     Context( VkSurfaceKHR surface );
 
     virtual ~Context();
-    virtual bool configure();
-    virtual bool _configure_device();
-    virtual bool destroy();
+
+    virtual void configure_components();
 
     virtual void add_component( std::string step_name, Component* component );
-    virtual void configure_components();
-    virtual void configure_process();
+    virtual bool configure();
+    virtual bool destroy();
     virtual void set_component( std::string step_name, Component* component );
   };
 };

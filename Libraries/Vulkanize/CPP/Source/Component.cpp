@@ -4,10 +4,8 @@ using namespace VULKANIZE;
 
 Component::~Component()
 {
-  if (parent) parent->remove_child( this );
-
-  while (last_child) delete last_child;
-  if (configured) destroy();
+  if (next_sibling) delete next_sibling;
+  if (first_child)  delete first_child;
 }
 
 void Component::add_child( Component* child )
@@ -24,6 +22,69 @@ void Component::add_child( Component* child )
   {
     first_child = last_child = child;
   }
+}
+
+void Component::add_sibling( Component* sibling )
+{
+  if (parent)
+  {
+    parent->add_child( sibling );
+  }
+  else
+  {
+    sibling->detach();
+    Component* cur = this;
+    while (cur->next_sibling) cur = cur->next_sibling;
+    cur->next_sibling = sibling;
+    sibling->previous_sibling = this;
+  }
+}
+
+bool Component::configure()
+{
+  on_configure();
+  if (not configured) return false;
+
+  if (first_child && !first_child->configure()) return false;
+  if (next_sibling && !next_sibling->configure()) return false;
+
+  return true;
+}
+
+void Component::detach()
+{
+  if (parent)
+  {
+    parent->remove_child( this );
+    parent = nullptr;
+  }
+  else
+  {
+    if (previous_sibling)
+    {
+      previous_sibling->next_sibling = next_sibling;
+      previous_sibling = nullptr;
+    }
+    if (next_sibling)
+    {
+      next_sibling->previous_sibling = next_sibling;
+      next_sibling = nullptr;
+    }
+  }
+}
+
+bool Component::destroy()
+{
+  if (next_sibling) next_sibling->destroy();
+  if (first_child)  first_child->destroy();
+
+  if (configured)
+  {
+    configured = false;
+    on_destroy();
+  }
+
+  return false;  // always returns false
 }
 
 void Component::remove_child( Component* child )

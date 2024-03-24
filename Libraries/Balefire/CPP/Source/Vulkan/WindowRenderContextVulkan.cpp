@@ -190,7 +190,12 @@ void WindowRenderContextVulkan::configure()
 void WindowRenderContextVulkan::configure( VkSurfaceKHR surface )
 {
   context = new Context( surface );
-  context->configure();
+  if ( !context->configure() )
+  {
+    fprintf( stderr, "[Balefire] Error creating Vulkan rendering context.\n" );
+    return;
+  }
+
   _configure_swapchain();
   _configure_queues();
   _configure_depth_stencil();
@@ -690,6 +695,7 @@ VkShaderModule WindowRenderContextVulkan::_create_shader_module( const Byte* cod
 
 void WindowRenderContextVulkan::render()
 {
+  if ( !initialized ) return;
 
   VkResult result = context->device_dispatch.acquireNextImageKHR(
     swapchain,

@@ -1,3 +1,5 @@
+#include <cstdio>
+
 #include "VkBootstrap.h"
 
 #include "Vulkanize/Vulkanize.h"
@@ -15,14 +17,10 @@ Context::~Context()
 
   for (int i=(int)process.size(); --i>=0; )
   {
-    auto& list = components[process[i]];
-    while (list.size())
-    {
-      Component* component = list.back();
-      list.pop_back();
-      delete component;
-    }
+    Component* component = components[ process[i] ];
+    if (component) delete component;
   }
+  components.clear();
 
   vkb::destroy_surface( vulkanize.vulkan_instance, surface );
   surface = nullptr;
@@ -30,25 +28,24 @@ Context::~Context()
 
 bool Context::configure()
 {
-  configure_process();
   configure_components();
 
+  bool error = false;
   for (auto step : process)
   {
-    auto list = components[step];
-    for (auto component : list)
+    Component* component = components[step];
+    if (component)
     {
-      component->configure();
+      if ( !component->configure() )
+      {
+        error = true;
+        break;
+      }
     }
   }
+  if (error) return false;
 
-  _configure_device();
   configured = true;
-  return true;
-}
-
-bool Context::_configure_device()
-{
   return true;
 }
 
@@ -59,7 +56,25 @@ bool Context::destroy()
 
 void Context::add_component( std::string step_name, Component* component )
 {
-  components[step_name].push_back( component );
+  if (configured)
+  {
+    fprintf( stderr, "[Vulkanize] Error calling add_component(): components can "
+                     "only be modified before configure() is called.\n" );
+    return;
+  }
+
+  Component* existing = components[step_name];
+  if (existing)
+  {
+    existing->add_sibling( component );
+  }
+  else
+  {
+    // This config step does not yet exist in the process definition.
+    process.push_back( step_name );
+
+    components[step_name] = component;
+  }
 }
 
 void Context::configure_components()
@@ -67,29 +82,24 @@ void Context::configure_components()
   set_component( VKZ_CONFIGURE_DEVICE, new StandardConfigureDeviceComponent(this) );
 }
 
-void Context::configure_process()
-{
-  process.clear();
-  process.push_back( VKZ_CONFIGURE_DEVICE );
-  process.push_back( VKZ_CONFIGURE_SWAPCHAIN );
-  process.push_back( VKZ_CONFIGURE_QUEUES );
-  process.push_back( VKZ_CONFIGURE_DEPTH_STENCIL );
-  process.push_back( VKZ_CONFIGURE_RENDER_PASS );
-  process.push_back( VKZ_CONFIGURE_GRAPHICS_PIPELINES );
-  process.push_back( VKZ_CONFIGURE_FRAMEBUFFERS );
-  process.push_back( VKZ_CONFIGURE_COMMAND_POOL );
-  process.push_back( VKZ_CONFIGURE_COMMAND_BUFFERS );
-  process.push_back( VKZ_CONFIGURE_SEMAPHORES );
-  process.push_back( VKZ_CONFIGURE_FENCES );
-}
-
 void Context::set_component( std::string step_name, Component* component )
 {
-  std::vector<Component*>& list = components[step_name];
-  while (list.size())
+  if (configured)
   {
-    delete list.back();
-    list.pop_back();
+    fprintf( stderr, "[Vulkanize] Error calling add_component(): components can "
+                     "only be modified before configure() is called.\n" );
+    return;
   }
-  list.push_back( component );
+
+  Component* existing = components[step_name];
+  if (existing)
+  {
+    delete existing;
+  }
+  else
+  {
+    // This config step does not yet exist in the process definition.
+    process.push_back( step_name );
+  }
+  components[step_name] = component;
 }
