@@ -54,7 +54,7 @@ bool Context::destroy()
   return false;
 }
 
-void Context::add_component( std::string step_name, Component* component )
+void Context::add_component( Component* component )
 {
   if (configured)
   {
@@ -63,6 +63,7 @@ void Context::add_component( std::string step_name, Component* component )
     return;
   }
 
+  const char* step_name = component->configuration_step();
   Component* existing = components[step_name];
   if (existing)
   {
@@ -79,10 +80,10 @@ void Context::add_component( std::string step_name, Component* component )
 
 void Context::configure_components()
 {
-  set_component( VKZ_CONFIGURE_DEVICE, new ConfigureDevice(this,1,2) );
+  set_component( new ConfigureDevice(this,1,2) );
 }
 
-void Context::set_component( std::string step_name, Component* component )
+void Context::set_component( Component* component )
 {
   if (configured)
   {
@@ -91,6 +92,7 @@ void Context::set_component( std::string step_name, Component* component )
     return;
   }
 
+  const char* step_name = component->configuration_step();
   Component* existing = components[step_name];
   if (existing)
   {

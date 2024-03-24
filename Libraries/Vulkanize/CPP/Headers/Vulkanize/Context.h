@@ -40,9 +40,9 @@ namespace VULKANIZE
 
     virtual void configure_components();
 
-    virtual void add_component( std::string step_name, Component* component );
+    virtual void add_component( Component* component );
     virtual bool configure();
     virtual bool destroy();
-    virtual void set_component( std::string step_name, Component* component );
+    virtual void set_component( Component* component );
   };
 };

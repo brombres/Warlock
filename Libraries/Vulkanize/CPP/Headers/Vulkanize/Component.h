@@ -14,6 +14,8 @@ namespace VULKANIZE
     Component() {}
     virtual ~Component();
 
+    virtual const char* configuration_step() = 0;
+
     virtual void on_configure() { configured = true; }
     // Called from configure(), which is called at the appropriate step in the Context
     // configuration process. Set 'configured' to true to indicate that the component

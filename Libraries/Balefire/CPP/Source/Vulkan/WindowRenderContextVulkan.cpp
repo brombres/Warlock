@@ -191,7 +191,7 @@ void WindowRenderContextVulkan::configure( VkSurfaceKHR surface )
 {
   context = new Context( surface );
   context->configure_components();
-  context->set_component( VKZ_CONFIGURE_DEVICE, new ConfigureDevice(context,1,2) );
+  context->set_component( new ConfigureDevice(context,1,2) );
 
   if ( !context->configure() )
   {

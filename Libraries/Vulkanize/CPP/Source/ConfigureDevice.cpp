@@ -7,7 +7,7 @@ ConfigureDevice::ConfigureDevice( Context* context, int major_version, int minor
 {
 }
 
-bool ConfigureDevice::configure()
+void ConfigureDevice::on_configure()
 {
   //vulkan 1.2 features
   VkPhysicalDeviceVulkan12Features features12{};
@@ -23,27 +23,23 @@ bool ConfigureDevice::configure()
       .set_surface( context->surface )
       .select(),
     "selecting physical device",
-    return false
+    return
   );
 
   VKZ_SET(
     context->device,
     vkb::DeviceBuilder{context->physical_device}.build(),
     "building device",
-    return false
+    return
   );
 
   context->device_dispatch = context->device.make_table();
 
   configured = true;
-  return true;
 }
 
-bool ConfigureDevice::destroy()
+void ConfigureDevice::on_destroy()
 {
   vkb::destroy_device( context->device );
-
-  configured = false;
-  return false;
 }
 

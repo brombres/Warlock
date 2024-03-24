@@ -9,7 +9,9 @@ namespace VULKANIZE
     int minor_version;
 
     ConfigureDevice( Context* context, int major_version=1, int minor_version=2 );
-    virtual bool configure();
-    virtual bool destroy();
+    virtual void on_configure();
+    virtual void on_destroy();
+
+    virtual const char* configuration_step() { return VKZ_CONFIGURE_DEVICE; }
   };
 };
