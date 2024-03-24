@@ -9,17 +9,18 @@ ConfigureDevice::ConfigureDevice( Context* context, int major_version, int minor
 
 void ConfigureDevice::on_configure()
 {
-  //vulkan 1.2 features
-  VkPhysicalDeviceVulkan12Features features12{};
-  features12.bufferDeviceAddress = true;
-  features12.descriptorIndexing = true;
+  //features12.bufferDeviceAddress = true;
+  //features12.descriptorIndexing = true;
 
   vkb::PhysicalDeviceSelector selector{ vulkanize.vulkan_instance };
+
   VKZ_SET( context->physical_device,
     selector
-      .set_minimum_version(major_version,minor_version)
-      //.set_required_features_13(features)
-      .set_required_features_12( features12 )
+      .set_minimum_version( major_version, minor_version )
+      .set_required_features( required_features )
+      .set_required_features_11( required_features_v1_1 )
+      .set_required_features_12( required_features_v1_2 )
+      .set_required_features_13( required_features_v1_3 )
       .set_surface( context->surface )
       .select(),
     "selecting physical device",
