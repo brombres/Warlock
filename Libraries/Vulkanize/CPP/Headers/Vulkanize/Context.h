@@ -26,7 +26,7 @@ namespace VKZ
   {
     bool configured = false;
 
-    std::vector<std::string>                   process;
+    std::vector<std::string>                   phases;
     std::unordered_map<std::string,Component*> components;
 
     VkSurfaceKHR        surface;

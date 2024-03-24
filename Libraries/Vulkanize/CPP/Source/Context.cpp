@@ -15,9 +15,9 @@ Context::~Context()
 {
   destroy();
 
-  for (int i=(int)process.size(); --i>=0; )
+  for (int i=(int)phases.size(); --i>=0; )
   {
-    Component* component = components[ process[i] ];
+    Component* component = components[ phases[i] ];
     if (component) delete component;
   }
   components.clear();
@@ -28,12 +28,12 @@ Context::~Context()
 
 bool Context::configure()
 {
-  if ( !process.size() ) configure_components();
+  if ( !phases.size() ) configure_components();
 
   bool error = false;
-  for (auto step : process)
+  for (auto phase : phases)
   {
-    Component* component = components[step];
+    Component* component = components[phase];
     if (component)
     {
       if ( !component->configure() )
@@ -63,18 +63,18 @@ void Context::add_component( Component* component )
     return;
   }
 
-  const char* step_name = component->configuration_step();
-  Component* existing = components[step_name];
+  const char* phase = component->phase();
+  Component* existing = components[phase];
   if (existing)
   {
     existing->add_sibling( component );
   }
   else
   {
-    // This config step does not yet exist in the process definition.
-    process.push_back( step_name );
+    // This config phase does not yet exist in the phases definition.
+    phases.push_back( phase );
 
-    components[step_name] = component;
+    components[phase] = component;
   }
 }
 
@@ -92,16 +92,16 @@ void Context::set_component( Component* component )
     return;
   }
 
-  const char* step_name = component->configuration_step();
-  Component* existing = components[step_name];
+  const char* phase = component->phase();
+  Component* existing = components[phase];
   if (existing)
   {
     delete existing;
   }
   else
   {
-    // This config step does not yet exist in the process definition.
-    process.push_back( step_name );
+    // This config phase does not yet exist in the phases definition.
+    phases.push_back( phase );
   }
-  components[step_name] = component;
+  components[phase] = component;
 }

@@ -12,6 +12,6 @@ namespace VKZ
     virtual void on_configure();
     virtual void on_destroy();
 
-    virtual const char* configuration_step() { return VKZ_CONFIGURE_DEVICE; }
+    virtual const char* phase() { return VKZ_CONFIGURE_DEVICE; }
   };
 };

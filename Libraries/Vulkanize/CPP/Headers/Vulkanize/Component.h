@@ -14,11 +14,11 @@ namespace VKZ
     Component() {}
     virtual ~Component();
 
-    virtual const char* configuration_step() = 0;
+    virtual const char* phase() = 0;
 
     virtual void on_configure() { configured = true; }
-    // Called from configure(), which is called at the appropriate step in the Context
-    // configuration process. Set 'configured' to true to indicate that the component
+    // Called from configure(), which is called at the appropriate phase in the Context
+    // configuration phases. Set 'configured' to true to indicate that the component
     // has been successfully configured or at least that there is no fatal error.
     // Leave 'configured' as false to indicate a fatal error.
 
