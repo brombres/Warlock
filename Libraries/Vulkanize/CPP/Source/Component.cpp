@@ -1,5 +1,5 @@
 #include "Vulkanize/Vulkanize.h"
-using namespace VULKANIZE;
+using namespace VKZ;
 
 Component::~Component()
 {

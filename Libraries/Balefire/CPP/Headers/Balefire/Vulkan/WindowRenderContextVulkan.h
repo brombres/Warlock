@@ -19,7 +19,7 @@ namespace BALEFIRE
   {
     // PROPERTIES
     RendererVulkan*     renderer;
-    VULKANIZE::Context* context = nullptr;
+    VKZ::Context* context = nullptr;
     VkSurfaceKHR        surface = nullptr;
 
     VkExtent2D               swapchain_size;

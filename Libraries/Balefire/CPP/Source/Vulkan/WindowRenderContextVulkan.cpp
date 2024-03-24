@@ -3,7 +3,7 @@ using namespace BALEFIRE;
 
 #include "Vulkanize/Vulkanize.h"
 #include "Vulkanize/Context.h"
-using namespace VULKANIZE;
+using namespace VKZ;
 
 const Byte fragment_spv[] =
 {
@@ -247,7 +247,7 @@ void WindowRenderContextVulkan::_configure_swapchain()
 	vkb::SwapchainBuilder swapchain_builder{ context->device };
 	auto swapchain_build_result = swapchain_builder
     //.set_desired_format( VK_FORMAT_B8G8R8A8_UNORM )
-    .set_desired_format( {VK_FORMAT_B8G8R8A8_UNORM, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR} )
+    //.set_desired_format( {VK_FORMAT_B8G8R8A8_UNORM, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR} )
 		//.use_default_format_selection()
 		.set_desired_present_mode( VK_PRESENT_MODE_FIFO_KHR )
 		.set_desired_extent( width, height )

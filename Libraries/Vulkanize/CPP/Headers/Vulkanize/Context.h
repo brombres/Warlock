@@ -20,7 +20,7 @@
 #define VKZ_CONFIGURE_SEMAPHORES         "semaphores"
 #define VKZ_CONFIGURE_FENCES             "fences"
 
-namespace VULKANIZE
+namespace VKZ
 {
   struct Context
   {

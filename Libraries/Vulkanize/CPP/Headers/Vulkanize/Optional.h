@@ -1,6 +1,6 @@
 #pragma once
 
-namespace VULKANIZE
+namespace VKZ
 {
   template<typename DataType>
   struct Optional

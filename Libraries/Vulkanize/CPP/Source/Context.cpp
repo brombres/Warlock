@@ -5,7 +5,7 @@
 #include "Vulkanize/Vulkanize.h"
 #include "Vulkanize/Context.h"
 #include "Vulkanize/ConfigureDevice.h"
-using namespace VULKANIZE;
+using namespace VKZ;
 
 Context::Context( VkSurfaceKHR surface ) : surface(surface)
 {

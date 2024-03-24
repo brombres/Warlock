@@ -1,6 +1,6 @@
 #include "VkBootstrap.h"
 #include "Vulkanize/Vulkanize.h"
-using namespace VULKANIZE;
+using namespace VKZ;
 
 ConfigureDevice::ConfigureDevice( Context* context, int major_version, int minor_version )
   : Component(), context(context), major_version(major_version), minor_version(minor_version)

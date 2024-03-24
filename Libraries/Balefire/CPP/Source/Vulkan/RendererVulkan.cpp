@@ -4,7 +4,7 @@
 using namespace BALEFIRE;
 
 #include "Vulkanize/Vulkanize.h"
-using namespace VULKANIZE;
+using namespace VKZ;
 
 #include <vector>
 using namespace std;

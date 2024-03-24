@@ -8,7 +8,7 @@
 using namespace BALEFIRE;
 
 #include "Vulkanize/Vulkanize.h"
-using namespace VULKANIZE;
+using namespace VKZ;
 
 void FrameworkSDLVulkan::configure()
 {

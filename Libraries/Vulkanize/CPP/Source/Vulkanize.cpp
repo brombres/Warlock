@@ -1,9 +1,9 @@
 #include <cstdio>
 #include "Vulkanize/Vulkanize.h"
-using namespace VULKANIZE;
+using namespace VKZ;
 
 // Global instance
-Vulkanize VULKANIZE::vulkanize;
+Vulkanize VKZ::vulkanize;
 
 Vulkanize::~Vulkanize()
 {

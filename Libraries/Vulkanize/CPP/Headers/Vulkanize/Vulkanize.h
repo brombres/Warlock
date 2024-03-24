@@ -4,7 +4,7 @@
 #include <vulkan/vulkan.h>
 #include "VkBootstrap.h"
 
-namespace VULKANIZE
+namespace VKZ
 {
   struct Vulkanize
   {
@@ -57,3 +57,4 @@ namespace VULKANIZE
 #include "Vulkanize/Component.h"
 #include "Vulkanize/Context.h"
 #include "Vulkanize/ConfigureDevice.h"
+#include "Vulkanize/ConfigureSwapchain.h"

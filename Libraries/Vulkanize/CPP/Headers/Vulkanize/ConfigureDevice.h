@@ -1,6 +1,6 @@
 #pragma once
 
-namespace VULKANIZE
+namespace VKZ
 {
   struct ConfigureDevice : Component
   {
