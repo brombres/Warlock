@@ -190,8 +190,8 @@ void WindowRenderContextVulkan::configure()
 void WindowRenderContextVulkan::configure( VkSurfaceKHR surface )
 {
   context = new Context( surface );
-  context->configure_components();
-  context->set_component( VKZ_CONFIGURE_DEVICE, new ConfigureDevice(context,1,2) );
+  context->configure_procedures();
+  context->set_procedure( VKZ_CONFIGURE_DEVICE, new ConfigureDevice(context,1,2) );
 
   if ( !context->configure() )
   {

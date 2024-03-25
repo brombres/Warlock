@@ -2,7 +2,7 @@
 
 namespace VKZ
 {
-  struct ConfigureSurfaceSize : Component
+  struct ConfigureSurfaceSize : Procedure
   {
     Context* context;
 

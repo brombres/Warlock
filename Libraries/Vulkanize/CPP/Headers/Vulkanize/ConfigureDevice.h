@@ -4,7 +4,7 @@
 
 namespace VKZ
 {
-  struct ConfigureDevice : Component
+  struct ConfigureDevice : Procedure
   {
     Context* context;
     int major_version;

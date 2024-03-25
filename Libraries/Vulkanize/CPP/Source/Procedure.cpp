@@ -1,13 +1,13 @@
 #include "Vulkanize/Vulkanize.h"
 using namespace VKZ;
 
-Component::~Component()
+Procedure::~Procedure()
 {
   if (next_sibling) delete next_sibling;
   if (first_child)  delete first_child;
 }
 
-void Component::add_child( Component* child )
+void Procedure::add_child( Procedure* child )
 {
   child->parent = this;
 
@@ -23,7 +23,7 @@ void Component::add_child( Component* child )
   }
 }
 
-void Component::add_sibling( Component* sibling )
+void Procedure::add_sibling( Procedure* sibling )
 {
   if (parent)
   {
@@ -32,14 +32,14 @@ void Component::add_sibling( Component* sibling )
   else
   {
     sibling->detach();
-    Component* cur = this;
+    Procedure* cur = this;
     while (cur->next_sibling) cur = cur->next_sibling;
     cur->next_sibling = sibling;
     sibling->previous_sibling = this;
   }
 }
 
-bool Component::configure()
+bool Procedure::configure()
 {
   on_configure();
   if (not configured) return false;
@@ -50,7 +50,7 @@ bool Component::configure()
   return true;
 }
 
-void Component::detach()
+void Procedure::detach()
 {
   if (parent)
   {
@@ -72,7 +72,7 @@ void Component::detach()
   }
 }
 
-bool Component::destroy()
+bool Procedure::destroy()
 {
   if (next_sibling) next_sibling->destroy();
   if (first_child)  first_child->destroy();
@@ -86,7 +86,7 @@ bool Component::destroy()
   return false;  // always returns false
 }
 
-void Component::remove_child( Component* child )
+void Procedure::remove_child( Procedure* child )
 {
   if (child->parent != this) return;
   child->parent = nullptr;
@@ -110,7 +110,7 @@ void Component::remove_child( Component* child )
   }
   else
   {
-    Component* cur = child->first_child;
+    Procedure* cur = child->first_child;
     while (cur->next_sibling != child)
     {
       cur = cur->next_sibling;

@@ -17,7 +17,7 @@ Context::~Context()
 
   for (int i=(int)phases.size(); --i>=0; )
   {
-    Component* component = components[ phases[i] ];
+    Procedure* component = components[ phases[i] ];
     if (component) delete component;
   }
   components.clear();
@@ -28,7 +28,7 @@ Context::~Context()
 
 bool Context::configure()
 {
-  if ( !phases.size() ) configure_components();
+  if ( !phases.size() ) configure_procedures();
 
   for (auto phase : phases)
   {
@@ -41,7 +41,7 @@ bool Context::configure()
 
 bool Context::configure( std::string phase )
 {
-  Component* component = components[phase];
+  Procedure* component = components[phase];
   if (component)
   {
     if ( !component->configure() )
@@ -64,20 +64,20 @@ void Context::destroy()
 
 void Context::destroy( std::string phase )
 {
-  Component* component = components[ phase ];
+  Procedure* component = components[ phase ];
   if (component) component->destroy();
 }
 
-void Context::add_component( std::string phase, Component* component )
+void Context::add_procedure( std::string phase, Procedure* component )
 {
   if (configured)
   {
-    fprintf( stderr, "[Vulkanize] Error calling add_component(): components can "
+    fprintf( stderr, "[Vulkanize] Error calling add_procedure(): components can "
                      "only be modified before configure() is called.\n" );
     return;
   }
 
-  Component* existing = components[phase];
+  Procedure* existing = components[phase];
   if (existing)
   {
     existing->add_sibling( component );
@@ -91,23 +91,23 @@ void Context::add_component( std::string phase, Component* component )
   }
 }
 
-void Context::configure_components()
+void Context::configure_procedures()
 {
-  set_component( VKZ_CONFIGURE_DEVICE,       new ConfigureDevice(this,1,2) );
-  set_component( VKZ_CONFIGURE_FORMATS,      new ConfigureFormats(this) );
-  set_component( VKZ_CONFIGURE_SURFACE_SIZE, new ConfigureFormats(this) );
+  set_procedure( VKZ_CONFIGURE_DEVICE,       new ConfigureDevice(this,1,2) );
+  set_procedure( VKZ_CONFIGURE_FORMATS,      new ConfigureFormats(this) );
+  set_procedure( VKZ_CONFIGURE_SURFACE_SIZE, new ConfigureFormats(this) );
 }
 
-void Context::set_component( std::string phase, Component* component )
+void Context::set_procedure( std::string phase, Procedure* component )
 {
   if (configured)
   {
-    fprintf( stderr, "[Vulkanize] Error calling add_component(): components can "
+    fprintf( stderr, "[Vulkanize] Error calling add_procedure(): components can "
                      "only be modified before configure() is called.\n" );
     return;
   }
 
-  Component* existing = components[phase];
+  Procedure* existing = components[phase];
   if (existing)
   {
     delete existing;

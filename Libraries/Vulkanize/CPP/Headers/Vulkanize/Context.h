@@ -29,7 +29,7 @@ namespace VKZ
     bool configured = false;
 
     std::vector<std::string>                   phases;
-    std::unordered_map<std::string,Component*> components;
+    std::unordered_map<std::string,Procedure*> components;
 
     VkSurfaceKHR        surface;
     VkExtent2D          surface_size;
@@ -43,13 +43,13 @@ namespace VKZ
 
     virtual ~Context();
 
-    virtual void configure_components();
+    virtual void configure_procedures();
 
-    virtual void add_component( std::string phase, Component* component );
+    virtual void add_procedure( std::string phase, Procedure* component );
     virtual bool configure();
     virtual bool configure( std::string phase );
     virtual void destroy();
     virtual void destroy( std::string phase );
-    virtual void set_component( std::string phase, Component* component );
+    virtual void set_procedure( std::string phase, Procedure* component );
   };
 };

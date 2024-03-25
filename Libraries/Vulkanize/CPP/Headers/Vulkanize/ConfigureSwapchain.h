@@ -2,7 +2,7 @@
 
 namespace VKZ
 {
-  struct ConfigureSwapchain : Component
+  struct ConfigureSwapchain : Procedure
   {
     Context* context;
 
