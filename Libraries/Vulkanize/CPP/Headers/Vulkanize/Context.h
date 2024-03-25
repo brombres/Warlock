@@ -9,6 +9,8 @@
 #include "Vulkanize.h"
 
 #define VKZ_CONFIGURE_DEVICE             "device"
+#define VKZ_CONFIGURE_FORMATS            "formats"
+#define VKZ_CONFIGURE_SURFACE_SIZE       "surface_size"
 #define VKZ_CONFIGURE_SWAPCHAIN          "swapchain"
 #define VKZ_CONFIGURE_QUEUES             "queues"
 #define VKZ_CONFIGURE_DEPTH_STENCIL      "depth_stencil"
@@ -30,9 +32,12 @@ namespace VKZ
     std::unordered_map<std::string,Component*> components;
 
     VkSurfaceKHR        surface;
+    VkExtent2D          surface_size;
     vkb::PhysicalDevice physical_device;
     vkb::Device         device;
     vkb::DispatchTable  device_dispatch;
+
+    VkSurfaceFormatKHR  swapchain_surface_format;
 
     Context( VkSurfaceKHR surface );
 
@@ -40,9 +45,11 @@ namespace VKZ
 
     virtual void configure_components();
 
-    virtual void add_component( Component* component );
+    virtual void add_component( std::string phase, Component* component );
     virtual bool configure();
-    virtual bool destroy();
-    virtual void set_component( Component* component );
+    virtual bool configure( std::string phase );
+    virtual void destroy();
+    virtual void destroy( std::string phase );
+    virtual void set_component( std::string phase, Component* component );
   };
 };

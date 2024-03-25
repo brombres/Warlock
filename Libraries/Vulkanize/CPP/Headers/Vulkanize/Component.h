@@ -14,8 +14,6 @@ namespace VKZ
     Component() {}
     virtual ~Component();
 
-    virtual const char* phase() = 0;
-
     virtual void on_configure() { configured = true; }
     // Called from configure(), which is called at the appropriate phase in the Context
     // configuration phases. Set 'configured' to true to indicate that the component

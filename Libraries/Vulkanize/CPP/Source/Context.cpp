@@ -30,31 +30,45 @@ bool Context::configure()
 {
   if ( !phases.size() ) configure_components();
 
-  bool error = false;
   for (auto phase : phases)
   {
-    Component* component = components[phase];
-    if (component)
-    {
-      if ( !component->configure() )
-      {
-        error = true;
-        break;
-      }
-    }
+    if ( !configure(phase) ) return false;
   }
-  if (error) return false;
 
   configured = true;
   return true;
 }
 
-bool Context::destroy()
+bool Context::configure( std::string phase )
 {
-  return false;
+  Component* component = components[phase];
+  if (component)
+  {
+    if ( !component->configure() )
+    {
+      return false;
+    }
+  }
+  return true;
 }
 
-void Context::add_component( Component* component )
+void Context::destroy()
+{
+  if ( !configured ) return;
+
+  for (int i=(int)phases.size(); --i>=0; )
+  {
+    destroy( phases[i] );
+  }
+}
+
+void Context::destroy( std::string phase )
+{
+  Component* component = components[ phase ];
+  if (component) component->destroy();
+}
+
+void Context::add_component( std::string phase, Component* component )
 {
   if (configured)
   {
@@ -63,7 +77,6 @@ void Context::add_component( Component* component )
     return;
   }
 
-  const char* phase = component->phase();
   Component* existing = components[phase];
   if (existing)
   {
@@ -80,10 +93,12 @@ void Context::add_component( Component* component )
 
 void Context::configure_components()
 {
-  set_component( new ConfigureDevice(this,1,2) );
+  set_component( VKZ_CONFIGURE_DEVICE,       new ConfigureDevice(this,1,2) );
+  set_component( VKZ_CONFIGURE_FORMATS,      new ConfigureFormats(this) );
+  set_component( VKZ_CONFIGURE_SURFACE_SIZE, new ConfigureFormats(this) );
 }
 
-void Context::set_component( Component* component )
+void Context::set_component( std::string phase, Component* component )
 {
   if (configured)
   {
@@ -92,7 +107,6 @@ void Context::set_component( Component* component )
     return;
   }
 
-  const char* phase = component->phase();
   Component* existing = components[phase];
   if (existing)
   {

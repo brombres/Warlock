@@ -23,6 +23,7 @@ WindowID FrameworkSDLVulkan::create_window( String name )
   int h = 768;
 
   int flags = SDL_WINDOW_SHOWN | SDL_WINDOW_VULKAN | SDL_WINDOW_RESIZABLE;
+  flags |= SDL_WINDOW_ALLOW_HIGHDPI;
 
   SDL_Window* sdl_window =
     SDL_CreateWindow(

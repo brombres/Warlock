@@ -7,7 +7,6 @@ namespace VKZ
     Context* context;
 
     ConfigureSwapchain( Context* context );
-    virtual const char* phase() { return VKZ_CONFIGURE_SWAPCHAIN; }
     virtual void on_configure();
     virtual void on_destroy();
   };

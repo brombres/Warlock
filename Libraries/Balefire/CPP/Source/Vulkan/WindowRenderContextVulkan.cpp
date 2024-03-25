@@ -191,7 +191,7 @@ void WindowRenderContextVulkan::configure( VkSurfaceKHR surface )
 {
   context = new Context( surface );
   context->configure_components();
-  context->set_component( new ConfigureDevice(context,1,2) );
+  context->set_component( VKZ_CONFIGURE_DEVICE, new ConfigureDevice(context,1,2) );
 
   if ( !context->configure() )
   {
@@ -204,6 +204,7 @@ void WindowRenderContextVulkan::configure( VkSurfaceKHR surface )
   _configure_depth_stencil();
   _configure_render_pass();
   _configure_graphics_pipeline();
+
   _configure_framebuffers();
   _configure_command_pool();
   _configure_command_buffers();
@@ -242,15 +243,17 @@ void WindowRenderContextVulkan::_configure_swapchain()
   vulkanize.instance_dispatch.getPhysicalDeviceSurfaceCapabilitiesKHR( context->physical_device, context->surface, &surface_capabilities );
   width = BFCLAMP( width, surface_capabilities.minImageExtent.width, surface_capabilities.maxImageExtent.width );
   height = BFCLAMP( height, surface_capabilities.minImageExtent.height, surface_capabilities.maxImageExtent.height );
-  swapchain_size.width = width;
-  swapchain_size.height = height;
+
+  context->surface_size.width = width;
+  context->surface_size.height = height;
 	vkb::SwapchainBuilder swapchain_builder{ context->device };
 	auto swapchain_build_result = swapchain_builder
+    .set_desired_format( context->swapchain_surface_format )
     //.set_desired_format( VK_FORMAT_B8G8R8A8_UNORM )
     //.set_desired_format( {VK_FORMAT_B8G8R8A8_UNORM, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR} )
 		//.use_default_format_selection()
 		.set_desired_present_mode( VK_PRESENT_MODE_FIFO_KHR )
-		.set_desired_extent( width, height )
+		.set_desired_extent( context->surface_size.width, context->surface_size.height )
     .set_old_swapchain( swapchain )
 		.build();
   vkb::destroy_swapchain( swapchain );
@@ -310,14 +313,14 @@ void WindowRenderContextVulkan::_configure_graphics_pipeline()
   VkViewport viewport = {};
   viewport.x = 0.0f;
   viewport.y = 0.0f;
-  viewport.width  = swapchain.extent.width;
-  viewport.height = swapchain.extent.height;
+  viewport.width  = context->surface_size.width;
+  viewport.height = context->surface_size.height;
   viewport.minDepth = 0.0f;
   viewport.maxDepth = 1.0f;
 
   VkRect2D scissor = {};
   scissor.offset = { 0, 0 };
-  scissor.extent = swapchain.extent;
+  scissor.extent = context->surface_size;
 
   VkPipelineViewportStateCreateInfo viewport_state = {};
   viewport_state.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
@@ -419,8 +422,8 @@ void WindowRenderContextVulkan::_configure_depth_stencil()
 
   depth_stencil.create(
     this,
-    swapchain_size.width,
-    swapchain_size.height,
+    context->surface_size.width,
+    context->surface_size.height,
     depth_format,
     VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT,
     VK_IMAGE_ASPECT_DEPTH_BIT,
@@ -432,7 +435,7 @@ void WindowRenderContextVulkan::_configure_render_pass()
 {
   std::vector<VkAttachmentDescription> attachments(2);
 
-  attachments[0].format = swapchain.image_format;
+  attachments[0].format = context->swapchain_surface_format.format;
   attachments[0].samples = VK_SAMPLE_COUNT_1_BIT;
   attachments[0].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
   attachments[0].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
@@ -513,8 +516,8 @@ void WindowRenderContextVulkan::_configure_framebuffers()
     framebuffer_info.renderPass = render_pass;
     framebuffer_info.attachmentCount = static_cast<uint32_t>(attachments.size());
     framebuffer_info.pAttachments = attachments.data();
-    framebuffer_info.width = swapchain_size.width;
-    framebuffer_info.height = swapchain_size.height;
+    framebuffer_info.width = context->surface_size.width;
+    framebuffer_info.height = context->surface_size.height;
     framebuffer_info.layers = 1;
 
     VK_CHECK(
@@ -547,64 +550,6 @@ void WindowRenderContextVulkan::_configure_command_buffers()
 
   command_buffers.resize( swapchain_images.size() );
   context->device_dispatch.allocateCommandBuffers( &allocateInfo, command_buffers.data() );
-
-  /*
-  for (size_t i=0; i<command_buffers.size(); ++i)
-  {
-    VkCommandBufferBeginInfo begin_info = {};
-    begin_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-
-    VK_CHECK(
-      "beginning command buffer",
-      context->device_dispatch.beginCommandBuffer( command_buffers[i], &begin_info )
-    );
-
-    VkRenderPassBeginInfo render_pass_info = {};
-    render_pass_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-    render_pass_info.renderPass = render_pass;
-    render_pass_info.framebuffer = framebuffers[i];
-    render_pass_info.renderArea.offset = { 0, 0 };
-    render_pass_info.renderArea.extent = swapchain.extent;
-    VkClearValue clearColor{ { { 0.0f, 0.0f, 0.0f, 1.0f } } };
-    render_pass_info.clearValueCount = 1;
-    render_pass_info.pClearValues = &clearColor;
-
-    VkViewport viewport = {};
-    viewport.x = 0.0f;
-    viewport.y = 0.0f;
-    viewport.width = (float)swapchain.extent.width;
-    viewport.height = (float)swapchain.extent.height;
-    viewport.minDepth = 0.0f;
-    viewport.maxDepth = 1.0f;
-
-    VkRect2D scissor = {};
-    scissor.offset = { 0, 0 };
-    scissor.extent = swapchain.extent;
-
-    context->device_dispatch.cmdSetViewport(command_buffers[i], 0, 1, &viewport);
-    context->device_dispatch.cmdSetScissor(command_buffers[i], 0, 1, &scissor);
-
-    context->device_dispatch.cmdBeginRenderPass(
-      command_buffers[i],
-      &render_pass_info,
-      VK_SUBPASS_CONTENTS_INLINE
-    );
-
-    context->device_dispatch.cmdBindPipeline(
-      command_buffers[i],
-      VK_PIPELINE_BIND_POINT_GRAPHICS,
-      graphics_pipeline
-    );
-
-    context->device_dispatch.cmdDraw( command_buffers[i], 3, 1, 0, 0 );
-    context->device_dispatch.cmdEndRenderPass(command_buffers[i]);
-
-    VK_CHECK(
-      "ending command buffer",
-      context->device_dispatch.endCommandBuffer( command_buffers[i] )
-    );
-  }
-  */
 }
 
 void WindowRenderContextVulkan::_configure_semaphores()
@@ -748,7 +693,7 @@ void WindowRenderContextVulkan::render()
   render_pass_info.renderPass = render_pass;
   render_pass_info.framebuffer = framebuffers[frame_index];
   render_pass_info.renderArea.offset = {0, 0};
-  render_pass_info.renderArea.extent = swapchain_size;
+  render_pass_info.renderArea.extent = context->surface_size;
   render_pass_info.clearValueCount = 1;
 
   std::vector<VkClearValue> clear_values(2);
@@ -771,14 +716,14 @@ void WindowRenderContextVulkan::render()
   VkViewport viewport = {};
   viewport.x = 0.0f;
   viewport.y = 0.0f;
-  viewport.width = swapchain_size.width;
-  viewport.height = swapchain_size.height;
+  viewport.width = context->surface_size.width;
+  viewport.height = context->surface_size.height;
   viewport.minDepth = 0.0f;
   viewport.maxDepth = 1.0f;
 
   VkRect2D scissor = {};
   scissor.offset = { 0, 0 };
-  scissor.extent = swapchain_size;
+  scissor.extent = context->surface_size;
   context->device_dispatch.cmdSetViewport( cmd, 0, 1, &viewport );
   context->device_dispatch.cmdSetScissor(  cmd, 0, 1, &scissor );
 
@@ -820,8 +765,8 @@ void WindowRenderContextVulkan::render()
         // SUBOPTIMAL could be due to resize
         //VkSurfaceCapabilitiesKHR surface_capabilities;
         //vkGetPhysicalDeviceSurfaceCapabilitiesKHR( context->physical_device, surface, &surface_capabilities );
-        //if (surface_capabilities.currentExtent.width != swapchain_size.width ||
-        //    surface_capabilities.currentExtent.height != swapchain_size.height)
+        //if (surface_capabilities.currentExtent.width != context->surface_size.width ||
+        //    surface_capabilities.currentExtent.height != context->surface_size.height)
         //{
         //  _recreate_swapchain();
         //}
