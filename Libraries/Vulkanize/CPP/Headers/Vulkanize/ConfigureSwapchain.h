@@ -2,12 +2,12 @@
 
 namespace VKZ
 {
-  struct ConfigureSwapchain : Procedure
+  struct ConfigureSwapchain : Action
   {
     Context* context;
 
     ConfigureSwapchain( Context* context );
-    virtual bool on_configure();
-    virtual void on_destroy();
+    virtual bool on_activate();
+    virtual void on_deactivate();
   };
 };

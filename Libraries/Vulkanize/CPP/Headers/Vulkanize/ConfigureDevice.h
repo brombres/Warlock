@@ -4,7 +4,7 @@
 
 namespace VKZ
 {
-  struct ConfigureDevice : Procedure
+  struct ConfigureDevice : Action
   {
     Context* context;
     int major_version;
@@ -15,7 +15,7 @@ namespace VKZ
     VkPhysicalDeviceVulkan13Features required_features_v1_3 = {};
 
     ConfigureDevice( Context* context, int major_version=1, int minor_version=2 );
-    virtual bool on_configure();
-    virtual void on_destroy();
+    virtual bool on_activate();
+    virtual void on_deactivate();
   };
 };

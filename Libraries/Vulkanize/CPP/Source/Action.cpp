@@ -1,13 +1,26 @@
 #include "Vulkanize/Vulkanize.h"
 using namespace VKZ;
 
-Procedure::~Procedure()
+Action::~Action()
 {
   if (next_sibling) delete next_sibling;
   if (first_child)  delete first_child;
 }
 
-void Procedure::add_child( Procedure* child )
+bool Action::activate()
+{
+  if (is_active) return true;
+
+  if (not on_activate()) return false;
+  is_active = true;
+
+  if (first_child && !first_child->activate()) return false;
+  if (next_sibling && !next_sibling->activate()) return false;
+
+  return true;
+}
+
+void Action::add_child( Action* child )
 {
   child->parent = this;
 
@@ -23,7 +36,7 @@ void Procedure::add_child( Procedure* child )
   }
 }
 
-void Procedure::add_sibling( Procedure* sibling )
+void Action::add_sibling( Action* sibling )
 {
   if (parent)
   {
@@ -32,25 +45,14 @@ void Procedure::add_sibling( Procedure* sibling )
   else
   {
     sibling->detach();
-    Procedure* cur = this;
+    Action* cur = this;
     while (cur->next_sibling) cur = cur->next_sibling;
     cur->next_sibling = sibling;
     sibling->previous_sibling = this;
   }
 }
 
-bool Procedure::configure()
-{
-  if (not on_configure()) return false;
-  configured = true;
-
-  if (first_child && !first_child->configure()) return false;
-  if (next_sibling && !next_sibling->configure()) return false;
-
-  return true;
-}
-
-void Procedure::detach()
+void Action::detach()
 {
   if (parent)
   {
@@ -72,26 +74,29 @@ void Procedure::detach()
   }
 }
 
-bool Procedure::destroy()
+void Action::deactivate()
 {
-  if (next_sibling) next_sibling->destroy();
-  if (first_child)  first_child->destroy();
+  if (next_sibling) next_sibling->deactivate();
+  if (first_child)  first_child->deactivate();
 
-  if (configured)
+  if (is_active)
   {
-    configured = false;
-    on_destroy();
+    is_active = false;
+    on_deactivate();
   }
-
-  return false;  // always returns false
 }
 
-bool Procedure::render()
+bool Action::execute()
 {
+  activate();
+  if ( !on_execute() ) return false;
+
+  if (first_child && !first_child->execute()) return false;
+  if (next_sibling && !next_sibling->execute()) return false;
   return true;
 }
 
-void Procedure::remove_child( Procedure* child )
+void Action::remove_child( Action* child )
 {
   if (child->parent != this) return;
   child->parent = nullptr;
@@ -115,7 +120,7 @@ void Procedure::remove_child( Procedure* child )
   }
   else
   {
-    Procedure* cur = child->first_child;
+    Action* cur = child->first_child;
     while (cur->next_sibling != child)
     {
       cur = cur->next_sibling;

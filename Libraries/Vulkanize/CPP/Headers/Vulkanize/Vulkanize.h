@@ -54,7 +54,7 @@ namespace VKZ
   }                                                            \
 }
 
-#include "Vulkanize/Procedure.h"
+#include "Vulkanize/Action.h"
 #include "Vulkanize/Context.h"
 #include "Vulkanize/ConfigureDevice.h"
 #include "Vulkanize/ConfigureFormats.h"

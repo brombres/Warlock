@@ -3,11 +3,11 @@
 using namespace VKZ;
 
 ConfigureDevice::ConfigureDevice( Context* context, int major_version, int minor_version )
-  : Procedure(), context(context), major_version(major_version), minor_version(minor_version)
+  : Action(), context(context), major_version(major_version), minor_version(minor_version)
 {
 }
 
-bool ConfigureDevice::on_configure()
+bool ConfigureDevice::on_activate()
 {
   //features12.bufferDeviceAddress = true;
   //features12.descriptorIndexing = true;
@@ -39,7 +39,7 @@ bool ConfigureDevice::on_configure()
   return true;
 }
 
-void ConfigureDevice::on_destroy()
+void ConfigureDevice::on_deactivate()
 {
   vkb::destroy_device( context->device );
 }

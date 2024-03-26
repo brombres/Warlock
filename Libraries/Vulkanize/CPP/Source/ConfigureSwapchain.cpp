@@ -3,16 +3,16 @@
 using namespace VKZ;
 
 ConfigureSwapchain::ConfigureSwapchain( Context* context )
-  : Procedure(), context(context)
+  : Action(), context(context)
 {
 }
 
-bool ConfigureSwapchain::on_configure()
+bool ConfigureSwapchain::on_activate()
 {
   return true;
 }
 
-void ConfigureSwapchain::on_destroy()
+void ConfigureSwapchain::on_deactivate()
 {
 }
 

@@ -3,11 +3,11 @@
 using namespace VKZ;
 
 ConfigureSurfaceSize::ConfigureSurfaceSize( Context* context )
-  : Procedure(), context(context)
+  : Action(), context(context)
 {
 }
 
-bool ConfigureSurfaceSize::on_configure()
+bool ConfigureSurfaceSize::on_activate()
 {
   VkSurfaceCapabilitiesKHR surface_capabilities;
 

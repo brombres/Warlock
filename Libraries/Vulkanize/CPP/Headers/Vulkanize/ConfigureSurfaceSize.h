@@ -2,11 +2,11 @@
 
 namespace VKZ
 {
-  struct ConfigureSurfaceSize : Procedure
+  struct ConfigureSurfaceSize : Action
   {
     Context* context;
 
     ConfigureSurfaceSize( Context* context );
-    virtual bool on_configure();
+    virtual bool on_activate();
   };
 };

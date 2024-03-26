@@ -13,109 +13,93 @@ Context::Context( VkSurfaceKHR surface ) : surface(surface)
 
 Context::~Context()
 {
-  destroy();
+  deactivate();
 
   for (int i=(int)configuration_phases.size(); --i>=0; )
   {
-    Procedure* procedure = procedures[ configuration_phases[i] ];
-    if (procedure) delete procedure;
+    Action* action = actions[ configuration_phases[i] ];
+    if (action) delete action;
   }
-  procedures.clear();
+  actions.clear();
 
   vkb::destroy_surface( vulkanize.vulkan_instance, surface );
   surface = nullptr;
 }
 
-bool Context::configure()
-{
-  if ( !configuration_phases.size() ) configure_procedures();
-
-  for (auto phase : configuration_phases)
-  {
-    if ( !configure(phase) ) return false;
-  }
-
-  configured = true;
-  return true;
-}
-
-bool Context::configure( std::string phase )
-{
-  Procedure* procedure = procedures[phase];
-  if (procedure)
-  {
-    if ( !procedure->configure() )
-    {
-      return false;
-    }
-  }
-  return true;
-}
-
-bool Context::render( std::string phase )
-{
-  Procedure* procedure = procedures[phase];
-  if (procedure)
-  {
-    if ( !procedure->configure() )
-    {
-      return false;
-    }
-  }
-  return true;
-}
-
-void Context::destroy()
-{
-  if ( !configured ) return;
-
-  for (int i=(int)configuration_phases.size(); --i>=0; )
-  {
-    destroy( configuration_phases[i] );
-  }
-}
-
-void Context::destroy( std::string phase )
-{
-  Procedure* procedure = procedures[phase];
-  if (procedure) procedure->destroy();
-}
-
-void Context::add_configuration_phase( std::string phase, Procedure* procedure )
+void Context::add_configuration_handler( std::string phase, Action* action )
 {
   if (configured)
   {
-    fprintf( stderr, "[Vulkanize] Error calling add_configuration_phase(): procedures can "
+    fprintf( stderr, "[Vulkanize] Error calling add_configuration_handler(): actions can "
                      "only be modified before configure() is called.\n" );
     return;
   }
 
-  Procedure* existing = procedures[phase];
+  Action* existing = actions[phase];
   if (existing)
   {
-    existing->add_sibling( procedure );
+    existing->add_sibling( action );
   }
   else
   {
     // This config phase does not yet exist in the configuration_phases definition.
     configuration_phases.push_back( phase );
 
-    procedures[phase] = procedure;
+    actions[phase] = action;
   }
 }
 
-void Context::add_render_phase( std::string phase, Procedure* procedure )
+void Context::add_event_handler( std::string event, Action* action )
 {
-  Procedure* existing = procedures[phase];
-  if (existing) existing->add_sibling( procedure );
-  else          procedures[phase] = procedure;
+  Action* existing = actions[event];
+  if (existing) existing->add_sibling( action );
+  else          actions[event] = action;
 }
 
-void Context::configure_procedures()
+bool Context::configure()
 {
-  set_configuration_phase( VKZ_CONFIGURE_DEVICE,       new ConfigureDevice(this,1,2) );
-  set_configuration_phase( VKZ_CONFIGURE_FORMATS,      new ConfigureFormats(this) );
-  set_configuration_phase( VKZ_CONFIGURE_SURFACE_SIZE, new ConfigureSurfaceSize(this) );
+  if ( !configuration_phases.size() ) configure_actions();
+
+  for (auto phase : configuration_phases)
+  {
+    if ( !dispatch_event(phase) ) return false;
+  }
+
+  configured = true;
+  return true;
+}
+
+void Context::configure_actions()
+{
+  set_configuration_handler( VKZ_CONFIGURE_DEVICE,       new ConfigureDevice(this,1,2) );
+  set_configuration_handler( VKZ_CONFIGURE_FORMATS,      new ConfigureFormats(this) );
+  set_configuration_handler( VKZ_CONFIGURE_SURFACE_SIZE, new ConfigureSurfaceSize(this) );
+}
+
+void Context::deactivate()
+{
+  if ( !configured ) return;
+
+  for (int i=(int)configuration_phases.size(); --i>=0; )
+  {
+    deactivate( configuration_phases[i] );
+  }
+}
+
+void Context::deactivate( std::string event )
+{
+  Action* action = actions[event];
+  if (action) action->deactivate();
+}
+
+bool Context::dispatch_event( std::string event )
+{
+  Action* action = actions[event];
+  if (action)
+  {
+    if ( !action->execute() ) return false;
+  }
+  return true;
 }
 
 void Context::recreate_swapchain()
@@ -128,21 +112,21 @@ void Context::recreate_swapchain()
   configuration_phases.push_back( VKZ_CONFIGURE_COMMAND_POOL );
   configuration_phases.push_back( VKZ_CONFIGURE_COMMAND_BUFFERS );
 
-  for (int i=(int)configuration_phases.size(); --i>=0; ) destroy( configuration_phases[i] );
+  for (int i=(int)configuration_phases.size(); --i>=0; ) deactivate( configuration_phases[i] );
 
-  for (auto phase : configuration_phases) configure( phase );
+  for (auto phase : configuration_phases) dispatch_event( phase );
 }
 
-void Context::set_configuration_phase( std::string phase, Procedure* procedure )
+void Context::set_configuration_handler( std::string phase, Action* action )
 {
   if (configured)
   {
-    fprintf( stderr, "[Vulkanize] Error calling add_configuration_phase(): procedures can "
+    fprintf( stderr, "[Vulkanize] Error calling set_configuration_handler(): actions can "
                      "only be modified before configure() is called.\n" );
     return;
   }
 
-  Procedure* existing = procedures[phase];
+  Action* existing = actions[phase];
   if (existing)
   {
     delete existing;
@@ -152,16 +136,16 @@ void Context::set_configuration_phase( std::string phase, Procedure* procedure )
     // This config phase does not yet exist in the configuration_phases definition.
     configuration_phases.push_back( phase );
   }
-  procedures[phase] = procedure;
+  actions[phase] = action;
 }
 
-void Context::set_render_phase( std::string phase, Procedure* procedure )
+void Context::set_event_handler( std::string event, Action* action )
 {
-  Procedure* existing = procedures[phase];
+  Action* existing = actions[event];
   if (existing)
   {
-    existing->destroy();
+    existing->deactivate();
     delete existing;
   }
-  procedures[phase] = procedure;
+  actions[event] = action;
 }
