@@ -28,8 +28,8 @@ namespace VKZ
   {
     bool configured = false;
 
-    std::vector<std::string>                   phases;
-    std::unordered_map<std::string,Procedure*> components;
+    std::vector<std::string>                   configuration_phases;
+    std::unordered_map<std::string,Procedure*> procedures;
 
     VkSurfaceKHR        surface;
     VkExtent2D          surface_size;
@@ -45,11 +45,15 @@ namespace VKZ
 
     virtual void configure_procedures();
 
-    virtual void add_procedure( std::string phase, Procedure* component );
+    virtual void add_configuration_phase( std::string phase, Procedure* procedure );
+    virtual void add_render_phase( std::string phase, Procedure* procedure );
     virtual bool configure();
     virtual bool configure( std::string phase );
     virtual void destroy();
     virtual void destroy( std::string phase );
-    virtual void set_procedure( std::string phase, Procedure* component );
+    virtual void recreate_swapchain();
+    virtual bool render( std::string phase );
+    virtual void set_configuration_phase( std::string phase, Procedure* procedure );
+    virtual void set_render_phase( std::string phase, Procedure* procedure );
   };
 };

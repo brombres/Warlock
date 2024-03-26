@@ -86,6 +86,11 @@ bool Procedure::destroy()
   return false;  // always returns false
 }
 
+bool Procedure::render()
+{
+  return true;
+}
+
 void Procedure::remove_child( Procedure* child )
 {
   if (child->parent != this) return;

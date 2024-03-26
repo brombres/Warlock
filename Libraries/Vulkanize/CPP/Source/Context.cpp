@@ -15,12 +15,12 @@ Context::~Context()
 {
   destroy();
 
-  for (int i=(int)phases.size(); --i>=0; )
+  for (int i=(int)configuration_phases.size(); --i>=0; )
   {
-    Procedure* component = components[ phases[i] ];
-    if (component) delete component;
+    Procedure* procedure = procedures[ configuration_phases[i] ];
+    if (procedure) delete procedure;
   }
-  components.clear();
+  procedures.clear();
 
   vkb::destroy_surface( vulkanize.vulkan_instance, surface );
   surface = nullptr;
@@ -28,9 +28,9 @@ Context::~Context()
 
 bool Context::configure()
 {
-  if ( !phases.size() ) configure_procedures();
+  if ( !configuration_phases.size() ) configure_procedures();
 
-  for (auto phase : phases)
+  for (auto phase : configuration_phases)
   {
     if ( !configure(phase) ) return false;
   }
@@ -41,10 +41,23 @@ bool Context::configure()
 
 bool Context::configure( std::string phase )
 {
-  Procedure* component = components[phase];
-  if (component)
+  Procedure* procedure = procedures[phase];
+  if (procedure)
   {
-    if ( !component->configure() )
+    if ( !procedure->configure() )
+    {
+      return false;
+    }
+  }
+  return true;
+}
+
+bool Context::render( std::string phase )
+{
+  Procedure* procedure = procedures[phase];
+  if (procedure)
+  {
+    if ( !procedure->configure() )
     {
       return false;
     }
@@ -56,66 +69,99 @@ void Context::destroy()
 {
   if ( !configured ) return;
 
-  for (int i=(int)phases.size(); --i>=0; )
+  for (int i=(int)configuration_phases.size(); --i>=0; )
   {
-    destroy( phases[i] );
+    destroy( configuration_phases[i] );
   }
 }
 
 void Context::destroy( std::string phase )
 {
-  Procedure* component = components[ phase ];
-  if (component) component->destroy();
+  Procedure* procedure = procedures[phase];
+  if (procedure) procedure->destroy();
 }
 
-void Context::add_procedure( std::string phase, Procedure* component )
+void Context::add_configuration_phase( std::string phase, Procedure* procedure )
 {
   if (configured)
   {
-    fprintf( stderr, "[Vulkanize] Error calling add_procedure(): components can "
+    fprintf( stderr, "[Vulkanize] Error calling add_configuration_phase(): procedures can "
                      "only be modified before configure() is called.\n" );
     return;
   }
 
-  Procedure* existing = components[phase];
+  Procedure* existing = procedures[phase];
   if (existing)
   {
-    existing->add_sibling( component );
+    existing->add_sibling( procedure );
   }
   else
   {
-    // This config phase does not yet exist in the phases definition.
-    phases.push_back( phase );
+    // This config phase does not yet exist in the configuration_phases definition.
+    configuration_phases.push_back( phase );
 
-    components[phase] = component;
+    procedures[phase] = procedure;
   }
+}
+
+void Context::add_render_phase( std::string phase, Procedure* procedure )
+{
+  Procedure* existing = procedures[phase];
+  if (existing) existing->add_sibling( procedure );
+  else          procedures[phase] = procedure;
 }
 
 void Context::configure_procedures()
 {
-  set_procedure( VKZ_CONFIGURE_DEVICE,       new ConfigureDevice(this,1,2) );
-  set_procedure( VKZ_CONFIGURE_FORMATS,      new ConfigureFormats(this) );
-  set_procedure( VKZ_CONFIGURE_SURFACE_SIZE, new ConfigureFormats(this) );
+  set_configuration_phase( VKZ_CONFIGURE_DEVICE,       new ConfigureDevice(this,1,2) );
+  set_configuration_phase( VKZ_CONFIGURE_FORMATS,      new ConfigureFormats(this) );
+  set_configuration_phase( VKZ_CONFIGURE_SURFACE_SIZE, new ConfigureSurfaceSize(this) );
 }
 
-void Context::set_procedure( std::string phase, Procedure* component )
+void Context::recreate_swapchain()
+{
+  std::vector<std::string> configuration_phases;
+  configuration_phases.push_back( VKZ_CONFIGURE_SURFACE_SIZE );
+  configuration_phases.push_back( VKZ_CONFIGURE_SWAPCHAIN );
+  configuration_phases.push_back( VKZ_CONFIGURE_DEPTH_STENCIL );
+  configuration_phases.push_back( VKZ_CONFIGURE_FRAMEBUFFERS );
+  configuration_phases.push_back( VKZ_CONFIGURE_COMMAND_POOL );
+  configuration_phases.push_back( VKZ_CONFIGURE_COMMAND_BUFFERS );
+
+  for (int i=(int)configuration_phases.size(); --i>=0; ) destroy( configuration_phases[i] );
+
+  for (auto phase : configuration_phases) configure( phase );
+}
+
+void Context::set_configuration_phase( std::string phase, Procedure* procedure )
 {
   if (configured)
   {
-    fprintf( stderr, "[Vulkanize] Error calling add_procedure(): components can "
+    fprintf( stderr, "[Vulkanize] Error calling add_configuration_phase(): procedures can "
                      "only be modified before configure() is called.\n" );
     return;
   }
 
-  Procedure* existing = components[phase];
+  Procedure* existing = procedures[phase];
   if (existing)
   {
     delete existing;
   }
   else
   {
-    // This config phase does not yet exist in the phases definition.
-    phases.push_back( phase );
+    // This config phase does not yet exist in the configuration_phases definition.
+    configuration_phases.push_back( phase );
   }
-  components[phase] = component;
+  procedures[phase] = procedure;
+}
+
+void Context::set_render_phase( std::string phase, Procedure* procedure )
+{
+  Procedure* existing = procedures[phase];
+  if (existing)
+  {
+    existing->destroy();
+    delete existing;
+  }
+  procedures[phase] = procedure;
 }

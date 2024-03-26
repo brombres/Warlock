@@ -58,4 +58,5 @@ namespace VKZ
 #include "Vulkanize/Context.h"
 #include "Vulkanize/ConfigureDevice.h"
 #include "Vulkanize/ConfigureFormats.h"
+#include "Vulkanize/ConfigureSurfaceSize.h"
 #include "Vulkanize/ConfigureSwapchain.h"

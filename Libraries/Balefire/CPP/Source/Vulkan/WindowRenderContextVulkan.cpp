@@ -190,8 +190,6 @@ void WindowRenderContextVulkan::configure()
 void WindowRenderContextVulkan::configure( VkSurfaceKHR surface )
 {
   context = new Context( surface );
-  context->configure_procedures();
-  context->set_procedure( VKZ_CONFIGURE_DEVICE, new ConfigureDevice(context,1,2) );
 
   if ( !context->configure() )
   {
@@ -200,14 +198,16 @@ void WindowRenderContextVulkan::configure( VkSurfaceKHR surface )
   }
 
   _configure_swapchain();
-  _configure_queues();
   _configure_depth_stencil();
+
+  _configure_queues();
   _configure_render_pass();
   _configure_graphics_pipeline();
 
   _configure_framebuffers();
   _configure_command_pool();
   _configure_command_buffers();
+
   _configure_semaphores();
   _configure_fences();
 
@@ -617,8 +617,12 @@ void WindowRenderContextVulkan::_recreate_swapchain()
   }
 
   swapchain.destroy_image_views( swapchain_image_views );
+  depth_stencil.destroy();
+
+  context->recreate_swapchain();
 
   _configure_swapchain();  // utilizes existing swapchain to create new swapchain
+  _configure_depth_stencil();
   _configure_framebuffers();
   _configure_command_pool();
   _configure_command_buffers();
