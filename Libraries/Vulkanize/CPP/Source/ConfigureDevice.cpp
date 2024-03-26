@@ -7,7 +7,7 @@ ConfigureDevice::ConfigureDevice( Context* context, int major_version, int minor
 {
 }
 
-void ConfigureDevice::on_configure()
+bool ConfigureDevice::on_configure()
 {
   //features12.bufferDeviceAddress = true;
   //features12.descriptorIndexing = true;
@@ -24,19 +24,19 @@ void ConfigureDevice::on_configure()
       .set_surface( context->surface )
       .select(),
     "selecting physical device",
-    return
+    return false
   );
 
   VKZ_SET(
     context->device,
     vkb::DeviceBuilder{context->physical_device}.build(),
     "building device",
-    return
+    return false
   );
 
   context->device_dispatch = context->device.make_table();
 
-  configured = true;
+  return true;
 }
 
 void ConfigureDevice::on_destroy()

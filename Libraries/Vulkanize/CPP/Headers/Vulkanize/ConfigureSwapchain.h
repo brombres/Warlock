@@ -7,7 +7,7 @@ namespace VKZ
     Context* context;
 
     ConfigureSwapchain( Context* context );
-    virtual void on_configure();
+    virtual bool on_configure();
     virtual void on_destroy();
   };
 };

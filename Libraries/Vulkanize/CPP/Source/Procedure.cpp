@@ -41,8 +41,8 @@ void Procedure::add_sibling( Procedure* sibling )
 
 bool Procedure::configure()
 {
-  on_configure();
-  if (not configured) return false;
+  if (not on_configure()) return false;
+  configured = true;
 
   if (first_child && !first_child->configure()) return false;
   if (next_sibling && !next_sibling->configure()) return false;

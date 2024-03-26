@@ -14,7 +14,7 @@ namespace VKZ
     Procedure() {}
     virtual ~Procedure();
 
-    virtual void on_configure() { configured = true; }
+    virtual bool on_configure() { return false; }
     // Called from configure(), which is called at the appropriate phase in the Context
     // configuration configuration_phases. Set 'configured' to true to indicate that the procedure
     // has been successfully configured or at least that there is no fatal error.

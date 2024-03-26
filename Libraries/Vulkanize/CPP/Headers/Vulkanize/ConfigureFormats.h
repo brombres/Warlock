@@ -7,6 +7,6 @@ namespace VKZ
     Context* context;
 
     ConfigureFormats( Context* context );
-    virtual void on_configure();
+    virtual bool on_configure();
   };
 };

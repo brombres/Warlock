@@ -7,9 +7,9 @@ ConfigureSwapchain::ConfigureSwapchain( Context* context )
 {
 }
 
-void ConfigureSwapchain::on_configure()
+bool ConfigureSwapchain::on_configure()
 {
-  configured = true;
+  return true;
 }
 
 void ConfigureSwapchain::on_destroy()

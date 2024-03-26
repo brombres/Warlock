@@ -7,7 +7,7 @@ ConfigureSurfaceSize::ConfigureSurfaceSize( Context* context )
 {
 }
 
-void ConfigureSurfaceSize::on_configure()
+bool ConfigureSurfaceSize::on_configure()
 {
   VkSurfaceCapabilitiesKHR surface_capabilities;
 
@@ -22,12 +22,9 @@ void ConfigureSurfaceSize::on_configure()
 
   printf( "SURFACE SIZE:%dx%d\n", width, height );
 
-  //width = BFCLAMP( width, surface_capabilities.minImageExtent.width, surface_capabilities.maxImageExtent.width );
-  //height = BFCLAMP( height, surface_capabilities.minImageExtent.height, surface_capabilities.maxImageExtent.height );
-
   context->surface_size.width = width;
   context->surface_size.height = height;
 
-  configured = true;
+  return true;
 }
 
