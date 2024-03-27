@@ -169,9 +169,9 @@ WindowRenderContextVulkan::~WindowRenderContextVulkan()
 
     depth_stencil.destroy();
 
-    swapchain.destroy_image_views( swapchain_image_views );
+    context->swapchain.destroy_image_views( context->swapchain_image_views );
 
-    vkb::destroy_swapchain( swapchain );
+    vkb::destroy_swapchain( context->swapchain );
     context->device_dispatch.deviceWaitIdle();
 
     if (context)
@@ -235,32 +235,7 @@ int WindowRenderContextVulkan::find_memory_type( uint32_t typeFilter, VkMemoryPr
 #define BFCLAMP(x, lo, hi) ((x) < (lo) ? (lo) : (x) > (hi) ? (hi) : (x))
 void WindowRenderContextVulkan::_configure_swapchain()
 {
-  window->update_pixel_size();
-  int width = window->pixel_width;
-  int height = window->pixel_height;
-
-  VkSurfaceCapabilitiesKHR surface_capabilities;
-  vulkanize.instance_dispatch.getPhysicalDeviceSurfaceCapabilitiesKHR( context->physical_device, context->surface, &surface_capabilities );
-  width = BFCLAMP( width, surface_capabilities.minImageExtent.width, surface_capabilities.maxImageExtent.width );
-  height = BFCLAMP( height, surface_capabilities.minImageExtent.height, surface_capabilities.maxImageExtent.height );
-
-  context->surface_size.width = width;
-  context->surface_size.height = height;
-	vkb::SwapchainBuilder swapchain_builder{ context->device };
-	auto swapchain_build_result = swapchain_builder
-    .set_desired_format( context->swapchain_surface_format )
-    //.set_desired_format( VK_FORMAT_B8G8R8A8_UNORM )
-    //.set_desired_format( {VK_FORMAT_B8G8R8A8_UNORM, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR} )
-		//.use_default_format_selection()
-		.set_desired_present_mode( VK_PRESENT_MODE_FIFO_KHR )
-		.set_desired_extent( context->surface_size.width, context->surface_size.height )
-    .set_old_swapchain( swapchain )
-		.build();
-  vkb::destroy_swapchain( swapchain );
-  swapchain = swapchain_build_result.value();
-
-  swapchain_images = swapchain.get_images().value();
-  swapchain_image_views = swapchain.get_image_views().value();
+  //window->update_pixel_size();
 }
 
 void WindowRenderContextVulkan::_configure_queues()
@@ -503,12 +478,12 @@ void WindowRenderContextVulkan::_configure_render_pass()
 
 void WindowRenderContextVulkan::_configure_framebuffers()
 {
-  framebuffers.resize( swapchain_image_views.size() );
+  framebuffers.resize( context->swapchain_image_views.size() );
 
-  for (size_t i=0; i<swapchain_image_views.size(); ++i)
+  for (size_t i=0; i<context->swapchain_image_views.size(); ++i)
   {
     std::vector<VkImageView> attachments(2);
-    attachments[0] = swapchain_image_views[i];
+    attachments[0] = context->swapchain_image_views[i];
     attachments[1] = depth_stencil.view;
 
     VkFramebufferCreateInfo framebuffer_info = {};
@@ -546,9 +521,9 @@ void WindowRenderContextVulkan::_configure_command_buffers()
   allocateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
   allocateInfo.commandPool = command_pool;
   allocateInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-  allocateInfo.commandBufferCount = (uint32_t)swapchain_images.size();
+  allocateInfo.commandBufferCount = (uint32_t)context->swapchain_images.size();
 
-  command_buffers.resize( swapchain_images.size() );
+  command_buffers.resize( context->swapchain_images.size() );
   context->device_dispatch.allocateCommandBuffers( &allocateInfo, command_buffers.data() );
 }
 
@@ -560,8 +535,8 @@ void WindowRenderContextVulkan::_configure_semaphores()
 
 void WindowRenderContextVulkan::_configure_fences()
 {
-  fences.resize( swapchain_images.size() );
-  for (uint32_t i=0; i<swapchain_images.size(); ++i)
+  fences.resize( context->swapchain_images.size() );
+  for (uint32_t i=0; i<context->swapchain_images.size(); ++i)
   {
     VkFenceCreateInfo fence_info = {};
     fence_info.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
@@ -616,7 +591,7 @@ void WindowRenderContextVulkan::_recreate_swapchain()
     context->device_dispatch.destroyFramebuffer( framebuffer, nullptr );
   }
 
-  swapchain.destroy_image_views( swapchain_image_views );
+  context->swapchain.destroy_image_views( context->swapchain_image_views );
   depth_stencil.destroy();
 
   context->recreate_swapchain();
@@ -650,7 +625,7 @@ void WindowRenderContextVulkan::render()
   if ( !initialized ) return;
 
   VkResult result = context->device_dispatch.acquireNextImageKHR(
-    swapchain,
+    context->swapchain,
     UINT64_MAX,
     image_available_semaphore,
     VK_NULL_HANDLE,
@@ -754,7 +729,7 @@ void WindowRenderContextVulkan::render()
   present_info.waitSemaphoreCount = 1;
   present_info.pWaitSemaphores = &rendering_finished_semaphore;
   present_info.swapchainCount = 1;
-  present_info.pSwapchains = &swapchain.swapchain;
+  present_info.pSwapchains = &context->swapchain.swapchain;
   present_info.pImageIndices = &frame_index;
 
   result = context->device_dispatch.queuePresentKHR( present_queue, &present_info );

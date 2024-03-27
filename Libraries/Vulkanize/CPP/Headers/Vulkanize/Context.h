@@ -37,7 +37,10 @@ namespace VKZ
     vkb::Device         device;
     vkb::DispatchTable  device_dispatch;
 
-    VkSurfaceFormatKHR  swapchain_surface_format;
+    VkSurfaceFormatKHR       swapchain_surface_format;
+    vkb::Swapchain           swapchain;
+	  std::vector<VkImage>     swapchain_images;
+    std::vector<VkImageView> swapchain_image_views;
 
     Context( VkSurfaceKHR surface );
 
@@ -45,14 +48,14 @@ namespace VKZ
 
     virtual void configure_actions();
 
-    virtual void add_configuration_handler( std::string phase, Action* action );
+    virtual void add_configuration_action( std::string phase, Action* action );
     virtual void add_event_handler( std::string event, Action* action );
     virtual bool configure();
     virtual void deactivate();
     virtual void deactivate( std::string event );
     virtual bool dispatch_event( std::string event );
     virtual void recreate_swapchain();
-    virtual void set_configuration_handler( std::string phase, Action* action );
+    virtual void set_configuration_action( std::string phase, Action* action );
     virtual void set_event_handler( std::string event, Action* action );
   };
 };

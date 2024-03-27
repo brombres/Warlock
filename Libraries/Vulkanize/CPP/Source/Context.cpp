@@ -26,11 +26,11 @@ Context::~Context()
   surface = nullptr;
 }
 
-void Context::add_configuration_handler( std::string phase, Action* action )
+void Context::add_configuration_action( std::string phase, Action* action )
 {
   if (configured)
   {
-    fprintf( stderr, "[Vulkanize] Error calling add_configuration_handler(): actions can "
+    fprintf( stderr, "[Vulkanize] Error calling add_configuration_action(): actions can "
                      "only be modified before configure() is called.\n" );
     return;
   }
@@ -44,7 +44,6 @@ void Context::add_configuration_handler( std::string phase, Action* action )
   {
     // This config phase does not yet exist in the configuration_phases definition.
     configuration_phases.push_back( phase );
-
     actions[phase] = action;
   }
 }
@@ -71,9 +70,10 @@ bool Context::configure()
 
 void Context::configure_actions()
 {
-  set_configuration_handler( VKZ_CONFIGURE_DEVICE,       new ConfigureDevice(this,1,2) );
-  set_configuration_handler( VKZ_CONFIGURE_FORMATS,      new ConfigureFormats(this) );
-  set_configuration_handler( VKZ_CONFIGURE_SURFACE_SIZE, new ConfigureSurfaceSize(this) );
+  set_configuration_action( VKZ_CONFIGURE_DEVICE,       new ConfigureDevice(this,1,2) );
+  set_configuration_action( VKZ_CONFIGURE_FORMATS,      new ConfigureFormats(this) );
+  set_configuration_action( VKZ_CONFIGURE_SURFACE_SIZE, new ConfigureSurfaceSize(this) );
+  set_configuration_action( VKZ_CONFIGURE_SWAPCHAIN,    new ConfigureSwapchain(this) );
 }
 
 void Context::deactivate()
@@ -117,11 +117,11 @@ void Context::recreate_swapchain()
   for (auto phase : configuration_phases) dispatch_event( phase );
 }
 
-void Context::set_configuration_handler( std::string phase, Action* action )
+void Context::set_configuration_action( std::string phase, Action* action )
 {
   if (configured)
   {
-    fprintf( stderr, "[Vulkanize] Error calling set_configuration_handler(): actions can "
+    fprintf( stderr, "[Vulkanize] Error calling set_configuration_action(): actions can "
                      "only be modified before configure() is called.\n" );
     return;
   }

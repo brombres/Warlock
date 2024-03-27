@@ -22,10 +22,6 @@ namespace BALEFIRE
     VKZ::Context*   context = nullptr;
     VkSurfaceKHR    surface = nullptr;
 
-    vkb::Swapchain           swapchain;
-	  std::vector<VkImage>     swapchain_images;
-    std::vector<VkImageView> swapchain_image_views;
-
     uint32_t graphics_QueueFamilyIndex;
     uint32_t present_QueueFamilyIndex;
     VkQueue  graphics_queue;
