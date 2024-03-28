@@ -48,22 +48,17 @@ void Context::add_configuration_action( std::string phase, Action* action )
   }
 }
 
-void Context::add_event_handler( std::string event, Action* action )
+void Context::add_event_handler( std::string phase, Action* action )
 {
-  Action* existing = actions[event];
+  Action* existing = actions[phase];
   if (existing) existing->add_sibling( action );
-  else          actions[event] = action;
+  else          actions[phase] = action;
 }
 
 bool Context::configure()
 {
   if ( !configuration_phases.size() ) configure_actions();
-
-  for (auto phase : configuration_phases)
-  {
-    if ( !dispatch_event(phase) ) return false;
-  }
-
+  if ( !dispatch_configuration_event(VKZ_EVENT_CONFIGURE) ) return false;
   configured = true;
   return true;
 }
@@ -79,27 +74,59 @@ void Context::configure_actions()
 void Context::deactivate()
 {
   if ( !configured ) return;
-
-  for (int i=(int)configuration_phases.size(); --i>=0; )
-  {
-    deactivate( configuration_phases[i] );
-  }
+  dispatch_configuration_event( VKZ_EVENT_DEACTIVATE, true );
+  configured = false;
 }
 
-void Context::deactivate( std::string event )
+void Context::deactivate( std::string phase )
 {
-  Action* action = actions[event];
+  Action* action = actions[phase];
   if (action) action->deactivate();
 }
 
-bool Context::dispatch_event( std::string event )
+bool Context::dispatch_configuration_event( int event_type, bool reverse_order )
 {
-  Action* action = actions[event];
+  if (reverse_order)
+  {
+    for (int i=(int)configuration_phases.size(); --i>=0; )
+    {
+      if ( !dispatch_event(configuration_phases[i],event_type) ) return false;
+    }
+    return true;
+  }
+  else
+  {
+    for (auto phase : configuration_phases)
+    {
+      if ( !dispatch_event(phase,event_type) ) return false;
+    }
+    return true;
+  }
+}
+
+bool Context::dispatch_event( std::string phase )
+{
+  Action* action = actions[phase];
   if (action)
   {
     if ( !action->execute() ) return false;
   }
   return true;
+}
+
+bool Context::dispatch_event( std::string phase, int event_type )
+{
+  Action* action = actions[phase];
+  if (action)
+  {
+    if ( !action->handle_event(event_type) ) return false;
+  }
+  return true;
+}
+
+bool Context::execute( std::string phase )
+{
+  return dispatch_event( phase, VKZ_EVENT_EXECUTE );
 }
 
 void Context::recreate_swapchain()
@@ -112,7 +139,8 @@ void Context::recreate_swapchain()
   configuration_phases.push_back( VKZ_CONFIGURE_COMMAND_POOL );
   configuration_phases.push_back( VKZ_CONFIGURE_COMMAND_BUFFERS );
 
-  for (int i=(int)configuration_phases.size(); --i>=0; ) deactivate( configuration_phases[i] );
+  dispatch_configuration_event( VKZ_EVENT_SURFACE_LOST, true );
+  //for (int i=(int)configuration_phases.size(); --i>=0; ) deactivate( configuration_phases[i] );
 
   for (auto phase : configuration_phases) dispatch_event( phase );
 }
@@ -139,13 +167,13 @@ void Context::set_configuration_action( std::string phase, Action* action )
   actions[phase] = action;
 }
 
-void Context::set_event_handler( std::string event, Action* action )
+void Context::set_event_handler( std::string phase, Action* action )
 {
-  Action* existing = actions[event];
+  Action* existing = actions[phase];
   if (existing)
   {
     existing->deactivate();
     delete existing;
   }
-  actions[event] = action;
+  actions[phase] = action;
 }

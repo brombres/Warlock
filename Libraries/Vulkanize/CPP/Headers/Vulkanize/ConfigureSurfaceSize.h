@@ -7,6 +7,7 @@ namespace VKZ
     Context* context;
 
     ConfigureSurfaceSize( Context* context );
-    virtual bool on_activate();
+    virtual bool on_configure();
+    virtual void on_surface_lost() { configured = false; }
   };
 };

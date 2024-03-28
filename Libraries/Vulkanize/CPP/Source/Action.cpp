@@ -7,15 +7,59 @@ Action::~Action()
   if (first_child)  delete first_child;
 }
 
-bool Action::activate()
+bool Action::handle_event( int event_type )
 {
-  if (is_active) return true;
+  switch (event_type)
+  {
+    case VKZ_EVENT_CONFIGURE:
+      if (configured) return true;
 
-  if (not on_activate()) return false;
-  is_active = true;
+      if ( !on_configure() ) return false;
+      configured = true;
+      break;
 
-  if (first_child && !first_child->activate()) return false;
-  if (next_sibling && !next_sibling->activate()) return false;
+    case VKZ_EVENT_EXECUTE:
+      if ( !configured )
+      {
+        if ( !on_configure() ) return false;
+        configured = true;
+      }
+
+      if ( !on_execute() ) return false;
+      break;
+
+    case VKZ_EVENT_DEACTIVATE:
+      if (configured)
+      {
+        configured = false;
+        on_deactivate();
+      }
+      break;
+
+    case VKZ_EVENT_SURFACE_LOST:
+      on_surface_lost();
+      break;
+
+    default:
+      if ( !on(event_type) ) return false;
+  }
+
+  if (first_child && !first_child->handle_event(event_type)) return false;
+  if (next_sibling && !next_sibling->handle_event(event_type)) return false;
+
+  return true;
+
+}
+
+bool Action::configure()
+{
+  if (configured) return true;
+
+  if (not on_configure()) return false;
+  configured = true;
+
+  if (first_child && !first_child->configure()) return false;
+  if (next_sibling && !next_sibling->configure()) return false;
 
   return true;
 }
@@ -79,21 +123,25 @@ void Action::deactivate()
   if (next_sibling) next_sibling->deactivate();
   if (first_child)  first_child->deactivate();
 
-  if (is_active)
+  if (configured)
   {
-    is_active = false;
+    configured = false;
     on_deactivate();
   }
 }
 
 bool Action::execute()
 {
-  activate();
+  configure();
   if ( !on_execute() ) return false;
 
   if (first_child && !first_child->execute()) return false;
   if (next_sibling && !next_sibling->execute()) return false;
   return true;
+}
+
+void Action::reconfigure()
+{
 }
 
 void Action::remove_child( Action* child )

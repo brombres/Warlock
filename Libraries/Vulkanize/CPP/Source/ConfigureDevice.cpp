@@ -7,7 +7,7 @@ ConfigureDevice::ConfigureDevice( Context* context, int major_version, int minor
 {
 }
 
-bool ConfigureDevice::on_activate()
+bool ConfigureDevice::on_configure()
 {
   //features12.bufferDeviceAddress = true;
   //features12.descriptorIndexing = true;

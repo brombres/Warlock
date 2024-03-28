@@ -300,7 +300,6 @@
 			children = (
 				30903CF92B9EC96500419514 /* BVKImage.cpp */,
 				3049E6AD2B952FBE008554DD /* WindowRenderContextVulkan.cpp */,
-				301985172B94DC6000CBECCB /* VkBootstrap.cpp */,
 				301985182B94DC6000CBECCB /* RendererVulkan.cpp */,
 			);
 			path = Vulkan;
@@ -360,8 +359,6 @@
 			children = (
 				30903CF82B9EC94E00419514 /* BVKImage.h */,
 				3049E6AC2B9518D9008554DD /* WindowRenderContextVulkan.h */,
-				3019852D2B94DC6000CBECCB /* VkBootstrap.h */,
-				3019852E2B94DC6000CBECCB /* VkBootstrapDispatch.h */,
 				3019852F2B94DC6000CBECCB /* RendererVulkan.h */,
 			);
 			path = Vulkan;
@@ -537,6 +534,8 @@
 				30089BBE2BAC918B00AE818B /* Optional.h */,
 				307706342BA8B39C00122E50 /* Context.h */,
 				3077062C2BA896D500122E50 /* Vulkanize.h */,
+				3019852D2B94DC6000CBECCB /* VkBootstrap.h */,
+				3019852E2B94DC6000CBECCB /* VkBootstrapDispatch.h */,
 			);
 			path = Vulkanize;
 			sourceTree = "<group>";
@@ -560,6 +559,7 @@
 				305AA2AE2BAF48E200BDAE68 /* ConfigureDevice.cpp */,
 				307706352BA8B3AC00122E50 /* Context.cpp */,
 				307706302BA896D500122E50 /* Vulkanize.cpp */,
+				301985172B94DC6000CBECCB /* VkBootstrap.cpp */,
 			);
 			name = Source;
 			path = ../../Libraries/Vulkanize/CPP/Source;

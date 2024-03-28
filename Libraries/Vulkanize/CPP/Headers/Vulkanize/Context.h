@@ -22,6 +22,11 @@
 #define VKZ_CONFIGURE_SEMAPHORES         "semaphores"
 #define VKZ_CONFIGURE_FENCES             "fences"
 
+#define VKZ_EVENT_CONFIGURE    1
+#define VKZ_EVENT_EXECUTE      2
+#define VKZ_EVENT_DEACTIVATE   3
+#define VKZ_EVENT_SURFACE_LOST 4
+
 namespace VKZ
 {
   struct Context
@@ -39,6 +44,7 @@ namespace VKZ
 
     VkSurfaceFormatKHR       swapchain_surface_format;
     vkb::Swapchain           swapchain;
+    bool                     swapchain_created = false;
 	  std::vector<VkImage>     swapchain_images;
     std::vector<VkImageView> swapchain_image_views;
 
@@ -49,13 +55,16 @@ namespace VKZ
     virtual void configure_actions();
 
     virtual void add_configuration_action( std::string phase, Action* action );
-    virtual void add_event_handler( std::string event, Action* action );
+    virtual void add_event_handler( std::string phase, Action* action );
     virtual bool configure();
     virtual void deactivate();
-    virtual void deactivate( std::string event );
-    virtual bool dispatch_event( std::string event );
+    virtual void deactivate( std::string phase );
+    virtual bool dispatch_configuration_event( int event_type, bool reverse_order=false );
+    virtual bool dispatch_event( std::string phase );
+    virtual bool dispatch_event( std::string phase, int event_type );
+    virtual bool execute( std::string phase );
     virtual void recreate_swapchain();
     virtual void set_configuration_action( std::string phase, Action* action );
-    virtual void set_event_handler( std::string event, Action* action );
+    virtual void set_event_handler( std::string phase, Action* action );
   };
 };
