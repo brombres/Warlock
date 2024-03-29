@@ -2,7 +2,7 @@
 
 namespace VKZ
 {
-  struct ConfigureFormats : Action
+  struct ConfigureFormats : Operation
   {
     Context* context;
 

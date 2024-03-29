@@ -2,18 +2,18 @@
 
 namespace VKZ
 {
-  struct Action
+  struct Operation
   {
-    Action* parent           = nullptr;
-    Action* first_child      = nullptr;
-    Action* last_child       = nullptr;
-    Action* next_sibling     = nullptr;
-    Action* previous_sibling = nullptr;
+    Operation* parent           = nullptr;
+    Operation* first_child      = nullptr;
+    Operation* last_child       = nullptr;
+    Operation* next_sibling     = nullptr;
+    Operation* previous_sibling = nullptr;
     bool    configured       = false;
 
     //----- Constructor/Destructor ---------------------------------------------
-    Action() {}
-    virtual ~Action();
+    Operation() {}
+    virtual ~Operation();
 
     //----- Event Callbacks ----------------------------------------------------
     virtual bool on( int event_type ) { return true; }
@@ -37,9 +37,9 @@ namespace VKZ
     virtual void deactivate();
 
     //----- Tree Operations ----------------------------------------------------
-    virtual void add_child( Action* child );
-    virtual void add_sibling( Action* sibling );
+    virtual void add_child( Operation* child );
+    virtual void add_sibling( Operation* sibling );
     virtual void detach();  // detach from parent and siblings; preserves children
-    virtual void remove_child( Action* child );
+    virtual void remove_child( Operation* child );
   };
 };

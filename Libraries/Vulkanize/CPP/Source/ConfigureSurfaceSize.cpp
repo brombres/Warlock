@@ -3,7 +3,7 @@
 using namespace VKZ;
 
 ConfigureSurfaceSize::ConfigureSurfaceSize( Context* context )
-  : Action(), context(context)
+  : Operation(), context(context)
 {
 }
 

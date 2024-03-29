@@ -2,7 +2,7 @@
 
 namespace VKZ
 {
-  struct ConfigureSwapchain : Action
+  struct ConfigureSwapchain : Operation
   {
     Context* context;
     bool     reconfiguring = false;

@@ -3,7 +3,7 @@
 using namespace VKZ;
 
 ConfigureFormats::ConfigureFormats( Context* context )
-  : Action(), context(context)
+  : Operation(), context(context)
 {
 }
 

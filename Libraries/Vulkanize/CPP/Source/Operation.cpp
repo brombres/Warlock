@@ -1,13 +1,13 @@
 #include "Vulkanize/Vulkanize.h"
 using namespace VKZ;
 
-Action::~Action()
+Operation::~Operation()
 {
   if (next_sibling) delete next_sibling;
   if (first_child)  delete first_child;
 }
 
-bool Action::handle_event( int event_type )
+bool Operation::handle_event( int event_type )
 {
   switch (event_type)
   {
@@ -51,7 +51,7 @@ bool Action::handle_event( int event_type )
 
 }
 
-bool Action::configure()
+bool Operation::configure()
 {
   if (configured) return true;
 
@@ -64,7 +64,7 @@ bool Action::configure()
   return true;
 }
 
-void Action::add_child( Action* child )
+void Operation::add_child( Operation* child )
 {
   child->parent = this;
 
@@ -80,7 +80,7 @@ void Action::add_child( Action* child )
   }
 }
 
-void Action::add_sibling( Action* sibling )
+void Operation::add_sibling( Operation* sibling )
 {
   if (parent)
   {
@@ -89,14 +89,14 @@ void Action::add_sibling( Action* sibling )
   else
   {
     sibling->detach();
-    Action* cur = this;
+    Operation* cur = this;
     while (cur->next_sibling) cur = cur->next_sibling;
     cur->next_sibling = sibling;
     sibling->previous_sibling = this;
   }
 }
 
-void Action::detach()
+void Operation::detach()
 {
   if (parent)
   {
@@ -118,7 +118,7 @@ void Action::detach()
   }
 }
 
-void Action::deactivate()
+void Operation::deactivate()
 {
   if (next_sibling) next_sibling->deactivate();
   if (first_child)  first_child->deactivate();
@@ -130,7 +130,7 @@ void Action::deactivate()
   }
 }
 
-bool Action::execute()
+bool Operation::execute()
 {
   configure();
   if ( !on_execute() ) return false;
@@ -140,11 +140,11 @@ bool Action::execute()
   return true;
 }
 
-void Action::reconfigure()
+void Operation::reconfigure()
 {
 }
 
-void Action::remove_child( Action* child )
+void Operation::remove_child( Operation* child )
 {
   if (child->parent != this) return;
   child->parent = nullptr;
@@ -168,7 +168,7 @@ void Action::remove_child( Action* child )
   }
   else
   {
-    Action* cur = child->first_child;
+    Operation* cur = child->first_child;
     while (cur->next_sibling != child)
     {
       cur = cur->next_sibling;

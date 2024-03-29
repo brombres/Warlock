@@ -3,7 +3,7 @@
 using namespace VKZ;
 
 ConfigureSwapchain::ConfigureSwapchain( Context* context )
-  : Action(), context(context)
+  : Operation(), context(context)
 {
 }
 

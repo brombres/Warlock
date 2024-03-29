@@ -17,42 +17,42 @@ Context::~Context()
 
   for (int i=(int)configuration_phases.size(); --i>=0; )
   {
-    Action* action = actions[ configuration_phases[i] ];
-    if (action) delete action;
+    Operation* operation = operations[ configuration_phases[i] ];
+    if (operation) delete operation;
   }
-  actions.clear();
+  operations.clear();
 
   vkb::destroy_surface( vulkanize.vulkan_instance, surface );
   surface = nullptr;
 }
 
-void Context::add_configuration_action( std::string phase, Action* action )
+void Context::add_configuration_action( std::string phase, Operation* operation )
 {
   if (configured)
   {
-    fprintf( stderr, "[Vulkanize] Error calling add_configuration_action(): actions can "
+    fprintf( stderr, "[Vulkanize] Error calling add_configuration_action(): operations can "
                      "only be modified before configure() is called.\n" );
     return;
   }
 
-  Action* existing = actions[phase];
+  Operation* existing = operations[phase];
   if (existing)
   {
-    existing->add_sibling( action );
+    existing->add_sibling( operation );
   }
   else
   {
     // This config phase does not yet exist in the configuration_phases definition.
     configuration_phases.push_back( phase );
-    actions[phase] = action;
+    operations[phase] = operation;
   }
 }
 
-void Context::add_event_handler( std::string phase, Action* action )
+void Context::add_event_handler( std::string phase, Operation* operation )
 {
-  Action* existing = actions[phase];
-  if (existing) existing->add_sibling( action );
-  else          actions[phase] = action;
+  Operation* existing = operations[phase];
+  if (existing) existing->add_sibling( operation );
+  else          operations[phase] = operation;
 }
 
 bool Context::configure()
@@ -80,8 +80,8 @@ void Context::deactivate()
 
 void Context::deactivate( std::string phase )
 {
-  Action* action = actions[phase];
-  if (action) action->deactivate();
+  Operation* operation = operations[phase];
+  if (operation) operation->deactivate();
 }
 
 bool Context::dispatch_configuration_event( int event_type, bool reverse_order )
@@ -106,20 +106,20 @@ bool Context::dispatch_configuration_event( int event_type, bool reverse_order )
 
 bool Context::dispatch_event( std::string phase )
 {
-  Action* action = actions[phase];
-  if (action)
+  Operation* operation = operations[phase];
+  if (operation)
   {
-    if ( !action->execute() ) return false;
+    if ( !operation->execute() ) return false;
   }
   return true;
 }
 
 bool Context::dispatch_event( std::string phase, int event_type )
 {
-  Action* action = actions[phase];
-  if (action)
+  Operation* operation = operations[phase];
+  if (operation)
   {
-    if ( !action->handle_event(event_type) ) return false;
+    if ( !operation->handle_event(event_type) ) return false;
   }
   return true;
 }
@@ -145,16 +145,16 @@ void Context::recreate_swapchain()
   for (auto phase : configuration_phases) dispatch_event( phase );
 }
 
-void Context::set_configuration_action( std::string phase, Action* action )
+void Context::set_configuration_action( std::string phase, Operation* operation )
 {
   if (configured)
   {
-    fprintf( stderr, "[Vulkanize] Error calling set_configuration_action(): actions can "
+    fprintf( stderr, "[Vulkanize] Error calling set_configuration_action(): operations can "
                      "only be modified before configure() is called.\n" );
     return;
   }
 
-  Action* existing = actions[phase];
+  Operation* existing = operations[phase];
   if (existing)
   {
     delete existing;
@@ -164,16 +164,16 @@ void Context::set_configuration_action( std::string phase, Action* action )
     // This config phase does not yet exist in the configuration_phases definition.
     configuration_phases.push_back( phase );
   }
-  actions[phase] = action;
+  operations[phase] = operation;
 }
 
-void Context::set_event_handler( std::string phase, Action* action )
+void Context::set_event_handler( std::string phase, Operation* operation )
 {
-  Action* existing = actions[phase];
+  Operation* existing = operations[phase];
   if (existing)
   {
     existing->deactivate();
     delete existing;
   }
-  actions[phase] = action;
+  operations[phase] = operation;
 }

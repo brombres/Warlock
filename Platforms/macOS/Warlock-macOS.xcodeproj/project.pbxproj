@@ -19,7 +19,7 @@
 		3049E6AE2B952FBE008554DD /* WindowRenderContextVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3049E6AD2B952FBE008554DD /* WindowRenderContextVulkan.cpp */; };
 		3049E6B02B953545008554DD /* WindowFrameworkContextSDL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3049E6AF2B953545008554DD /* WindowFrameworkContextSDL.cpp */; };
 		305AA2AF2BAF48E200BDAE68 /* ConfigureDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 305AA2AE2BAF48E200BDAE68 /* ConfigureDevice.cpp */; };
-		305AA2B12BAF4B5600BDAE68 /* Action.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 305AA2B02BAF4B5600BDAE68 /* Action.cpp */; };
+		305AA2B12BAF4B5600BDAE68 /* Operation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 305AA2B02BAF4B5600BDAE68 /* Operation.cpp */; };
 		305AA2C42BB0EDF800BDAE68 /* ConfigureFormats.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 305AA2C22BB0EDF800BDAE68 /* ConfigureFormats.cpp */; };
 		305AA2C52BB0EDF800BDAE68 /* ConfigureSwapchain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 305AA2C32BB0EDF800BDAE68 /* ConfigureSwapchain.cpp */; };
 		305AA2D52BB1041300BDAE68 /* ConfigureSurfaceSize.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 305AA2D42BB1041300BDAE68 /* ConfigureSurfaceSize.cpp */; };
@@ -131,7 +131,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		30089BB22BAC918B00AE818B /* Action.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Action.h; sourceTree = "<group>"; };
+		30089BB22BAC918B00AE818B /* Operation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Operation.h; sourceTree = "<group>"; };
 		30089BBE2BAC918B00AE818B /* Optional.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Optional.h; sourceTree = "<group>"; };
 		3019850D2B94DC6000CBECCB /* Window.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Window.cpp; sourceTree = "<group>"; };
 		3019850F2B94DC6000CBECCB /* String.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = String.cpp; sourceTree = "<group>"; };
@@ -166,7 +166,7 @@
 		3049E6AF2B953545008554DD /* WindowFrameworkContextSDL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WindowFrameworkContextSDL.cpp; sourceTree = "<group>"; };
 		305AA2AD2BAF48CB00BDAE68 /* ConfigureDevice.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConfigureDevice.h; sourceTree = "<group>"; };
 		305AA2AE2BAF48E200BDAE68 /* ConfigureDevice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureDevice.cpp; sourceTree = "<group>"; };
-		305AA2B02BAF4B5600BDAE68 /* Action.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Action.cpp; sourceTree = "<group>"; };
+		305AA2B02BAF4B5600BDAE68 /* Operation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Operation.cpp; sourceTree = "<group>"; };
 		305AA2B52BB0EDEF00BDAE68 /* ConfigureFormats.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConfigureFormats.h; sourceTree = "<group>"; };
 		305AA2C12BB0EDEF00BDAE68 /* ConfigureSwapchain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConfigureSwapchain.h; sourceTree = "<group>"; };
 		305AA2C22BB0EDF800BDAE68 /* ConfigureFormats.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureFormats.cpp; sourceTree = "<group>"; };
@@ -530,7 +530,7 @@
 				305AA2B52BB0EDEF00BDAE68 /* ConfigureFormats.h */,
 				305AA2C12BB0EDEF00BDAE68 /* ConfigureSwapchain.h */,
 				305AA2AD2BAF48CB00BDAE68 /* ConfigureDevice.h */,
-				30089BB22BAC918B00AE818B /* Action.h */,
+				30089BB22BAC918B00AE818B /* Operation.h */,
 				30089BBE2BAC918B00AE818B /* Optional.h */,
 				307706342BA8B39C00122E50 /* Context.h */,
 				3077062C2BA896D500122E50 /* Vulkanize.h */,
@@ -555,7 +555,7 @@
 				305AA2D42BB1041300BDAE68 /* ConfigureSurfaceSize.cpp */,
 				305AA2C22BB0EDF800BDAE68 /* ConfigureFormats.cpp */,
 				305AA2C32BB0EDF800BDAE68 /* ConfigureSwapchain.cpp */,
-				305AA2B02BAF4B5600BDAE68 /* Action.cpp */,
+				305AA2B02BAF4B5600BDAE68 /* Operation.cpp */,
 				305AA2AE2BAF48E200BDAE68 /* ConfigureDevice.cpp */,
 				307706352BA8B3AC00122E50 /* Context.cpp */,
 				307706302BA896D500122E50 /* Vulkanize.cpp */,
@@ -755,7 +755,7 @@
 				307706332BA896D500122E50 /* Vulkanize.cpp in Sources */,
 				305AA2D52BB1041300BDAE68 /* ConfigureSurfaceSize.cpp in Sources */,
 				306912E12B5E7E1D00B14F73 /* Warlock.swift in Sources */,
-				305AA2B12BAF4B5600BDAE68 /* Action.cpp in Sources */,
+				305AA2B12BAF4B5600BDAE68 /* Operation.cpp in Sources */,
 				3049E6AE2B952FBE008554DD /* WindowRenderContextVulkan.cpp in Sources */,
 				3049E6A72B94FBF4008554DD /* Balefire.cpp in Sources */,
 				301985332B94DC6000CBECCB /* Renderer.cpp in Sources */,
