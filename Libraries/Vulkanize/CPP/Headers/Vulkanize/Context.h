@@ -33,10 +33,10 @@ namespace VKZ
   {
     bool configured = false;
 
-    std::unordered_map<std::string,std::vector<std::string>> categories;
+    std::unordered_map<std::string,std::vector<std::string>> task_phases;
+    std::unordered_map<std::string,Operation*> operations;
 
     std::vector<std::string>                configuration_phases;
-    std::unordered_map<std::string,Operation*> operations;
 
     VkSurfaceKHR        surface;
     VkExtent2D          surface_size;
@@ -54,19 +54,14 @@ namespace VKZ
 
     virtual ~Context();
 
-    virtual void configure_actions();
+    virtual void configure_operations();
 
-    virtual void add_configuration_action( std::string phase, Operation* operation );
-    virtual void add_event_handler( std::string phase, Operation* operation );
+    virtual void add_operation( std::string task, Operation* operation );
     virtual bool configure();
     virtual void deactivate();
-    virtual void deactivate( std::string phase );
-    virtual bool dispatch_configuration_event( int event_type, bool reverse_order=false );
-    virtual bool dispatch_event( std::string phase );
-    virtual bool dispatch_event( std::string phase, int event_type );
-    virtual bool execute( std::string phase );
+    virtual bool dispatch_event( std::string task, std::string event_type, bool reverse_order=false );
+    virtual bool execute( std::string task );
     virtual void recreate_swapchain();
-    virtual void set_configuration_action( std::string phase, Operation* operation );
-    virtual void set_event_handler( std::string phase, Operation* operation );
+    virtual void set_operation( std::string task, Operation* operation );
   };
 };

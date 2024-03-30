@@ -6,6 +6,31 @@
 #include "Vulkanize/Context.h"
 #include "Vulkanize/ConfigureDevice.h"
 using namespace VKZ;
+using namespace std;
+
+struct TaskPhase
+{
+  string task;
+  string phase;
+
+  TaskPhase( string task, string phase ) : task(task), phase(phase) {}
+
+  TaskPhase( string task_phase )
+  {
+    auto i = task_phase.find( '.' );
+    if (i == string::npos)
+    {
+      task = task_phase;
+      phase = "*";
+    }
+    else
+    {
+      task = task_phase;
+      task.resize( i );
+      phase = task_phase.c_str() + i + 1;
+    }
+  }
+};
 
 Context::Context( VkSurfaceKHR surface ) : surface(surface)
 {
@@ -26,154 +51,143 @@ Context::~Context()
   surface = nullptr;
 }
 
-void Context::add_configuration_action( std::string phase, Operation* operation )
+void Context::add_operation( string task, Operation* operation )
 {
-  if (configured)
-  {
-    fprintf( stderr, "[Vulkanize] Error calling add_configuration_action(): operations can "
-                     "only be modified before configure() is called.\n" );
-    return;
-  }
-
-  Operation* existing = operations[phase];
+  Operation* existing = operations[task];
   if (existing)
   {
     existing->add_sibling( operation );
   }
   else
   {
-    // This config phase does not yet exist in the configuration_phases definition.
-    configuration_phases.push_back( phase );
-    operations[phase] = operation;
+    // This task.phase does not yet exist in task_phases.
+    TaskPhase task_phase( task );
+    task_phases[ task_phase.task ].push_back( task_phase.phase );
   }
-}
-
-void Context::add_event_handler( std::string phase, Operation* operation )
-{
-  Operation* existing = operations[phase];
-  if (existing) existing->add_sibling( operation );
-  else          operations[phase] = operation;
+  operations[task] = operation;
 }
 
 bool Context::configure()
 {
-  if ( !configuration_phases.size() ) configure_actions();
-  if ( !dispatch_configuration_event(VKZ_EVENT_CONFIGURE) ) return false;
+  if ( !operations.size() ) configure_operations();
+
+  if (task_phases.find("configure") == task_phases.end()) return true;
+
+  vector<string>& phases = task_phases["configure"];
+  for (auto phase : phases)
+  {
+    Operation* operation = operations[ phase ];
+    if (operation && !operation->configure())
+    {
+      return false;
+    }
+  }
+
   configured = true;
   return true;
 }
 
-void Context::configure_actions()
+void Context::configure_operations()
 {
-  set_configuration_action( VKZ_CONFIGURE_DEVICE,       new ConfigureDevice(this,1,2) );
-  set_configuration_action( VKZ_CONFIGURE_FORMATS,      new ConfigureFormats(this) );
-  set_configuration_action( VKZ_CONFIGURE_SURFACE_SIZE, new ConfigureSurfaceSize(this) );
-  set_configuration_action( VKZ_CONFIGURE_SWAPCHAIN,    new ConfigureSwapchain(this) );
+  set_operation( "configure.device",       new ConfigureDevice(this,1,2) );
+  set_operation( "configure.formats",      new ConfigureFormats(this) );
+  set_operation( "configure.surface_size", new ConfigureSurfaceSize(this) );
+  set_operation( "configure.swapchain",    new ConfigureSwapchain(this) );
 }
 
 void Context::deactivate()
 {
   if ( !configured ) return;
-  dispatch_configuration_event( VKZ_EVENT_DEACTIVATE, true );
+  if (task_phases.find("configure") == task_phases.end()) return;
+
+  vector<string>& phases = task_phases["configure"];
+  for (int i=(int)phases.size(); --i>=0; )
+  {
+    Operation* operation = operations[ phases[i] ];
+    if (operation) operation->deactivate();
+  }
+
   configured = false;
 }
 
-void Context::deactivate( std::string phase )
+bool Context::dispatch_event( string task, string event_type, bool reverse_order )
 {
-  Operation* operation = operations[phase];
-  if (operation) operation->deactivate();
-}
+  TaskPhase task_phase( task );
+  if (task_phases.find(task_phase.task) == task_phases.end()) return true;
 
-bool Context::dispatch_configuration_event( int event_type, bool reverse_order )
-{
-  if (reverse_order)
+  vector<string>& phases = task_phases[task_phase.task];
+  if (task_phase.phase == "*")
   {
-    for (int i=(int)configuration_phases.size(); --i>=0; )
+    if (reverse_order)
     {
-      if ( !dispatch_event(configuration_phases[i],event_type) ) return false;
+      for (int i=(int)phases.size(); --i>=0; )
+      {
+        Operation* operation = operations[phases[i]];
+        if (operation)
+        {
+          if ( !operation->handle_event(event_type,reverse_order) ) return false;
+        }
+      }
+      return true;
     }
-    return true;
+    else
+    {
+      for (auto phase : phases)
+      {
+        Operation* operation = operations[phase];
+        if (operation)
+        {
+          if ( !operation->handle_event(event_type) ) return false;
+        }
+      }
+      return true;
+    }
   }
   else
   {
-    for (auto phase : configuration_phases)
+    Operation* operation = operations[ task ];
+    if (operation) return operation->handle_event( event_type, reverse_order );
+    else           return true;
+  }
+
+
+}
+
+bool Context::execute( string task )
+{
+  TaskPhase task_phase( task );
+  if (task_phases.find(task_phase.task) == task_phases.end()) return true;
+
+  vector<string>& phases = task_phases[task_phase.task];
+  for (auto phase : phases)
+  {
+    Operation* operation = operations[phase];
+    if (operation)
     {
-      if ( !dispatch_event(phase,event_type) ) return false;
+      if ( !operation->execute() ) return false;
     }
-    return true;
-  }
-}
-
-bool Context::dispatch_event( std::string phase )
-{
-  Operation* operation = operations[phase];
-  if (operation)
-  {
-    if ( !operation->execute() ) return false;
   }
   return true;
-}
-
-bool Context::dispatch_event( std::string phase, int event_type )
-{
-  Operation* operation = operations[phase];
-  if (operation)
-  {
-    if ( !operation->handle_event(event_type) ) return false;
-  }
-  return true;
-}
-
-bool Context::execute( std::string phase )
-{
-  return dispatch_event( phase, VKZ_EVENT_EXECUTE );
 }
 
 void Context::recreate_swapchain()
 {
-  std::vector<std::string> configuration_phases;
-  configuration_phases.push_back( VKZ_CONFIGURE_SURFACE_SIZE );
-  configuration_phases.push_back( VKZ_CONFIGURE_SWAPCHAIN );
-  configuration_phases.push_back( VKZ_CONFIGURE_DEPTH_STENCIL );
-  configuration_phases.push_back( VKZ_CONFIGURE_FRAMEBUFFERS );
-  configuration_phases.push_back( VKZ_CONFIGURE_COMMAND_POOL );
-  configuration_phases.push_back( VKZ_CONFIGURE_COMMAND_BUFFERS );
-
-  dispatch_configuration_event( VKZ_EVENT_SURFACE_LOST, true );
-  //for (int i=(int)configuration_phases.size(); --i>=0; ) deactivate( configuration_phases[i] );
-
-  for (auto phase : configuration_phases) dispatch_event( phase );
+  dispatch_event( "configure", "surface_lost", true );
+  configure();
 }
 
-void Context::set_configuration_action( std::string phase, Operation* operation )
+void Context::set_operation( string task, Operation* operation )
 {
-  if (configured)
-  {
-    fprintf( stderr, "[Vulkanize] Error calling set_configuration_action(): operations can "
-                     "only be modified before configure() is called.\n" );
-    return;
-  }
-
-  Operation* existing = operations[phase];
+  Operation* existing = operations[task];
   if (existing)
   {
     delete existing;
   }
   else
   {
-    // This config phase does not yet exist in the configuration_phases definition.
-    configuration_phases.push_back( phase );
+    // This task.phase does not yet exist in task_phases.
+    TaskPhase task_phase( task );
+    task_phases[ task_phase.task ].push_back( task );
   }
-  operations[phase] = operation;
-}
-
-void Context::set_event_handler( std::string phase, Operation* operation )
-{
-  Operation* existing = operations[phase];
-  if (existing)
-  {
-    existing->deactivate();
-    delete existing;
-  }
-  operations[phase] = operation;
+  operations[task] = operation;
 }

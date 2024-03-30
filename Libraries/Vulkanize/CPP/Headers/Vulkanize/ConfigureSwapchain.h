@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 namespace VKZ
 {
   struct ConfigureSwapchain : Operation
@@ -8,8 +10,8 @@ namespace VKZ
     bool     reconfiguring = false;
 
     ConfigureSwapchain( Context* context );
+    virtual bool on( std::string event_type );
     virtual bool on_configure();
     virtual void on_deactivate();
-    virtual void on_surface_lost();
   };
 };

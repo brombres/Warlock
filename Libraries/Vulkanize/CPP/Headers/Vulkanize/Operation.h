@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 namespace VKZ
 {
   struct Operation
@@ -18,6 +20,8 @@ namespace VKZ
     //----- Event Callbacks ----------------------------------------------------
     virtual bool on( int event_type ) { return true; }
 
+    virtual bool on( std::string event_type ) { return true; }
+
     virtual bool on_configure() { return true; }
     // Return true on success, false on failure.
 
@@ -31,9 +35,9 @@ namespace VKZ
 
     //----- Event Handling Framework -------------------------------------------
     virtual bool handle_event( int event_type );
+    virtual bool handle_event( std::string event_type, bool reverse_order=false );
     virtual bool configure();
     virtual bool execute();
-    virtual void reconfigure();
     virtual void deactivate();
 
     //----- Tree Operations ----------------------------------------------------

@@ -1,5 +1,6 @@
 #include "Vulkanize/Vulkanize.h"
 using namespace VKZ;
+using namespace std;
 
 Operation::~Operation()
 {
@@ -46,6 +47,32 @@ bool Operation::handle_event( int event_type )
 
   if (first_child && !first_child->handle_event(event_type)) return false;
   if (next_sibling && !next_sibling->handle_event(event_type)) return false;
+
+  return true;
+
+}
+
+bool Operation::handle_event( string event_type, bool reverse_order )
+{
+  if (reverse_order)
+  {
+    if (next_sibling && !next_sibling->handle_event(event_type)) return false;
+    if (first_child && !first_child->handle_event(event_type)) return false;
+  }
+
+  if ( !configured )
+  {
+    if ( !on_configure() ) return false;
+    configured = true;
+  }
+
+  if ( !on(event_type) ) return false;
+
+  if ( !reverse_order )
+  {
+    if (first_child && !first_child->handle_event(event_type)) return false;
+    if (next_sibling && !next_sibling->handle_event(event_type)) return false;
+  }
 
   return true;
 
@@ -138,10 +165,6 @@ bool Operation::execute()
   if (first_child && !first_child->execute()) return false;
   if (next_sibling && !next_sibling->execute()) return false;
   return true;
-}
-
-void Operation::reconfigure()
-{
 }
 
 void Operation::remove_child( Operation* child )
