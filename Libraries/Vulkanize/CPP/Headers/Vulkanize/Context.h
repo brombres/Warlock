@@ -33,8 +33,10 @@ namespace VKZ
   {
     bool configured = false;
 
+    Operation operation;
+
     std::unordered_map<std::string,std::vector<std::string>> task_phases;
-    std::unordered_map<std::string,Operation*> operations;
+    std::unordered_map<std::string,Operation*> old_operations;
 
     std::vector<std::string>                configuration_phases;
 

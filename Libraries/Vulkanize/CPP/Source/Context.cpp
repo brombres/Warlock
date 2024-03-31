@@ -42,10 +42,10 @@ Context::~Context()
 
   for (int i=(int)configuration_phases.size(); --i>=0; )
   {
-    Operation* operation = operations[ configuration_phases[i] ];
+    Operation* operation = old_operations[ configuration_phases[i] ];
     if (operation) delete operation;
   }
-  operations.clear();
+  old_operations.clear();
 
   vkb::destroy_surface( vulkanize.vulkan_instance, surface );
   surface = nullptr;
@@ -53,7 +53,7 @@ Context::~Context()
 
 void Context::add_operation( string task, Operation* operation )
 {
-  Operation* existing = operations[task];
+  Operation* existing = old_operations[task];
   if (existing)
   {
     existing->add_sibling( operation );
@@ -64,19 +64,19 @@ void Context::add_operation( string task, Operation* operation )
     TaskPhase task_phase( task );
     task_phases[ task_phase.task ].push_back( task_phase.phase );
   }
-  operations[task] = operation;
+  old_operations[task] = operation;
 }
 
 bool Context::configure()
 {
-  if ( !operations.size() ) configure_operations();
+  if ( !old_operations.size() ) configure_operations();
 
   if (task_phases.find("configure") == task_phases.end()) return true;
 
   vector<string>& phases = task_phases["configure"];
   for (auto phase : phases)
   {
-    Operation* operation = operations[ phase ];
+    Operation* operation = old_operations[ phase ];
     if (operation && !operation->configure())
     {
       return false;
@@ -103,7 +103,7 @@ void Context::deactivate()
   vector<string>& phases = task_phases["configure"];
   for (int i=(int)phases.size(); --i>=0; )
   {
-    Operation* operation = operations[ phases[i] ];
+    Operation* operation = old_operations[ phases[i] ];
     if (operation) operation->deactivate();
   }
 
@@ -122,7 +122,7 @@ bool Context::dispatch_event( string task, string event_type, bool reverse_order
     {
       for (int i=(int)phases.size(); --i>=0; )
       {
-        Operation* operation = operations[phases[i]];
+        Operation* operation = old_operations[phases[i]];
         if (operation)
         {
           if ( !operation->handle_event(event_type,reverse_order) ) return false;
@@ -134,7 +134,7 @@ bool Context::dispatch_event( string task, string event_type, bool reverse_order
     {
       for (auto phase : phases)
       {
-        Operation* operation = operations[phase];
+        Operation* operation = old_operations[phase];
         if (operation)
         {
           if ( !operation->handle_event(event_type) ) return false;
@@ -145,7 +145,7 @@ bool Context::dispatch_event( string task, string event_type, bool reverse_order
   }
   else
   {
-    Operation* operation = operations[ task ];
+    Operation* operation = old_operations[ task ];
     if (operation) return operation->handle_event( event_type, reverse_order );
     else           return true;
   }
@@ -161,7 +161,7 @@ bool Context::execute( string task )
   vector<string>& phases = task_phases[task_phase.task];
   for (auto phase : phases)
   {
-    Operation* operation = operations[phase];
+    Operation* operation = old_operations[phase];
     if (operation)
     {
       if ( !operation->execute() ) return false;
@@ -178,7 +178,7 @@ void Context::recreate_swapchain()
 
 void Context::set_operation( string task, Operation* operation )
 {
-  Operation* existing = operations[task];
+  Operation* existing = old_operations[task];
   if (existing)
   {
     delete existing;
@@ -189,5 +189,5 @@ void Context::set_operation( string task, Operation* operation )
     TaskPhase task_phase( task );
     task_phases[ task_phase.task ].push_back( task );
   }
-  operations[task] = operation;
+  old_operations[task] = operation;
 }

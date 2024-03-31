@@ -33,6 +33,7 @@
 		306913BC2B5EAFC900B14F73 /* vulkan.cppm in Resources */ = {isa = PBXBuildFile; fileRef = 3069139D2B5EAFC900B14F73 /* vulkan.cppm */; };
 		307706332BA896D500122E50 /* Vulkanize.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 307706302BA896D500122E50 /* Vulkanize.cpp */; };
 		307706362BA8B3AC00122E50 /* Context.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 307706352BA8B3AC00122E50 /* Context.cpp */; };
+		307DC3082BB9AFF1009297EA /* Group.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 307DC3072BB9AFF1009297EA /* Group.cpp */; };
 		30903CFA2B9EC96500419514 /* BVKImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30903CF92B9EC96500419514 /* BVKImage.cpp */; };
 /* End PBXBuildFile section */
 
@@ -236,6 +237,10 @@
 		307706302BA896D500122E50 /* Vulkanize.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Vulkanize.cpp; sourceTree = "<group>"; };
 		307706342BA8B39C00122E50 /* Context.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Context.h; sourceTree = "<group>"; };
 		307706352BA8B3AC00122E50 /* Context.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Context.cpp; sourceTree = "<group>"; };
+		307DC3042BB9AE27009297EA /* Node.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Node.h; sourceTree = "<group>"; };
+		307DC3072BB9AFF1009297EA /* Group.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Group.cpp; sourceTree = "<group>"; };
+		307DC3092BB9AFF7009297EA /* Group.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Group.h; sourceTree = "<group>"; };
+		307DC30A2BBA07E8009297EA /* String.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = String.h; sourceTree = "<group>"; };
 		30903CF82B9EC94E00419514 /* BVKImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BVKImage.h; sourceTree = "<group>"; };
 		30903CF92B9EC96500419514 /* BVKImage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BVKImage.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -526,6 +531,9 @@
 		3077062D2BA896D500122E50 /* Vulkanize */ = {
 			isa = PBXGroup;
 			children = (
+				307DC30A2BBA07E8009297EA /* String.h */,
+				307DC3092BB9AFF7009297EA /* Group.h */,
+				307DC3042BB9AE27009297EA /* Node.h */,
 				305AA2C82BB1040C00BDAE68 /* ConfigureSurfaceSize.h */,
 				305AA2B52BB0EDEF00BDAE68 /* ConfigureFormats.h */,
 				305AA2C12BB0EDEF00BDAE68 /* ConfigureSwapchain.h */,
@@ -552,6 +560,7 @@
 		307706312BA896D500122E50 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				307DC3072BB9AFF1009297EA /* Group.cpp */,
 				305AA2D42BB1041300BDAE68 /* ConfigureSurfaceSize.cpp */,
 				305AA2C22BB0EDF800BDAE68 /* ConfigureFormats.cpp */,
 				305AA2C32BB0EDF800BDAE68 /* ConfigureSwapchain.cpp */,
@@ -751,6 +760,7 @@
 				301985372B94DC6000CBECCB /* FrameworkSDLVulkan.cpp in Sources */,
 				301985362B94DC6000CBECCB /* FrameworkSDL.cpp in Sources */,
 				306912D12B5E7D7400B14F73 /* AppDelegate.m in Sources */,
+				307DC3082BB9AFF1009297EA /* Group.cpp in Sources */,
 				305AA2C42BB0EDF800BDAE68 /* ConfigureFormats.cpp in Sources */,
 				307706332BA896D500122E50 /* Vulkanize.cpp in Sources */,
 				305AA2D52BB1041300BDAE68 /* ConfigureSurfaceSize.cpp in Sources */,
