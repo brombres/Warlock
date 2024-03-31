@@ -55,7 +55,6 @@ namespace VKZ
 }
 
 #include "Vulkanize/Node.h"
-#include "Vulkanize/Group.h"
 #include "Vulkanize/Operation.h"
 #include "Vulkanize/Context.h"
 #include "Vulkanize/ConfigureDevice.h"

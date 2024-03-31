@@ -4,14 +4,13 @@
 
 namespace VKZ
 {
-  struct Operation : Node
+  struct Operation : Node<Operation>
   {
     bool        configured       = false;
 
     //----- Constructor/Destructor ---------------------------------------------
     Operation() {}
     virtual ~Operation();
-    virtual bool is_operation() { return true; }
 
     //----- Event Callbacks ----------------------------------------------------
     virtual bool on( std::string event_type ) { return true; }

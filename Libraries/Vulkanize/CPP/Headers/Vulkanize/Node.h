@@ -8,11 +8,11 @@ namespace VKZ
   struct Node
   {
     // PROPERTIES
-    Node<ExtendedType>* parent           = nullptr;
-    Node<ExtendedType>* first_child      = nullptr;
-    Node<ExtendedType>* last_child       = nullptr;
-    Node<ExtendedType>* next_sibling     = nullptr;
-    Node<ExtendedType>* previous_sibling = nullptr;
+    ExtendedType* parent           = nullptr;
+    ExtendedType* first_child      = nullptr;
+    ExtendedType* last_child       = nullptr;
+    ExtendedType* next_sibling     = nullptr;
+    ExtendedType* previous_sibling = nullptr;
 
     // METHODS
     virtual ~Node<ExtendedType>()
@@ -22,13 +22,13 @@ namespace VKZ
 
       if (parent)
       {
-        parent->remove_child( this );
+        parent->remove_child( (ExtendedType*)this );
       }
     }
 
-    virtual void add_child( Node<ExtendedType>* child )
+    virtual void add_child( ExtendedType* child )
     {
-      child->parent = this;
+      child->parent = (ExtendedType*)this;
 
       if (first_child)
       {
@@ -42,7 +42,7 @@ namespace VKZ
       }
     }
 
-    virtual void add_sibling( Node<ExtendedType>* sibling )
+    virtual void add_sibling( ExtendedType* sibling )
     {
       if (parent)
       {
@@ -51,10 +51,10 @@ namespace VKZ
       else
       {
         sibling->detach();
-        Node<ExtendedType>* cur = this;
+        ExtendedType* cur = (ExtendedType*)this;
         while (cur->next_sibling) cur = cur->next_sibling;
         cur->next_sibling = sibling;
-        sibling->previous_sibling = this;
+        sibling->previous_sibling = (ExtendedType*)this;
       }
     }
 
@@ -62,7 +62,7 @@ namespace VKZ
     {
       if (parent)
       {
-        parent->remove_child( this );
+        parent->remove_child( (ExtendedType*)this );
         parent = nullptr;
       }
       else
@@ -81,9 +81,9 @@ namespace VKZ
     }
 
     // Detach from parent and siblings; preserves children
-    virtual void remove_child( Node<ExtendedType>* child )
+    virtual void remove_child( ExtendedType* child )
     {
-      if (child->parent != this) return;
+      if (child->parent != (ExtendedType*)this) return;
       child->parent = nullptr;
 
       if (child == first_child)
@@ -105,7 +105,7 @@ namespace VKZ
       }
       else
       {
-        Node<ExtendedType>* cur = child->first_child;
+        ExtendedType* cur = child->first_child;
         while (cur->next_sibling != child)
         {
           cur = cur->next_sibling;
