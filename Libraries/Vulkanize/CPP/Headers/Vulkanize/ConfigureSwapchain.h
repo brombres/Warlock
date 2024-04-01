@@ -10,8 +10,8 @@ namespace VKZ
     bool     reconfiguring = false;
 
     ConfigureSwapchain( Context* context );
-    virtual bool on( std::string event_type );
-    virtual bool on_configure();
-    virtual void on_deactivate();
+    virtual bool on_event( std::string event_type );
+    virtual bool configure();
+    virtual void deactivate();
   };
 };

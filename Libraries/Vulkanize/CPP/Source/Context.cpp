@@ -8,30 +8,6 @@
 using namespace VKZ;
 using namespace std;
 
-struct TaskPhase
-{
-  string task;
-  string phase;
-
-  TaskPhase( string task, string phase ) : task(task), phase(phase) {}
-
-  TaskPhase( string task_phase )
-  {
-    auto i = task_phase.find( '.' );
-    if (i == string::npos)
-    {
-      task = task_phase;
-      phase = "*";
-    }
-    else
-    {
-      task = task_phase;
-      task.resize( i );
-      phase = task_phase.c_str() + i + 1;
-    }
-  }
-};
-
 Context::Context( VkSurfaceKHR surface ) : surface(surface)
 {
 }
@@ -40,48 +16,37 @@ Context::~Context()
 {
   deactivate();
 
-  for (int i=(int)configuration_phases.size(); --i>=0; )
+  for (auto phase : phases)
   {
-    Operation* operation = old_operations[ configuration_phases[i] ];
+    Operation* operation = operations[phase];
     if (operation) delete operation;
   }
-  old_operations.clear();
+  phases.clear();
+  operations.clear();
 
   vkb::destroy_surface( vulkanize.vulkan_instance, surface );
   surface = nullptr;
 }
 
-void Context::add_operation( string task, Operation* operation )
+void Context::add_operation( string phase, Operation* operation )
 {
-  Operation* existing = old_operations[task];
+  Operation* existing = operations[phase];
   if (existing)
   {
     existing->add_sibling( operation );
   }
   else
   {
-    // This task.phase does not yet exist in task_phases.
-    TaskPhase task_phase( task );
-    task_phases[ task_phase.task ].push_back( task_phase.phase );
+    // This phase does not yet exist.
+    phases.push_back( phase );
   }
-  old_operations[task] = operation;
+  operations[phase] = operation;
 }
 
 bool Context::configure()
 {
-  if ( !old_operations.size() ) configure_operations();
-
-  if (task_phases.find("configure") == task_phases.end()) return true;
-
-  vector<string>& phases = task_phases["configure"];
-  for (auto phase : phases)
-  {
-    Operation* operation = old_operations[ phase ];
-    if (operation && !operation->configure())
-    {
-      return false;
-    }
-  }
+  if ( !operations.size() ) configure_operations();
+  if ( !dispatch_event("configure", "configure") ) return false;
 
   configured = true;
   return true;
@@ -89,105 +54,81 @@ bool Context::configure()
 
 void Context::configure_operations()
 {
-  set_operation( "configure.device",       new ConfigureDevice(this,1,2) );
-  set_operation( "configure.formats",      new ConfigureFormats(this) );
-  set_operation( "configure.surface_size", new ConfigureSurfaceSize(this) );
-  set_operation( "configure.swapchain",    new ConfigureSwapchain(this) );
+  set_operation( "configure.device",                 new ConfigureDevice(this,1,2) );
+  set_operation( "configure.formats",                new ConfigureFormats(this) );
+  set_operation( "configure.swapchain.surface_size", new ConfigureSurfaceSize(this) );
+  set_operation( "configure.swapchain",              new ConfigureSwapchain(this) );
 }
 
 void Context::deactivate()
 {
   if ( !configured ) return;
-  if (task_phases.find("configure") == task_phases.end()) return;
-
-  vector<string>& phases = task_phases["configure"];
-  for (int i=(int)phases.size(); --i>=0; )
-  {
-    Operation* operation = old_operations[ phases[i] ];
-    if (operation) operation->deactivate();
-  }
-
+  dispatch_event( "configure", "deactivate", true );
   configured = false;
 }
 
-bool Context::dispatch_event( string task, string event_type, bool reverse_order )
+bool Context::dispatch_event( string phase, string event, bool reverse_order )
 {
-  TaskPhase task_phase( task );
-  if (task_phases.find(task_phase.task) == task_phases.end()) return true;
-
-  vector<string>& phases = task_phases[task_phase.task];
-  if (task_phase.phase == "*")
+  if (reverse_order)
   {
-    if (reverse_order)
+    for (int i=(int)phases.size(); --i>=0; )
     {
-      for (int i=(int)phases.size(); --i>=0; )
+      string cur_phase = phases[i];
+      if (_phase_begins_with(cur_phase,phase))
       {
-        Operation* operation = old_operations[phases[i]];
-        if (operation)
-        {
-          if ( !operation->handle_event(event_type,reverse_order) ) return false;
-        }
+        Operation* operation = operations[ cur_phase ];
+        if (operation && !operation->handle_event(event,true)) return false;
       }
-      return true;
     }
-    else
-    {
-      for (auto phase : phases)
-      {
-        Operation* operation = old_operations[phase];
-        if (operation)
-        {
-          if ( !operation->handle_event(event_type) ) return false;
-        }
-      }
-      return true;
-    }
+    return true;
   }
   else
   {
-    Operation* operation = old_operations[ task ];
-    if (operation) return operation->handle_event( event_type, reverse_order );
-    else           return true;
+    for (auto cur_phase : phases)
+    {
+      if (_phase_begins_with(cur_phase,phase))
+      {
+        Operation* operation = operations[ cur_phase ];
+        if (operation && !operation->handle_event(event,false)) return false;
+      }
+    }
+    return true;
   }
-
-
 }
 
-bool Context::execute( string task )
+bool Context::execute( string phase )
 {
-  TaskPhase task_phase( task );
-  if (task_phases.find(task_phase.task) == task_phases.end()) return true;
-
-  vector<string>& phases = task_phases[task_phase.task];
-  for (auto phase : phases)
-  {
-    Operation* operation = old_operations[phase];
-    if (operation)
-    {
-      if ( !operation->execute() ) return false;
-    }
-  }
-  return true;
+  return dispatch_event( phase, "execute" );
 }
 
 void Context::recreate_swapchain()
 {
-  dispatch_event( "configure", "surface_lost", true );
+  dispatch_event( "configure.swapchain", "surface_lost", true );
   configure();
 }
 
-void Context::set_operation( string task, Operation* operation )
+void Context::set_operation( string phase, Operation* operation )
 {
-  Operation* existing = old_operations[task];
+  Operation* existing = operations[phase];
   if (existing)
   {
     delete existing;
   }
   else
   {
-    // This task.phase does not yet exist in task_phases.
-    TaskPhase task_phase( task );
-    task_phases[ task_phase.task ].push_back( task );
+    // This phase does not yet exist in 'phases'.
+    phases.push_back( phase );
   }
-  old_operations[task] = operation;
+  operations[phase] = operation;
+}
+
+bool Context::_phase_begins_with( const string& phase, const string& other )
+{
+  auto value_n = phase.size();
+  auto n = other.size();
+  if (value_n < n) return false;
+
+  if (0 != phase.compare(0,n,other)) return false;
+  if (value_n == n) return true;
+  return (phase[n] == '.');
 }

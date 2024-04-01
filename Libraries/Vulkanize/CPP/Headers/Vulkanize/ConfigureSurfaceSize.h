@@ -9,7 +9,7 @@ namespace VKZ
     Context* context;
 
     ConfigureSurfaceSize( Context* context );
-    virtual bool on( std::string event_type );
-    virtual bool on_configure();
+    virtual bool on_event( std::string event_type );
+    virtual bool configure();
   };
 };

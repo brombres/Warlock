@@ -7,7 +7,7 @@ ConfigureSurfaceSize::ConfigureSurfaceSize( Context* context )
 {
 }
 
-bool ConfigureSurfaceSize::on( std::string event_type )
+bool ConfigureSurfaceSize::on_event( std::string event_type )
 {
   if (event_type == "surface_lost")
   {
@@ -16,7 +16,7 @@ bool ConfigureSurfaceSize::on( std::string event_type )
   return true;
 }
 
-bool ConfigureSurfaceSize::on_configure()
+bool ConfigureSurfaceSize::configure()
 {
   VkSurfaceCapabilitiesKHR surface_capabilities;
 
