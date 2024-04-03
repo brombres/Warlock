@@ -232,11 +232,6 @@ void WindowRenderContextVulkan::_configure_swapchain()
 
 void WindowRenderContextVulkan::_configure_queues()
 {
-  graphics_QueueFamilyIndex = context->device.get_queue_index( vkb::QueueType::graphics ).value();
-  present_QueueFamilyIndex  = context->device.get_queue_index( vkb::QueueType::present ).value();
-
-	graphics_queue = vkb_require( context->device.get_queue(vkb::QueueType::graphics) );
-	present_queue  = vkb_require( context->device.get_queue(vkb::QueueType::present) );
 }
 
 void WindowRenderContextVulkan::_configure_graphics_pipeline()
@@ -483,7 +478,7 @@ void WindowRenderContextVulkan::_configure_command_pool()
   VkCommandPoolCreateInfo pool_info = {};
   pool_info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
   pool_info.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT | VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
-  pool_info.queueFamilyIndex = graphics_QueueFamilyIndex;
+  pool_info.queueFamilyIndex = context->graphics_QueueFamilyIndex;
 
   VK_CHECK(
     "creating command pool",
@@ -695,7 +690,7 @@ void WindowRenderContextVulkan::render()
   submitInfo.pCommandBuffers = &cmd;
   submitInfo.signalSemaphoreCount = 1;
   submitInfo.pSignalSemaphores = &rendering_finished_semaphore;
-  context->device_dispatch.queueSubmit( graphics_queue, 1, &submitInfo, fences[frame_index] );
+  context->device_dispatch.queueSubmit( context->graphics_queue, 1, &submitInfo, fences[frame_index] );
 
   VkPresentInfoKHR present_info = {};
   present_info.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
@@ -705,7 +700,7 @@ void WindowRenderContextVulkan::render()
   present_info.pSwapchains = &context->swapchain.swapchain;
   present_info.pImageIndices = &frame_index;
 
-  result = context->device_dispatch.queuePresentKHR( present_queue, &present_info );
+  result = context->device_dispatch.queuePresentKHR( context->present_queue, &present_info );
   switch (result)
   {
     case VK_SUCCESS:
@@ -733,5 +728,5 @@ void WindowRenderContextVulkan::render()
       return;
   }
 
-  context->device_dispatch.queueWaitIdle( present_queue );
+  context->device_dispatch.queueWaitIdle( context->present_queue );
 }

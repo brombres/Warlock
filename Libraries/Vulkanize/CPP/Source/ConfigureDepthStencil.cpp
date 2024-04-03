@@ -2,7 +2,7 @@
 #include "Vulkanize/Vulkanize.h"
 using namespace VKZ;
 
-ConfigureDepthStencil::ConfigureDepthStencil( Context* context ) : Operation(), context(context)
+ConfigureDepthStencil::ConfigureDepthStencil( Context* context ) : context(context)
 {
 }
 

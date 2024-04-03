@@ -79,4 +79,5 @@ namespace VKZ
 #include "Vulkanize/ConfigureSurfaceSize.h"
 #include "Vulkanize/ConfigureSwapchain.h"
 #include "Vulkanize/ConfigureDepthStencil.h"
+#include "Vulkanize/ConfigureQueues.h"
 

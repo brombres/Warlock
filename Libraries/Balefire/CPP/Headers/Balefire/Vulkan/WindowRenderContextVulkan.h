@@ -22,11 +22,6 @@ namespace BALEFIRE
     VKZ::Context*   context = nullptr;
     VkSurfaceKHR    surface = nullptr;
 
-    uint32_t graphics_QueueFamilyIndex;
-    uint32_t present_QueueFamilyIndex;
-    VkQueue  graphics_queue;
-    VkQueue  present_queue;
-
     VkRenderPass render_pass;
 
     VkPipelineLayout pipeline_layout;

@@ -64,6 +64,7 @@ void Context::configure_operations()
   set_operation( "configure.swapchain.surface_size",  new ConfigureSurfaceSize(this) );
   set_operation( "configure.swapchain",               new ConfigureSwapchain(this) );
   set_operation( "configure.swapchain.depth_stencil", new ConfigureDepthStencil(this) );
+  set_operation( "configure.queues",                  new ConfigureQueues(this) );
 }
 
 void Context::deactivate( string phase )

@@ -50,6 +50,11 @@ namespace VKZ
     std::vector<VkImageView> swapchain_image_views;
     VKZ::Image               depth_stencil;
 
+    uint32_t graphics_QueueFamilyIndex;
+    uint32_t present_QueueFamilyIndex;
+    VkQueue  graphics_queue;
+    VkQueue  present_queue;
+
     Context( VkSurfaceKHR surface );
 
     virtual ~Context();
