@@ -6,7 +6,7 @@ namespace VKZ
 {
   struct Operation : Node<Operation>
   {
-    bool        configured       = false;
+    bool        active       = false;
 
     //----- Constructor/Destructor ---------------------------------------------
     Operation() {}
@@ -15,7 +15,7 @@ namespace VKZ
     //----- Event Callbacks ----------------------------------------------------
     virtual bool on_event( std::string event ) { return true; }
 
-    virtual bool configure() { return true; }
+    virtual bool activate() { return true; }
     // Return true on success, false on failure.
 
     virtual bool execute() { return true; }

@@ -57,8 +57,10 @@ namespace VKZ
     virtual void configure_operations();
 
     virtual void add_operation( std::string phase, Operation* operation );
-    virtual bool configure( const std::string phase="configure" );
-    virtual void deactivate( const std::string phase="configure" );
+    virtual bool activate( const std::string phase );
+    virtual bool configure();
+    virtual void deactivate( const std::string phase );
+    virtual void destroy();
     virtual bool dispatch_event( std::string phase, std::string event, bool reverse_order=false );
     virtual bool execute( std::string phase );
     virtual int  find_memory_type( uint32_t typeFilter, VkMemoryPropertyFlags properties );

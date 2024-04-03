@@ -15,7 +15,7 @@ namespace VKZ
     VkPhysicalDeviceVulkan13Features required_features_v1_3 = {};
 
     ConfigureDevice( Context* context, int major_version=1, int minor_version=2 );
-    virtual bool configure();
+    virtual bool activate();
     virtual void deactivate();
   };
 };

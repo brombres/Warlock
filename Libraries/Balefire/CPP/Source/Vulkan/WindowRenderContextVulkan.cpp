@@ -167,7 +167,7 @@ WindowRenderContextVulkan::~WindowRenderContextVulkan()
 			context->device_dispatch.destroyFramebuffer( framebuffer, nullptr );
 		}
 
-    context->deactivate();
+    context->destroy();
 
     delete context;
     context = nullptr;

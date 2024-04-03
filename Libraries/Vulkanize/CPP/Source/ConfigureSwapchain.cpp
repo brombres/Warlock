@@ -7,7 +7,7 @@ ConfigureSwapchain::ConfigureSwapchain( Context* context )
 {
 }
 
-bool ConfigureSwapchain::configure()
+bool ConfigureSwapchain::activate()
 {
 	vkb::SwapchainBuilder swapchain_builder{ context->device };
   swapchain_builder
@@ -44,7 +44,7 @@ bool ConfigureSwapchain::on_event( std::string event_type )
 {
   if (event_type == "surface_lost")
   {
-    if (configured) reconfiguring = true;
+    if (active) reconfiguring = true;
   }
   return true;
 }

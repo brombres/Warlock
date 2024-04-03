@@ -6,7 +6,7 @@ ConfigureDepthStencil::ConfigureDepthStencil( Context* context ) : Operation(), 
 {
 }
 
-bool ConfigureDepthStencil::configure()
+bool ConfigureDepthStencil::activate()
 {
   VkFormat depth_format;
   if ( !_find_supported_depth_format( &depth_format ) )

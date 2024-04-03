@@ -14,7 +14,7 @@ Context::Context( VkSurfaceKHR surface ) : surface(surface)
 
 Context::~Context()
 {
-  deactivate();
+  destroy();
 
   for (auto phase : phases)
   {
@@ -43,11 +43,16 @@ void Context::add_operation( string phase, Operation* operation )
   operations[phase] = operation;
 }
 
-bool Context::configure( string phase )
+bool Context::activate( string phase )
+{
+  if ( !dispatch_event(phase, "activate") ) return false;
+  return true;
+}
+
+bool Context::configure()
 {
   if ( !operations.size() ) configure_operations();
-  if ( !dispatch_event(phase, "configure") ) return false;
-
+  if ( !activate("configure") ) return false;
   configured = true;
   return true;
 }
@@ -63,8 +68,13 @@ void Context::configure_operations()
 
 void Context::deactivate( string phase )
 {
-  if ( !configured ) return;
   dispatch_event( phase, "deactivate", true );
+}
+
+void Context::destroy()
+{
+  if ( !configured ) return;
+  deactivate( "configure" );
   configured = false;
 }
 
@@ -123,7 +133,7 @@ void Context::recreate_swapchain()
 {
   dispatch_event( "configure.swapchain", "surface_lost", true );
   deactivate( "configure.swapchain" );
-  configure( "configure.swapchain" );
+  activate( "configure.swapchain" );
 }
 
 void Context::set_operation( string phase, Operation* operation )

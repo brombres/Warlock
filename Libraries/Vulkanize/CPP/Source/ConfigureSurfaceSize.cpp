@@ -7,7 +7,7 @@ ConfigureSurfaceSize::ConfigureSurfaceSize( Context* context )
 {
 }
 
-bool ConfigureSurfaceSize::configure()
+bool ConfigureSurfaceSize::activate()
 {
   VkSurfaceCapabilitiesKHR surface_capabilities;
 

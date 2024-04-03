@@ -9,6 +9,6 @@ namespace VKZ
     Context* context;
 
     ConfigureSurfaceSize( Context* context );
-    virtual bool configure();
+    virtual bool activate();
   };
 };

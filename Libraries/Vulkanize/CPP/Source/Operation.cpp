@@ -23,21 +23,21 @@ bool Operation::handle_event( string event, bool reverse_order )
 
   if (event == "deactivate")
   {
-    if (configured)
+    if (active)
     {
       deactivate();
-      configured = false;
+      active = false;
     }
   }
   else
   {
-    bool is_configure = (event == "configure");
+    bool is_configure = (event == "activate");
     if (is_configure || event == "execute")
     {
-      if ( !configured )
+      if ( !active )
       {
-        if ( !configure() ) return false;
-        configured = true;
+        if ( !activate() ) return false;
+        active = true;
       }
 
       if ( !is_configure && !execute() ) return false;
