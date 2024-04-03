@@ -41,6 +41,7 @@ bool ConfigureDevice::configure()
 
 void ConfigureDevice::deactivate()
 {
+  context->device_dispatch.deviceWaitIdle();
   vkb::destroy_device( context->device );
 }
 

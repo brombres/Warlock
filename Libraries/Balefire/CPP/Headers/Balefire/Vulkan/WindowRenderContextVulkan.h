@@ -27,7 +27,6 @@ namespace BALEFIRE
     VkQueue  graphics_queue;
     VkQueue  present_queue;
 
-    BVKImage     depth_stencil;
     VkRenderPass render_pass;
 
     VkPipelineLayout pipeline_layout;

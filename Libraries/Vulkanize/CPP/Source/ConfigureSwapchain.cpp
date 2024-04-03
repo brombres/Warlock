@@ -7,20 +7,6 @@ ConfigureSwapchain::ConfigureSwapchain( Context* context )
 {
 }
 
-bool ConfigureSwapchain::on_event( std::string event_type )
-{
-  if (event_type == "surface_lost")
-  {
-    if (configured)
-    {
-      reconfiguring = true;
-      configured = false;
-      deactivate();
-    }
-  }
-  return true;
-}
-
 bool ConfigureSwapchain::configure()
 {
 	vkb::SwapchainBuilder swapchain_builder{ context->device };
@@ -50,5 +36,16 @@ bool ConfigureSwapchain::configure()
 
 void ConfigureSwapchain::deactivate()
 {
+  context->swapchain.destroy_image_views( context->swapchain_image_views );
+  if ( !reconfiguring ) vkb::destroy_swapchain( context->swapchain );
+}
+
+bool ConfigureSwapchain::on_event( std::string event_type )
+{
+  if (event_type == "surface_lost")
+  {
+    if (configured) reconfiguring = true;
+  }
+  return true;
 }
 

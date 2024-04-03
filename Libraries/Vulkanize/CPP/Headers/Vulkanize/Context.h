@@ -7,6 +7,7 @@
 #include "VkBootstrap.h"
 
 #include "Vulkanize.h"
+#include "Vulkanize/Image.h"
 
 #define VKZ_CONFIGURE_DEVICE             "device"
 #define VKZ_CONFIGURE_FORMATS            "formats"
@@ -47,6 +48,7 @@ namespace VKZ
     bool                     swapchain_created = false;
 	  std::vector<VkImage>     swapchain_images;
     std::vector<VkImageView> swapchain_image_views;
+    VKZ::Image               depth_stencil;
 
     Context( VkSurfaceKHR surface );
 
@@ -55,10 +57,11 @@ namespace VKZ
     virtual void configure_operations();
 
     virtual void add_operation( std::string phase, Operation* operation );
-    virtual bool configure();
-    virtual void deactivate();
+    virtual bool configure( const std::string phase="configure" );
+    virtual void deactivate( const std::string phase="configure" );
     virtual bool dispatch_event( std::string phase, std::string event, bool reverse_order=false );
     virtual bool execute( std::string phase );
+    virtual int  find_memory_type( uint32_t typeFilter, VkMemoryPropertyFlags properties );
     virtual void recreate_swapchain();
     virtual void set_operation( std::string phase, Operation* operation );
 

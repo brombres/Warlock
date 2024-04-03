@@ -32,12 +32,14 @@ namespace VKZ
     Vulkanize&  set_app_name( const char* app_name );
     Vulkanize&  use_default_debug_messenger();
     vkb::InstanceBuilder& vulkan_instance_builder( PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr );
+
+    static const char* vkResult_to_c_string( VkResult result );
   };
 
   extern Vulkanize vulkanize;
 };
 
-#define LOG_VULKANIZE_ERROR(message) fprintf( stderr, "[Vulkanize] %s.\n", message );
+#define VKZ_LOG_ERROR(message) fprintf( stderr, "[Vulkanize] Error %s.\n", message );
 
 #define VKZ_SET( variable, expression, description, on_error ) \
 {                                                              \
@@ -54,6 +56,21 @@ namespace VKZ
   }                                                            \
 }
 
+#define VKZ_ON_ERROR(stage,cmd,body)                     \
+	{                                                      \
+		VkResult err = cmd;                                  \
+		if ((err=cmd))                                       \
+		{                                                    \
+      fprintf( stderr,                                   \
+          "[ERROR] Balefire Vulkan: error %s (%s).\n",   \
+          stage, Vulkanize::vkResult_to_c_string(err) ); \
+      body;                                              \
+		}                                                    \
+	}
+
+#define VKZ_REQUIRE(stage,cmd) VKZ_ON_ERROR(stage,cmd,return false;)
+
+#include "Vulkanize/Image.h"
 #include "Vulkanize/Node.h"
 #include "Vulkanize/Operation.h"
 #include "Vulkanize/Context.h"
@@ -61,3 +78,5 @@ namespace VKZ
 #include "Vulkanize/ConfigureFormats.h"
 #include "Vulkanize/ConfigureSurfaceSize.h"
 #include "Vulkanize/ConfigureSwapchain.h"
+#include "Vulkanize/ConfigureDepthStencil.h"
+

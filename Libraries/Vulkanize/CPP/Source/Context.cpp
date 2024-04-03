@@ -43,10 +43,10 @@ void Context::add_operation( string phase, Operation* operation )
   operations[phase] = operation;
 }
 
-bool Context::configure()
+bool Context::configure( string phase )
 {
   if ( !operations.size() ) configure_operations();
-  if ( !dispatch_event("configure", "configure") ) return false;
+  if ( !dispatch_event(phase, "configure") ) return false;
 
   configured = true;
   return true;
@@ -54,16 +54,17 @@ bool Context::configure()
 
 void Context::configure_operations()
 {
-  set_operation( "configure.device",                 new ConfigureDevice(this,1,2) );
-  set_operation( "configure.formats",                new ConfigureFormats(this) );
-  set_operation( "configure.swapchain.surface_size", new ConfigureSurfaceSize(this) );
-  set_operation( "configure.swapchain",              new ConfigureSwapchain(this) );
+  set_operation( "configure.device",                  new ConfigureDevice(this,1,2) );
+  set_operation( "configure.formats",                 new ConfigureFormats(this) );
+  set_operation( "configure.swapchain.surface_size",  new ConfigureSurfaceSize(this) );
+  set_operation( "configure.swapchain",               new ConfigureSwapchain(this) );
+  set_operation( "configure.swapchain.depth_stencil", new ConfigureDepthStencil(this) );
 }
 
-void Context::deactivate()
+void Context::deactivate( string phase )
 {
   if ( !configured ) return;
-  dispatch_event( "configure", "deactivate", true );
+  dispatch_event( phase, "deactivate", true );
   configured = false;
 }
 
@@ -101,10 +102,28 @@ bool Context::execute( string phase )
   return dispatch_event( phase, "execute" );
 }
 
+int Context::find_memory_type( uint32_t typeFilter, VkMemoryPropertyFlags properties )
+{
+  VkPhysicalDeviceMemoryProperties memory_properties;
+  vulkanize.instance_dispatch.getPhysicalDeviceMemoryProperties( physical_device, &memory_properties );
+
+  for (uint32_t i=0; i<memory_properties.memoryTypeCount; ++i)
+  {
+    if ( (typeFilter & (1 << i)) &&
+        (memory_properties.memoryTypes[i].propertyFlags & properties) == properties)
+    {
+      return i;
+    }
+  }
+
+  return -1;
+}
+
 void Context::recreate_swapchain()
 {
   dispatch_event( "configure.swapchain", "surface_lost", true );
-  configure();
+  deactivate( "configure.swapchain" );
+  configure( "configure.swapchain" );
 }
 
 void Context::set_operation( string phase, Operation* operation )

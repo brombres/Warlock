@@ -167,18 +167,10 @@ WindowRenderContextVulkan::~WindowRenderContextVulkan()
 			context->device_dispatch.destroyFramebuffer( framebuffer, nullptr );
 		}
 
-    depth_stencil.destroy();
+    context->deactivate();
 
-    context->swapchain.destroy_image_views( context->swapchain_image_views );
-
-    vkb::destroy_swapchain( context->swapchain );
-    context->device_dispatch.deviceWaitIdle();
-
-    if (context)
-    {
-      delete context;
-      context = nullptr;
-    }
+    delete context;
+    context = nullptr;
   }
 }
 
@@ -388,22 +380,6 @@ void WindowRenderContextVulkan::_configure_graphics_pipeline()
 
 void WindowRenderContextVulkan::_configure_depth_stencil()
 {
-  VkFormat depth_format;
-  if ( !_find_supported_depth_format( &depth_format ) )
-  {
-    VK_LOG_ERROR( "finding supported depth format" );
-    abort();
-  }
-
-  depth_stencil.create(
-    this,
-    context->surface_size.width,
-    context->surface_size.height,
-    depth_format,
-    VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT,
-    VK_IMAGE_ASPECT_DEPTH_BIT,
-    VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT
-  );
 }
 
 void WindowRenderContextVulkan::_configure_render_pass()
@@ -419,7 +395,7 @@ void WindowRenderContextVulkan::_configure_render_pass()
   attachments[0].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
   attachments[0].finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
 
-  attachments[1].format = depth_stencil.format;
+  attachments[1].format = context->depth_stencil.format;
   attachments[1].samples = VK_SAMPLE_COUNT_1_BIT;
   attachments[1].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
   attachments[1].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
@@ -484,7 +460,7 @@ void WindowRenderContextVulkan::_configure_framebuffers()
   {
     std::vector<VkImageView> attachments(2);
     attachments[0] = context->swapchain_image_views[i];
-    attachments[1] = depth_stencil.view;
+    attachments[1] = context->depth_stencil.view;
 
     VkFramebufferCreateInfo framebuffer_info = {};
     framebuffer_info.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
@@ -590,9 +566,6 @@ void WindowRenderContextVulkan::_recreate_swapchain()
   {
     context->device_dispatch.destroyFramebuffer( framebuffer, nullptr );
   }
-
-  context->swapchain.destroy_image_views( context->swapchain_image_views );
-  depth_stencil.destroy();
 
   context->recreate_swapchain();
 
