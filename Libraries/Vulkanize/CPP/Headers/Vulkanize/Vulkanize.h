@@ -80,4 +80,5 @@ namespace VKZ
 #include "Vulkanize/ConfigureSwapchain.h"
 #include "Vulkanize/ConfigureDepthStencil.h"
 #include "Vulkanize/ConfigureQueues.h"
+#include "Vulkanize/ConfigureRenderPasses.h"
 

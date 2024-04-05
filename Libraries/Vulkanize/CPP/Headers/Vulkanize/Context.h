@@ -55,6 +55,8 @@ namespace VKZ
     VkQueue  graphics_queue;
     VkQueue  present_queue;
 
+    VkRenderPass render_pass;
+
     Context( VkSurfaceKHR surface );
 
     virtual ~Context();

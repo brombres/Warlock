@@ -47,7 +47,7 @@ bool ConfigureDepthStencil::_find_supported_depth_format( VkFormat* depth_format
   for (auto& format_candidate : depth_format_candidates)
   {
     VkFormatProperties format_properties;
-    vulkanize.instance_dispatch.getPhysicalDeviceFormatProperties(
+    instance_dispatch.getPhysicalDeviceFormatProperties(
       context->physical_device,
       format_candidate,
       &format_properties

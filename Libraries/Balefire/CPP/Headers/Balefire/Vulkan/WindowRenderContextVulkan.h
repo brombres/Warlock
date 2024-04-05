@@ -22,8 +22,6 @@ namespace BALEFIRE
     VKZ::Context*   context = nullptr;
     VkSurfaceKHR    surface = nullptr;
 
-    VkRenderPass render_pass;
-
     VkPipelineLayout pipeline_layout;
     VkPipeline       graphics_pipeline;
 

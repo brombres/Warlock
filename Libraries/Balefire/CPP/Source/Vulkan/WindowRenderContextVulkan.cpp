@@ -160,7 +160,7 @@ WindowRenderContextVulkan::~WindowRenderContextVulkan()
 
     context->device_dispatch.freeCommandBuffers( command_pool, (uint32_t)command_buffers.size(), command_buffers.data() );
 		context->device_dispatch.destroyCommandPool( command_pool, nullptr );
-    context->device_dispatch.destroyRenderPass( render_pass, nullptr );
+    context->device_dispatch.destroyRenderPass( context->render_pass, nullptr );
 
     for (auto framebuffer : framebuffers)
     {
@@ -359,7 +359,7 @@ void WindowRenderContextVulkan::_configure_graphics_pipeline()
   pipeline_info.pColorBlendState = &color_blending;
   pipeline_info.pDynamicState = &dynamic_info;
   pipeline_info.layout = pipeline_layout;
-  pipeline_info.renderPass = render_pass;
+  pipeline_info.renderPass = context->render_pass;
   pipeline_info.subpass = 0;
   pipeline_info.basePipelineHandle = VK_NULL_HANDLE;
 
@@ -379,72 +379,6 @@ void WindowRenderContextVulkan::_configure_depth_stencil()
 
 void WindowRenderContextVulkan::_configure_render_pass()
 {
-  std::vector<VkAttachmentDescription> attachments(2);
-
-  attachments[0].format = context->swapchain_surface_format.format;
-  attachments[0].samples = VK_SAMPLE_COUNT_1_BIT;
-  attachments[0].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-  attachments[0].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
-  attachments[0].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-  attachments[0].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-  attachments[0].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-  attachments[0].finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-
-  attachments[1].format = context->depth_stencil.format;
-  attachments[1].samples = VK_SAMPLE_COUNT_1_BIT;
-  attachments[1].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-  attachments[1].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
-  attachments[1].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-  attachments[1].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-  attachments[1].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-  attachments[1].finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-
-  VkAttachmentReference color_reference = {};
-  color_reference.attachment = 0;
-  color_reference.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-
-  VkAttachmentReference depth_reference = {};
-  depth_reference.attachment = 1;
-  depth_reference.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-
-  VkSubpassDescription subpassDescription = {};
-  subpassDescription.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
-  subpassDescription.colorAttachmentCount = 1;
-  subpassDescription.pColorAttachments = &color_reference;
-  subpassDescription.pDepthStencilAttachment = &depth_reference;
-  subpassDescription.inputAttachmentCount = 0;
-  subpassDescription.pInputAttachments = nullptr;
-  subpassDescription.preserveAttachmentCount = 0;
-  subpassDescription.pPreserveAttachments = nullptr;
-  subpassDescription.pResolveAttachments = nullptr;
-
-  std::vector<VkSubpassDependency> dependencies(1);
-
-  dependencies[0].srcSubpass = VK_SUBPASS_EXTERNAL;
-  dependencies[0].dstSubpass = 0;
-  dependencies[0].srcStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
-  dependencies[0].dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-  dependencies[0].srcAccessMask = VK_ACCESS_MEMORY_READ_BIT;
-  dependencies[0].dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-  dependencies[0].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
-
-  VkRenderPassCreateInfo render_pass_info = {};
-  render_pass_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
-  render_pass_info.attachmentCount = static_cast<uint32_t>(attachments.size());
-  render_pass_info.pAttachments = attachments.data();
-  render_pass_info.subpassCount = 1;
-  render_pass_info.pSubpasses = &subpassDescription;
-  render_pass_info.dependencyCount = static_cast<uint32_t>(dependencies.size());
-  render_pass_info.pDependencies = dependencies.data();
-
-	VK_CHECK(
-    "creating render pass",
-    context->device_dispatch.createRenderPass(
-      &render_pass_info,
-      nullptr,
-      &render_pass
-    )
-  );
 }
 
 void WindowRenderContextVulkan::_configure_framebuffers()
@@ -459,7 +393,7 @@ void WindowRenderContextVulkan::_configure_framebuffers()
 
     VkFramebufferCreateInfo framebuffer_info = {};
     framebuffer_info.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-    framebuffer_info.renderPass = render_pass;
+    framebuffer_info.renderPass = context->render_pass;
     framebuffer_info.attachmentCount = static_cast<uint32_t>(attachments.size());
     framebuffer_info.pAttachments = attachments.data();
     framebuffer_info.width = context->surface_size.width;
@@ -637,7 +571,7 @@ void WindowRenderContextVulkan::render()
   // Begin render pass
   VkRenderPassBeginInfo render_pass_info = {};
   render_pass_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-  render_pass_info.renderPass = render_pass;
+  render_pass_info.renderPass = context->render_pass;
   render_pass_info.framebuffer = framebuffers[frame_index];
   render_pass_info.renderArea.offset = {0, 0};
   render_pass_info.renderArea.extent = context->surface_size;

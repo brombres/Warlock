@@ -65,6 +65,7 @@ void Context::configure_operations()
   set_operation( "configure.swapchain",               new ConfigureSwapchain(this) );
   set_operation( "configure.swapchain.depth_stencil", new ConfigureDepthStencil(this) );
   set_operation( "configure.queues",                  new ConfigureQueues(this) );
+  set_operation( "configure.render_passes",           new ConfigureRenderPasses(this) );
 }
 
 void Context::deactivate( string phase )
