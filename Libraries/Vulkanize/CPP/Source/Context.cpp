@@ -73,6 +73,8 @@ void Context::configure_operations()
   set_operation( "configure.swapchain.command_buffers", new ConfigureCommandBuffers(this) );
   set_operation( "configure.semaphores",                new ConfigureSemaphores(this) );
   set_operation( "configure.fences",                    new ConfigureFences(this) );
+  set_operation( "render.begin",                        new RenderBegin(this) );
+  set_operation( "render.end",                          new RenderEnd(this) );
 }
 
 void Context::deactivate( string phase )

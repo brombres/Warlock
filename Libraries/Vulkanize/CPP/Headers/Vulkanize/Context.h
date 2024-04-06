@@ -71,6 +71,9 @@ namespace VKZ
 
     std::vector<VkFence> fences;
 
+    // Rendering
+    uint32_t swap_index;
+
     // METHODS
     Context( VkSurfaceKHR surface );
 

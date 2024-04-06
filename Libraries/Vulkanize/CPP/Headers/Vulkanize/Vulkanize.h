@@ -40,8 +40,6 @@ namespace VKZ
   extern Vulkanize vulkanize;
 };
 
-#define VKZ_LOG_ERROR(message) fprintf( stderr, "[Vulkanize] Error %s.\n", message );
-
 #define VKZ_SET( variable, expression, description, on_error ) \
 {                                                              \
   auto result = expression;                                    \
@@ -51,8 +49,8 @@ namespace VKZ
   }                                                            \
   else                                                         \
   {                                                            \
-    fprintf( stderr, "[Vulkanize] Error %s; %s.\n",            \
-             description, result.error().message().c_str() );  \
+    VKZ_LOG_ERROR( "[Vulkanize] Error %s; %s.\n",              \
+        description, result.error().message().c_str() );       \
     on_error;                                                  \
   }                                                            \
 }
@@ -62,9 +60,10 @@ namespace VKZ
 		VkResult err = cmd;                                  \
 		if ((err=cmd))                                       \
 		{                                                    \
-      fprintf( stderr,                                   \
+      VKZ_LOG_ERROR(                                     \
           "[ERROR] Balefire Vulkan: error %s (%s).\n",   \
-          stage, Vulkanize::vkResult_to_c_string(err) ); \
+          stage, Vulkanize::vkResult_to_c_string(err)    \
+      );                                                 \
       body;                                              \
 		}                                                    \
 	}
@@ -88,3 +87,5 @@ namespace VKZ
 #include "Vulkanize/ConfigureCommandBuffers.h"
 #include "Vulkanize/ConfigureSemaphores.h"
 #include "Vulkanize/ConfigureFences.h"
+#include "Vulkanize/RenderBegin.h"
+#include "Vulkanize/RenderEnd.h"

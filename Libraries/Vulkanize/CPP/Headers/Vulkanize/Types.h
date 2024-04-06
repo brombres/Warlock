@@ -70,7 +70,7 @@
   #define VKZ_LOG_ERROR(...) __android_log_print( ANDROID_LOG_ERROR, "Vulkanize", __VA_ARGS__ )
 #else
   #define VKZ_LOG(...)       printf( __VA_ARGS__ )
-  #define VKZ_LOG_ERROR(...) printf( __VA_ARGS__ )
+  #define VKZ_LOG_ERROR(...) fprintf( stderr, __VA_ARGS__ )
 #endif
 
 namespace VKZ

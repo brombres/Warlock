@@ -21,7 +21,6 @@ namespace BALEFIRE
     VKZ::Context*   context = nullptr;
     VkSurfaceKHR    surface = nullptr;
 
-    uint32_t frame_index;
     //size_t current_frame = 0;
     //int frame_count = 0;  // FIXME
 
@@ -36,8 +35,6 @@ namespace BALEFIRE
     virtual void render();
 
     void _recreate_swapchain();
-
-    VkShaderModule _create_shader_module( const Byte* code, int count );
   };
 };
 
