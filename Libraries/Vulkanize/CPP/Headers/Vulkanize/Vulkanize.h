@@ -3,6 +3,7 @@
 #include <string>
 #include <vulkan/vulkan.h>
 #include "VkBootstrap.h"
+#include "Vulkanize/Types.h"
 
 namespace VKZ
 {
@@ -81,4 +82,4 @@ namespace VKZ
 #include "Vulkanize/ConfigureDepthStencil.h"
 #include "Vulkanize/ConfigureQueues.h"
 #include "Vulkanize/ConfigureRenderPasses.h"
-
+#include "Vulkanize/ConfigureGraphicsPipeline.h"

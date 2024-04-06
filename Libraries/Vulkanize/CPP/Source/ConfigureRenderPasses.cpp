@@ -79,5 +79,6 @@ bool ConfigureRenderPasses::activate()
 
 void ConfigureRenderPasses::deactivate()
 {
+  context->device_dispatch.destroyRenderPass( context->render_pass, nullptr );
 }
 

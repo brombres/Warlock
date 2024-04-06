@@ -55,7 +55,10 @@ namespace VKZ
     VkQueue  graphics_queue;
     VkQueue  present_queue;
 
-    VkRenderPass render_pass;
+    VkRenderPass     render_pass;
+
+    VkPipelineLayout pipeline_layout;
+    VkPipeline       graphics_pipeline;
 
     Context( VkSurfaceKHR surface );
 

@@ -11,6 +11,7 @@
 		3004D1EB2BBDA14000572087 /* ConfigureDepthStencil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3004D1E92BBDA14000572087 /* ConfigureDepthStencil.cpp */; };
 		3004D1EE2BBDB20700572087 /* ConfigureQueues.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3004D1ED2BBDB20700572087 /* ConfigureQueues.cpp */; };
 		3004D1FE2BC05A2700572087 /* ConfigureRenderPasses.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3004D1FD2BC05A2700572087 /* ConfigureRenderPasses.cpp */; };
+		300C71CB2BC1833600FFBB85 /* ConfigureGraphicsPipeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 300C71BF2BC1833600FFBB85 /* ConfigureGraphicsPipeline.cpp */; };
 		301985302B94DC6000CBECCB /* Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3019850D2B94DC6000CBECCB /* Window.cpp */; };
 		301985322B94DC6000CBECCB /* String.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3019850F2B94DC6000CBECCB /* String.cpp */; };
 		301985332B94DC6000CBECCB /* Renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 301985102B94DC6000CBECCB /* Renderer.cpp */; };
@@ -144,6 +145,9 @@
 		3004D1F12BC05A0B00572087 /* ConfigureRenderPasses.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConfigureRenderPasses.h; sourceTree = "<group>"; };
 		3004D1FD2BC05A2700572087 /* ConfigureRenderPasses.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureRenderPasses.cpp; sourceTree = "<group>"; };
 		30089BB22BAC918B00AE818B /* Operation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Operation.h; sourceTree = "<group>"; };
+		300C71BF2BC1833600FFBB85 /* ConfigureGraphicsPipeline.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureGraphicsPipeline.cpp; sourceTree = "<group>"; };
+		300C71CC2BC1833E00FFBB85 /* ConfigureGraphicsPipeline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigureGraphicsPipeline.h; sourceTree = "<group>"; };
+		300C71CD2BC1868800FFBB85 /* Types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Types.h; sourceTree = "<group>"; };
 		3019850D2B94DC6000CBECCB /* Window.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Window.cpp; sourceTree = "<group>"; };
 		3019850F2B94DC6000CBECCB /* String.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = String.cpp; sourceTree = "<group>"; };
 		301985102B94DC6000CBECCB /* Renderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Renderer.cpp; sourceTree = "<group>"; };
@@ -538,6 +542,8 @@
 		3077062D2BA896D500122E50 /* Vulkanize */ = {
 			isa = PBXGroup;
 			children = (
+				300C71CD2BC1868800FFBB85 /* Types.h */,
+				300C71CC2BC1833E00FFBB85 /* ConfigureGraphicsPipeline.h */,
 				3004D1F12BC05A0B00572087 /* ConfigureRenderPasses.h */,
 				3004D1EC2BBDB20000572087 /* ConfigureQueues.h */,
 				3004D1E72BBDA13600572087 /* ConfigureDepthStencil.h */,
@@ -568,6 +574,7 @@
 		307706312BA896D500122E50 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				300C71BF2BC1833600FFBB85 /* ConfigureGraphicsPipeline.cpp */,
 				3004D1FD2BC05A2700572087 /* ConfigureRenderPasses.cpp */,
 				3004D1ED2BBDB20700572087 /* ConfigureQueues.cpp */,
 				3004D1E92BBDA14000572087 /* ConfigureDepthStencil.cpp */,
@@ -785,6 +792,7 @@
 				305AA2C52BB0EDF800BDAE68 /* ConfigureSwapchain.cpp in Sources */,
 				301985322B94DC6000CBECCB /* String.cpp in Sources */,
 				301985392B94DC6000CBECCB /* RendererVulkan.cpp in Sources */,
+				300C71CB2BC1833600FFBB85 /* ConfigureGraphicsPipeline.cpp in Sources */,
 				307706362BA8B3AC00122E50 /* Context.cpp in Sources */,
 				3004D1EE2BBDB20700572087 /* ConfigureQueues.cpp in Sources */,
 				301985302B94DC6000CBECCB /* Window.cpp in Sources */,
