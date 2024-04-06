@@ -36,11 +36,6 @@ void WindowRenderContextVulkan::configure( VkSurfaceKHR surface )
 	initialized = true;
 }
 
-void WindowRenderContextVulkan::_recreate_swapchain()
-{
-  context->recreate_swapchain();
-}
-
 void WindowRenderContextVulkan::render()
 {
   if ( !initialized ) return;
