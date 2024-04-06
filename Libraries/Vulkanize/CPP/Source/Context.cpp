@@ -51,6 +51,7 @@ bool Context::activate( string phase )
 
 bool Context::configure()
 {
+  if (configured) return true;
   if ( !operations.size() ) configure_operations();
   if ( !activate("configure") ) return false;
   configured = true;
@@ -59,14 +60,19 @@ bool Context::configure()
 
 void Context::configure_operations()
 {
-  set_operation( "configure.device",                  new ConfigureDevice(this,1,2) );
-  set_operation( "configure.formats",                 new ConfigureFormats(this) );
-  set_operation( "configure.swapchain.surface_size",  new ConfigureSurfaceSize(this) );
-  set_operation( "configure.swapchain",               new ConfigureSwapchain(this) );
-  set_operation( "configure.swapchain.depth_stencil", new ConfigureDepthStencil(this) );
-  set_operation( "configure.queues",                  new ConfigureQueues(this) );
-  set_operation( "configure.render_passes",           new ConfigureRenderPasses(this) );
-  set_operation( "configure.graphics_pipeline",       new ConfigureGraphicsPipeline(this) );
+  set_operation( "configure.device",                    new ConfigureDevice(this,1,2) );
+  set_operation( "configure.formats",                   new ConfigureFormats(this) );
+  set_operation( "configure.swapchain.surface_size",    new ConfigureSurfaceSize(this) );
+  set_operation( "configure.swapchain",                 new ConfigureSwapchain(this) );
+  set_operation( "configure.swapchain.depth_stencil",   new ConfigureDepthStencil(this) );
+  set_operation( "configure.queues",                    new ConfigureQueues(this) );
+  set_operation( "configure.render_passes",             new ConfigureRenderPasses(this) );
+  set_operation( "configure.graphics_pipeline",         new ConfigureGraphicsPipeline(this) );
+  set_operation( "configure.swapchain.framebuffers",    new ConfigureFramebuffers(this) );
+  set_operation( "configure.swapchain.command_pool",    new ConfigureCommandPool(this) );
+  set_operation( "configure.swapchain.command_buffers", new ConfigureCommandBuffers(this) );
+  set_operation( "configure.semaphores",                new ConfigureSemaphores(this) );
+  set_operation( "configure.fences",                    new ConfigureFences(this) );
 }
 
 void Context::deactivate( string phase )
@@ -76,7 +82,7 @@ void Context::deactivate( string phase )
 
 void Context::destroy()
 {
-  if ( !configured ) return;
+  device_dispatch.deviceWaitIdle();
   deactivate( "configure" );
   configured = false;
 }
@@ -134,6 +140,7 @@ int Context::find_memory_type( uint32_t typeFilter, VkMemoryPropertyFlags proper
 
 void Context::recreate_swapchain()
 {
+  device_dispatch.deviceWaitIdle();
   dispatch_event( "configure.swapchain", "surface_lost", true );
   deactivate( "configure.swapchain" );
   activate( "configure.swapchain" );

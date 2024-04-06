@@ -32,6 +32,7 @@ namespace VKZ
 {
   struct Context
   {
+    // PROPERTIES
     bool configured = false;
 
     std::vector<std::string>                   phases;
@@ -43,12 +44,13 @@ namespace VKZ
     vkb::Device         device;
     vkb::DispatchTable  device_dispatch;
 
-    VkSurfaceFormatKHR       swapchain_surface_format;
-    vkb::Swapchain           swapchain;
-    bool                     swapchain_created = false;
-	  std::vector<VkImage>     swapchain_images;
-    std::vector<VkImageView> swapchain_image_views;
-    VKZ::Image               depth_stencil;
+    VkSurfaceFormatKHR         swapchain_surface_format;
+    vkb::Swapchain             swapchain;
+    bool                       swapchain_created = false;
+	  std::vector<VkImage>       swapchain_images;
+    std::vector<VkImageView>   swapchain_image_views;
+    VKZ::Image                 depth_stencil;
+    std::vector<VkFramebuffer> framebuffers;
 
     uint32_t graphics_QueueFamilyIndex;
     uint32_t present_QueueFamilyIndex;
@@ -60,6 +62,16 @@ namespace VKZ
     VkPipelineLayout pipeline_layout;
     VkPipeline       graphics_pipeline;
 
+    VkCommandPool                command_pool;
+    std::vector<VkCommandBuffer> command_buffers;
+    VkCommandBuffer              cmd;
+
+    VkSemaphore image_available_semaphore;
+    VkSemaphore rendering_finished_semaphore;
+
+    std::vector<VkFence> fences;
+
+    // METHODS
     Context( VkSurfaceKHR surface );
 
     virtual ~Context();

@@ -83,3 +83,8 @@ namespace VKZ
 #include "Vulkanize/ConfigureQueues.h"
 #include "Vulkanize/ConfigureRenderPasses.h"
 #include "Vulkanize/ConfigureGraphicsPipeline.h"
+#include "Vulkanize/ConfigureFramebuffers.h"
+#include "Vulkanize/ConfigureCommandPool.h"
+#include "Vulkanize/ConfigureCommandBuffers.h"
+#include "Vulkanize/ConfigureSemaphores.h"
+#include "Vulkanize/ConfigureFences.h"
