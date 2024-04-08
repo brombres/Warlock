@@ -22,6 +22,12 @@ routine rogo_t
   execute cmd
 endRoutine
 
+routine rogo_shaders
+  execute @|glslang Shader.vert -V -o vert.spv
+  execute @|glslang Shader.frag -V -o frag.spv
+  execute @|binsrc vert.spv frag.spv
+endRoutine
+
 routine rogo_default
   rogo_debug
 endRoutine
