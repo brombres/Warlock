@@ -29,7 +29,8 @@ routine rogo_shaders
 endRoutine
 
 routine rogo_default
-  rogo_debug
+  rogo_deps
+  rogo_help
 endRoutine
 
 routine rogo_debug
@@ -129,42 +130,45 @@ routine deps( &update, &rebuild )
 
   -------- Libraries/MoltenVK --------
   if System.is_macos
+    local rebuild_vulkan = rebuild
     local folder = File("Libraries/MoltenVK")
     local repo = GitRepo( "https://github.com/KhronosGroup/MoltenVK.git", folder )
     if (not repo.exists)
       banner "Cloning MoltenVK repo"
       repo.clone( "main", &verbose )
-      rebuild = true
+      rebuild_vulkan = true
 
     elseIf (update and repo.has_remote_changes)
       banner "Updating MoltenVK repo"
       repo.pull( &verbose )
-      rebuild = true
+      rebuild_vulkan = true
     endIf
 
-    if (rebuild or not (folder/"External/build/Release").exists)
+    if (rebuild_vulkan or not (folder/"External/build/Release").exists)
       execute @|cd Libraries/MoltenVK && ./fetchDependencies --macos --ios --iossim
     endIf
 
-    if (rebuild or not (folder/"Package/Release/MoltenVK/MoltenVK.xcframework/macos-arm64_x86_64").exists)
+    local release_folder = folder/"Package/Release/MoltenVK/static/MoltenVK.xcframework"
+
+    if (rebuild_vulkan or not (release_folder/"macos-arm64_x86_64").exists)
       banner "Building MoltenVK for macOS"
       local cmd = "cd Libraries/MoltenVK"
       execute "cd $ && make macos"(folder.esc)
     endIf
 
-    if (rebuild or not (folder/"Package/Release/MoltenVK/MoltenVK.xcframework/ios-arm64").exists)
+    if (rebuild_vulkan or not (release_folder/"ios-arm64").exists)
       banner "Building MoltenVK for iOS"
       execute "cd $ && make ios"(folder.esc)
     endIf
 
-    if (rebuild or not (folder/"Package/Release/MoltenVK/MoltenVK.xcframework/ios-arm64_x86_64-simulator").exists)
+    if (rebuild_vulkan or not (release_folder/"ios-arm64_x86_64-simulator").exists)
       banner "Building MoltenVK for iOS Simulator"
       execute "cd $ && make iossim"(folder.esc)
     endIf
   endIf
 
   -------- Libraries/SDL --------
-  if System.is_macos
+  block
     local folder = File("Libraries/SDL")
     local repo = GitRepo( "https://github.com/libsdl-org/SDL.git", folder )
 
@@ -180,10 +184,10 @@ routine deps( &update, &rebuild )
         repo.pull( &verbose )
       endIf
     endIf
-  endIf
+  endBlock
 
   -------- Libraries/glm --------
-  if System.is_macos
+  block
     local folder = File("Libraries/glm")
     local repo = GitRepo( "https://github.com/g-truc/glm.git", folder )
 
@@ -199,7 +203,68 @@ routine deps( &update, &rebuild )
         repo.pull( &verbose )
       endIf
     endIf
-  endIf
+  endBlock
+
+  -------- Libraries/glslang --------
+  block
+    local folder = File("Libraries/glslang")
+    local repo = GitRepo( "https://github.com/KhronosGroup/glslang.git", folder )
+    local rebuild_glslang = rebuild
+
+    if (not repo.exists)
+      banner "Cloning glslang repo"
+      repo.clone( &verbose )
+      rebuild_glslang = true
+
+    elseIf (update)
+      if (repo.has_remote_changes)
+        banner "Updating glslang repo"
+        repo.pull( &verbose )
+        rebuild_glslang = true
+      endIf
+    endIf
+
+    if (rebuild_glslang or not (folder/"External").contains("spirv-tools"))
+      rebuild_glslang = true
+      execute "cd Libraries/glslang && ./update_glslang_sources.py"
+    endIf
+
+    local build_folder = folder/"build"
+    if (rebuild_glslang or not build_folder.exists)
+      rebuild_glslang = true
+      local source_folder = folder
+      build_folder.create_folder
+      if (System.is_windows)
+        execute ''cd $ && cmake $ -DCMAKE_INSTALL_PREFIX="$/install"''...
+                (build_folder.esc,source_folder.abs.esc,"$(pwd)")
+
+      #elseIf (<targeting android>)
+      #  cmake $SOURCE_DIR -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$(pwd)/install" -DANDROID_ABI=arm64-v8a -DCMAKE_BUILD_TYPE=Release -DANDROID_STL=c++_static -DANDROID_PLATFORM=android-24 -DCMAKE_SYSTEM_NAME=Android -DANDROID_TOOLCHAIN=clang -DANDROID_ARM_MODE=arm -DCMAKE_MAKE_PROGRAM=$ANDROID_NDK_HOME/prebuilt/linux-x86_64/bin/make -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_HOME/build/cmake/android.toolchain.cmake
+      # If on Windows will be -DCMAKE_MAKE_PROGRAM=%ANDROID_NDK_HOME%\prebuilt\windows-x86_64\bin\make.exe
+      # -G is needed for building on Windows
+      # -DANDROID_ABI can also be armeabi-v7a for 32 bit
+
+      else
+        # Linux/macOS
+        execute ''cd $ && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$/install" $''...
+                (build_folder.esc,"$(pwd)",source_folder.abs.esc)
+      endIf
+    endIf
+
+    if (rebuild_glslang or not (build_folder/"glslang/libglslang.a").exists)
+      if (System.is_windows)
+        execute "cd $ && cmake --build . --config Release --target install"((build_folder/"glslang").esc)
+      else
+        execute "cd $ && make -j4 install"((build_folder/"glslang").esc)
+      endIf
+
+      println "glslang Build Products"
+      forEach (filepath in File(build_folder/"glslang").listing)
+        println "  " + filepath
+      endForEach
+    endIf
+
+  endBlock
 
 endRoutine
 

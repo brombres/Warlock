@@ -89,3 +89,4 @@ namespace VKZ
 #include "Vulkanize/ConfigureFences.h"
 #include "Vulkanize/RenderBegin.h"
 #include "Vulkanize/RenderEnd.h"
+#include "Vulkanize/CompileShader.h"

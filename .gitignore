@@ -1,5 +1,6 @@
 # Libraries
 /Libraries/glm
+/Libraries/glslang
 /Libraries/MoltenVK
 /Libraries/SDL
 
