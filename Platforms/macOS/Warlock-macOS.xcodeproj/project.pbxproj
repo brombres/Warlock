@@ -46,6 +46,11 @@
 		306913BC2B5EAFC900B14F73 /* vulkan.cppm in Resources */ = {isa = PBXBuildFile; fileRef = 3069139D2B5EAFC900B14F73 /* vulkan.cppm */; };
 		307706332BA896D500122E50 /* Vulkanize.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 307706302BA896D500122E50 /* Vulkanize.cpp */; };
 		307706362BA8B3AC00122E50 /* Context.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 307706352BA8B3AC00122E50 /* Context.cpp */; };
+		30C79FFD2BC448E3004A98B7 /* libOSDependent.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30C79F672BC448E3004A98B7 /* libOSDependent.a */; };
+		30C7A0002BC448E3004A98B7 /* libGenericCodeGen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30C79F6C2BC448E3004A98B7 /* libGenericCodeGen.a */; };
+		30C7A0012BC448E3004A98B7 /* libglslang-default-resource-limits.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30C79F6D2BC448E3004A98B7 /* libglslang-default-resource-limits.a */; };
+		30C7A0032BC448E3004A98B7 /* libMachineIndependent.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30C79F6F2BC448E3004A98B7 /* libMachineIndependent.a */; };
+		30C7A0052BC44927004A98B7 /* libglslang.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30C79F6E2BC448E3004A98B7 /* libglslang.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -339,6 +344,12 @@
 		307706342BA8B39C00122E50 /* Context.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Context.h; sourceTree = "<group>"; };
 		307706352BA8B3AC00122E50 /* Context.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Context.cpp; sourceTree = "<group>"; };
 		307DC3042BB9AE27009297EA /* Node.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Node.h; sourceTree = "<group>"; };
+		30C79EBA2BC44878004A98B7 /* libglslang.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libglslang.a; path = ../../Libraries/glslang/build/glslang/libglslang.a; sourceTree = "<group>"; };
+		30C79F672BC448E3004A98B7 /* libOSDependent.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libOSDependent.a; sourceTree = "<group>"; };
+		30C79F6C2BC448E3004A98B7 /* libGenericCodeGen.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libGenericCodeGen.a; sourceTree = "<group>"; };
+		30C79F6D2BC448E3004A98B7 /* libglslang-default-resource-limits.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libglslang-default-resource-limits.a"; sourceTree = "<group>"; };
+		30C79F6E2BC448E3004A98B7 /* libglslang.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libglslang.a; sourceTree = "<group>"; };
+		30C79F6F2BC448E3004A98B7 /* libMachineIndependent.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libMachineIndependent.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -346,6 +357,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				30C7A0032BC448E3004A98B7 /* libMachineIndependent.a in Frameworks */,
+				30C79FFD2BC448E3004A98B7 /* libOSDependent.a in Frameworks */,
+				30C7A0002BC448E3004A98B7 /* libGenericCodeGen.a in Frameworks */,
+				30C7A0012BC448E3004A98B7 /* libglslang-default-resource-limits.a in Frameworks */,
+				30C7A0052BC44927004A98B7 /* libglslang.a in Frameworks */,
 				306913582B5E98C400B14F73 /* SDL2.framework in Frameworks */,
 				306913732B5E9D4600B14F73 /* MoltenVK.xcframework in Frameworks */,
 			);
@@ -357,6 +373,7 @@
 		300C888E2BC430B200FFBB85 /* glslang */ = {
 			isa = PBXGroup;
 			children = (
+				30C79F712BC448E3004A98B7 /* glslang */,
 				300C889D2BC430E800FFBB85 /* glslang */,
 			);
 			name = glslang;
@@ -633,6 +650,7 @@
 		306913552B5E8D2300B14F73 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				30C79EBA2BC44878004A98B7 /* libglslang.a */,
 				306913672B5E9D4600B14F73 /* MoltenVK.xcframework */,
 			);
 			name = Frameworks;
@@ -802,6 +820,35 @@
 			);
 			name = Source;
 			path = ../../Libraries/Vulkanize/CPP/Source;
+			sourceTree = "<group>";
+		};
+		30C79F692BC448E3004A98B7 /* Unix */ = {
+			isa = PBXGroup;
+			children = (
+				30C79F672BC448E3004A98B7 /* libOSDependent.a */,
+			);
+			path = Unix;
+			sourceTree = "<group>";
+		};
+		30C79F6A2BC448E3004A98B7 /* OSDependent */ = {
+			isa = PBXGroup;
+			children = (
+				30C79F692BC448E3004A98B7 /* Unix */,
+			);
+			path = OSDependent;
+			sourceTree = "<group>";
+		};
+		30C79F712BC448E3004A98B7 /* glslang */ = {
+			isa = PBXGroup;
+			children = (
+				30C79F6A2BC448E3004A98B7 /* OSDependent */,
+				30C79F6C2BC448E3004A98B7 /* libGenericCodeGen.a */,
+				30C79F6D2BC448E3004A98B7 /* libglslang-default-resource-limits.a */,
+				30C79F6E2BC448E3004A98B7 /* libglslang.a */,
+				30C79F6F2BC448E3004A98B7 /* libMachineIndependent.a */,
+			);
+			name = glslang;
+			path = ../../Libraries/glslang/build/glslang;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1141,6 +1188,10 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				LIBRARY_SEARCH_PATHS = (
+					../../Libraries/glslang/build/glslang,
+					../../Libraries/glslang/build/glslang/OSDependent/Unix,
+				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "dev.warlock.Warlock-macOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1179,6 +1230,10 @@
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					../../Libraries/glslang/build/glslang,
+					../../Libraries/glslang/build/glslang/OSDependent/Unix,
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "dev.warlock.Warlock-macOS";
