@@ -2,7 +2,7 @@
 #include "Vulkanize/Vulkanize.h"
 using namespace VKZ;
 
-//#include "glslang/Include/glslang_c_interface.h"
+#include "glslang/Include/glslang_c_interface.h"
 
 CompileShader::CompileShader( Context* context ) : context(context)
 {
@@ -10,13 +10,13 @@ CompileShader::CompileShader( Context* context ) : context(context)
 
 bool CompileShader::activate()
 {
-  //glslang_initialize_process();
+  glslang_initialize_process();
   return true;
 }
 
 void CompileShader::deactivate()
 {
-  //glslang_finalize_process();
+  glslang_finalize_process();
 }
 
 

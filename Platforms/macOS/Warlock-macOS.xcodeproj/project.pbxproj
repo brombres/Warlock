@@ -51,6 +51,7 @@
 		30C7A0012BC448E3004A98B7 /* libglslang-default-resource-limits.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30C79F6D2BC448E3004A98B7 /* libglslang-default-resource-limits.a */; };
 		30C7A0032BC448E3004A98B7 /* libMachineIndependent.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30C79F6F2BC448E3004A98B7 /* libMachineIndependent.a */; };
 		30C7A0052BC44927004A98B7 /* libglslang.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30C79F6E2BC448E3004A98B7 /* libglslang.a */; };
+		30C7A0132BC574B5004A98B7 /* OperationManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30C7A0072BC574B5004A98B7 /* OperationManager.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -350,6 +351,8 @@
 		30C79F6D2BC448E3004A98B7 /* libglslang-default-resource-limits.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libglslang-default-resource-limits.a"; sourceTree = "<group>"; };
 		30C79F6E2BC448E3004A98B7 /* libglslang.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libglslang.a; sourceTree = "<group>"; };
 		30C79F6F2BC448E3004A98B7 /* libMachineIndependent.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libMachineIndependent.a; sourceTree = "<group>"; };
+		30C7A0072BC574B5004A98B7 /* OperationManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OperationManager.cpp; sourceTree = "<group>"; };
+		30C7A0142BC574C0004A98B7 /* OperationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OperationManager.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -756,6 +759,7 @@
 		3077062D2BA896D500122E50 /* Vulkanize */ = {
 			isa = PBXGroup;
 			children = (
+				30C7A0142BC574C0004A98B7 /* OperationManager.h */,
 				300C71E52BC42C9300FFBB85 /* CompileShader.h */,
 				300C71DD2BC1AD2100FFBB85 /* RenderBegin.h */,
 				300C71DE2BC1AD2100FFBB85 /* RenderEnd.h */,
@@ -796,6 +800,7 @@
 		307706312BA896D500122E50 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				30C7A0072BC574B5004A98B7 /* OperationManager.cpp */,
 				300C71E32BC42C8A00FFBB85 /* CompileShader.cpp */,
 				300C71DF2BC1AD2C00FFBB85 /* RenderBegin.cpp */,
 				300C71E02BC1AD2C00FFBB85 /* RenderEnd.cpp */,
@@ -1026,6 +1031,7 @@
 				306912E12B5E7E1D00B14F73 /* Warlock.swift in Sources */,
 				300C71E42BC42C8A00FFBB85 /* CompileShader.cpp in Sources */,
 				305AA2B12BAF4B5600BDAE68 /* Operation.cpp in Sources */,
+				30C7A0132BC574B5004A98B7 /* OperationManager.cpp in Sources */,
 				300C71D92BC192B300FFBB85 /* ConfigureCommandPool.cpp in Sources */,
 				3049E6AE2B952FBE008554DD /* WindowRenderContextVulkan.cpp in Sources */,
 				3049E6A72B94FBF4008554DD /* Balefire.cpp in Sources */,

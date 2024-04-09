@@ -73,6 +73,7 @@ namespace VKZ
 #include "Vulkanize/Image.h"
 #include "Vulkanize/Node.h"
 #include "Vulkanize/Operation.h"
+#include "Vulkanize/OperationManager.h"
 #include "Vulkanize/Context.h"
 #include "Vulkanize/ConfigureDevice.h"
 #include "Vulkanize/ConfigureFormats.h"
