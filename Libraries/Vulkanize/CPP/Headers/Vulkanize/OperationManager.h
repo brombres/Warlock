@@ -10,6 +10,8 @@
 
 namespace VKZ
 {
+  struct Operation;
+
   struct OperationManager
   {
     // PROPERTIES
@@ -21,11 +23,12 @@ namespace VKZ
     // METHODS
     virtual ~OperationManager();
 
-    virtual void configure_operations();
-
     virtual void add_operation( std::string phase, Operation* operation );
     virtual bool activate( const std::string phase );
     virtual bool configure();
+
+    virtual void configure_operations();
+
     virtual void deactivate( const std::string phase );
     virtual void destroy();
     virtual bool dispatch_event( std::string phase, std::string event, bool reverse_order=false );

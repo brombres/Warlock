@@ -62,7 +62,7 @@ WindowID FrameworkSDLVulkan::create_window( String name )
   VkSurfaceKHR surface;
   if (SDL_TRUE != SDL_Vulkan_CreateSurface(
       framework_context->sdl_window,
-      vulkanize.vulkan_instance,
+      Vulkanize::instance->vulkan_instance,
       &surface
     ))
   {

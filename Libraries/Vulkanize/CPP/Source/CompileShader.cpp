@@ -10,13 +10,11 @@ CompileShader::CompileShader( Context* context ) : context(context)
 
 bool CompileShader::activate()
 {
-  glslang_initialize_process();
   return true;
 }
 
 void CompileShader::deactivate()
 {
-  glslang_finalize_process();
 }
 
 

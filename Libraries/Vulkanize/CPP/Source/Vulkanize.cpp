@@ -2,16 +2,26 @@
 #include "Vulkanize/Vulkanize.h"
 using namespace VKZ;
 
-// Global instance
-Vulkanize VKZ::vulkanize;
+Vulkanize* Vulkanize::instance = nullptr;
+
+Vulkanize::Vulkanize()
+{
+  Vulkanize::instance = this;
+}
 
 Vulkanize::~Vulkanize()
 {
   reset();
+  Vulkanize::instance = nullptr;
 }
 
 bool Vulkanize::reset()
 {
+  while (context_instances.size())
+  {
+    delete context_instances.back();  // Context will remove itself from this list
+  }
+
   if (instance_builder)
   {
     delete instance_builder;
@@ -20,7 +30,7 @@ bool Vulkanize::reset()
 
   if (configured)
   {
-    configured = false;
+    destroy();
     vkb::destroy_instance( vulkan_instance );
   }
 
@@ -41,8 +51,13 @@ bool Vulkanize::configure( PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr )
 	debug_messenger = vulkan_instance.debug_messenger;
   instance_dispatch = vulkan_instance.make_table();
 
-  configured = true;
+  OperationManager::configure();
   return true;
+}
+
+void Vulkanize::configure_operations()
+{
+  set_operation( "configure.glslang", new ConfigureGLSLang() );
 }
 
 Vulkanize& Vulkanize::request_validation_layers( bool setting )

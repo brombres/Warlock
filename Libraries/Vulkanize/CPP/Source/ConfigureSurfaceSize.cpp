@@ -11,7 +11,7 @@ bool ConfigureSurfaceSize::activate()
 {
   VkSurfaceCapabilitiesKHR surface_capabilities;
 
-  vulkanize.instance_dispatch.getPhysicalDeviceSurfaceCapabilitiesKHR(
+  Vulkanize::instance->instance_dispatch.getPhysicalDeviceSurfaceCapabilitiesKHR(
     context->physical_device,
     context->surface,
     &surface_capabilities

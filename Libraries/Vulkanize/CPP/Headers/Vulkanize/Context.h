@@ -11,6 +11,8 @@
 
 namespace VKZ
 {
+  struct Vulkanize;
+
   struct Context : OperationManager
   {
     // PROPERTIES

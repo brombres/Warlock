@@ -8,6 +8,7 @@
 #include "VkBootstrap.h"
 #include "Balefire/Core/Framework.h"
 #include "Balefire/Core/Renderer.h"
+#include "Vulkanize/Vulkanize.h"
 
 #define VK_LOG_ERROR(stage) fprintf( stderr, "[ERROR] Balefire Vulkan: error %s.\n", stage );
 
@@ -29,6 +30,7 @@ namespace BALEFIRE
 {
   struct RendererVulkan : Renderer
   {
+    VKZ::Vulkanize             vulkanize;
     Framework*                 framework = nullptr;
     bool                       configured = false;
 

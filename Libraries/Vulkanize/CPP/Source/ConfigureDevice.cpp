@@ -12,7 +12,7 @@ bool ConfigureDevice::activate()
   //features12.bufferDeviceAddress = true;
   //features12.descriptorIndexing = true;
 
-  vkb::PhysicalDeviceSelector selector{ vulkanize.vulkan_instance };
+  vkb::PhysicalDeviceSelector selector{ Vulkanize::instance->vulkan_instance };
 
   VKZ_SET( context->physical_device,
     selector

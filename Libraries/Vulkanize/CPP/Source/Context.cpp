@@ -10,13 +10,33 @@ using namespace std;
 
 Context::Context( VkSurfaceKHR surface ) : surface(surface)
 {
+  if ( !Vulkanize::instance )
+  {
+    VKZ_LOG_ERROR( "Error creating Context - a Vulkanize instance must be created before creating a Context.\n" );
+    exit(1);
+  }
+
+  Vulkanize::instance->context_instances.push_back( this );
 }
 
 Context::~Context()
 {
+  if (Vulkanize::instance)
+  {
+    vector<Context*>& instances = Vulkanize::instance->context_instances;
+    for (auto it=instances.begin(); it!=instances.end(); ++it)
+    {
+      if (*it == this)
+      {
+        instances.erase( it );
+        break;
+      }
+    }
+  }
+
   destroy();
 
-  vkb::destroy_surface( vulkanize.vulkan_instance, surface );
+  vkb::destroy_surface( Vulkanize::instance->vulkan_instance, surface );
   surface = nullptr;
 }
 
@@ -49,7 +69,7 @@ void Context::destroy()
 int Context::find_memory_type( uint32_t typeFilter, VkMemoryPropertyFlags properties )
 {
   VkPhysicalDeviceMemoryProperties memory_properties;
-  vulkanize.instance_dispatch.getPhysicalDeviceMemoryProperties( physical_device, &memory_properties );
+  Vulkanize::instance->instance_dispatch.getPhysicalDeviceMemoryProperties( physical_device, &memory_properties );
 
   for (uint32_t i=0; i<memory_properties.memoryTypeCount; ++i)
   {

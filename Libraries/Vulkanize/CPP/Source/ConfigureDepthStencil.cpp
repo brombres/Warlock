@@ -43,7 +43,7 @@ bool ConfigureDepthStencil::_find_supported_depth_format( VkFormat* depth_format
     VK_FORMAT_D16_UNORM
   };
 
-  auto instance_dispatch = vulkanize.instance_dispatch;
+  auto instance_dispatch = Vulkanize::instance->instance_dispatch;
   for (auto& format_candidate : depth_format_candidates)
   {
     VkFormatProperties format_properties;
