@@ -12,6 +12,12 @@ namespace VKZ
   struct Context;
   struct Operation;
 
+  enum Shader
+  {
+    FRAGMENT,
+    VERTEX
+  };
+
   struct Vulkanize : OperationManager
   {
     // GLOBAL PROPERTIES
@@ -102,4 +108,4 @@ namespace VKZ
 #include "Vulkanize/RenderBegin.h"
 #include "Vulkanize/RenderEnd.h"
 #include "Vulkanize/ConfigureGLSLang.h"
-#include "Vulkanize/CompileShader.h"
+#include "Vulkanize/ConfigureShaders.h"

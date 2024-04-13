@@ -4,13 +4,12 @@
 
 namespace VKZ
 {
-  struct CompileShader : Operation
+  struct ConfigureShaders : Operation
   {
     Context* context;
 
-    CompileShader( Context* context );
+    ConfigureShaders( Context* context );
     virtual bool activate();
     virtual void deactivate();
-    virtual bool execute();
   };
 };

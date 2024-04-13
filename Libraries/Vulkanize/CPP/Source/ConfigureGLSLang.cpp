@@ -6,14 +6,12 @@ using namespace VKZ;
 
 bool ConfigureGLSLang::activate()
 {
-  printf( "------- ACTIVATE GLSLANG -------\n" );
   glslang_initialize_process();
   return true;
 }
 
 void ConfigureGLSLang::deactivate()
 {
-  printf( "------- DEACTIVATE GLSLANG -------\n" );
   glslang_finalize_process();
 }
 

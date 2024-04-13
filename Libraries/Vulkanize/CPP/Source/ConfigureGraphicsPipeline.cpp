@@ -11,13 +11,41 @@ ConfigureGraphicsPipeline::ConfigureGraphicsPipeline( Context* context ) : conte
 
 bool ConfigureGraphicsPipeline::activate()
 {
-  VkShaderModule vertex_module =
-      _create_shader_module( vertex_spv, sizeof(vertex_spv) );
-  VkShaderModule fragment_module =
-      _create_shader_module( fragment_spv, sizeof(fragment_spv) );
+  VkShaderModule vertex_module = context->compile_shader(
+    VKZ::Shader::VERTEX,
+    "shader.vert",
+    "#version 450\n"
+    "#extension GL_ARB_separate_shader_objects : enable\n"
+    "\n"
+    "layout (location = 0) out vec3 fragColor;\n"
+    "\n"
+    "vec2 positions[3] = vec2[](vec2 (0.0, -0.5), vec2 (0.5, 0.5), vec2 (-0.5, 0.5));\n"
+    "\n"
+    "vec3 colors[3] = vec3[](vec3 (1.0, 0.0, 0.0), vec3 (0.0, 1.0, 0.0), vec3 (0.0, 0.0, 1.0));\n"
+    "\n"
+    "void main ()\n"
+    "{\n"
+      "gl_Position = vec4 (positions[gl_VertexIndex], 0.0, 1.0);\n"
+      "fragColor = colors[gl_VertexIndex];\n"
+    "}\n"
+  );
+  if (vertex_module == VK_NULL_HANDLE) return false;
 
-  if (vertex_module == VK_NULL_HANDLE || fragment_module == VK_NULL_HANDLE)
+  VkShaderModule fragment_module = context->compile_shader(
+    VKZ::Shader::FRAGMENT,
+    "shader.frag",
+    "#version 450\n"
+    "#extension GL_ARB_separate_shader_objects : enable\n"
+    "\n"
+    "layout (location = 0) in vec3 fragColor;\n"
+    "\n"
+    "layout (location = 0) out vec4 outColor;\n"
+    "\n"
+    "void main () { outColor = vec4 (fragColor, 1.0); }\n"
+  );
+  if (fragment_module == VK_NULL_HANDLE)
   {
+    context->device_dispatch.destroyShaderModule( vertex_module, nullptr );
     return false;
   }
 

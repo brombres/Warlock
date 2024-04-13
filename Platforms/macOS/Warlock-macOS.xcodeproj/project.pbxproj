@@ -19,7 +19,7 @@
 		300C71DC2BC192B300FFBB85 /* ConfigureFramebuffers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 300C71D72BC192B300FFBB85 /* ConfigureFramebuffers.cpp */; };
 		300C71E12BC1AD2C00FFBB85 /* RenderBegin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 300C71DF2BC1AD2C00FFBB85 /* RenderBegin.cpp */; };
 		300C71E22BC1AD2C00FFBB85 /* RenderEnd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 300C71E02BC1AD2C00FFBB85 /* RenderEnd.cpp */; };
-		300C71E42BC42C8A00FFBB85 /* CompileShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 300C71E32BC42C8A00FFBB85 /* CompileShader.cpp */; };
+		300C71E42BC42C8A00FFBB85 /* ConfigureShaders.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 300C71E32BC42C8A00FFBB85 /* ConfigureShaders.cpp */; };
 		301985302B94DC6000CBECCB /* Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3019850D2B94DC6000CBECCB /* Window.cpp */; };
 		301985322B94DC6000CBECCB /* String.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3019850F2B94DC6000CBECCB /* String.cpp */; };
 		301985332B94DC6000CBECCB /* Renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 301985102B94DC6000CBECCB /* Renderer.cpp */; };
@@ -46,13 +46,15 @@
 		306913BC2B5EAFC900B14F73 /* vulkan.cppm in Resources */ = {isa = PBXBuildFile; fileRef = 3069139D2B5EAFC900B14F73 /* vulkan.cppm */; };
 		307706332BA896D500122E50 /* Vulkanize.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 307706302BA896D500122E50 /* Vulkanize.cpp */; };
 		307706362BA8B3AC00122E50 /* Context.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 307706352BA8B3AC00122E50 /* Context.cpp */; };
-		30C79FFD2BC448E3004A98B7 /* libOSDependent.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30C79F672BC448E3004A98B7 /* libOSDependent.a */; };
-		30C7A0002BC448E3004A98B7 /* libGenericCodeGen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30C79F6C2BC448E3004A98B7 /* libGenericCodeGen.a */; };
-		30C7A0012BC448E3004A98B7 /* libglslang-default-resource-limits.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30C79F6D2BC448E3004A98B7 /* libglslang-default-resource-limits.a */; };
-		30C7A0032BC448E3004A98B7 /* libMachineIndependent.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30C79F6F2BC448E3004A98B7 /* libMachineIndependent.a */; };
-		30C7A0052BC44927004A98B7 /* libglslang.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30C79F6E2BC448E3004A98B7 /* libglslang.a */; };
 		30C7A0132BC574B5004A98B7 /* OperationManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30C7A0072BC574B5004A98B7 /* OperationManager.cpp */; };
 		30C7A0172BC57818004A98B7 /* ConfigureGLSLang.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30C7A0162BC57818004A98B7 /* ConfigureGLSLang.cpp */; };
+		30C7A0292BC59DEF004A98B7 /* libGenericCodeGen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30C7A0242BC59DEF004A98B7 /* libGenericCodeGen.a */; };
+		30C7A02A2BC59DEF004A98B7 /* libglslang.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30C7A0252BC59DEF004A98B7 /* libglslang.a */; };
+		30C7A02B2BC59DEF004A98B7 /* libglslang-default-resource-limits.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30C7A0262BC59DEF004A98B7 /* libglslang-default-resource-limits.a */; };
+		30C7A02C2BC59DEF004A98B7 /* libMachineIndependent.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30C7A0272BC59DEF004A98B7 /* libMachineIndependent.a */; };
+		30C7A02F2BC59E40004A98B7 /* libSPIRV.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30C7A02E2BC59E40004A98B7 /* libSPIRV.a */; };
+		30C7A03F2BC6D3D2004A98B7 /* libSPIRV-Tools.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30C7A03E2BC6D3D2004A98B7 /* libSPIRV-Tools.a */; };
+		30E9EA712BCB224100E45E9F /* libSPIRV-Tools-opt.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30C7A03C2BC6D3CE004A98B7 /* libSPIRV-Tools-opt.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -176,8 +178,8 @@
 		300C71DE2BC1AD2100FFBB85 /* RenderEnd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RenderEnd.h; sourceTree = "<group>"; };
 		300C71DF2BC1AD2C00FFBB85 /* RenderBegin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RenderBegin.cpp; sourceTree = "<group>"; };
 		300C71E02BC1AD2C00FFBB85 /* RenderEnd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RenderEnd.cpp; sourceTree = "<group>"; };
-		300C71E32BC42C8A00FFBB85 /* CompileShader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CompileShader.cpp; sourceTree = "<group>"; };
-		300C71E52BC42C9300FFBB85 /* CompileShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CompileShader.h; sourceTree = "<group>"; };
+		300C71E32BC42C8A00FFBB85 /* ConfigureShaders.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureShaders.cpp; sourceTree = "<group>"; };
+		300C71E52BC42C9300FFBB85 /* ConfigureShaders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigureShaders.h; sourceTree = "<group>"; };
 		300C889E2BC431AD00FFBB85 /* arrays.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = arrays.h; sourceTree = "<group>"; };
 		300C889F2BC431AD00FFBB85 /* BaseTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseTypes.h; sourceTree = "<group>"; };
 		300C88A02BC431AD00FFBB85 /* Common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Common.h; sourceTree = "<group>"; };
@@ -356,6 +358,15 @@
 		30C7A0142BC574C0004A98B7 /* OperationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OperationManager.h; sourceTree = "<group>"; };
 		30C7A0152BC57800004A98B7 /* ConfigureGLSLang.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigureGLSLang.h; sourceTree = "<group>"; };
 		30C7A0162BC57818004A98B7 /* ConfigureGLSLang.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureGLSLang.cpp; sourceTree = "<group>"; };
+		30C7A0242BC59DEF004A98B7 /* libGenericCodeGen.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libGenericCodeGen.a; path = ../../Libraries/glslang/build/install/lib/libGenericCodeGen.a; sourceTree = "<group>"; };
+		30C7A0252BC59DEF004A98B7 /* libglslang.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libglslang.a; path = ../../Libraries/glslang/build/install/lib/libglslang.a; sourceTree = "<group>"; };
+		30C7A0262BC59DEF004A98B7 /* libglslang-default-resource-limits.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libglslang-default-resource-limits.a"; path = "../../Libraries/glslang/build/install/lib/libglslang-default-resource-limits.a"; sourceTree = "<group>"; };
+		30C7A0272BC59DEF004A98B7 /* libMachineIndependent.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libMachineIndependent.a; path = ../../Libraries/glslang/build/install/lib/libMachineIndependent.a; sourceTree = "<group>"; };
+		30C7A0282BC59DEF004A98B7 /* libOSDependent.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libOSDependent.a; path = ../../Libraries/glslang/build/install/lib/libOSDependent.a; sourceTree = "<group>"; };
+		30C7A02E2BC59E40004A98B7 /* libSPIRV.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSPIRV.a; path = ../../Libraries/glslang/build/install/lib/libSPIRV.a; sourceTree = "<group>"; };
+		30C7A03C2BC6D3CE004A98B7 /* libSPIRV-Tools-opt.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libSPIRV-Tools-opt.a"; path = "../../Libraries/glslang/build/install/lib/libSPIRV-Tools-opt.a"; sourceTree = "<group>"; };
+		30C7A03E2BC6D3D2004A98B7 /* libSPIRV-Tools.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libSPIRV-Tools.a"; path = "../../Libraries/glslang/build/install/lib/libSPIRV-Tools.a"; sourceTree = "<group>"; };
+		30C7A0402BC6D3D4004A98B7 /* libSPVRemapper.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSPVRemapper.a; path = ../../Libraries/glslang/build/install/lib/libSPVRemapper.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -363,13 +374,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				30C7A0032BC448E3004A98B7 /* libMachineIndependent.a in Frameworks */,
-				30C79FFD2BC448E3004A98B7 /* libOSDependent.a in Frameworks */,
-				30C7A0002BC448E3004A98B7 /* libGenericCodeGen.a in Frameworks */,
-				30C7A0012BC448E3004A98B7 /* libglslang-default-resource-limits.a in Frameworks */,
-				30C7A0052BC44927004A98B7 /* libglslang.a in Frameworks */,
 				306913582B5E98C400B14F73 /* SDL2.framework in Frameworks */,
 				306913732B5E9D4600B14F73 /* MoltenVK.xcframework in Frameworks */,
+				30C7A02F2BC59E40004A98B7 /* libSPIRV.a in Frameworks */,
+				30C7A0292BC59DEF004A98B7 /* libGenericCodeGen.a in Frameworks */,
+				30C7A02A2BC59DEF004A98B7 /* libglslang.a in Frameworks */,
+				30C7A02B2BC59DEF004A98B7 /* libglslang-default-resource-limits.a in Frameworks */,
+				30C7A02C2BC59DEF004A98B7 /* libMachineIndependent.a in Frameworks */,
+				30C7A03F2BC6D3D2004A98B7 /* libSPIRV-Tools.a in Frameworks */,
+				30E9EA712BCB224100E45E9F /* libSPIRV-Tools-opt.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -656,7 +669,16 @@
 		306913552B5E8D2300B14F73 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				30C7A0402BC6D3D4004A98B7 /* libSPVRemapper.a */,
+				30C7A03E2BC6D3D2004A98B7 /* libSPIRV-Tools.a */,
+				30C7A03C2BC6D3CE004A98B7 /* libSPIRV-Tools-opt.a */,
+				30C7A02E2BC59E40004A98B7 /* libSPIRV.a */,
+				30C7A0262BC59DEF004A98B7 /* libglslang-default-resource-limits.a */,
 				30C79EBA2BC44878004A98B7 /* libglslang.a */,
+				30C7A0242BC59DEF004A98B7 /* libGenericCodeGen.a */,
+				30C7A0252BC59DEF004A98B7 /* libglslang.a */,
+				30C7A0272BC59DEF004A98B7 /* libMachineIndependent.a */,
+				30C7A0282BC59DEF004A98B7 /* libOSDependent.a */,
 				306913672B5E9D4600B14F73 /* MoltenVK.xcframework */,
 			);
 			name = Frameworks;
@@ -764,7 +786,7 @@
 			children = (
 				30C7A0152BC57800004A98B7 /* ConfigureGLSLang.h */,
 				30C7A0142BC574C0004A98B7 /* OperationManager.h */,
-				300C71E52BC42C9300FFBB85 /* CompileShader.h */,
+				300C71E52BC42C9300FFBB85 /* ConfigureShaders.h */,
 				300C71DD2BC1AD2100FFBB85 /* RenderBegin.h */,
 				300C71DE2BC1AD2100FFBB85 /* RenderEnd.h */,
 				300C71CF2BC192A700FFBB85 /* ConfigureCommandBuffers.h */,
@@ -806,7 +828,7 @@
 			children = (
 				30C7A0162BC57818004A98B7 /* ConfigureGLSLang.cpp */,
 				30C7A0072BC574B5004A98B7 /* OperationManager.cpp */,
-				300C71E32BC42C8A00FFBB85 /* CompileShader.cpp */,
+				300C71E32BC42C8A00FFBB85 /* ConfigureShaders.cpp */,
 				300C71DF2BC1AD2C00FFBB85 /* RenderBegin.cpp */,
 				300C71E02BC1AD2C00FFBB85 /* RenderEnd.cpp */,
 				300C71D62BC192B300FFBB85 /* ConfigureCommandBuffers.cpp */,
@@ -1035,7 +1057,7 @@
 				305AA2D52BB1041300BDAE68 /* ConfigureSurfaceSize.cpp in Sources */,
 				30C7A0172BC57818004A98B7 /* ConfigureGLSLang.cpp in Sources */,
 				306912E12B5E7E1D00B14F73 /* Warlock.swift in Sources */,
-				300C71E42BC42C8A00FFBB85 /* CompileShader.cpp in Sources */,
+				300C71E42BC42C8A00FFBB85 /* ConfigureShaders.cpp in Sources */,
 				305AA2B12BAF4B5600BDAE68 /* Operation.cpp in Sources */,
 				30C7A0132BC574B5004A98B7 /* OperationManager.cpp in Sources */,
 				300C71D92BC192B300FFBB85 /* ConfigureCommandPool.cpp in Sources */,
@@ -1200,10 +1222,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				LIBRARY_SEARCH_PATHS = (
-					../../Libraries/glslang/build/glslang,
-					../../Libraries/glslang/build/glslang/OSDependent/Unix,
-				);
+				LIBRARY_SEARCH_PATHS = ../../Libraries/glslang/build/install/lib;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "dev.warlock.Warlock-macOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1243,10 +1262,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				LIBRARY_SEARCH_PATHS = (
-					../../Libraries/glslang/build/glslang,
-					../../Libraries/glslang/build/glslang/OSDependent/Unix,
-				);
+				LIBRARY_SEARCH_PATHS = ../../Libraries/glslang/build/install/lib;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "dev.warlock.Warlock-macOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
