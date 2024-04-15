@@ -57,7 +57,9 @@ bool Vulkanize::configure( PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr )
 
 void Vulkanize::configure_operations()
 {
-  set_operation( "configure.glslang", new ConfigureGLSLang() );
+  #if (VKZ_USE_GLSLANG)
+    set_operation( "configure.glslang", new ConfigureGLSLang() );
+  #endif
 }
 
 Vulkanize& Vulkanize::request_validation_layers( bool setting )

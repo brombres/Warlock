@@ -7,16 +7,14 @@
 #include "Vulkanize/Types.h"
 #include "Vulkanize/OperationManager.h"
 
+#if !defined(VKZ_USE_GLSLANG)
+  #define VKZ_USE_GLSLANG 1
+#endif
+
 namespace VKZ
 {
   struct Context;
   struct Operation;
-
-  enum Shader
-  {
-    FRAGMENT,
-    VERTEX
-  };
 
   struct Vulkanize : OperationManager
   {
@@ -107,5 +105,9 @@ namespace VKZ
 #include "Vulkanize/ConfigureFences.h"
 #include "Vulkanize/RenderBegin.h"
 #include "Vulkanize/RenderEnd.h"
-#include "Vulkanize/ConfigureGLSLang.h"
 #include "Vulkanize/ConfigureShaders.h"
+
+#if (VKZ_USE_GLSLANG)
+  #include "Vulkanize/ConfigureGLSLang.h"
+  #include "Vulkanize/GLSLangInterface.h"
+#endif

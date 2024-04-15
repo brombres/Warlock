@@ -11,7 +11,8 @@ ConfigureGraphicsPipeline::ConfigureGraphicsPipeline( Context* context ) : conte
 
 bool ConfigureGraphicsPipeline::activate()
 {
-  VkShaderModule vertex_module = context->compile_shader(
+  VkShaderModule vertex_module = compile_shader(
+    context,
     VKZ::Shader::VERTEX,
     "shader.vert",
     "#version 450\n"
@@ -31,7 +32,8 @@ bool ConfigureGraphicsPipeline::activate()
   );
   if (vertex_module == VK_NULL_HANDLE) return false;
 
-  VkShaderModule fragment_module = context->compile_shader(
+  VkShaderModule fragment_module = compile_shader(
+    context,
     VKZ::Shader::FRAGMENT,
     "shader.frag",
     "#version 450\n"

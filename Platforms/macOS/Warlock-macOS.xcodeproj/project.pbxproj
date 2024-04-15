@@ -55,6 +55,7 @@
 		30C7A02F2BC59E40004A98B7 /* libSPIRV.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30C7A02E2BC59E40004A98B7 /* libSPIRV.a */; };
 		30C7A03F2BC6D3D2004A98B7 /* libSPIRV-Tools.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30C7A03E2BC6D3D2004A98B7 /* libSPIRV-Tools.a */; };
 		30E9EA712BCB224100E45E9F /* libSPIRV-Tools-opt.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30C7A03C2BC6D3CE004A98B7 /* libSPIRV-Tools-opt.a */; };
+		30E9EA802BCD84B000E45E9F /* GLSLangInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E9EA7F2BCD84B000E45E9F /* GLSLangInterface.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -367,6 +368,8 @@
 		30C7A03C2BC6D3CE004A98B7 /* libSPIRV-Tools-opt.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libSPIRV-Tools-opt.a"; path = "../../Libraries/glslang/build/install/lib/libSPIRV-Tools-opt.a"; sourceTree = "<group>"; };
 		30C7A03E2BC6D3D2004A98B7 /* libSPIRV-Tools.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libSPIRV-Tools.a"; path = "../../Libraries/glslang/build/install/lib/libSPIRV-Tools.a"; sourceTree = "<group>"; };
 		30C7A0402BC6D3D4004A98B7 /* libSPVRemapper.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSPVRemapper.a; path = ../../Libraries/glslang/build/install/lib/libSPVRemapper.a; sourceTree = "<group>"; };
+		30E9EA732BCD84A600E45E9F /* GLSLangInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GLSLangInterface.h; sourceTree = "<group>"; };
+		30E9EA7F2BCD84B000E45E9F /* GLSLangInterface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLSLangInterface.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -784,6 +787,7 @@
 		3077062D2BA896D500122E50 /* Vulkanize */ = {
 			isa = PBXGroup;
 			children = (
+				30E9EA732BCD84A600E45E9F /* GLSLangInterface.h */,
 				30C7A0152BC57800004A98B7 /* ConfigureGLSLang.h */,
 				30C7A0142BC574C0004A98B7 /* OperationManager.h */,
 				300C71E52BC42C9300FFBB85 /* ConfigureShaders.h */,
@@ -826,6 +830,7 @@
 		307706312BA896D500122E50 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				30E9EA7F2BCD84B000E45E9F /* GLSLangInterface.cpp */,
 				30C7A0162BC57818004A98B7 /* ConfigureGLSLang.cpp */,
 				30C7A0072BC574B5004A98B7 /* OperationManager.cpp */,
 				300C71E32BC42C8A00FFBB85 /* ConfigureShaders.cpp */,
@@ -1054,6 +1059,7 @@
 				3004D1EA2BBDA14000572087 /* Image.cpp in Sources */,
 				305AA2C42BB0EDF800BDAE68 /* ConfigureFormats.cpp in Sources */,
 				307706332BA896D500122E50 /* Vulkanize.cpp in Sources */,
+				30E9EA802BCD84B000E45E9F /* GLSLangInterface.cpp in Sources */,
 				305AA2D52BB1041300BDAE68 /* ConfigureSurfaceSize.cpp in Sources */,
 				30C7A0172BC57818004A98B7 /* ConfigureGLSLang.cpp in Sources */,
 				306912E12B5E7E1D00B14F73 /* Warlock.swift in Sources */,
