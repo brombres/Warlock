@@ -12,9 +12,9 @@ bool ConfigureCommandBuffers::activate()
   allocateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
   allocateInfo.commandPool = context->command_pool;
   allocateInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-  allocateInfo.commandBufferCount = (uint32_t)context->swapchain_images.size();
+  allocateInfo.commandBufferCount = context->swapchain_count;
 
-  context->command_buffers.resize( context->swapchain_images.size() );
+  context->command_buffers.resize( context->swapchain_count );
   context->device_dispatch.allocateCommandBuffers( &allocateInfo, context->command_buffers.data() );
   return true;
 }

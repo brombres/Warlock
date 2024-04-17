@@ -8,8 +8,8 @@ ConfigureFences::ConfigureFences( Context* context ) : context(context)
 
 bool ConfigureFences::activate()
 {
-  context->fences.resize( context->swapchain_images.size() );
-  for (uint32_t i=0; i<context->swapchain_images.size(); ++i)
+  context->fences.resize( context->swapchain_count );
+  for (uint32_t i=0; i<context->swapchain_count; ++i)
   {
     VkFenceCreateInfo fence_info = {};
     fence_info.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;

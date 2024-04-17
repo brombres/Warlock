@@ -59,7 +59,7 @@ bool RenderEnd::execute()
 
   context->device_dispatch.queueWaitIdle( context->present_queue );
 
-  context->swap_index = (context->swap_index + 1) % context->swapchain_images.size();
+  context->swap_index = (context->swap_index + 1) % context->swapchain_count;
 
   return true;
 }

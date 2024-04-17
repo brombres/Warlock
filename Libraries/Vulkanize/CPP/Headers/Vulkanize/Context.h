@@ -29,6 +29,7 @@ namespace VKZ
     std::vector<VkImageView>   swapchain_image_views;
     VKZ::Image                 depth_stencil;
     std::vector<VkFramebuffer> framebuffers;
+    uint32_t                   swapchain_count = 0;
 
     uint32_t graphics_QueueFamilyIndex;
     uint32_t present_QueueFamilyIndex;

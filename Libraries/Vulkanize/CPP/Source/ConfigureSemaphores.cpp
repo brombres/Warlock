@@ -8,7 +8,7 @@ ConfigureSemaphores::ConfigureSemaphores( Context* context ) : context(context)
 
 bool ConfigureSemaphores::activate()
 {
-  uint32_t swapchain_count = context->swapchain_images.size();
+  uint32_t swapchain_count = context->swapchain_count;
   context->image_available_semaphores.resize( swapchain_count );
   context->rendering_finished_semaphores.resize( swapchain_count );
   for (uint32_t i=0; i<swapchain_count; ++i)
@@ -21,7 +21,7 @@ bool ConfigureSemaphores::activate()
 
 void ConfigureSemaphores::deactivate()
 {
-  uint32_t semaphore_count = context->swapchain_images.size();
+  uint32_t semaphore_count = context->swapchain_count;
   for (uint32_t i=0; i<semaphore_count; ++i)
   {
     context->device_dispatch.destroySemaphore( context->image_available_semaphores[i], nullptr );
