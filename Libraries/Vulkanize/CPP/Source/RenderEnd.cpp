@@ -15,21 +15,21 @@ bool RenderEnd::execute()
   VkSubmitInfo submitInfo = {};
   submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
   submitInfo.waitSemaphoreCount = 1;
-  submitInfo.pWaitSemaphores = &context->image_available_semaphore;
+  submitInfo.pWaitSemaphores = &context->image_available_semaphores[context->swap_index];
   submitInfo.pWaitDstStageMask = &wait_dest_stage_mask;
   submitInfo.commandBufferCount = 1;
   submitInfo.pCommandBuffers = &context->cmd;
   submitInfo.signalSemaphoreCount = 1;
-  submitInfo.pSignalSemaphores = &context->rendering_finished_semaphore;
+  submitInfo.pSignalSemaphores = &context->rendering_finished_semaphores[context->swap_index];
   context->device_dispatch.queueSubmit( context->graphics_queue, 1, &submitInfo, context->fences[context->swap_index] );
 
   VkPresentInfoKHR present_info = {};
   present_info.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
   present_info.waitSemaphoreCount = 1;
-  present_info.pWaitSemaphores = &context->rendering_finished_semaphore;
+  present_info.pWaitSemaphores = &context->rendering_finished_semaphores[context->swap_index];
   present_info.swapchainCount = 1;
   present_info.pSwapchains = &context->swapchain.swapchain;
-  present_info.pImageIndices = &context->swap_index;
+  present_info.pImageIndices = &context->image_index;
 
   VkResult result = context->device_dispatch.queuePresentKHR( context->present_queue, &present_info );
   switch (result)
@@ -58,6 +58,9 @@ bool RenderEnd::execute()
   }
 
   context->device_dispatch.queueWaitIdle( context->present_queue );
+
+  context->swap_index = (context->swap_index + 1) % context->swapchain_images.size();
+
   return true;
 }
 

@@ -8,15 +8,25 @@ ConfigureSemaphores::ConfigureSemaphores( Context* context ) : context(context)
 
 bool ConfigureSemaphores::activate()
 {
-  _create_semaphore( &context->image_available_semaphore );
-  _create_semaphore( &context->rendering_finished_semaphore );
+  uint32_t swapchain_count = context->swapchain_images.size();
+  context->image_available_semaphores.resize( swapchain_count );
+  context->rendering_finished_semaphores.resize( swapchain_count );
+  for (uint32_t i=0; i<swapchain_count; ++i)
+  {
+    _create_semaphore( &context->image_available_semaphores[i] );
+    _create_semaphore( &context->rendering_finished_semaphores[i] );
+  }
   return true;
 }
 
 void ConfigureSemaphores::deactivate()
 {
-  context->device_dispatch.destroySemaphore( context->image_available_semaphore, nullptr );
-  context->device_dispatch.destroySemaphore( context->rendering_finished_semaphore, nullptr );
+  uint32_t semaphore_count = context->swapchain_images.size();
+  for (uint32_t i=0; i<semaphore_count; ++i)
+  {
+    context->device_dispatch.destroySemaphore( context->image_available_semaphores[i], nullptr );
+    context->device_dispatch.destroySemaphore( context->rendering_finished_semaphores[i], nullptr );
+  }
 }
 
 void ConfigureSemaphores::_create_semaphore( VkSemaphore *semaphore )

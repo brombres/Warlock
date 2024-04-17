@@ -11,9 +11,9 @@ bool RenderBegin::execute()
   VkResult result = context->device_dispatch.acquireNextImageKHR(
     context->swapchain,
     UINT64_MAX,
-    context->image_available_semaphore,
+    context->image_available_semaphores[context->swap_index],
     VK_NULL_HANDLE,
-    &context->swap_index
+    &context->image_index
   );
 
   switch (result)

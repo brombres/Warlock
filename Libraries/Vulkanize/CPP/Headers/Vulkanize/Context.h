@@ -44,13 +44,14 @@ namespace VKZ
     std::vector<VkCommandBuffer> command_buffers;
     VkCommandBuffer              cmd;
 
-    VkSemaphore image_available_semaphore;
-    VkSemaphore rendering_finished_semaphore;
+    std::vector<VkSemaphore> image_available_semaphores;
+    std::vector<VkSemaphore> rendering_finished_semaphores;
 
     std::vector<VkFence> fences;
 
     // Rendering
-    uint32_t swap_index;
+    uint32_t swap_index = 0;
+    uint32_t image_index = 0;
 
     // METHODS
     Context( VkSurfaceKHR surface );
