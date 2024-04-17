@@ -10,16 +10,28 @@ using namespace std;
 
 using namespace VKZ;
 
-VkShaderModule VKZ::compile_shader( Context* context, Shader type,
+VkShaderModule VKZ::compile_shader( Context* context, VkShaderStageFlagBits type,
     const string& filename, const string& shader_source )
 {
   glslang_stage_t stage;
   switch (type)
   {
-    case VKZ::Shader::FRAGMENT: stage = GLSLANG_STAGE_FRAGMENT; break;
-    case VKZ::Shader::VERTEX:   stage = GLSLANG_STAGE_VERTEX; break;
+    case VK_SHADER_STAGE_VERTEX_BIT:                  stage = GLSLANG_STAGE_VERTEX; break;
+    case VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT:    stage = GLSLANG_STAGE_TESSCONTROL; break;
+    case VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT: stage = GLSLANG_STAGE_TESSEVALUATION; break;
+    case VK_SHADER_STAGE_GEOMETRY_BIT:                stage = GLSLANG_STAGE_GEOMETRY; break;
+    case VK_SHADER_STAGE_FRAGMENT_BIT:                stage = GLSLANG_STAGE_FRAGMENT; break;
+    case VK_SHADER_STAGE_COMPUTE_BIT:                 stage = GLSLANG_STAGE_COMPUTE; break;
+    case VK_SHADER_STAGE_RAYGEN_BIT_KHR:              stage = GLSLANG_STAGE_RAYGEN; break;
+    case VK_SHADER_STAGE_ANY_HIT_BIT_KHR:             stage = GLSLANG_STAGE_ANYHIT; break;
+    case VK_SHADER_STAGE_CLOSEST_HIT_BIT_KHR:         stage = GLSLANG_STAGE_CLOSESTHIT; break;
+    case VK_SHADER_STAGE_MISS_BIT_KHR:                stage = GLSLANG_STAGE_MISS; break;
+    case VK_SHADER_STAGE_INTERSECTION_BIT_KHR:        stage = GLSLANG_STAGE_INTERSECT; break;
+    case VK_SHADER_STAGE_CALLABLE_BIT_KHR:            stage = GLSLANG_STAGE_CALLABLE; break;
+    case VK_SHADER_STAGE_TASK_BIT_EXT:                stage = GLSLANG_STAGE_TASK; break;
+    case VK_SHADER_STAGE_MESH_BIT_EXT:                stage = GLSLANG_STAGE_MESH; break;
     default:
-      VKZ_LOG_ERROR( "[Vulkanize] Internal error: unhandled VKZ::Shader type in Context::compile_shader().\n" );
+      VKZ_LOG_ERROR( "[Vulkanize] Internal error: unhandled VkShaderStageFlagBits type in Context::compile_shader().\n" );
   }
   auto spirv = compile_shader_to_spirv( stage, filename.c_str(), shader_source.c_str() );
   if (spirv.size == 0) return VK_NULL_HANDLE;

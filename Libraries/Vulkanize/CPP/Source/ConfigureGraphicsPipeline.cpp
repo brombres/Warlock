@@ -13,7 +13,7 @@ bool ConfigureGraphicsPipeline::activate()
 {
   VkShaderModule vertex_module = compile_shader(
     context,
-    VKZ::Shader::VERTEX,
+    VK_SHADER_STAGE_VERTEX_BIT,
     "shader.vert",
     "#version 450\n"
     "#extension GL_ARB_separate_shader_objects : enable\n"
@@ -34,7 +34,7 @@ bool ConfigureGraphicsPipeline::activate()
 
   VkShaderModule fragment_module = compile_shader(
     context,
-    VKZ::Shader::FRAGMENT,
+    VK_SHADER_STAGE_FRAGMENT_BIT,
     "shader.frag",
     "#version 450\n"
     "#extension GL_ARB_separate_shader_objects : enable\n"
