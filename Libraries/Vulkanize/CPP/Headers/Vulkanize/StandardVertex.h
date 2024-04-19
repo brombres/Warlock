@@ -4,12 +4,14 @@
 
 namespace VKZ
 {
-  struct StandardVertex : Vertex
+  struct StandardVertex
   {
     struct { float x, y, z; } position;
-    uint32_t rgba;
-
-    virtual VkVertexInputBindingDescription get_binding_description();
-    virtual std::vector<VkVertexInputAttributeDescription> get_attribute_descriptions();
+    struct { float x, y, z; } normal;
+    struct { float u, v; }    uv;
+    struct { float u, v; }    uv2;
+    float    data;
+    uint32_t color;
   };
 };
+
