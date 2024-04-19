@@ -86,6 +86,8 @@ namespace VKZ
 #define VKZ_REQUIRE(stage,cmd) VKZ_ON_ERROR(stage,cmd,return false;)
 
 #include "Vulkanize/Image.h"
+#include "Vulkanize/Vertex.h"
+#include "Vulkanize/StandardVertex.h"
 #include "Vulkanize/Node.h"
 #include "Vulkanize/Operation.h"
 #include "Vulkanize/OperationManager.h"
