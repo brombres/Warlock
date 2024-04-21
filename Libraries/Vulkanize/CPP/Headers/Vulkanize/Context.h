@@ -41,7 +41,11 @@ namespace VKZ
     VkPipelineLayout pipeline_layout;
     VkPipeline       graphics_pipeline;
 
+    std::vector<StandardVertex>  vertices; // TEST
+
     VkCommandPool                command_pool;
+    VkBuffer                     vertex_buffer;
+    VkDeviceMemory               vertex_buffer_memory;
     std::vector<VkCommandBuffer> command_buffers;
     VkCommandBuffer              cmd;
 

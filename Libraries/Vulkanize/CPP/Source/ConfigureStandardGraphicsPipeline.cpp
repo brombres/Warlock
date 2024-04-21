@@ -1,21 +1,15 @@
 #include "VkBootstrap.h"
-#include "Vulkanize/Vulkanize.h"
+#include "Vulkanize/ConfigureStandardGraphicsPipeline.h"
+using namespace std;
 using namespace VKZ;
 
-ConfigureGraphicsPipeline::ConfigureGraphicsPipeline( Context* context ) : context(context)
+ConfigureStandardGraphicsPipeline::ConfigureStandardGraphicsPipeline( Context* context )
+  : ConfigureGraphicsPipeline(context)
 {
+  add_vertex_description( new StandardVertexDescription() );
 }
 
-ConfigureGraphicsPipeline::~ConfigureGraphicsPipeline()
-{
-  while (vertex_descriptions.size())
-  {
-    delete vertex_descriptions.back();
-    vertex_descriptions.pop_back();
-  }
-}
-
-bool ConfigureGraphicsPipeline::activate()
+bool ConfigureStandardGraphicsPipeline::activate()
 {
   VkShaderModule vertex_module = compile_shader(
     context,
@@ -25,7 +19,7 @@ bool ConfigureGraphicsPipeline::activate()
     "#extension GL_ARB_separate_shader_objects : enable\n"
     "\n"
     "layout (location = 0) in vec2 position;\n"
-    "layout (location = 1) in vec3 color;\n"
+    "layout (location = 2) in vec3 color;\n"
     "\n"
     "layout (location = 0) out vec3 fragColor;\n"
     "\n"
@@ -71,10 +65,30 @@ bool ConfigureGraphicsPipeline::activate()
   VkPipelineShaderStageCreateInfo shader_stages[] =
       { vertex_stage_info, fragment_stage_info };
 
+  vector<VkVertexInputBindingDescription>   binding_descriptions;
+  vector<VkVertexInputAttributeDescription> attribute_descriptions;
+  for (auto vertex_description : vertex_descriptions)
+  {
+    uint32_t binding = 0;
+    vertex_description->collect_binding_description( binding_descriptions );
+    binding_descriptions.back().binding = binding;
+
+    uint32_t i = attribute_descriptions.size();
+    vertex_description->collect_attribute_descriptions( attribute_descriptions );
+    for (; i<attribute_descriptions.size(); ++i)
+    {
+      attribute_descriptions[i].binding = binding;
+    }
+
+    ++binding;
+  }
+
   VkPipelineVertexInputStateCreateInfo vertex_input_info = {};
   vertex_input_info.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-  vertex_input_info.vertexBindingDescriptionCount = 0;
-  vertex_input_info.vertexAttributeDescriptionCount = 0;
+  vertex_input_info.vertexBindingDescriptionCount = binding_descriptions.size();
+  vertex_input_info.vertexAttributeDescriptionCount = attribute_descriptions.size();
+  vertex_input_info.pVertexBindingDescriptions = binding_descriptions.data();
+  vertex_input_info.pVertexAttributeDescriptions = attribute_descriptions.data();
 
   VkPipelineInputAssemblyStateCreateInfo input_assembly = {};
   input_assembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
@@ -184,31 +198,9 @@ bool ConfigureGraphicsPipeline::activate()
   return true;
 }
 
-void ConfigureGraphicsPipeline::add_vertex_description( VertexDescription* vertex_description )
-{
-  vertex_descriptions.push_back( vertex_description );
-}
-
-void ConfigureGraphicsPipeline::deactivate()
+void ConfigureStandardGraphicsPipeline::deactivate()
 {
   context->device_dispatch.destroyPipeline( context->graphics_pipeline, nullptr );
   context->device_dispatch.destroyPipelineLayout( context->pipeline_layout, nullptr );
-}
-
-VkShaderModule ConfigureGraphicsPipeline::_create_shader_module( const Byte* code, int count )
-{
-  VkShaderModuleCreateInfo create_info = {};
-  create_info.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
-  create_info.codeSize = count;
-  create_info.pCode = (const uint32_t*)code;
-
-  VkShaderModule shader_module;
-  VKZ_ON_ERROR(
-    "creating shader module",
-    context->device_dispatch.createShaderModule( &create_info, nullptr, &shader_module ),
-    return VK_NULL_HANDLE;
-  );
-
-  return shader_module;
 }
 

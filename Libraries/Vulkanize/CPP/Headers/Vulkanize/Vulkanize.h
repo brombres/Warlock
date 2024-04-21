@@ -70,16 +70,19 @@ namespace VKZ
   }                                                            \
 }
 
-#define VKZ_ON_ERROR(stage,cmd,body)                     \
+#define VKZ_REPORT_ERROR(stage)                                   \
+  VKZ_LOG_ERROR( "[ERROR] Balefire Vulkan: error %s.\n", stage ); \
+
+#define VKZ_ON_ERROR(stage,cmd,on_error)                 \
 	{                                                      \
-		VkResult err = cmd;                                  \
-		if ((err=cmd))                                       \
+		auto err = cmd;                                      \
+		if (err)                                             \
 		{                                                    \
       VKZ_LOG_ERROR(                                     \
           "[ERROR] Balefire Vulkan: error %s (%s).\n",   \
           stage, Vulkanize::vkResult_to_c_string(err)    \
       );                                                 \
-      body;                                              \
+      on_error;                                              \
 		}                                                    \
 	}
 
@@ -87,8 +90,9 @@ namespace VKZ
 
 #include "Vulkanize/Image.h"
 #include "Vulkanize/StandardVertex.h"
-#include "Vulkanize/VertexDescriptor.h"
-#include "Vulkanize/StandardVertexDescriptor.h"
+#include "Vulkanize/VertexDescription.h"
+#include "Vulkanize/CustomVertexDescription.h"
+#include "Vulkanize/StandardVertexDescription.h"
 #include "Vulkanize/Node.h"
 #include "Vulkanize/Operation.h"
 #include "Vulkanize/OperationManager.h"
@@ -101,8 +105,10 @@ namespace VKZ
 #include "Vulkanize/ConfigureQueues.h"
 #include "Vulkanize/ConfigureRenderPasses.h"
 #include "Vulkanize/ConfigureGraphicsPipeline.h"
+#include "Vulkanize/ConfigureStandardGraphicsPipeline.h"
 #include "Vulkanize/ConfigureFramebuffers.h"
 #include "Vulkanize/ConfigureCommandPool.h"
+#include "Vulkanize/ConfigureStandardVertexBuffer.h"
 #include "Vulkanize/ConfigureCommandBuffers.h"
 #include "Vulkanize/ConfigureSemaphores.h"
 #include "Vulkanize/ConfigureFences.h"

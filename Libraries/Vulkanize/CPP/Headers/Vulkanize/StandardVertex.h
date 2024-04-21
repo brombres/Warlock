@@ -7,11 +7,16 @@ namespace VKZ
   struct StandardVertex
   {
     struct { float x, y, z; } position;
-    struct { float x, y, z; } normal;
     struct { float u, v; }    uv;
-    struct { float u, v; }    uv2;
-    float    data;
     uint32_t color;
+    uint32_t data;
+
+    StandardVertex( float x, float y, float z, uint32_t color ) : color(color)
+    {
+      position.x = x;
+      position.y = y;
+      position.z = z;
+    }
   };
 };
 
