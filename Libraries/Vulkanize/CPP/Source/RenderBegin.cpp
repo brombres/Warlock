@@ -86,6 +86,10 @@ bool RenderBegin::execute()
   context->device_dispatch.cmdSetViewport( context->cmd, 0, 1, &viewport );
   context->device_dispatch.cmdSetScissor(  context->cmd, 0, 1, &scissor );
 
+  VkBuffer vertex_buffers[] = { context->vertex_buffer };
+  VkDeviceSize offsets[] = {0};
+  vkCmdBindVertexBuffers( context->cmd, 0, 1, vertex_buffers, offsets );
+
   return true;
 }
 

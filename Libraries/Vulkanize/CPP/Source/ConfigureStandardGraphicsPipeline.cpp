@@ -67,17 +67,19 @@ bool ConfigureStandardGraphicsPipeline::activate()
 
   vector<VkVertexInputBindingDescription>   binding_descriptions;
   vector<VkVertexInputAttributeDescription> attribute_descriptions;
+  uint32_t binding = 0;
   for (auto vertex_description : vertex_descriptions)
   {
-    uint32_t binding = 0;
     vertex_description->collect_binding_description( binding_descriptions );
     binding_descriptions.back().binding = binding;
+printf("set binding to %u\n",binding_descriptions.back().binding);
 
     uint32_t i = attribute_descriptions.size();
     vertex_description->collect_attribute_descriptions( attribute_descriptions );
     for (; i<attribute_descriptions.size(); ++i)
     {
       attribute_descriptions[i].binding = binding;
+printf("set attribute[%u] to %u\n", i, attribute_descriptions[i].binding );
     }
 
     ++binding;
@@ -157,6 +159,7 @@ bool ConfigureStandardGraphicsPipeline::activate()
       &pipeline_layout_info, nullptr, &context->pipeline_layout
     )
   );
+  progress = 1;
 
   std::vector<VkDynamicState> dynamic_states =
   {
@@ -192,6 +195,7 @@ bool ConfigureStandardGraphicsPipeline::activate()
       VK_NULL_HANDLE, 1, &pipeline_info, nullptr, &context->graphics_pipeline
     )
   );
+  progress = 2;
 
   context->device_dispatch.destroyShaderModule( fragment_module, nullptr );
   context->device_dispatch.destroyShaderModule( vertex_module, nullptr );
@@ -200,7 +204,7 @@ bool ConfigureStandardGraphicsPipeline::activate()
 
 void ConfigureStandardGraphicsPipeline::deactivate()
 {
-  context->device_dispatch.destroyPipeline( context->graphics_pipeline, nullptr );
-  context->device_dispatch.destroyPipelineLayout( context->pipeline_layout, nullptr );
+  if (progress >= 2) context->device_dispatch.destroyPipeline( context->graphics_pipeline, nullptr );
+  if (progress >= 1) context->device_dispatch.destroyPipelineLayout( context->pipeline_layout, nullptr );
 }
 

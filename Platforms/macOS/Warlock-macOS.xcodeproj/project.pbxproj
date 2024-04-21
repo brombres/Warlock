@@ -56,7 +56,6 @@
 		30C7A03F2BC6D3D2004A98B7 /* libSPIRV-Tools.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30C7A03E2BC6D3D2004A98B7 /* libSPIRV-Tools.a */; };
 		30E9EA712BCB224100E45E9F /* libSPIRV-Tools-opt.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30C7A03C2BC6D3CE004A98B7 /* libSPIRV-Tools-opt.a */; };
 		30E9EA802BCD84B000E45E9F /* GLSLangInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E9EA7F2BCD84B000E45E9F /* GLSLangInterface.cpp */; };
-		30E9EA942BD16CFF00E45E9F /* StandardVertexDescription.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E9EA922BD16CFF00E45E9F /* StandardVertexDescription.cpp */; };
 		30E9EAB72BD41A6E00E45E9F /* ConfigureStandardGraphicsPipeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E9EAB62BD41A6E00E45E9F /* ConfigureStandardGraphicsPipeline.cpp */; };
 		30E9EAB92BD4665400E45E9F /* ConfigureStandardVertexBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E9EAB82BD4665400E45E9F /* ConfigureStandardVertexBuffer.cpp */; };
 /* End PBXBuildFile section */
@@ -375,7 +374,6 @@
 		30E9EA7F2BCD84B000E45E9F /* GLSLangInterface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLSLangInterface.cpp; sourceTree = "<group>"; };
 		30E9EA852BD16CF300E45E9F /* StandardVertexDescription.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StandardVertexDescription.h; sourceTree = "<group>"; };
 		30E9EA912BD16CF300E45E9F /* VertexDescription.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VertexDescription.h; sourceTree = "<group>"; };
-		30E9EA922BD16CFF00E45E9F /* StandardVertexDescription.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StandardVertexDescription.cpp; sourceTree = "<group>"; };
 		30E9EAA52BD2CC4100E45E9F /* StandardVertex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StandardVertex.h; sourceTree = "<group>"; };
 		30E9EAA92BD4139200E45E9F /* CustomVertexDescription.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomVertexDescription.h; sourceTree = "<group>"; };
 		30E9EAB52BD41A6600E45E9F /* ConfigureStandardGraphicsPipeline.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConfigureStandardGraphicsPipeline.h; sourceTree = "<group>"; };
@@ -850,7 +848,6 @@
 			children = (
 				30E9EAB82BD4665400E45E9F /* ConfigureStandardVertexBuffer.cpp */,
 				30E9EAB62BD41A6E00E45E9F /* ConfigureStandardGraphicsPipeline.cpp */,
-				30E9EA922BD16CFF00E45E9F /* StandardVertexDescription.cpp */,
 				30E9EA7F2BCD84B000E45E9F /* GLSLangInterface.cpp */,
 				30C7A0162BC57818004A98B7 /* ConfigureGLSLang.cpp */,
 				30C7A0072BC574B5004A98B7 /* OperationManager.cpp */,
@@ -1090,7 +1087,6 @@
 				300C71D92BC192B300FFBB85 /* ConfigureCommandPool.cpp in Sources */,
 				3049E6AE2B952FBE008554DD /* WindowRenderContextVulkan.cpp in Sources */,
 				3049E6A72B94FBF4008554DD /* Balefire.cpp in Sources */,
-				30E9EA942BD16CFF00E45E9F /* StandardVertexDescription.cpp in Sources */,
 				301985332B94DC6000CBECCB /* Renderer.cpp in Sources */,
 				30E9EAB72BD41A6E00E45E9F /* ConfigureStandardGraphicsPipeline.cpp in Sources */,
 				305AA2C52BB0EDF800BDAE68 /* ConfigureSwapchain.cpp in Sources */,

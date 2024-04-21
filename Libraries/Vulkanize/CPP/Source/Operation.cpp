@@ -23,10 +23,11 @@ bool Operation::handle_event( string event, bool reverse_order )
 
   if (event == "deactivate")
   {
-    if (active)
+    if (active || progress)
     {
       deactivate();
       active = false;
+      progress = 0;
     }
   }
   else

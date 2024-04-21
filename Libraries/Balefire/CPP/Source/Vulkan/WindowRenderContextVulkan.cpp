@@ -42,7 +42,7 @@ void WindowRenderContextVulkan::render()
 
   if (context->execute("render.begin"))
   {
-    context->device_dispatch.cmdDraw( context->cmd, 3, 1, 0, 0 );
+    context->device_dispatch.cmdDraw( context->cmd, context->vertices.size(), 1, 0, 0 );
     context->execute( "render.end" );
   }
 

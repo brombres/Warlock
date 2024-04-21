@@ -143,6 +143,7 @@ bool ConfigureGraphicsPipeline::activate()
       &pipeline_layout_info, nullptr, &context->pipeline_layout
     )
   );
+  progress = 1;
 
   std::vector<VkDynamicState> dynamic_states =
   {
@@ -178,6 +179,7 @@ bool ConfigureGraphicsPipeline::activate()
       VK_NULL_HANDLE, 1, &pipeline_info, nullptr, &context->graphics_pipeline
     )
   );
+  progress = 2;
 
   context->device_dispatch.destroyShaderModule( fragment_module, nullptr );
   context->device_dispatch.destroyShaderModule( vertex_module, nullptr );
@@ -191,8 +193,8 @@ void ConfigureGraphicsPipeline::add_vertex_description( VertexDescription* verte
 
 void ConfigureGraphicsPipeline::deactivate()
 {
-  context->device_dispatch.destroyPipeline( context->graphics_pipeline, nullptr );
-  context->device_dispatch.destroyPipelineLayout( context->pipeline_layout, nullptr );
+  if (progress >= 2) context->device_dispatch.destroyPipeline( context->graphics_pipeline, nullptr );
+  if (progress >= 1) context->device_dispatch.destroyPipelineLayout( context->pipeline_layout, nullptr );
 }
 
 VkShaderModule ConfigureGraphicsPipeline::_create_shader_module( const Byte* code, int count )

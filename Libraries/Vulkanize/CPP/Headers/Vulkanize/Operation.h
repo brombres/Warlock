@@ -6,7 +6,14 @@ namespace VKZ
 {
   struct Operation : Node<Operation>
   {
-    bool        active       = false;
+    // Internal use. Set by the dispatch_event() framework.
+    bool active = false;
+
+    // Activation progress that can optionally be set by an activate() call.
+    // deactivate() will only be called if 'activate' is true OR if 'progress'
+    // is non-zero. A deactivate() implementation can examine 'progress' to
+    // only clean up certain parts that were successfully activated.
+    int  progress = 0;
 
     //----- Constructor/Destructor ---------------------------------------------
     Operation() {}

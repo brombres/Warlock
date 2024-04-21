@@ -7,9 +7,9 @@ using namespace VKZ;
 bool ConfigureStandardVertexBuffer::activate()
 {
   context->vertices.clear();
-  context->vertices.push_back( StandardVertex(0.0f,-0.5f, 0, 0xff0000ff) );
-  context->vertices.push_back( StandardVertex(0.5f, 0.5f, 0, 0x00ff00ff) );
-  context->vertices.push_back( StandardVertex(-0.5f, 0.5f, 0, 0x0000ffff) );
+  context->vertices.push_back( StandardVertex( 0.0f,-0.5f, 0, 0xff0000ff) );
+  context->vertices.push_back( StandardVertex( 0.5f, 0.5f, 0, 0xff00ff00) );
+  context->vertices.push_back( StandardVertex(-0.5f, 0.5f, 0, 0xffff0000) );
 
   VkBufferCreateInfo buffer_info{};
   buffer_info.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
@@ -21,6 +21,7 @@ bool ConfigureStandardVertexBuffer::activate()
     "creating vertex buffer",
     vkCreateBuffer( context->device, &buffer_info, nullptr, &context->vertex_buffer )
   );
+  progress = 1;
 
   VkMemoryRequirements mem_requirements;
   vkGetBufferMemoryRequirements( context->device,  context->vertex_buffer, &mem_requirements );
@@ -33,7 +34,6 @@ bool ConfigureStandardVertexBuffer::activate()
   if (mem_type == -1)
   {
     VKZ_REPORT_ERROR( "finding memory type for vertex buffer" );
-    vkDestroyBuffer( context->device, context->vertex_buffer, nullptr );
     return false;
   }
   alloc_info.memoryTypeIndex = (uint32_t) mem_type;
@@ -41,16 +41,31 @@ bool ConfigureStandardVertexBuffer::activate()
   VKZ_ON_ERROR(
     "allocating memory for vertex buffer",
     vkAllocateMemory( context->device, &alloc_info, nullptr, &context->vertex_buffer_memory),
-    vkDestroyBuffer( context->device, context->vertex_buffer, nullptr );
     return false;
   );
+  progress = 2;
 
+  vkBindBufferMemory( context->device, context->vertex_buffer, context->vertex_buffer_memory, 0 );
+
+  void* data;
+  vkMapMemory( context->device, context->vertex_buffer_memory, 0, buffer_info.size, 0, &data );
+  memcpy( data, context->vertices.data(), (size_t) buffer_info.size );
+  vkUnmapMemory( context->device, context->vertex_buffer_memory);
+
+  // Create a staging buffer with the VK_BUFFER_USAGE_TRANSFER_SRC_BIT flag.
+  // Map the staging buffer memory once during setup.
+  // Every frame, update the vertex data in the mapped staging buffer.
+  // Use vkCmdCopyBuffer to copy the data from the staging buffer to the final vertex buffer.
+  // Unmap the staging buffer memory once at the end of the program.
+  //
+  // This approach allows you to minimize the number of times you call vkMapMemory and vkUnmapMemory, while also taking advantage of the performance benefits of using a staging buffer for data transfer.
+  //
   return true;
 }
 
 void ConfigureStandardVertexBuffer::deactivate()
 {
-  vkDestroyBuffer( context->device, context->vertex_buffer, nullptr );
-  vkFreeMemory( context->device, context->vertex_buffer_memory, nullptr );
+  if (progress >= 2) vkDestroyBuffer( context->device, context->vertex_buffer, nullptr );
+  if (progress >= 1) vkFreeMemory( context->device, context->vertex_buffer_memory, nullptr );
 }
 
