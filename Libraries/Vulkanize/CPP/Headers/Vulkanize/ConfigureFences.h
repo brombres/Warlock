@@ -4,11 +4,8 @@
 
 namespace VKZ
 {
-  struct ConfigureFences : Operation
+  struct ConfigureFences : ContextOperation<Context>
   {
-    Context* context;
-
-    ConfigureFences( Context* context );
     virtual bool activate();
     virtual void deactivate();
   };

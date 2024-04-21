@@ -2,8 +2,8 @@
 #include "Vulkanize/Vulkanize.h"
 using namespace VKZ;
 
-ConfigureDevice::ConfigureDevice( Context* context, int major_version, int minor_version )
-  : context(context), major_version(major_version), minor_version(minor_version)
+ConfigureDevice::ConfigureDevice( int major_version, int minor_version )
+  : major_version(major_version), minor_version(minor_version)
 {
 }
 

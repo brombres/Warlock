@@ -2,10 +2,6 @@
 #include "Vulkanize/Vulkanize.h"
 using namespace VKZ;
 
-ConfigureCommandPool::ConfigureCommandPool( Context* context ) : context(context)
-{
-}
-
 bool ConfigureCommandPool::activate()
 {
   VkCommandPoolCreateInfo pool_info = {};

@@ -46,7 +46,7 @@
 		306913BC2B5EAFC900B14F73 /* vulkan.cppm in Resources */ = {isa = PBXBuildFile; fileRef = 3069139D2B5EAFC900B14F73 /* vulkan.cppm */; };
 		307706332BA896D500122E50 /* Vulkanize.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 307706302BA896D500122E50 /* Vulkanize.cpp */; };
 		307706362BA8B3AC00122E50 /* Context.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 307706352BA8B3AC00122E50 /* Context.cpp */; };
-		30C7A0132BC574B5004A98B7 /* OperationManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30C7A0072BC574B5004A98B7 /* OperationManager.cpp */; };
+		30C7A0132BC574B5004A98B7 /* Process.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30C7A0072BC574B5004A98B7 /* Process.cpp */; };
 		30C7A0172BC57818004A98B7 /* ConfigureGLSLang.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30C7A0162BC57818004A98B7 /* ConfigureGLSLang.cpp */; };
 		30C7A0292BC59DEF004A98B7 /* libGenericCodeGen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30C7A0242BC59DEF004A98B7 /* libGenericCodeGen.a */; };
 		30C7A02A2BC59DEF004A98B7 /* libglslang.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30C7A0252BC59DEF004A98B7 /* libglslang.a */; };
@@ -357,8 +357,8 @@
 		30C79F6D2BC448E3004A98B7 /* libglslang-default-resource-limits.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libglslang-default-resource-limits.a"; sourceTree = "<group>"; };
 		30C79F6E2BC448E3004A98B7 /* libglslang.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libglslang.a; sourceTree = "<group>"; };
 		30C79F6F2BC448E3004A98B7 /* libMachineIndependent.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libMachineIndependent.a; sourceTree = "<group>"; };
-		30C7A0072BC574B5004A98B7 /* OperationManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OperationManager.cpp; sourceTree = "<group>"; };
-		30C7A0142BC574C0004A98B7 /* OperationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OperationManager.h; sourceTree = "<group>"; };
+		30C7A0072BC574B5004A98B7 /* Process.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Process.cpp; sourceTree = "<group>"; };
+		30C7A0142BC574C0004A98B7 /* Process.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Process.h; sourceTree = "<group>"; };
 		30C7A0152BC57800004A98B7 /* ConfigureGLSLang.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigureGLSLang.h; sourceTree = "<group>"; };
 		30C7A0162BC57818004A98B7 /* ConfigureGLSLang.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureGLSLang.cpp; sourceTree = "<group>"; };
 		30C7A0242BC59DEF004A98B7 /* libGenericCodeGen.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libGenericCodeGen.a; path = ../../Libraries/glslang/build/install/lib/libGenericCodeGen.a; sourceTree = "<group>"; };
@@ -380,6 +380,7 @@
 		30E9EAB62BD41A6E00E45E9F /* ConfigureStandardGraphicsPipeline.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureStandardGraphicsPipeline.cpp; sourceTree = "<group>"; };
 		30E9EAB82BD4665400E45E9F /* ConfigureStandardVertexBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureStandardVertexBuffer.cpp; sourceTree = "<group>"; };
 		30E9EABA2BD4665D00E45E9F /* ConfigureStandardVertexBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigureStandardVertexBuffer.h; sourceTree = "<group>"; };
+		30E9EAC82BD58DA900E45E9F /* ContextOperation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContextOperation.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -797,6 +798,7 @@
 		3077062D2BA896D500122E50 /* Vulkanize */ = {
 			isa = PBXGroup;
 			children = (
+				30E9EAC82BD58DA900E45E9F /* ContextOperation.h */,
 				30E9EABA2BD4665D00E45E9F /* ConfigureStandardVertexBuffer.h */,
 				30E9EAB52BD41A6600E45E9F /* ConfigureStandardGraphicsPipeline.h */,
 				30E9EAA92BD4139200E45E9F /* CustomVertexDescription.h */,
@@ -805,7 +807,7 @@
 				30E9EA912BD16CF300E45E9F /* VertexDescription.h */,
 				30E9EA732BCD84A600E45E9F /* GLSLangInterface.h */,
 				30C7A0152BC57800004A98B7 /* ConfigureGLSLang.h */,
-				30C7A0142BC574C0004A98B7 /* OperationManager.h */,
+				30C7A0142BC574C0004A98B7 /* Process.h */,
 				300C71E52BC42C9300FFBB85 /* ConfigureShaders.h */,
 				300C71DD2BC1AD2100FFBB85 /* RenderBegin.h */,
 				300C71DE2BC1AD2100FFBB85 /* RenderEnd.h */,
@@ -850,7 +852,7 @@
 				30E9EAB62BD41A6E00E45E9F /* ConfigureStandardGraphicsPipeline.cpp */,
 				30E9EA7F2BCD84B000E45E9F /* GLSLangInterface.cpp */,
 				30C7A0162BC57818004A98B7 /* ConfigureGLSLang.cpp */,
-				30C7A0072BC574B5004A98B7 /* OperationManager.cpp */,
+				30C7A0072BC574B5004A98B7 /* Process.cpp */,
 				300C71E32BC42C8A00FFBB85 /* ConfigureShaders.cpp */,
 				300C71DF2BC1AD2C00FFBB85 /* RenderBegin.cpp */,
 				300C71E02BC1AD2C00FFBB85 /* RenderEnd.cpp */,
@@ -1083,7 +1085,7 @@
 				306912E12B5E7E1D00B14F73 /* Warlock.swift in Sources */,
 				300C71E42BC42C8A00FFBB85 /* ConfigureShaders.cpp in Sources */,
 				305AA2B12BAF4B5600BDAE68 /* Operation.cpp in Sources */,
-				30C7A0132BC574B5004A98B7 /* OperationManager.cpp in Sources */,
+				30C7A0132BC574B5004A98B7 /* Process.cpp in Sources */,
 				300C71D92BC192B300FFBB85 /* ConfigureCommandPool.cpp in Sources */,
 				3049E6AE2B952FBE008554DD /* WindowRenderContextVulkan.cpp in Sources */,
 				3049E6A72B94FBF4008554DD /* Balefire.cpp in Sources */,

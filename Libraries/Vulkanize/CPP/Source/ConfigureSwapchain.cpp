@@ -2,11 +2,6 @@
 #include "Vulkanize/Vulkanize.h"
 using namespace VKZ;
 
-ConfigureSwapchain::ConfigureSwapchain( Context* context )
-  : context(context)
-{
-}
-
 bool ConfigureSwapchain::activate()
 {
 	vkb::SwapchainBuilder swapchain_builder{ context->device };

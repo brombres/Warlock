@@ -12,7 +12,7 @@ namespace VKZ
 {
   struct Operation;
 
-  struct OperationManager
+  struct Process
   {
     // PROPERTIES
     bool configured = false;
@@ -21,7 +21,7 @@ namespace VKZ
     std::unordered_map<std::string,Operation*> operations;
 
     // METHODS
-    virtual ~OperationManager();
+    virtual ~Process();
 
     virtual void add_operation( std::string phase, Operation* operation );
     virtual bool activate( const std::string phase );

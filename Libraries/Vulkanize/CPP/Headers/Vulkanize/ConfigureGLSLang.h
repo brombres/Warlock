@@ -4,7 +4,7 @@
 
 namespace VKZ
 {
-  struct ConfigureGLSLang : Operation
+  struct ConfigureGLSLang : ContextOperation<Context>
   {
     virtual bool activate();
     virtual void deactivate();

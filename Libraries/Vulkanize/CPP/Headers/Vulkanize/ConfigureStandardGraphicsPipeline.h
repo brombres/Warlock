@@ -7,7 +7,7 @@ namespace VKZ
 {
   struct ConfigureStandardGraphicsPipeline : ConfigureGraphicsPipeline
   {
-    ConfigureStandardGraphicsPipeline( Context* context );
+    ConfigureStandardGraphicsPipeline();
 
     virtual bool activate();
     virtual void deactivate();

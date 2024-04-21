@@ -48,29 +48,35 @@ Context::~Context()
 
 void Context::configure_operations()
 {
-  set_operation( "configure.device",                    new ConfigureDevice(this,1,2) );
-  set_operation( "configure.formats",                   new ConfigureFormats(this) );
-  set_operation( "configure.swapchain.surface_size",    new ConfigureSurfaceSize(this) );
-  set_operation( "configure.swapchain",                 new ConfigureSwapchain(this) );
-  set_operation( "configure.swapchain.depth_stencil",   new ConfigureDepthStencil(this) );
-  set_operation( "configure.queues",                    new ConfigureQueues(this) );
-  set_operation( "configure.render_passes",             new ConfigureRenderPasses(this) );
-  set_operation( "configure.shaders",                   new ConfigureShaders(this) );
-  set_operation( "configure.graphics_pipeline",         new ConfigureStandardGraphicsPipeline(this) );
-  set_operation( "configure.swapchain.framebuffers",    new ConfigureFramebuffers(this) );
-  set_operation( "configure.swapchain.command_pool",    new ConfigureCommandPool(this) );
-  set_operation( "configure.vertex_buffers",            new ConfigureStandardVertexBuffer(this) );
-  set_operation( "configure.swapchain.command_buffers", new ConfigureCommandBuffers(this) );
-  set_operation( "configure.semaphores",                new ConfigureSemaphores(this) );
-  set_operation( "configure.fences",                    new ConfigureFences(this) );
-  set_operation( "render.begin",                        new RenderBegin(this) );
-  set_operation( "render.end",                          new RenderEnd(this) );
+  set_operation( "configure.device",                    new ConfigureDevice(1,2) );
+  set_operation( "configure.formats",                   new ConfigureFormats() );
+  set_operation( "configure.swapchain.surface_size",    new ConfigureSurfaceSize() );
+  set_operation( "configure.swapchain",                 new ConfigureSwapchain() );
+  set_operation( "configure.swapchain.depth_stencil",   new ConfigureDepthStencil() );
+  set_operation( "configure.queues",                    new ConfigureQueues() );
+  set_operation( "configure.render_passes",             new ConfigureRenderPasses() );
+  set_operation( "configure.shaders",                   new ConfigureShaders() );
+  set_operation( "configure.graphics_pipeline",         new ConfigureStandardGraphicsPipeline() );
+  set_operation( "configure.swapchain.framebuffers",    new ConfigureFramebuffers() );
+  set_operation( "configure.swapchain.command_pool",    new ConfigureCommandPool() );
+  set_operation( "configure.vertex_buffers",            new ConfigureStandardVertexBuffer() );
+  set_operation( "configure.swapchain.command_buffers", new ConfigureCommandBuffers() );
+  set_operation( "configure.semaphores",                new ConfigureSemaphores() );
+  set_operation( "configure.fences",                    new ConfigureFences() );
+  set_operation( "render.begin",                        new RenderBegin() );
+  set_operation( "render.end",                          new RenderEnd() );
+}
+
+void Context::add_operation( std::string phase, Operation* operation )
+{
+  operation->set_context( this );
+  Process::add_operation( phase, operation );
 }
 
 void Context::destroy()
 {
   device_dispatch.deviceWaitIdle();
-  OperationManager::destroy();
+  Process::destroy();
 }
 
 int Context::find_memory_type( uint32_t typeFilter, VkMemoryPropertyFlags properties )
@@ -98,3 +104,8 @@ void Context::recreate_swapchain()
   activate( "configure.swapchain" );
 }
 
+void Context::set_operation( std::string phase, Operation* operation )
+{
+  operation->set_context( this );
+  Process::set_operation( phase, operation );
+}

@@ -2,11 +2,8 @@
 
 namespace VKZ
 {
-  struct ConfigureQueues : Operation
+  struct ConfigureQueues : ContextOperation<Context>
   {
-    Context* context;
-
-    ConfigureQueues( Context* context );
     virtual bool activate();
   };
 };

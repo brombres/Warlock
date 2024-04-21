@@ -4,11 +4,8 @@
 
 namespace VKZ
 {
-  struct ConfigureDepthStencil : Operation
+  struct ConfigureDepthStencil : ContextOperation<Context>
   {
-    Context* context;
-
-    ConfigureDepthStencil( Context* context );
     virtual bool activate();
     virtual void deactivate();
     virtual bool _find_supported_depth_format( VkFormat* depth_format );

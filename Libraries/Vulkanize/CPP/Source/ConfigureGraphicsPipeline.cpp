@@ -2,10 +2,6 @@
 #include "Vulkanize/Vulkanize.h"
 using namespace VKZ;
 
-ConfigureGraphicsPipeline::ConfigureGraphicsPipeline( Context* context ) : context(context)
-{
-}
-
 ConfigureGraphicsPipeline::~ConfigureGraphicsPipeline()
 {
   while (vertex_descriptions.size())

@@ -4,11 +4,8 @@
 
 namespace VKZ
 {
-  struct ConfigureRenderPasses : Operation
+  struct ConfigureRenderPasses : ContextOperation<Context>
   {
-    Context* context;
-
-    ConfigureRenderPasses( Context* context );
     virtual bool activate();
     virtual void deactivate();
   };

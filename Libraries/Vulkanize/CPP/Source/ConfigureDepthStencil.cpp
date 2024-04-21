@@ -2,10 +2,6 @@
 #include "Vulkanize/Vulkanize.h"
 using namespace VKZ;
 
-ConfigureDepthStencil::ConfigureDepthStencil( Context* context ) : context(context)
-{
-}
-
 bool ConfigureDepthStencil::activate()
 {
   VkFormat depth_format;

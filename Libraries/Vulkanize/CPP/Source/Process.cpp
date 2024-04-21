@@ -4,7 +4,7 @@
 using namespace VKZ;
 using namespace std;
 
-OperationManager::~OperationManager()
+Process::~Process()
 {
   destroy();
 
@@ -17,7 +17,7 @@ OperationManager::~OperationManager()
   operations.clear();
 }
 
-void OperationManager::add_operation( string phase, Operation* operation )
+void Process::add_operation( string phase, Operation* operation )
 {
   Operation* existing = operations[phase];
   if (existing)
@@ -32,13 +32,13 @@ void OperationManager::add_operation( string phase, Operation* operation )
   operations[phase] = operation;
 }
 
-bool OperationManager::activate( string phase )
+bool Process::activate( string phase )
 {
   if ( !dispatch_event(phase, "activate") ) return false;
   return true;
 }
 
-bool OperationManager::configure()
+bool Process::configure()
 {
   if (configured) return true;
   if ( !operations.size() ) configure_operations();
@@ -47,22 +47,22 @@ bool OperationManager::configure()
   return true;
 }
 
-void OperationManager::configure_operations()
+void Process::configure_operations()
 {
 }
 
-void OperationManager::deactivate( string phase )
+void Process::deactivate( string phase )
 {
   dispatch_event( phase, "deactivate", true );
 }
 
-void OperationManager::destroy()
+void Process::destroy()
 {
   deactivate( "configure" );
   configured = false;
 }
 
-bool OperationManager::dispatch_event( string phase, string event, bool reverse_order )
+bool Process::dispatch_event( string phase, string event, bool reverse_order )
 {
   if (reverse_order)
   {
@@ -91,12 +91,12 @@ bool OperationManager::dispatch_event( string phase, string event, bool reverse_
   }
 }
 
-bool OperationManager::execute( string phase )
+bool Process::execute( string phase )
 {
   return dispatch_event( phase, "execute" );
 }
 
-void OperationManager::set_operation( string phase, Operation* operation )
+void Process::set_operation( string phase, Operation* operation )
 {
   Operation* existing = operations[phase];
   if (existing)
@@ -111,7 +111,7 @@ void OperationManager::set_operation( string phase, Operation* operation )
   operations[phase] = operation;
 }
 
-bool OperationManager::_phase_begins_with( const string& phase, const string& other )
+bool Process::_phase_begins_with( const string& phase, const string& other )
 {
   auto value_n = phase.size();
   auto n = other.size();

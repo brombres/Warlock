@@ -2,10 +2,6 @@
 #include "Vulkanize/Vulkanize.h"
 using namespace VKZ;
 
-ConfigureCommandBuffers::ConfigureCommandBuffers( Context* context ) : context(context)
-{
-}
-
 bool ConfigureCommandBuffers::activate()
 {
   VkCommandBufferAllocateInfo allocateInfo = {};

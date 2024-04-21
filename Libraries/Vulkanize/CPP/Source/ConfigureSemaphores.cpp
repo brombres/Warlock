@@ -2,10 +2,6 @@
 #include "Vulkanize/Vulkanize.h"
 using namespace VKZ;
 
-ConfigureSemaphores::ConfigureSemaphores( Context* context ) : context(context)
-{
-}
-
 bool ConfigureSemaphores::activate()
 {
   uint32_t swapchain_count = context->swapchain_count;

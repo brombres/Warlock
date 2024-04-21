@@ -5,12 +5,10 @@
 
 namespace VKZ
 {
-  struct ConfigureGraphicsPipeline : Operation
+  struct ConfigureGraphicsPipeline : ContextOperation<Context>
   {
-    Context* context;
     std::vector<VertexDescription*> vertex_descriptions;
 
-    ConfigureGraphicsPipeline( Context* context );
     virtual ~ConfigureGraphicsPipeline();
 
     virtual bool activate();

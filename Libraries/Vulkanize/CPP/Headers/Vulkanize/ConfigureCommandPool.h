@@ -4,11 +4,8 @@
 
 namespace VKZ
 {
-  struct ConfigureCommandPool : Operation
+  struct ConfigureCommandPool : ContextOperation<Context>
   {
-    Context* context;
-
-    ConfigureCommandPool( Context* context );
     virtual bool activate();
     virtual void deactivate();
   };

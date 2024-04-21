@@ -4,11 +4,8 @@
 
 namespace VKZ
 {
-  struct ConfigureSemaphores : Operation
+  struct ConfigureSemaphores : ContextOperation<Context>
   {
-    Context* context;
-
-    ConfigureSemaphores( Context* context );
     virtual bool activate();
     virtual void deactivate();
 

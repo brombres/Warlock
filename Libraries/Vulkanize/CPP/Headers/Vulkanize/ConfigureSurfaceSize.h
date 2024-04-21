@@ -4,11 +4,8 @@
 
 namespace VKZ
 {
-  struct ConfigureSurfaceSize : Operation
+  struct ConfigureSurfaceSize : ContextOperation<Context>
   {
-    Context* context;
-
-    ConfigureSurfaceSize( Context* context );
     virtual bool activate();
   };
 };

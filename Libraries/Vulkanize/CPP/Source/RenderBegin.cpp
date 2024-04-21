@@ -2,10 +2,6 @@
 #include "Vulkanize/Vulkanize.h"
 using namespace VKZ;
 
-RenderBegin::RenderBegin( Context* context ) : context(context)
-{
-}
-
 bool RenderBegin::execute()
 {
   VkResult result = context->device_dispatch.acquireNextImageKHR(

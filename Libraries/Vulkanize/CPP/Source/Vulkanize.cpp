@@ -51,7 +51,7 @@ bool Vulkanize::configure( PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr )
 	debug_messenger = vulkan_instance.debug_messenger;
   instance_dispatch = vulkan_instance.make_table();
 
-  OperationManager::configure();
+  Process::configure();
   return true;
 }
 

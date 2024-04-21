@@ -4,11 +4,8 @@
 
 namespace VKZ
 {
-  struct ConfigureFramebuffers : Operation
+  struct ConfigureFramebuffers : ContextOperation<Context>
   {
-    Context* context;
-
-    ConfigureFramebuffers( Context* context );
     virtual bool activate();
     virtual void deactivate();
   };

@@ -2,10 +2,6 @@
 #include "Vulkanize/Vulkanize.h"
 using namespace VKZ;
 
-ConfigureRenderPasses::ConfigureRenderPasses( Context* context ) : context(context)
-{
-}
-
 bool ConfigureRenderPasses::activate()
 {
   std::vector<VkAttachmentDescription> attachments(2);

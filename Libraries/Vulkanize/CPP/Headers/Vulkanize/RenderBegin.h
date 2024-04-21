@@ -4,11 +4,8 @@
 
 namespace VKZ
 {
-  struct RenderBegin : Operation
+  struct RenderBegin : ContextOperation<Context>
   {
-    Context* context;
-
-    RenderBegin( Context* context );
     virtual bool execute();
   };
 };

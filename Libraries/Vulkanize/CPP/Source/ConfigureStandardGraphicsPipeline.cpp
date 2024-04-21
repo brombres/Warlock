@@ -3,8 +3,7 @@
 using namespace std;
 using namespace VKZ;
 
-ConfigureStandardGraphicsPipeline::ConfigureStandardGraphicsPipeline( Context* context )
-  : ConfigureGraphicsPipeline(context)
+ConfigureStandardGraphicsPipeline::ConfigureStandardGraphicsPipeline()
 {
   add_vertex_description( new StandardVertexDescription() );
 }

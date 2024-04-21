@@ -4,11 +4,8 @@
 
 namespace VKZ
 {
-  struct ConfigureCommandBuffers : Operation
+  struct ConfigureCommandBuffers : ContextOperation<Context>
   {
-    Context* context;
-
-    ConfigureCommandBuffers( Context* context );
     virtual bool activate();
     virtual void deactivate();
   };

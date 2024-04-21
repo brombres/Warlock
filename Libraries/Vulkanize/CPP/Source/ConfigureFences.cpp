@@ -2,10 +2,6 @@
 #include "Vulkanize/Vulkanize.h"
 using namespace VKZ;
 
-ConfigureFences::ConfigureFences( Context* context ) : context(context)
-{
-}
-
 bool ConfigureFences::activate()
 {
   context->fences.resize( context->swapchain_count );

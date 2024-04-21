@@ -2,10 +2,6 @@
 #include "Vulkanize/Vulkanize.h"
 using namespace VKZ;
 
-ConfigureQueues::ConfigureQueues( Context* context ) : context(context)
-{
-}
-
 bool ConfigureQueues::activate()
 {
   context->graphics_QueueFamilyIndex = context->device.get_queue_index( vkb::QueueType::graphics ).value();

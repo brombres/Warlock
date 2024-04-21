@@ -2,11 +2,8 @@
 
 namespace VKZ
 {
-  struct ConfigureFormats : Operation
+  struct ConfigureFormats : ContextOperation<Context>
   {
-    Context* context;
-
-    ConfigureFormats( Context* context );
     virtual bool activate();
   };
 };

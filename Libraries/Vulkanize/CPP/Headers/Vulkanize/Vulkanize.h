@@ -5,7 +5,7 @@
 #include <vulkan/vulkan.h>
 #include "VkBootstrap.h"
 #include "Vulkanize/Types.h"
-#include "Vulkanize/OperationManager.h"
+#include "Vulkanize/Process.h"
 
 #if !defined(VKZ_USE_GLSLANG)
   #define VKZ_USE_GLSLANG 1
@@ -16,7 +16,7 @@ namespace VKZ
   struct Context;
   struct Operation;
 
-  struct Vulkanize : OperationManager
+  struct Vulkanize : Process
   {
     // GLOBAL PROPERTIES
     static Vulkanize* instance;  // set by Vulkanize()
@@ -95,7 +95,8 @@ namespace VKZ
 #include "Vulkanize/StandardVertexDescription.h"
 #include "Vulkanize/Node.h"
 #include "Vulkanize/Operation.h"
-#include "Vulkanize/OperationManager.h"
+#include "Vulkanize/ContextOperation.h"
+#include "Vulkanize/Process.h"
 #include "Vulkanize/Context.h"
 #include "Vulkanize/ConfigureDevice.h"
 #include "Vulkanize/ConfigureFormats.h"

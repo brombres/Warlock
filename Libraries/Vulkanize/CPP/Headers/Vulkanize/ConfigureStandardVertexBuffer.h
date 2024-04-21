@@ -4,11 +4,8 @@
 
 namespace VKZ
 {
-  struct ConfigureStandardVertexBuffer : Operation
+  struct ConfigureStandardVertexBuffer : ContextOperation<Context>
   {
-    Context* context;
-
-    ConfigureStandardVertexBuffer( Context* context ) : context(context) {}
     virtual bool activate();
     virtual void deactivate();
   };

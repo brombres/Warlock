@@ -2,10 +2,6 @@
 #include "Vulkanize/Vulkanize.h"
 using namespace VKZ;
 
-ConfigureFramebuffers::ConfigureFramebuffers( Context* context ) : context(context)
-{
-}
-
 bool ConfigureFramebuffers::activate()
 {
   context->framebuffers.resize( context->swapchain_image_views.size() );

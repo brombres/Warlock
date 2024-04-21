@@ -2,10 +2,6 @@
 #include "Vulkanize/Vulkanize.h"
 using namespace VKZ;
 
-RenderEnd::RenderEnd( Context* context ) : context(context)
-{
-}
-
 bool RenderEnd::execute()
 {
   context->device_dispatch.cmdEndRenderPass( context->cmd );

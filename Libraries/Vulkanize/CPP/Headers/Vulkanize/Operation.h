@@ -33,5 +33,7 @@ namespace VKZ
 
     //----- Event Handling Framework -------------------------------------------
     virtual bool handle_event( std::string event, bool reverse_order=false );
+
+    virtual void set_context( Context* context ) = 0;
   };
 };
