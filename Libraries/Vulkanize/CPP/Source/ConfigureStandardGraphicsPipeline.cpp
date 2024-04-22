@@ -71,14 +71,12 @@ bool ConfigureStandardGraphicsPipeline::activate()
   {
     vertex_description->collect_binding_description( binding_descriptions );
     binding_descriptions.back().binding = binding;
-printf("set binding to %u\n",binding_descriptions.back().binding);
 
     uint32_t i = attribute_descriptions.size();
     vertex_description->collect_attribute_descriptions( attribute_descriptions );
     for (; i<attribute_descriptions.size(); ++i)
     {
       attribute_descriptions[i].binding = binding;
-printf("set attribute[%u] to %u\n", i, attribute_descriptions[i].binding );
     }
 
     ++binding;

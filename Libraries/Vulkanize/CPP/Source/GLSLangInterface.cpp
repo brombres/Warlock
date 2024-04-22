@@ -10,11 +10,11 @@ using namespace std;
 
 using namespace VKZ;
 
-VkShaderModule VKZ::compile_shader( Context* context, VkShaderStageFlagBits type,
+VkShaderModule VKZ::compile_shader( Context* context, VkShaderStageFlagBits stage,
     const string& filename, const string& shader_source )
 {
   glslang_stage_t stage;
-  switch (type)
+  switch (stage)
   {
     case VK_SHADER_STAGE_VERTEX_BIT:                  stage = GLSLANG_STAGE_VERTEX; break;
     case VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT:    stage = GLSLANG_STAGE_TESSCONTROL; break;
@@ -31,7 +31,7 @@ VkShaderModule VKZ::compile_shader( Context* context, VkShaderStageFlagBits type
     case VK_SHADER_STAGE_TASK_BIT_EXT:                stage = GLSLANG_STAGE_TASK; break;
     case VK_SHADER_STAGE_MESH_BIT_EXT:                stage = GLSLANG_STAGE_MESH; break;
     default:
-      VKZ_LOG_ERROR( "[Vulkanize] Internal error: unhandled VkShaderStageFlagBits type in Context::compile_shader().\n" );
+      VKZ_LOG_ERROR( "[Vulkanize] Internal error: unhandled VkShaderStageFlagBits stage in Context::compile_shader().\n" );
   }
   auto spirv = compile_shader_to_spirv( stage, filename.c_str(), shader_source.c_str() );
   if (spirv.size == 0) return VK_NULL_HANDLE;
