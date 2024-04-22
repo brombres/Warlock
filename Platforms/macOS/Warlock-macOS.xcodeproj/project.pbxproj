@@ -381,6 +381,7 @@
 		30E9EAB82BD4665400E45E9F /* ConfigureStandardVertexBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureStandardVertexBuffer.cpp; sourceTree = "<group>"; };
 		30E9EABA2BD4665D00E45E9F /* ConfigureStandardVertexBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigureStandardVertexBuffer.h; sourceTree = "<group>"; };
 		30E9EAC82BD58DA900E45E9F /* ContextOperation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContextOperation.h; sourceTree = "<group>"; };
+		30E9EAD62BD5F00700E45E9F /* ShaderStageInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShaderStageInfo.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -798,6 +799,7 @@
 		3077062D2BA896D500122E50 /* Vulkanize */ = {
 			isa = PBXGroup;
 			children = (
+				30E9EAD62BD5F00700E45E9F /* ShaderStageInfo.h */,
 				30E9EAC82BD58DA900E45E9F /* ContextOperation.h */,
 				30E9EABA2BD4665D00E45E9F /* ConfigureStandardVertexBuffer.h */,
 				30E9EAB52BD41A6600E45E9F /* ConfigureStandardGraphicsPipeline.h */,

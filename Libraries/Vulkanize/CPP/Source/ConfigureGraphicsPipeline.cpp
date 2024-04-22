@@ -4,6 +4,12 @@ using namespace VKZ;
 
 ConfigureGraphicsPipeline::~ConfigureGraphicsPipeline()
 {
+  while (shader_stages.size())
+  {
+    delete shader_stages.back();
+    shader_stages.pop_back();
+  }
+
   while (vertex_descriptions.size())
   {
     delete vertex_descriptions.back();
@@ -180,6 +186,24 @@ bool ConfigureGraphicsPipeline::activate()
   context->device_dispatch.destroyShaderModule( fragment_module, nullptr );
   context->device_dispatch.destroyShaderModule( vertex_module, nullptr );
   return true;
+}
+
+void ConfigureGraphicsPipeline::add_shader_stage( VkShaderStageFlagBits stage, VkShaderModule module,
+    const char* main_function_name )
+{
+  shader_stages.push_back( new ShaderStageInfo(stage,module,main_function_name) );
+}
+
+void ConfigureGraphicsPipeline::add_shader_stage( VkShaderStageFlagBits stage, std::string& shader_source,
+    const char* main_function_name )
+{
+  shader_stages.push_back( new ShaderStageInfo(stage,shader_source,main_function_name) );
+}
+
+void ConfigureGraphicsPipeline::add_shader_stage( VkShaderStageFlagBits stage, const char* spirv_bytes,
+    size_t spirv_byte_count, const char* main_function_name )
+{
+  shader_stages.push_back( new ShaderStageInfo(stage,spirv_bytes,spirv_byte_count,main_function_name) );
 }
 
 void ConfigureGraphicsPipeline::add_vertex_description( VertexDescription* vertex_description )
