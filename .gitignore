@@ -3,6 +3,7 @@
 /Libraries/glslang
 /Libraries/MoltenVK
 /Libraries/SDL
+/Libraries/Vulkanize
 
 # Mac
 .DS_Store
