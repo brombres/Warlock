@@ -58,6 +58,7 @@
 		30E9EA802BCD84B000E45E9F /* GLSLangInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E9EA7F2BCD84B000E45E9F /* GLSLangInterface.cpp */; };
 		30E9EAB72BD41A6E00E45E9F /* ConfigureStandardGraphicsPipeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E9EAB62BD41A6E00E45E9F /* ConfigureStandardGraphicsPipeline.cpp */; };
 		30E9EAB92BD4665400E45E9F /* ConfigureStandardVertexBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E9EAB82BD4665400E45E9F /* ConfigureStandardVertexBuffer.cpp */; };
+		30F2718E2BDD4346000AD163 /* ShaderStageInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30F271822BDD4346000AD163 /* ShaderStageInfo.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -382,6 +383,7 @@
 		30E9EABA2BD4665D00E45E9F /* ConfigureStandardVertexBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigureStandardVertexBuffer.h; sourceTree = "<group>"; };
 		30E9EAC82BD58DA900E45E9F /* ContextOperation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContextOperation.h; sourceTree = "<group>"; };
 		30E9EAD62BD5F00700E45E9F /* ShaderStageInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShaderStageInfo.h; sourceTree = "<group>"; };
+		30F271822BDD4346000AD163 /* ShaderStageInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ShaderStageInfo.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -850,6 +852,7 @@
 		307706312BA896D500122E50 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				30F271822BDD4346000AD163 /* ShaderStageInfo.cpp */,
 				30E9EAB82BD4665400E45E9F /* ConfigureStandardVertexBuffer.cpp */,
 				30E9EAB62BD41A6E00E45E9F /* ConfigureStandardGraphicsPipeline.cpp */,
 				30E9EA7F2BCD84B000E45E9F /* GLSLangInterface.cpp */,
@@ -1070,6 +1073,7 @@
 				3049E6B02B953545008554DD /* WindowFrameworkContextSDL.cpp in Sources */,
 				3019853B2B94DDBB00CBECCB /* Framework.cpp in Sources */,
 				3004D1EB2BBDA14000572087 /* ConfigureDepthStencil.cpp in Sources */,
+				30F2718E2BDD4346000AD163 /* ShaderStageInfo.cpp in Sources */,
 				300C71DC2BC192B300FFBB85 /* ConfigureFramebuffers.cpp in Sources */,
 				300C71DB2BC192B300FFBB85 /* ConfigureCommandBuffers.cpp in Sources */,
 				300C71E12BC1AD2C00FFBB85 /* RenderBegin.cpp in Sources */,

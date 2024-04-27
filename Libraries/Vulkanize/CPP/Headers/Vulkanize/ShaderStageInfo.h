@@ -40,13 +40,6 @@ namespace VKZ
       this->spirv_bytecode.assign( spirv_bytecode, byte_count );
     }
 
-    ~ShaderStageInfo()
-    {
-      if (state == MODULE)
-      {
-        context->device_dispatch.destroyShaderModule( module, nullptr );
-      }
-      state = DESTROYED;
-    }
+    ~ShaderStageInfo();
   };
 };
