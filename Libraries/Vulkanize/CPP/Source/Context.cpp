@@ -4,7 +4,7 @@
 
 #include "Vulkanize/Vulkanize.h"
 #include "Vulkanize/Context.h"
-#include "Vulkanize/ConfigureDevice.h"
+#include "Vulkanize/Configure/ConfigureDevice.h"
 using namespace VKZ;
 using namespace std;
 

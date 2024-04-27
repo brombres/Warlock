@@ -1,5 +1,5 @@
 #include "VkBootstrap.h"
-#include "Vulkanize/ConfigureStandardGraphicsPipeline.h"
+#include "Vulkanize/Configure/ConfigureStandardGraphicsPipeline.h"
 using namespace std;
 using namespace VKZ;
 

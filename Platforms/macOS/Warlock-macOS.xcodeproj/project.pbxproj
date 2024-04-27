@@ -8,18 +8,18 @@
 
 /* Begin PBXBuildFile section */
 		3004D1EA2BBDA14000572087 /* Image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3004D1E82BBDA14000572087 /* Image.cpp */; };
-		3004D1EB2BBDA14000572087 /* ConfigureDepthStencil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3004D1E92BBDA14000572087 /* ConfigureDepthStencil.cpp */; };
-		3004D1EE2BBDB20700572087 /* ConfigureQueues.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3004D1ED2BBDB20700572087 /* ConfigureQueues.cpp */; };
-		3004D1FE2BC05A2700572087 /* ConfigureRenderPasses.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3004D1FD2BC05A2700572087 /* ConfigureRenderPasses.cpp */; };
-		300C71CB2BC1833600FFBB85 /* ConfigureGraphicsPipeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 300C71BF2BC1833600FFBB85 /* ConfigureGraphicsPipeline.cpp */; };
-		300C71D82BC192B300FFBB85 /* ConfigureSemaphores.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 300C71D32BC192B300FFBB85 /* ConfigureSemaphores.cpp */; };
-		300C71D92BC192B300FFBB85 /* ConfigureCommandPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 300C71D42BC192B300FFBB85 /* ConfigureCommandPool.cpp */; };
-		300C71DA2BC192B300FFBB85 /* ConfigureFences.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 300C71D52BC192B300FFBB85 /* ConfigureFences.cpp */; };
-		300C71DB2BC192B300FFBB85 /* ConfigureCommandBuffers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 300C71D62BC192B300FFBB85 /* ConfigureCommandBuffers.cpp */; };
-		300C71DC2BC192B300FFBB85 /* ConfigureFramebuffers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 300C71D72BC192B300FFBB85 /* ConfigureFramebuffers.cpp */; };
-		300C71E12BC1AD2C00FFBB85 /* RenderBegin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 300C71DF2BC1AD2C00FFBB85 /* RenderBegin.cpp */; };
-		300C71E22BC1AD2C00FFBB85 /* RenderEnd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 300C71E02BC1AD2C00FFBB85 /* RenderEnd.cpp */; };
-		300C71E42BC42C8A00FFBB85 /* ConfigureShaders.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 300C71E32BC42C8A00FFBB85 /* ConfigureShaders.cpp */; };
+		3004D1EB2BBDA14000572087 /* Configure/ConfigureDepthStencil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3004D1E92BBDA14000572087 /* Configure/ConfigureDepthStencil.cpp */; };
+		3004D1EE2BBDB20700572087 /* Configure/ConfigureQueues.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3004D1ED2BBDB20700572087 /* Configure/ConfigureQueues.cpp */; };
+		3004D1FE2BC05A2700572087 /* Configure/ConfigureRenderPasses.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3004D1FD2BC05A2700572087 /* Configure/ConfigureRenderPasses.cpp */; };
+		300C71CB2BC1833600FFBB85 /* Configure/ConfigureGraphicsPipeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 300C71BF2BC1833600FFBB85 /* Configure/ConfigureGraphicsPipeline.cpp */; };
+		300C71D82BC192B300FFBB85 /* Configure/ConfigureSemaphores.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 300C71D32BC192B300FFBB85 /* Configure/ConfigureSemaphores.cpp */; };
+		300C71D92BC192B300FFBB85 /* Configure/ConfigureCommandPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 300C71D42BC192B300FFBB85 /* Configure/ConfigureCommandPool.cpp */; };
+		300C71DA2BC192B300FFBB85 /* Configure/ConfigureFences.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 300C71D52BC192B300FFBB85 /* Configure/ConfigureFences.cpp */; };
+		300C71DB2BC192B300FFBB85 /* Configure/ConfigureCommandBuffers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 300C71D62BC192B300FFBB85 /* Configure/ConfigureCommandBuffers.cpp */; };
+		300C71DC2BC192B300FFBB85 /* Configure/ConfigureFramebuffers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 300C71D72BC192B300FFBB85 /* Configure/ConfigureFramebuffers.cpp */; };
+		300C71E12BC1AD2C00FFBB85 /* Render/RenderBegin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 300C71DF2BC1AD2C00FFBB85 /* Render/RenderBegin.cpp */; };
+		300C71E22BC1AD2C00FFBB85 /* Render/RenderEnd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 300C71E02BC1AD2C00FFBB85 /* Render/RenderEnd.cpp */; };
+		300C71E42BC42C8A00FFBB85 /* Configure/ConfigureShaders.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 300C71E32BC42C8A00FFBB85 /* Configure/ConfigureShaders.cpp */; };
 		301985302B94DC6000CBECCB /* Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3019850D2B94DC6000CBECCB /* Window.cpp */; };
 		301985322B94DC6000CBECCB /* String.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3019850F2B94DC6000CBECCB /* String.cpp */; };
 		301985332B94DC6000CBECCB /* Renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 301985102B94DC6000CBECCB /* Renderer.cpp */; };
@@ -31,11 +31,11 @@
 		3049E6A72B94FBF4008554DD /* Balefire.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3049E6A62B94FBF4008554DD /* Balefire.cpp */; };
 		3049E6AE2B952FBE008554DD /* WindowRenderContextVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3049E6AD2B952FBE008554DD /* WindowRenderContextVulkan.cpp */; };
 		3049E6B02B953545008554DD /* WindowFrameworkContextSDL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3049E6AF2B953545008554DD /* WindowFrameworkContextSDL.cpp */; };
-		305AA2AF2BAF48E200BDAE68 /* ConfigureDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 305AA2AE2BAF48E200BDAE68 /* ConfigureDevice.cpp */; };
+		305AA2AF2BAF48E200BDAE68 /* Configure/ConfigureDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 305AA2AE2BAF48E200BDAE68 /* Configure/ConfigureDevice.cpp */; };
 		305AA2B12BAF4B5600BDAE68 /* Operation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 305AA2B02BAF4B5600BDAE68 /* Operation.cpp */; };
-		305AA2C42BB0EDF800BDAE68 /* ConfigureFormats.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 305AA2C22BB0EDF800BDAE68 /* ConfigureFormats.cpp */; };
-		305AA2C52BB0EDF800BDAE68 /* ConfigureSwapchain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 305AA2C32BB0EDF800BDAE68 /* ConfigureSwapchain.cpp */; };
-		305AA2D52BB1041300BDAE68 /* ConfigureSurfaceSize.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 305AA2D42BB1041300BDAE68 /* ConfigureSurfaceSize.cpp */; };
+		305AA2C42BB0EDF800BDAE68 /* Configure/ConfigureFormats.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 305AA2C22BB0EDF800BDAE68 /* Configure/ConfigureFormats.cpp */; };
+		305AA2C52BB0EDF800BDAE68 /* Configure/ConfigureSwapchain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 305AA2C32BB0EDF800BDAE68 /* Configure/ConfigureSwapchain.cpp */; };
+		305AA2D52BB1041300BDAE68 /* Configure/ConfigureSurfaceSize.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 305AA2D42BB1041300BDAE68 /* Configure/ConfigureSurfaceSize.cpp */; };
 		306912D12B5E7D7400B14F73 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 306912D02B5E7D7400B14F73 /* AppDelegate.m */; };
 		306912D32B5E7D7500B14F73 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 306912D22B5E7D7500B14F73 /* Assets.xcassets */; };
 		306912E12B5E7E1D00B14F73 /* Warlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 306912E02B5E7E1D00B14F73 /* Warlock.swift */; };
@@ -47,7 +47,7 @@
 		307706332BA896D500122E50 /* Vulkanize.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 307706302BA896D500122E50 /* Vulkanize.cpp */; };
 		307706362BA8B3AC00122E50 /* Context.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 307706352BA8B3AC00122E50 /* Context.cpp */; };
 		30C7A0132BC574B5004A98B7 /* Process.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30C7A0072BC574B5004A98B7 /* Process.cpp */; };
-		30C7A0172BC57818004A98B7 /* ConfigureGLSLang.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30C7A0162BC57818004A98B7 /* ConfigureGLSLang.cpp */; };
+		30C7A0172BC57818004A98B7 /* Configure/ConfigureGLSLang.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30C7A0162BC57818004A98B7 /* Configure/ConfigureGLSLang.cpp */; };
 		30C7A0292BC59DEF004A98B7 /* libGenericCodeGen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30C7A0242BC59DEF004A98B7 /* libGenericCodeGen.a */; };
 		30C7A02A2BC59DEF004A98B7 /* libglslang.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30C7A0252BC59DEF004A98B7 /* libglslang.a */; };
 		30C7A02B2BC59DEF004A98B7 /* libglslang-default-resource-limits.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30C7A0262BC59DEF004A98B7 /* libglslang-default-resource-limits.a */; };
@@ -56,8 +56,8 @@
 		30C7A03F2BC6D3D2004A98B7 /* libSPIRV-Tools.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30C7A03E2BC6D3D2004A98B7 /* libSPIRV-Tools.a */; };
 		30E9EA712BCB224100E45E9F /* libSPIRV-Tools-opt.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30C7A03C2BC6D3CE004A98B7 /* libSPIRV-Tools-opt.a */; };
 		30E9EA802BCD84B000E45E9F /* GLSLangInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E9EA7F2BCD84B000E45E9F /* GLSLangInterface.cpp */; };
-		30E9EAB72BD41A6E00E45E9F /* ConfigureStandardGraphicsPipeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E9EAB62BD41A6E00E45E9F /* ConfigureStandardGraphicsPipeline.cpp */; };
-		30E9EAB92BD4665400E45E9F /* ConfigureStandardVertexBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E9EAB82BD4665400E45E9F /* ConfigureStandardVertexBuffer.cpp */; };
+		30E9EAB72BD41A6E00E45E9F /* Configure/ConfigureStandardGraphicsPipeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E9EAB62BD41A6E00E45E9F /* Configure/ConfigureStandardGraphicsPipeline.cpp */; };
+		30E9EAB92BD4665400E45E9F /* Configure/ConfigureStandardVertexBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E9EAB82BD4665400E45E9F /* Configure/ConfigureStandardVertexBuffer.cpp */; };
 		30F2718E2BDD4346000AD163 /* ShaderStageInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30F271822BDD4346000AD163 /* ShaderStageInfo.cpp */; };
 /* End PBXBuildFile section */
 
@@ -157,33 +157,33 @@
 
 /* Begin PBXFileReference section */
 		3004D1DB2BBDA13600572087 /* Image.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Image.h; sourceTree = "<group>"; };
-		3004D1E72BBDA13600572087 /* ConfigureDepthStencil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConfigureDepthStencil.h; sourceTree = "<group>"; };
+		3004D1E72BBDA13600572087 /* Configure/ConfigureDepthStencil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Configure/ConfigureDepthStencil.h; sourceTree = "<group>"; };
 		3004D1E82BBDA14000572087 /* Image.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Image.cpp; sourceTree = "<group>"; };
-		3004D1E92BBDA14000572087 /* ConfigureDepthStencil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureDepthStencil.cpp; sourceTree = "<group>"; };
-		3004D1EC2BBDB20000572087 /* ConfigureQueues.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigureQueues.h; sourceTree = "<group>"; };
-		3004D1ED2BBDB20700572087 /* ConfigureQueues.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureQueues.cpp; sourceTree = "<group>"; };
-		3004D1F12BC05A0B00572087 /* ConfigureRenderPasses.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConfigureRenderPasses.h; sourceTree = "<group>"; };
-		3004D1FD2BC05A2700572087 /* ConfigureRenderPasses.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureRenderPasses.cpp; sourceTree = "<group>"; };
+		3004D1E92BBDA14000572087 /* Configure/ConfigureDepthStencil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Configure/ConfigureDepthStencil.cpp; sourceTree = "<group>"; };
+		3004D1EC2BBDB20000572087 /* Configure/ConfigureQueues.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Configure/ConfigureQueues.h; sourceTree = "<group>"; };
+		3004D1ED2BBDB20700572087 /* Configure/ConfigureQueues.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Configure/ConfigureQueues.cpp; sourceTree = "<group>"; };
+		3004D1F12BC05A0B00572087 /* Configure/ConfigureRenderPasses.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Configure/ConfigureRenderPasses.h; sourceTree = "<group>"; };
+		3004D1FD2BC05A2700572087 /* Configure/ConfigureRenderPasses.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Configure/ConfigureRenderPasses.cpp; sourceTree = "<group>"; };
 		30089BB22BAC918B00AE818B /* Operation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Operation.h; sourceTree = "<group>"; };
-		300C71BF2BC1833600FFBB85 /* ConfigureGraphicsPipeline.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureGraphicsPipeline.cpp; sourceTree = "<group>"; };
-		300C71CC2BC1833E00FFBB85 /* ConfigureGraphicsPipeline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigureGraphicsPipeline.h; sourceTree = "<group>"; };
+		300C71BF2BC1833600FFBB85 /* Configure/ConfigureGraphicsPipeline.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Configure/ConfigureGraphicsPipeline.cpp; sourceTree = "<group>"; };
+		300C71CC2BC1833E00FFBB85 /* Configure/ConfigureGraphicsPipeline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Configure/ConfigureGraphicsPipeline.h; sourceTree = "<group>"; };
 		300C71CD2BC1868800FFBB85 /* Types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Types.h; sourceTree = "<group>"; };
-		300C71CE2BC192A700FFBB85 /* ConfigureFramebuffers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigureFramebuffers.h; sourceTree = "<group>"; };
-		300C71CF2BC192A700FFBB85 /* ConfigureCommandBuffers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigureCommandBuffers.h; sourceTree = "<group>"; };
-		300C71D02BC192A700FFBB85 /* ConfigureCommandPool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigureCommandPool.h; sourceTree = "<group>"; };
-		300C71D12BC192A700FFBB85 /* ConfigureFences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigureFences.h; sourceTree = "<group>"; };
-		300C71D22BC192A700FFBB85 /* ConfigureSemaphores.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigureSemaphores.h; sourceTree = "<group>"; };
-		300C71D32BC192B300FFBB85 /* ConfigureSemaphores.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureSemaphores.cpp; sourceTree = "<group>"; };
-		300C71D42BC192B300FFBB85 /* ConfigureCommandPool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureCommandPool.cpp; sourceTree = "<group>"; };
-		300C71D52BC192B300FFBB85 /* ConfigureFences.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureFences.cpp; sourceTree = "<group>"; };
-		300C71D62BC192B300FFBB85 /* ConfigureCommandBuffers.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureCommandBuffers.cpp; sourceTree = "<group>"; };
-		300C71D72BC192B300FFBB85 /* ConfigureFramebuffers.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureFramebuffers.cpp; sourceTree = "<group>"; };
-		300C71DD2BC1AD2100FFBB85 /* RenderBegin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RenderBegin.h; sourceTree = "<group>"; };
-		300C71DE2BC1AD2100FFBB85 /* RenderEnd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RenderEnd.h; sourceTree = "<group>"; };
-		300C71DF2BC1AD2C00FFBB85 /* RenderBegin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RenderBegin.cpp; sourceTree = "<group>"; };
-		300C71E02BC1AD2C00FFBB85 /* RenderEnd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RenderEnd.cpp; sourceTree = "<group>"; };
-		300C71E32BC42C8A00FFBB85 /* ConfigureShaders.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureShaders.cpp; sourceTree = "<group>"; };
-		300C71E52BC42C9300FFBB85 /* ConfigureShaders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigureShaders.h; sourceTree = "<group>"; };
+		300C71CE2BC192A700FFBB85 /* Configure/ConfigureFramebuffers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Configure/ConfigureFramebuffers.h; sourceTree = "<group>"; };
+		300C71CF2BC192A700FFBB85 /* Configure/ConfigureCommandBuffers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Configure/ConfigureCommandBuffers.h; sourceTree = "<group>"; };
+		300C71D02BC192A700FFBB85 /* Configure/ConfigureCommandPool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Configure/ConfigureCommandPool.h; sourceTree = "<group>"; };
+		300C71D12BC192A700FFBB85 /* Configure/ConfigureFences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Configure/ConfigureFences.h; sourceTree = "<group>"; };
+		300C71D22BC192A700FFBB85 /* Configure/ConfigureSemaphores.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Configure/ConfigureSemaphores.h; sourceTree = "<group>"; };
+		300C71D32BC192B300FFBB85 /* Configure/ConfigureSemaphores.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Configure/ConfigureSemaphores.cpp; sourceTree = "<group>"; };
+		300C71D42BC192B300FFBB85 /* Configure/ConfigureCommandPool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Configure/ConfigureCommandPool.cpp; sourceTree = "<group>"; };
+		300C71D52BC192B300FFBB85 /* Configure/ConfigureFences.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Configure/ConfigureFences.cpp; sourceTree = "<group>"; };
+		300C71D62BC192B300FFBB85 /* Configure/ConfigureCommandBuffers.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Configure/ConfigureCommandBuffers.cpp; sourceTree = "<group>"; };
+		300C71D72BC192B300FFBB85 /* Configure/ConfigureFramebuffers.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Configure/ConfigureFramebuffers.cpp; sourceTree = "<group>"; };
+		300C71DD2BC1AD2100FFBB85 /* Render/RenderBegin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Render/RenderBegin.h; sourceTree = "<group>"; };
+		300C71DE2BC1AD2100FFBB85 /* Render/RenderEnd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Render/RenderEnd.h; sourceTree = "<group>"; };
+		300C71DF2BC1AD2C00FFBB85 /* Render/RenderBegin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Render/RenderBegin.cpp; sourceTree = "<group>"; };
+		300C71E02BC1AD2C00FFBB85 /* Render/RenderEnd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Render/RenderEnd.cpp; sourceTree = "<group>"; };
+		300C71E32BC42C8A00FFBB85 /* Configure/ConfigureShaders.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Configure/ConfigureShaders.cpp; sourceTree = "<group>"; };
+		300C71E52BC42C9300FFBB85 /* Configure/ConfigureShaders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Configure/ConfigureShaders.h; sourceTree = "<group>"; };
 		300C889E2BC431AD00FFBB85 /* arrays.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = arrays.h; sourceTree = "<group>"; };
 		300C889F2BC431AD00FFBB85 /* BaseTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseTypes.h; sourceTree = "<group>"; };
 		300C88A02BC431AD00FFBB85 /* Common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Common.h; sourceTree = "<group>"; };
@@ -279,15 +279,15 @@
 		3049E6AC2B9518D9008554DD /* WindowRenderContextVulkan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WindowRenderContextVulkan.h; sourceTree = "<group>"; };
 		3049E6AD2B952FBE008554DD /* WindowRenderContextVulkan.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WindowRenderContextVulkan.cpp; sourceTree = "<group>"; };
 		3049E6AF2B953545008554DD /* WindowFrameworkContextSDL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WindowFrameworkContextSDL.cpp; sourceTree = "<group>"; };
-		305AA2AD2BAF48CB00BDAE68 /* ConfigureDevice.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConfigureDevice.h; sourceTree = "<group>"; };
-		305AA2AE2BAF48E200BDAE68 /* ConfigureDevice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureDevice.cpp; sourceTree = "<group>"; };
+		305AA2AD2BAF48CB00BDAE68 /* Configure/ConfigureDevice.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Configure/ConfigureDevice.h; sourceTree = "<group>"; };
+		305AA2AE2BAF48E200BDAE68 /* Configure/ConfigureDevice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Configure/ConfigureDevice.cpp; sourceTree = "<group>"; };
 		305AA2B02BAF4B5600BDAE68 /* Operation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Operation.cpp; sourceTree = "<group>"; };
-		305AA2B52BB0EDEF00BDAE68 /* ConfigureFormats.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConfigureFormats.h; sourceTree = "<group>"; };
-		305AA2C12BB0EDEF00BDAE68 /* ConfigureSwapchain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConfigureSwapchain.h; sourceTree = "<group>"; };
-		305AA2C22BB0EDF800BDAE68 /* ConfigureFormats.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureFormats.cpp; sourceTree = "<group>"; };
-		305AA2C32BB0EDF800BDAE68 /* ConfigureSwapchain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureSwapchain.cpp; sourceTree = "<group>"; };
-		305AA2C82BB1040C00BDAE68 /* ConfigureSurfaceSize.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConfigureSurfaceSize.h; sourceTree = "<group>"; };
-		305AA2D42BB1041300BDAE68 /* ConfigureSurfaceSize.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureSurfaceSize.cpp; sourceTree = "<group>"; };
+		305AA2B52BB0EDEF00BDAE68 /* Configure/ConfigureFormats.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Configure/ConfigureFormats.h; sourceTree = "<group>"; };
+		305AA2C12BB0EDEF00BDAE68 /* Configure/ConfigureSwapchain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Configure/ConfigureSwapchain.h; sourceTree = "<group>"; };
+		305AA2C22BB0EDF800BDAE68 /* Configure/ConfigureFormats.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Configure/ConfigureFormats.cpp; sourceTree = "<group>"; };
+		305AA2C32BB0EDF800BDAE68 /* Configure/ConfigureSwapchain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Configure/ConfigureSwapchain.cpp; sourceTree = "<group>"; };
+		305AA2C82BB1040C00BDAE68 /* Configure/ConfigureSurfaceSize.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Configure/ConfigureSurfaceSize.h; sourceTree = "<group>"; };
+		305AA2D42BB1041300BDAE68 /* Configure/ConfigureSurfaceSize.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Configure/ConfigureSurfaceSize.cpp; sourceTree = "<group>"; };
 		306912CC2B5E7D7400B14F73 /* Warlock-macOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Warlock-macOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		306912CF2B5E7D7400B14F73 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		306912D02B5E7D7400B14F73 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -360,8 +360,8 @@
 		30C79F6F2BC448E3004A98B7 /* libMachineIndependent.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libMachineIndependent.a; sourceTree = "<group>"; };
 		30C7A0072BC574B5004A98B7 /* Process.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Process.cpp; sourceTree = "<group>"; };
 		30C7A0142BC574C0004A98B7 /* Process.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Process.h; sourceTree = "<group>"; };
-		30C7A0152BC57800004A98B7 /* ConfigureGLSLang.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigureGLSLang.h; sourceTree = "<group>"; };
-		30C7A0162BC57818004A98B7 /* ConfigureGLSLang.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureGLSLang.cpp; sourceTree = "<group>"; };
+		30C7A0152BC57800004A98B7 /* Configure/ConfigureGLSLang.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Configure/ConfigureGLSLang.h; sourceTree = "<group>"; };
+		30C7A0162BC57818004A98B7 /* Configure/ConfigureGLSLang.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Configure/ConfigureGLSLang.cpp; sourceTree = "<group>"; };
 		30C7A0242BC59DEF004A98B7 /* libGenericCodeGen.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libGenericCodeGen.a; path = ../../Libraries/glslang/build/install/lib/libGenericCodeGen.a; sourceTree = "<group>"; };
 		30C7A0252BC59DEF004A98B7 /* libglslang.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libglslang.a; path = ../../Libraries/glslang/build/install/lib/libglslang.a; sourceTree = "<group>"; };
 		30C7A0262BC59DEF004A98B7 /* libglslang-default-resource-limits.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libglslang-default-resource-limits.a"; path = "../../Libraries/glslang/build/install/lib/libglslang-default-resource-limits.a"; sourceTree = "<group>"; };
@@ -377,10 +377,10 @@
 		30E9EA912BD16CF300E45E9F /* VertexDescription.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VertexDescription.h; sourceTree = "<group>"; };
 		30E9EAA52BD2CC4100E45E9F /* StandardVertex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StandardVertex.h; sourceTree = "<group>"; };
 		30E9EAA92BD4139200E45E9F /* CustomVertexDescription.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomVertexDescription.h; sourceTree = "<group>"; };
-		30E9EAB52BD41A6600E45E9F /* ConfigureStandardGraphicsPipeline.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConfigureStandardGraphicsPipeline.h; sourceTree = "<group>"; };
-		30E9EAB62BD41A6E00E45E9F /* ConfigureStandardGraphicsPipeline.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureStandardGraphicsPipeline.cpp; sourceTree = "<group>"; };
-		30E9EAB82BD4665400E45E9F /* ConfigureStandardVertexBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureStandardVertexBuffer.cpp; sourceTree = "<group>"; };
-		30E9EABA2BD4665D00E45E9F /* ConfigureStandardVertexBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigureStandardVertexBuffer.h; sourceTree = "<group>"; };
+		30E9EAB52BD41A6600E45E9F /* Configure/ConfigureStandardGraphicsPipeline.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Configure/ConfigureStandardGraphicsPipeline.h; sourceTree = "<group>"; };
+		30E9EAB62BD41A6E00E45E9F /* Configure/ConfigureStandardGraphicsPipeline.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Configure/ConfigureStandardGraphicsPipeline.cpp; sourceTree = "<group>"; };
+		30E9EAB82BD4665400E45E9F /* Configure/ConfigureStandardVertexBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Configure/ConfigureStandardVertexBuffer.cpp; sourceTree = "<group>"; };
+		30E9EABA2BD4665D00E45E9F /* Configure/ConfigureStandardVertexBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Configure/ConfigureStandardVertexBuffer.h; sourceTree = "<group>"; };
 		30E9EAC82BD58DA900E45E9F /* ContextOperation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContextOperation.h; sourceTree = "<group>"; };
 		30E9EAD62BD5F00700E45E9F /* ShaderStageInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShaderStageInfo.h; sourceTree = "<group>"; };
 		30F271822BDD4346000AD163 /* ShaderStageInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ShaderStageInfo.cpp; sourceTree = "<group>"; };
@@ -803,34 +803,34 @@
 			children = (
 				30E9EAD62BD5F00700E45E9F /* ShaderStageInfo.h */,
 				30E9EAC82BD58DA900E45E9F /* ContextOperation.h */,
-				30E9EABA2BD4665D00E45E9F /* ConfigureStandardVertexBuffer.h */,
-				30E9EAB52BD41A6600E45E9F /* ConfigureStandardGraphicsPipeline.h */,
+				30E9EABA2BD4665D00E45E9F /* Configure/ConfigureStandardVertexBuffer.h */,
+				30E9EAB52BD41A6600E45E9F /* Configure/ConfigureStandardGraphicsPipeline.h */,
 				30E9EAA92BD4139200E45E9F /* CustomVertexDescription.h */,
 				30E9EAA52BD2CC4100E45E9F /* StandardVertex.h */,
 				30E9EA852BD16CF300E45E9F /* StandardVertexDescription.h */,
 				30E9EA912BD16CF300E45E9F /* VertexDescription.h */,
 				30E9EA732BCD84A600E45E9F /* GLSLangInterface.h */,
-				30C7A0152BC57800004A98B7 /* ConfigureGLSLang.h */,
+				30C7A0152BC57800004A98B7 /* Configure/ConfigureGLSLang.h */,
 				30C7A0142BC574C0004A98B7 /* Process.h */,
-				300C71E52BC42C9300FFBB85 /* ConfigureShaders.h */,
-				300C71DD2BC1AD2100FFBB85 /* RenderBegin.h */,
-				300C71DE2BC1AD2100FFBB85 /* RenderEnd.h */,
-				300C71CF2BC192A700FFBB85 /* ConfigureCommandBuffers.h */,
-				300C71D02BC192A700FFBB85 /* ConfigureCommandPool.h */,
-				300C71D12BC192A700FFBB85 /* ConfigureFences.h */,
-				300C71CE2BC192A700FFBB85 /* ConfigureFramebuffers.h */,
-				300C71D22BC192A700FFBB85 /* ConfigureSemaphores.h */,
+				300C71E52BC42C9300FFBB85 /* Configure/ConfigureShaders.h */,
+				300C71DD2BC1AD2100FFBB85 /* Render/RenderBegin.h */,
+				300C71DE2BC1AD2100FFBB85 /* Render/RenderEnd.h */,
+				300C71CF2BC192A700FFBB85 /* Configure/ConfigureCommandBuffers.h */,
+				300C71D02BC192A700FFBB85 /* Configure/ConfigureCommandPool.h */,
+				300C71D12BC192A700FFBB85 /* Configure/ConfigureFences.h */,
+				300C71CE2BC192A700FFBB85 /* Configure/ConfigureFramebuffers.h */,
+				300C71D22BC192A700FFBB85 /* Configure/ConfigureSemaphores.h */,
 				300C71CD2BC1868800FFBB85 /* Types.h */,
-				300C71CC2BC1833E00FFBB85 /* ConfigureGraphicsPipeline.h */,
-				3004D1F12BC05A0B00572087 /* ConfigureRenderPasses.h */,
-				3004D1EC2BBDB20000572087 /* ConfigureQueues.h */,
-				3004D1E72BBDA13600572087 /* ConfigureDepthStencil.h */,
+				300C71CC2BC1833E00FFBB85 /* Configure/ConfigureGraphicsPipeline.h */,
+				3004D1F12BC05A0B00572087 /* Configure/ConfigureRenderPasses.h */,
+				3004D1EC2BBDB20000572087 /* Configure/ConfigureQueues.h */,
+				3004D1E72BBDA13600572087 /* Configure/ConfigureDepthStencil.h */,
 				3004D1DB2BBDA13600572087 /* Image.h */,
 				307DC3042BB9AE27009297EA /* Node.h */,
-				305AA2C82BB1040C00BDAE68 /* ConfigureSurfaceSize.h */,
-				305AA2B52BB0EDEF00BDAE68 /* ConfigureFormats.h */,
-				305AA2C12BB0EDEF00BDAE68 /* ConfigureSwapchain.h */,
-				305AA2AD2BAF48CB00BDAE68 /* ConfigureDevice.h */,
+				305AA2C82BB1040C00BDAE68 /* Configure/ConfigureSurfaceSize.h */,
+				305AA2B52BB0EDEF00BDAE68 /* Configure/ConfigureFormats.h */,
+				305AA2C12BB0EDEF00BDAE68 /* Configure/ConfigureSwapchain.h */,
+				305AA2AD2BAF48CB00BDAE68 /* Configure/ConfigureDevice.h */,
 				30089BB22BAC918B00AE818B /* Operation.h */,
 				307706342BA8B39C00122E50 /* Context.h */,
 				3077062C2BA896D500122E50 /* Vulkanize.h */,
@@ -853,29 +853,29 @@
 			isa = PBXGroup;
 			children = (
 				30F271822BDD4346000AD163 /* ShaderStageInfo.cpp */,
-				30E9EAB82BD4665400E45E9F /* ConfigureStandardVertexBuffer.cpp */,
-				30E9EAB62BD41A6E00E45E9F /* ConfigureStandardGraphicsPipeline.cpp */,
+				30E9EAB82BD4665400E45E9F /* Configure/ConfigureStandardVertexBuffer.cpp */,
+				30E9EAB62BD41A6E00E45E9F /* Configure/ConfigureStandardGraphicsPipeline.cpp */,
 				30E9EA7F2BCD84B000E45E9F /* GLSLangInterface.cpp */,
-				30C7A0162BC57818004A98B7 /* ConfigureGLSLang.cpp */,
+				30C7A0162BC57818004A98B7 /* Configure/ConfigureGLSLang.cpp */,
 				30C7A0072BC574B5004A98B7 /* Process.cpp */,
-				300C71E32BC42C8A00FFBB85 /* ConfigureShaders.cpp */,
-				300C71DF2BC1AD2C00FFBB85 /* RenderBegin.cpp */,
-				300C71E02BC1AD2C00FFBB85 /* RenderEnd.cpp */,
-				300C71D62BC192B300FFBB85 /* ConfigureCommandBuffers.cpp */,
-				300C71D42BC192B300FFBB85 /* ConfigureCommandPool.cpp */,
-				300C71D52BC192B300FFBB85 /* ConfigureFences.cpp */,
-				300C71D72BC192B300FFBB85 /* ConfigureFramebuffers.cpp */,
-				300C71D32BC192B300FFBB85 /* ConfigureSemaphores.cpp */,
-				300C71BF2BC1833600FFBB85 /* ConfigureGraphicsPipeline.cpp */,
-				3004D1FD2BC05A2700572087 /* ConfigureRenderPasses.cpp */,
-				3004D1ED2BBDB20700572087 /* ConfigureQueues.cpp */,
-				3004D1E92BBDA14000572087 /* ConfigureDepthStencil.cpp */,
+				300C71E32BC42C8A00FFBB85 /* Configure/ConfigureShaders.cpp */,
+				300C71DF2BC1AD2C00FFBB85 /* Render/RenderBegin.cpp */,
+				300C71E02BC1AD2C00FFBB85 /* Render/RenderEnd.cpp */,
+				300C71D62BC192B300FFBB85 /* Configure/ConfigureCommandBuffers.cpp */,
+				300C71D42BC192B300FFBB85 /* Configure/ConfigureCommandPool.cpp */,
+				300C71D52BC192B300FFBB85 /* Configure/ConfigureFences.cpp */,
+				300C71D72BC192B300FFBB85 /* Configure/ConfigureFramebuffers.cpp */,
+				300C71D32BC192B300FFBB85 /* Configure/ConfigureSemaphores.cpp */,
+				300C71BF2BC1833600FFBB85 /* Configure/ConfigureGraphicsPipeline.cpp */,
+				3004D1FD2BC05A2700572087 /* Configure/ConfigureRenderPasses.cpp */,
+				3004D1ED2BBDB20700572087 /* Configure/ConfigureQueues.cpp */,
+				3004D1E92BBDA14000572087 /* Configure/ConfigureDepthStencil.cpp */,
 				3004D1E82BBDA14000572087 /* Image.cpp */,
-				305AA2D42BB1041300BDAE68 /* ConfigureSurfaceSize.cpp */,
-				305AA2C22BB0EDF800BDAE68 /* ConfigureFormats.cpp */,
-				305AA2C32BB0EDF800BDAE68 /* ConfigureSwapchain.cpp */,
+				305AA2D42BB1041300BDAE68 /* Configure/ConfigureSurfaceSize.cpp */,
+				305AA2C22BB0EDF800BDAE68 /* Configure/ConfigureFormats.cpp */,
+				305AA2C32BB0EDF800BDAE68 /* Configure/ConfigureSwapchain.cpp */,
 				305AA2B02BAF4B5600BDAE68 /* Operation.cpp */,
-				305AA2AE2BAF48E200BDAE68 /* ConfigureDevice.cpp */,
+				305AA2AE2BAF48E200BDAE68 /* Configure/ConfigureDevice.cpp */,
 				307706352BA8B3AC00122E50 /* Context.cpp */,
 				307706302BA896D500122E50 /* Vulkanize.cpp */,
 				301985172B94DC6000CBECCB /* VkBootstrap.cpp */,
@@ -1072,44 +1072,44 @@
 			files = (
 				3049E6B02B953545008554DD /* WindowFrameworkContextSDL.cpp in Sources */,
 				3019853B2B94DDBB00CBECCB /* Framework.cpp in Sources */,
-				3004D1EB2BBDA14000572087 /* ConfigureDepthStencil.cpp in Sources */,
+				3004D1EB2BBDA14000572087 /* Configure/ConfigureDepthStencil.cpp in Sources */,
 				30F2718E2BDD4346000AD163 /* ShaderStageInfo.cpp in Sources */,
-				300C71DC2BC192B300FFBB85 /* ConfigureFramebuffers.cpp in Sources */,
-				300C71DB2BC192B300FFBB85 /* ConfigureCommandBuffers.cpp in Sources */,
-				300C71E12BC1AD2C00FFBB85 /* RenderBegin.cpp in Sources */,
+				300C71DC2BC192B300FFBB85 /* Configure/ConfigureFramebuffers.cpp in Sources */,
+				300C71DB2BC192B300FFBB85 /* Configure/ConfigureCommandBuffers.cpp in Sources */,
+				300C71E12BC1AD2C00FFBB85 /* Render/RenderBegin.cpp in Sources */,
 				3069132E2B5E8A1A00B14F73 /* Main.cpp in Sources */,
-				3004D1FE2BC05A2700572087 /* ConfigureRenderPasses.cpp in Sources */,
+				3004D1FE2BC05A2700572087 /* Configure/ConfigureRenderPasses.cpp in Sources */,
 				301985372B94DC6000CBECCB /* FrameworkSDLVulkan.cpp in Sources */,
 				301985362B94DC6000CBECCB /* FrameworkSDL.cpp in Sources */,
 				306912D12B5E7D7400B14F73 /* AppDelegate.m in Sources */,
 				3004D1EA2BBDA14000572087 /* Image.cpp in Sources */,
-				305AA2C42BB0EDF800BDAE68 /* ConfigureFormats.cpp in Sources */,
+				305AA2C42BB0EDF800BDAE68 /* Configure/ConfigureFormats.cpp in Sources */,
 				307706332BA896D500122E50 /* Vulkanize.cpp in Sources */,
 				30E9EA802BCD84B000E45E9F /* GLSLangInterface.cpp in Sources */,
-				305AA2D52BB1041300BDAE68 /* ConfigureSurfaceSize.cpp in Sources */,
-				30C7A0172BC57818004A98B7 /* ConfigureGLSLang.cpp in Sources */,
+				305AA2D52BB1041300BDAE68 /* Configure/ConfigureSurfaceSize.cpp in Sources */,
+				30C7A0172BC57818004A98B7 /* Configure/ConfigureGLSLang.cpp in Sources */,
 				306912E12B5E7E1D00B14F73 /* Warlock.swift in Sources */,
-				300C71E42BC42C8A00FFBB85 /* ConfigureShaders.cpp in Sources */,
+				300C71E42BC42C8A00FFBB85 /* Configure/ConfigureShaders.cpp in Sources */,
 				305AA2B12BAF4B5600BDAE68 /* Operation.cpp in Sources */,
 				30C7A0132BC574B5004A98B7 /* Process.cpp in Sources */,
-				300C71D92BC192B300FFBB85 /* ConfigureCommandPool.cpp in Sources */,
+				300C71D92BC192B300FFBB85 /* Configure/ConfigureCommandPool.cpp in Sources */,
 				3049E6AE2B952FBE008554DD /* WindowRenderContextVulkan.cpp in Sources */,
 				3049E6A72B94FBF4008554DD /* Balefire.cpp in Sources */,
 				301985332B94DC6000CBECCB /* Renderer.cpp in Sources */,
-				30E9EAB72BD41A6E00E45E9F /* ConfigureStandardGraphicsPipeline.cpp in Sources */,
-				305AA2C52BB0EDF800BDAE68 /* ConfigureSwapchain.cpp in Sources */,
-				300C71DA2BC192B300FFBB85 /* ConfigureFences.cpp in Sources */,
+				30E9EAB72BD41A6E00E45E9F /* Configure/ConfigureStandardGraphicsPipeline.cpp in Sources */,
+				305AA2C52BB0EDF800BDAE68 /* Configure/ConfigureSwapchain.cpp in Sources */,
+				300C71DA2BC192B300FFBB85 /* Configure/ConfigureFences.cpp in Sources */,
 				301985322B94DC6000CBECCB /* String.cpp in Sources */,
 				301985392B94DC6000CBECCB /* RendererVulkan.cpp in Sources */,
-				30E9EAB92BD4665400E45E9F /* ConfigureStandardVertexBuffer.cpp in Sources */,
-				300C71CB2BC1833600FFBB85 /* ConfigureGraphicsPipeline.cpp in Sources */,
+				30E9EAB92BD4665400E45E9F /* Configure/ConfigureStandardVertexBuffer.cpp in Sources */,
+				300C71CB2BC1833600FFBB85 /* Configure/ConfigureGraphicsPipeline.cpp in Sources */,
 				307706362BA8B3AC00122E50 /* Context.cpp in Sources */,
-				3004D1EE2BBDB20700572087 /* ConfigureQueues.cpp in Sources */,
+				3004D1EE2BBDB20700572087 /* Configure/ConfigureQueues.cpp in Sources */,
 				301985302B94DC6000CBECCB /* Window.cpp in Sources */,
-				300C71D82BC192B300FFBB85 /* ConfigureSemaphores.cpp in Sources */,
+				300C71D82BC192B300FFBB85 /* Configure/ConfigureSemaphores.cpp in Sources */,
 				301985382B94DC6000CBECCB /* VkBootstrap.cpp in Sources */,
-				305AA2AF2BAF48E200BDAE68 /* ConfigureDevice.cpp in Sources */,
-				300C71E22BC1AD2C00FFBB85 /* RenderEnd.cpp in Sources */,
+				305AA2AF2BAF48E200BDAE68 /* Configure/ConfigureDevice.cpp in Sources */,
+				300C71E22BC1AD2C00FFBB85 /* Render/RenderEnd.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
