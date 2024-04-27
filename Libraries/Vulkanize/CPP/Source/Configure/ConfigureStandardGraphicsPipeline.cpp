@@ -6,6 +6,7 @@ using namespace VKZ;
 ConfigureStandardGraphicsPipeline::ConfigureStandardGraphicsPipeline()
 {
   add_vertex_description( new StandardVertexDescription() );
+  //add_shader_stage( VK_SHADER_STAGE_VERTEX_BIT,
 }
 
 bool ConfigureStandardGraphicsPipeline::activate()

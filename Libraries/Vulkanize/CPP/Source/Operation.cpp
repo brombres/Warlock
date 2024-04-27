@@ -21,6 +21,11 @@ bool Operation::handle_event( string event, bool reverse_order )
     if (first_child && !first_child->handle_event(event)) return false;
   }
 
+  if ( !configured ) {
+    configured = true;
+    configure();
+  }
+
   if (event == "deactivate")
   {
     if (active || progress)
@@ -32,16 +37,17 @@ bool Operation::handle_event( string event, bool reverse_order )
   }
   else
   {
-    bool is_configure = (event == "activate");
-    if (is_configure || event == "execute")
+    if (event == "activate")
     {
       if ( !active )
       {
         if ( !activate() ) return false;
         active = true;
       }
-
-      if ( !is_configure && !execute() ) return false;
+    }
+    else if (event == "execute")
+    {
+      if ( !execute() ) return false;
     }
     else
     {

@@ -7,7 +7,8 @@ namespace VKZ
   struct Operation : Node<Operation>
   {
     // Internal use. Set by the dispatch_event() framework.
-    bool active = false;
+    bool configured = false;
+    bool active     = false;
 
     // Activation progress that can optionally be set by an activate() call.
     // deactivate() will only be called if 'activate' is true OR if 'progress'
@@ -24,6 +25,9 @@ namespace VKZ
 
     virtual bool activate() { return true; }
     // Return true on success, false on failure.
+
+    virtual void configure() {}
+    // Automatically called once before any other event is handled.
 
     virtual bool execute() { return true; }
     // Return true on success, false on failure.

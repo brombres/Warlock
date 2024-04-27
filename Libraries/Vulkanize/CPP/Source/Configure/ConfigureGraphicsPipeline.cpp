@@ -191,19 +191,25 @@ bool ConfigureGraphicsPipeline::activate()
 void ConfigureGraphicsPipeline::add_shader_stage( VkShaderStageFlagBits stage, VkShaderModule module,
     const char* main_function_name )
 {
-  shader_stages.push_back( new ShaderStageInfo(stage,module,main_function_name) );
+  ShaderStageInfo* stage_info = new ShaderStageInfo( stage, module, main_function_name );
+  stage_info->context = context;
+  shader_stages.push_back( stage_info );
 }
 
 void ConfigureGraphicsPipeline::add_shader_stage( VkShaderStageFlagBits stage, std::string& shader_source,
     const char* main_function_name )
 {
-  shader_stages.push_back( new ShaderStageInfo(stage,shader_source,main_function_name) );
+  ShaderStageInfo* stage_info = new ShaderStageInfo( stage, shader_source, main_function_name );
+  stage_info->context = context;
+  shader_stages.push_back( stage_info );
 }
 
 void ConfigureGraphicsPipeline::add_shader_stage( VkShaderStageFlagBits stage, const char* spirv_bytes,
     size_t spirv_byte_count, const char* main_function_name )
 {
-  shader_stages.push_back( new ShaderStageInfo(stage,spirv_bytes,spirv_byte_count,main_function_name) );
+  ShaderStageInfo* stage_info = new ShaderStageInfo( stage, spirv_bytes, spirv_byte_count, main_function_name );
+  stage_info->context = context;
+  shader_stages.push_back( stage_info );
 }
 
 void ConfigureGraphicsPipeline::add_vertex_description( VertexDescription* vertex_description )
@@ -215,6 +221,15 @@ void ConfigureGraphicsPipeline::deactivate()
 {
   if (progress >= 2) context->device_dispatch.destroyPipeline( context->graphics_pipeline, nullptr );
   if (progress >= 1) context->device_dispatch.destroyPipelineLayout( context->pipeline_layout, nullptr );
+}
+
+void ConfigureGraphicsPipeline::set_context( Context* context )
+{
+  ContextOperation<Context>::set_context( context );
+  for (auto stage : shader_stages)
+  {
+    stage->context = context;
+  }
 }
 
 VkShaderModule ConfigureGraphicsPipeline::_create_shader_module( const Byte* code, int count )

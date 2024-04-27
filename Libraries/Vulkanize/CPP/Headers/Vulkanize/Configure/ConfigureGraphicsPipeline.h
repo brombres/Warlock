@@ -22,6 +22,8 @@ namespace VKZ
     virtual void add_vertex_description( VertexDescription* vertex_description );
     virtual void deactivate();
 
+    virtual void set_context( Context* context );
+
     VkShaderModule _create_shader_module( const Byte* code, int count );
   };
 };
