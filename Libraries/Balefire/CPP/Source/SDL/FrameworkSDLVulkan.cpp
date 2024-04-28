@@ -35,6 +35,8 @@ WindowID FrameworkSDLVulkan::create_window( String name )
       flags
     );
 
+  SDL_RaiseWindow( sdl_window );
+
   //unsigned int extensionCount = 0;
   //SDL_Vulkan_GetInstanceExtensions(sdl_window, &extensionCount, nullptr);
   //std::vector<const char *> extensionNames(extensionCount);
