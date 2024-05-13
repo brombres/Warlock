@@ -11,7 +11,6 @@
 		301959782BDF040C00D9D51B /* GraphicsPipeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 301959772BDF040C00D9D51B /* GraphicsPipeline.cpp */; };
 		3019597B2BDFDF1D00D9D51B /* RenderPass.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3019597A2BDFDF1D00D9D51B /* RenderPass.cpp */; };
 		301985302B94DC6000CBECCB /* Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3019850D2B94DC6000CBECCB /* Window.cpp */; };
-		301985322B94DC6000CBECCB /* String.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3019850F2B94DC6000CBECCB /* String.cpp */; };
 		301985332B94DC6000CBECCB /* Renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 301985102B94DC6000CBECCB /* Renderer.cpp */; };
 		301985362B94DC6000CBECCB /* FrameworkSDL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 301985142B94DC6000CBECCB /* FrameworkSDL.cpp */; };
 		301985372B94DC6000CBECCB /* FrameworkSDLVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 301985152B94DC6000CBECCB /* FrameworkSDLVulkan.cpp */; };
@@ -230,22 +229,16 @@
 		301959772BDF040C00D9D51B /* GraphicsPipeline.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GraphicsPipeline.cpp; sourceTree = "<group>"; };
 		3019597A2BDFDF1D00D9D51B /* RenderPass.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RenderPass.cpp; sourceTree = "<group>"; };
 		3019850D2B94DC6000CBECCB /* Window.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Window.cpp; sourceTree = "<group>"; };
-		3019850F2B94DC6000CBECCB /* String.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = String.cpp; sourceTree = "<group>"; };
 		301985102B94DC6000CBECCB /* Renderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Renderer.cpp; sourceTree = "<group>"; };
 		301985142B94DC6000CBECCB /* FrameworkSDL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FrameworkSDL.cpp; sourceTree = "<group>"; };
 		301985152B94DC6000CBECCB /* FrameworkSDLVulkan.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FrameworkSDLVulkan.cpp; sourceTree = "<group>"; };
 		301985172B94DC6000CBECCB /* VkBootstrap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VkBootstrap.cpp; sourceTree = "<group>"; };
 		301985182B94DC6000CBECCB /* RendererVulkan.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RendererVulkan.cpp; sourceTree = "<group>"; };
-		3019851C2B94DC6000CBECCB /* DiscreteData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DiscreteData.h; sourceTree = "<group>"; };
 		3019851D2B94DC6000CBECCB /* Types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Types.h; sourceTree = "<group>"; };
 		3019851E2B94DC6000CBECCB /* Renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Renderer.h; sourceTree = "<group>"; };
 		3019851F2B94DC6000CBECCB /* Window.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Window.h; sourceTree = "<group>"; };
-		301985212B94DC6000CBECCB /* BulkData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BulkData.h; sourceTree = "<group>"; };
 		301985222B94DC6000CBECCB /* Framework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Framework.h; sourceTree = "<group>"; };
-		301985232B94DC6000CBECCB /* RefCounted.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RefCounted.h; sourceTree = "<group>"; };
 		301985242B94DC6000CBECCB /* ResourceBank.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResourceBank.h; sourceTree = "<group>"; };
-		301985252B94DC6000CBECCB /* Ref.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Ref.h; sourceTree = "<group>"; };
-		301985262B94DC6000CBECCB /* String.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = String.h; sourceTree = "<group>"; };
 		301985292B94DC6000CBECCB /* FrameworkSDL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FrameworkSDL.h; sourceTree = "<group>"; };
 		3019852A2B94DC6000CBECCB /* FrameworkSDLVulkan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FrameworkSDLVulkan.h; sourceTree = "<group>"; };
 		3019852D2B94DC6000CBECCB /* VkBootstrap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VkBootstrap.h; sourceTree = "<group>"; };
@@ -551,7 +544,6 @@
 			children = (
 				3019853A2B94DDBB00CBECCB /* Framework.cpp */,
 				3019850D2B94DC6000CBECCB /* Window.cpp */,
-				3019850F2B94DC6000CBECCB /* String.cpp */,
 				301985102B94DC6000CBECCB /* Renderer.cpp */,
 			);
 			path = Core;
@@ -601,16 +593,11 @@
 			children = (
 				3049E6AA2B9518C8008554DD /* WindowFrameworkContext.h */,
 				3049E6A92B9518C8008554DD /* WindowRenderContext.h */,
-				3019851C2B94DC6000CBECCB /* DiscreteData.h */,
 				3019851D2B94DC6000CBECCB /* Types.h */,
 				3019851E2B94DC6000CBECCB /* Renderer.h */,
 				3019851F2B94DC6000CBECCB /* Window.h */,
-				301985212B94DC6000CBECCB /* BulkData.h */,
 				301985222B94DC6000CBECCB /* Framework.h */,
-				301985232B94DC6000CBECCB /* RefCounted.h */,
 				301985242B94DC6000CBECCB /* ResourceBank.h */,
-				301985252B94DC6000CBECCB /* Ref.h */,
-				301985262B94DC6000CBECCB /* String.h */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -1145,7 +1132,6 @@
 				3049E6A72B94FBF4008554DD /* Balefire.cpp in Sources */,
 				301985332B94DC6000CBECCB /* Renderer.cpp in Sources */,
 				30F271E02BDD5941000AD163 /* ConfigureSwapchain.cpp in Sources */,
-				301985322B94DC6000CBECCB /* String.cpp in Sources */,
 				301985392B94DC6000CBECCB /* RendererVulkan.cpp in Sources */,
 				30F271DA2BDD5941000AD163 /* ConfigureRenderPass.cpp in Sources */,
 				307706362BA8B3AC00122E50 /* Context.cpp in Sources */,

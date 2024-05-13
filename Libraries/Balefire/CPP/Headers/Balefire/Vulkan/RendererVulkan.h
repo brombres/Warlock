@@ -6,8 +6,7 @@
 #include <cstdio>
 #include <vulkan/vulkan.h>
 #include "VkBootstrap.h"
-#include "Balefire/Core/Framework.h"
-#include "Balefire/Core/Renderer.h"
+#include "Balefire/Balefire.h"
 #include "Vulkanize/Vulkanize.h"
 
 #define VK_LOG_ERROR(stage) fprintf( stderr, "[ERROR] Balefire Vulkan: error %s.\n", stage );

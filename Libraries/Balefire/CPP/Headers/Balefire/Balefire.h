@@ -3,28 +3,34 @@
 
 #pragma once
 
-#include "Balefire/Core/Framework.h"
-#include "Balefire/Core/Ref.h"
-#include "Balefire/Core/RefCounted.h"
-#include "Balefire/Core/Renderer.h"
-#include "Balefire/Core/ResourceBank.h"
-#include "Balefire/Core/String.h"
-#include "Balefire/Core/Window.h"
+#include <string>
 
 namespace BALEFIRE
 {
-  struct Balefire : RefCounted
-  {
-    ResourceBank<WindowID,Ref<Window>> windows;
+  typedef int WindowID;
+};
 
-    Ref<Framework> framework;
+#include "Balefire/Core/Window.h"
+#include "Balefire/Core/Framework.h"
+#include "Balefire/Core/Renderer.h"
+#include "Balefire/Core/ResourceBank.h"
+#include "Balefire/Core/WindowFrameworkContext.h"
+#include "Balefire/Core/WindowRenderContext.h"
+
+namespace BALEFIRE
+{
+  struct Balefire
+  {
+    ResourceBank<WindowID,Window*> windows;
+
+    Framework* framework = nullptr;
 
     Balefire() {}
     Balefire( Framework* framework );
 
     ~Balefire();
     void     configure( Framework* framework );
-    WindowID create_window( String name );
+    WindowID create_window( std::string name );
     void     render();
   };
 };

@@ -1,8 +1,13 @@
-#include "Balefire/Core/Framework.h"
+#include "Balefire/Balefire.h"
 using namespace BALEFIRE;
 
 Framework::~Framework()
 {
+  if (renderer)
+  {
+    delete renderer;
+    renderer = nullptr;
+  }
 }
 
 void Framework::configure()

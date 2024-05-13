@@ -6,7 +6,7 @@
 #include <vector>
 #include <vulkan/vulkan.h>
 
-#include "Balefire/Core/WindowRenderContext.h"
+#include "Balefire/Balefire.h"
 #include "Balefire/Vulkan/RendererVulkan.h"
 
 #include "Vulkanize/Vulkanize.h"

@@ -3,17 +3,18 @@
 
 #pragma once
 
-#include "Balefire/Core/RefCounted.h"
+#include "Balefire/Balefire.h"
 
 namespace BALEFIRE
 {
   struct Window;
 
-  struct WindowFrameworkContext : RefCounted
+  struct WindowFrameworkContext
   {
-    Window* window;
+    Window* window = nullptr;
 
     WindowFrameworkContext( Window* window ) : window(window) {}
+    virtual ~WindowFrameworkContext() {}
   };
 };
 

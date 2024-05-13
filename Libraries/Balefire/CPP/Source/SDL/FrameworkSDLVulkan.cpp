@@ -17,7 +17,7 @@ void FrameworkSDLVulkan::configure()
   renderer->configure();
 }
 
-WindowID FrameworkSDLVulkan::create_window( String name )
+WindowID FrameworkSDLVulkan::create_window( std::string name )
 {
   int w = 1024;
   int h = 768;
@@ -27,7 +27,7 @@ WindowID FrameworkSDLVulkan::create_window( String name )
 
   SDL_Window* sdl_window =
     SDL_CreateWindow(
-      name,
+      name.c_str(),
       SDL_WINDOWPOS_CENTERED,
       SDL_WINDOWPOS_CENTERED,
       w,
@@ -48,7 +48,7 @@ WindowID FrameworkSDLVulkan::create_window( String name )
   //}
 
 
-  RendererVulkan* renderer = (RendererVulkan*)this->renderer.data;
+  RendererVulkan* renderer = (RendererVulkan*)this->renderer;
 
   Window* window = new Window( this, w, h );
   SDL_Vulkan_GetDrawableSize( sdl_window, &window->pixel_width, &window->pixel_height );

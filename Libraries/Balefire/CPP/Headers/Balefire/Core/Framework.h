@@ -3,25 +3,22 @@
 
 #pragma once
 
-#include "Balefire/Core/Ref.h"
-#include "Balefire/Core/RefCounted.h"
-#include "Balefire/Core/Renderer.h"
-#include "Balefire/Core/ResourceBank.h"
-#include "Balefire/Core/String.h"
-#include "Balefire/Core/Window.h"
+#include "Balefire/Balefire.h"
 
 namespace BALEFIRE
 {
   struct Balefire;
+  struct Renderer;
+  struct Window;
 
-  struct Framework : RefCounted
+  struct Framework
   {
     Balefire* balefire = nullptr;
-    Ref<Renderer> renderer;
+    Renderer* renderer = nullptr;
 
     virtual ~Framework();
     virtual void configure();
-    virtual WindowID create_window( String name ) { return (WindowID)0; }
+    virtual WindowID create_window( std::string name ) { return (WindowID)0; }
     virtual void     render( Window* window );
     virtual void     update_pixel_size( Window* window ) {}
   };

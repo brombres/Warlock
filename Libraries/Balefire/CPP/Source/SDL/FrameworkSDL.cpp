@@ -6,7 +6,7 @@ void FrameworkSDL::configure()
   SDL_Init( SDL_INIT_VIDEO );
 }
 
-WindowID FrameworkSDL::create_window( String name )
+WindowID FrameworkSDL::create_window( std::string name )
 {
   return 0;
 }

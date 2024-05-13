@@ -4,7 +4,7 @@
 #pragma once
 
 #include <SDL2/SDL.h>
-#include "Balefire/Core/WindowFrameworkContext.h"
+#include "Balefire/Balefire.h"
 
 namespace BALEFIRE
 {

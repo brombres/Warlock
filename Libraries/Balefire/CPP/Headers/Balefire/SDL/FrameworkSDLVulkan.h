@@ -1,6 +1,7 @@
 #ifndef BALEFIRE_FRAMEWORK_SDL_VULKAN_H
 #define BALEFIRE_FRAMEWORK_SDL_VULKAN_H
 
+#include <vector>
 #include <SDL2/SDL_vulkan.h>
 #include "Balefire/SDL/FrameworkSDL.h"
 
@@ -9,7 +10,7 @@ namespace BALEFIRE
   struct FrameworkSDLVulkan : FrameworkSDL
   {
     virtual void     configure();
-    virtual WindowID create_window( String name );
+    virtual WindowID create_window( std::string name );
     virtual void     render( Window* window );
     virtual void     update_pixel_size( Window* window );
   };
