@@ -37,8 +37,8 @@ namespace BALEFIRE
       }
       else
       {
-        IDType id = resources.size();
-        id_index_lookup[id] = ids.size();
+        IDType id = (IDType) resources.size();
+        id_index_lookup[(IDType)id] = ids.size();
         ids.push_back( id );
         resources.push_back( resource );
         return id;
@@ -69,7 +69,7 @@ namespace BALEFIRE
       size_t i1 = id_index_lookup[id];
       size_t i2 = ids.size() - 1;
       ids[i1] = ids[i2];
-      id_index_lookup[i2] = i1;
+      id_index_lookup[(IDType)i2] = i1;
       ids.pop_back();
       free_ids.push_back( id );
       return result;

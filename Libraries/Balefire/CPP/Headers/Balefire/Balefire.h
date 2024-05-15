@@ -7,7 +7,8 @@
 
 namespace BALEFIRE
 {
-  typedef int WindowID;
+  typedef int  WindowID;
+  typedef void (*Callback)(void* data);
 };
 
 #include "Balefire/Core/Window.h"
@@ -21,6 +22,11 @@ namespace BALEFIRE
 {
   struct Balefire
   {
+    void*    callback_data   = nullptr;
+    Callback on_render_begin = nullptr;
+    Callback on_render       = nullptr;
+    Callback on_render_end   = nullptr;
+
     ResourceBank<WindowID,Window*> windows;
 
     Framework* framework = nullptr;
