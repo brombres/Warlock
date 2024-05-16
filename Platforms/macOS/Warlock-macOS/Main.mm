@@ -11,6 +11,8 @@
 #include "Balefire/SDL/FrameworkSDLVulkan.h"
 using namespace BALEFIRE;
 
+#import "RogueInterface.h"
+
 #include <iostream>
 #include <thread>
 using namespace std;
@@ -38,6 +40,9 @@ void on_render_end( void* data )
 
 int main(int argc, char *argv[])
 {
+  RogueInterface_configure( argc, argv );
+  RogueInterface_launch();
+
   Balefire balefire( new FrameworkSDLVulkan() );
   balefire.create_window( "Warlock Engine" );
 

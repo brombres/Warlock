@@ -25,16 +25,16 @@
 #ifdef PLASMACORE_PLATFORM_MACOS
   #import <Cocoa/Cocoa.h>
 #else
-  #import <Foundation/Foundation.h>
+  //#import <Foundation/Foundation.h>
 #endif
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void RogueInterface_configure(void);
+void RogueInterface_configure( int argc, char* argv[] );
+void RogueInterface_launch();
 
-//void    RogueInterface_launch();
 //NSData* RogueInterface_post_messages( const unsigned char* data, int count );
 //NSData* RogueInterface_send_message( const unsigned char* data, int count );
 //void    RogueInterface_set_arg_count( int count );

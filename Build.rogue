@@ -52,19 +52,25 @@ endRoutine
 
 routine build( platform:String, &debug )
   deps( System.command_line_arguments )
+  compile_rogue( platform, &=debug )
+endRoutine
 
-  local product_folder = File("Build/$/Product"(platform)).[create_folder]
+routine compile_rogue( platform:String, &debug )
+  local files = Files( "Libraries/Warlock/Rogue/**.rogue" )
   local source_folder = File("Build/$/Source"(platform)).[create_folder]
 
-  block cmd = "roguec Source/Main.rogue Warlock"
-    cmd .= appending( "Warlock/Platform/$.rogue"(platform) )
-    if (debug) cmd .= appending( "--debug" )
-    cmd .= appending( "--libraries=Libraries/Rogue" )
-    cmd .= appending( "--target=C++,Warlock,SDL,$"(platform) )
-    cmd .= appending( "--gc=manual" )
-    cmd .= appending( "--output=$/RogueProgram"(source_folder.esc) )
-    execute cmd
-  endBlock
+  if (files.any_newer_than(source_folder/"RogueProgram.cpp"))
+    block cmd = "roguec Warlock"
+      cmd .= appending( "Warlock/Platform/$.rogue"(platform) )
+      if (debug) cmd .= appending( "--debug" )
+      cmd .= appending( "--libraries=Libraries/Warlock/Rogue" )
+      cmd .= appending( "--target=C++,Warlock,SDL,Vulkan,$"(platform) )
+      cmd .= appending( "--gc=manual" )
+      cmd .= appending( "--output=$/RogueProgram"(source_folder.esc) )
+      execute cmd
+    endBlock
+  endIf
+endRoutine
 
   #{
   block cmd = "g++ -Wall -fno-strict-aliasing"
@@ -104,7 +110,6 @@ routine build( platform:String, &debug )
   #endBlock
 
   #Files("Assets/Downloads/**").sync_to( "Build/Web/Product/Assets", &verbose )
-endRoutine
 
 routine rogo_run
   trace "TODO: run"
