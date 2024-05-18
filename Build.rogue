@@ -38,28 +38,40 @@ routine rogo_debug
   rogo_run
 endRoutine
 
-routine rogo_build
-  rogo_build_debug
+routine rogo_build( &rebuild )
+  rogo_build_debug( &=rebuild )
+endRoutine
+
+routine rogo_rebuild
+  rogo_build( &rebuild )
+endRoutine
+
+routine rogo_macos
+  # SYNTAX: rogo macos [rebuild|release]
+  local args = System.command_line_arguments
+  local debug   = args.contains("debug") or not args.contains("release")
+  local rebuild = args.contains("rebuild")
+  build( "macOS", &=debug, &=rebuild )
 endRoutine
 
 routine rogo_macos_open
   execute @|open Platforms/macOS/Warlock-macOS.xcodeproj
 endRoutine
 
-routine rogo_build_debug
-  build( System.os, &debug )
+routine rogo_build_debug( &rebuild )
+  build( System.os, &debug, &=rebuild )
 endRoutine
 
-routine build( platform:String, &debug )
+routine build( platform:String, &debug, &rebuild )
   deps( System.command_line_arguments )
-  compile_rogue( platform, &=debug )
+  compile_rogue( platform, &=debug, &=rebuild )
 endRoutine
 
-routine compile_rogue( platform:String, &debug )
+routine compile_rogue( platform:String, &debug, &rebuild )
   local files = Files( "Libraries/Warlock/Rogue/**.rogue" )
   local source_folder = File("Build/$/Source"(platform)).[create_folder]
 
-  if (files.any_newer_than(source_folder/"RogueProgram.cpp"))
+  if (rebuild or files.any_newer_than(source_folder/"RogueProgram.cpp"))
     block cmd = "roguec Warlock"
       cmd .= appending( "Warlock/Platform/$.rogue"(platform) )
       if (debug) cmd .= appending( "--debug" )

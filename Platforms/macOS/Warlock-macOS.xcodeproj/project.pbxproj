@@ -967,6 +967,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 306912DC2B5E7D7500B14F73 /* Build configuration list for PBXNativeTarget "Warlock-macOS" */;
 			buildPhases = (
+				30B5A2892BF647EE0030183A /* ShellScript */,
 				306912C82B5E7D7400B14F73 /* Sources */,
 				306912C92B5E7D7400B14F73 /* Frameworks */,
 				306912CA2B5E7D7400B14F73 /* Resources */,
@@ -1111,6 +1112,27 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		30B5A2892BF647EE0030183A /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cd ../..\nenv -i PATH=/opt/morlock/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin HOME=$HOME IDE=true rogo macos\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		306912C82B5E7D7400B14F73 /* Sources */ = {

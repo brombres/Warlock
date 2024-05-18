@@ -26,18 +26,6 @@ using namespace std;
 //#include <glm/vec4.hpp>
 //using namespace glm;
 
-void on_render_begin( void* data )
-{
-}
-
-void on_render( void* data )
-{
-}
-
-void on_render_end( void* data )
-{
-}
-
 int main(int argc, char *argv[])
 {
   RogueInterface_configure( argc, argv );
@@ -46,10 +34,6 @@ int main(int argc, char *argv[])
   Balefire balefire( new FrameworkSDLVulkan() );
   balefire.create_window( "Warlock Engine" );
 
-  balefire.on_render_begin = on_render_begin;
-  balefire.on_render       = on_render;
-  balefire.on_render_end   = on_render_end;
-
 	//const array of positions for the triangle
 	//const vec3 positions[3] = {
 	//	vec3(1.f,1.f, 0.0f),
@@ -57,41 +41,43 @@ int main(int argc, char *argv[])
 	//	vec3(0.f,-1.f, 0.0f)
 	//};
 
-  SDL_Event e;
-  bool running = true;
-  bool pause_rendering = false;
-  while(running)
-  {
-    while(SDL_PollEvent(&e))
-    {
-      switch (e.type)
-      {
-        case SDL_QUIT:
-          running = false;
-          break;
+  while (balefire.handle_events()) balefire.render( nullptr );
 
-        case SDL_WINDOWEVENT:
-          if (e.window.event == SDL_WINDOWEVENT_MINIMIZED || e.window.event == SDL_WINDOWEVENT_HIDDEN)
-          {
-            printf("PAUSE RENDERING\n");
-            pause_rendering = true;
-          }
-          else if (e.window.event == SDL_WINDOWEVENT_RESTORED || e.window.event == SDL_WINDOWEVENT_SHOWN)
-          {
-            printf("RESUME RENDERING\n");
-            pause_rendering = false;
-          }
-          break;
-      }
-    }
+  //SDL_Event e;
+  //bool running = true;
+  //bool pause_rendering = false;
+  //while(running)
+  //{
+  //  while(SDL_PollEvent(&e))
+  //  {
+  //    switch (e.type)
+  //    {
+  //      case SDL_QUIT:
+  //        running = false;
+  //        break;
 
-    if (pause_rendering) {
-      std::this_thread::sleep_for( std::chrono::milliseconds(100) );
-      continue;
-    }
+  //      case SDL_WINDOWEVENT:
+  //        if (e.window.event == SDL_WINDOWEVENT_MINIMIZED || e.window.event == SDL_WINDOWEVENT_HIDDEN)
+  //        {
+  //          printf("PAUSE RENDERING\n");
+  //          pause_rendering = true;
+  //        }
+  //        else if (e.window.event == SDL_WINDOWEVENT_RESTORED || e.window.event == SDL_WINDOWEVENT_SHOWN)
+  //        {
+  //          printf("RESUME RENDERING\n");
+  //          pause_rendering = false;
+  //        }
+  //        break;
+  //    }
+  //  }
 
-    balefire.render();
-  }
+  //  if (pause_rendering) {
+  //    std::this_thread::sleep_for( std::chrono::milliseconds(100) );
+  //    continue;
+  //  }
+
+  //  balefire.render();
+  //}
 
   SDL_Quit();
   return 0;

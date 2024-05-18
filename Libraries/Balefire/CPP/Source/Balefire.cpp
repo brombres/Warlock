@@ -38,12 +38,18 @@ WindowID Balefire::create_window( std::string name )
   }
 }
 
-void Balefire::render()
+bool Balefire::handle_events()
+{
+  if (framework) return framework->handle_events();
+  return false;
+}
+
+void Balefire::render( CmdData* data )
 {
   for (WindowID id : windows.ids)
   {
     Window* window = windows[id];
-    framework->render( window );
+    framework->render( window, data );
   }
 }
 

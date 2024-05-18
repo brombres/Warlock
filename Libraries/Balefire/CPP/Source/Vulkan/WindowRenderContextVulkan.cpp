@@ -36,17 +36,12 @@ void WindowRenderContextVulkan::configure( VkSurfaceKHR surface )
 	initialized = true;
 }
 
-void WindowRenderContextVulkan::render()
+void WindowRenderContextVulkan::render( CmdData* data )
 {
   if ( !initialized ) return;
 
-  Balefire* balefire = window->framework->balefire;
-  if (balefire->on_render_begin) balefire->on_render_begin( balefire->callback_data );
-
   if (context->execute("render.begin"))
   {
-    if (balefire->on_render) balefire->on_render( balefire->callback_data );
-
     context->standard_pipeline.cmd_bind( context->cmd );
     context->standard_pipeline.cmd_set_default_viewports_and_scissor_rects( context->cmd );
 
@@ -68,7 +63,5 @@ void WindowRenderContextVulkan::render()
 
     context->execute( "render.end" );
   }
-
-  if (balefire->on_render_end) balefire->on_render_end( balefire->callback_data );
 
 }

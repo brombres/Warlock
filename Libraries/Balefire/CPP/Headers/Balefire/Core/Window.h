@@ -26,7 +26,7 @@ namespace BALEFIRE
 
     virtual ~Window();
 
-    void render();
+    void render( CmdData* data );
     void update_pixel_size();
   };
 };

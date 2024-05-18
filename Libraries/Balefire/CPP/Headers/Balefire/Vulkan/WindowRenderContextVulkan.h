@@ -32,7 +32,7 @@ namespace BALEFIRE
     // METHODS
     virtual void configure();
     virtual void configure( VkSurfaceKHR surface );
-    virtual void render();
+    virtual void render( CmdData* data );
   };
 };
 

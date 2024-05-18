@@ -79,9 +79,9 @@ WindowID FrameworkSDLVulkan::create_window( std::string name )
   return window->id;
 }
 
-void FrameworkSDLVulkan::render( Window* window )
+void FrameworkSDLVulkan::render( Window* window, CmdData* data )
 {
-  window->render();
+  window->render( data );
 }
 
 void FrameworkSDLVulkan::update_pixel_size( Window* window )

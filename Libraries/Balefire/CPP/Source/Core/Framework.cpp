@@ -14,7 +14,7 @@ void Framework::configure()
 {
 }
 
-void Framework::render( Window* window )
+void Framework::render( Window* window, CmdData* data )
 {
 }
 

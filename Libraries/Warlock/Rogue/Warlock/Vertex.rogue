@@ -1,0 +1,10 @@
+module Warlock
+
+class Vertex( x:Real32, y:Real32, z:Real32, color:Int32, u:Real32, v:Real32 ) [compound]
+  DEFINITIONS
+    PROPERTY_COUNT = 6
+
+  GLOBAL METHODS
+    method create( xy:XY, color:Color )->Vertex
+      return Vertex( xy.x, xy.y, 0, color.argb, 0, 0 )
+endClass

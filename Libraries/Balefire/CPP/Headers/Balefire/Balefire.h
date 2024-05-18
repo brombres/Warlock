@@ -11,6 +11,8 @@ namespace BALEFIRE
   typedef void (*Callback)(void* data);
 };
 
+#include "Balefire/Core/CmdData.h"
+#include "Balefire/Core/RenderCmd.h"
 #include "Balefire/Core/Window.h"
 #include "Balefire/Core/Framework.h"
 #include "Balefire/Core/Renderer.h"
@@ -22,11 +24,6 @@ namespace BALEFIRE
 {
   struct Balefire
   {
-    void*    callback_data   = nullptr;
-    Callback on_render_begin = nullptr;
-    Callback on_render       = nullptr;
-    Callback on_render_end   = nullptr;
-
     ResourceBank<WindowID,Window*> windows;
 
     Framework* framework = nullptr;
@@ -37,7 +34,8 @@ namespace BALEFIRE
     ~Balefire();
     void     configure( Framework* framework );
     WindowID create_window( std::string name );
-    void     render();
+    bool     handle_events();
+    void     render( CmdData* data );
   };
 };
 

@@ -1,1 +1,26 @@
-println "Hello Rogue!!"
+module Warlock [api]
+
+uses Geometry [export]
+uses Graphics [export]
+
+$include CmdData
+$include RenderCmd
+$include Renderer
+$include Vertex
+
+class Warlock [essential singleton]
+  PROPERTIES
+  METHODS
+    method init
+      local d1 = CmdData(3)
+      local d2 = CmdData(4.5)
+      println "Hello Warlock!!"
+      @trace d1.int32, d2.real32
+
+  GLOBAL METHODS
+    method end_render
+      Renderer.clear
+
+    method render->CmdData[]
+      return Renderer.finalized_cmd_buffer
+endClass

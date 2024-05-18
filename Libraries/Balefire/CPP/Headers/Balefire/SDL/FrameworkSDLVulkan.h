@@ -11,7 +11,7 @@ namespace BALEFIRE
   {
     virtual void     configure();
     virtual WindowID create_window( std::string name );
-    virtual void     render( Window* window );
+    virtual void     render( Window* window, CmdData* data );
     virtual void     update_pixel_size( Window* window );
   };
 };

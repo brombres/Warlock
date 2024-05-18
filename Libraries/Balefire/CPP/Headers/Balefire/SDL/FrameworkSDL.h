@@ -11,6 +11,7 @@ namespace BALEFIRE
   {
     virtual void configure();
     virtual WindowID create_window( std::string name );
+    virtual bool     handle_events();
   };
 };
 

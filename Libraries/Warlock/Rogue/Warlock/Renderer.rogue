@@ -1,0 +1,69 @@
+module Warlock
+
+enum PrimitiveType
+  UNDEFINED,
+  TRIANGLES,
+  LINES
+endEnum
+
+class Renderer [singleton]
+  DEFINITIONS
+    VERSION = 1
+
+    TOTAL_COUNT_INDEX = 0
+    VCOUNT_INDEX      = 2
+
+  PROPERTIES
+    cmd_buffer     = CmdData[]
+    vertex_buffer  = Vertex[]
+    primitive_type : PrimitiveType
+
+  METHODS
+    method init
+      clear
+
+    method clear
+      cmd_buffer.clear
+      cmd_buffer.add( 0 )  # total data count
+      cmd_buffer.add( VERSION )
+      cmd_buffer.add( 0 )  # total dynamic vertex count
+      vertex_buffer.clear
+      primitive_type = PrimitiveType.UNDEFINED
+
+    method fill( triangle:Triangle, color:Color )
+
+    method finalized_cmd_buffer->CmdData[]
+      cmd_buffer[TOTAL_COUNT_INDEX] = CmdData( cmd_buffer.count )
+      return cmd_buffer
+
+    method flush
+      if (vertex_buffer.is_empty) return
+
+      local n_slots = vertex_buffer.count * Vertex.PROPERTY_COUNT
+      cmd_buffer.reserve( n_slots + 2 )
+
+      which (primitive_type)
+        case TRIANGLES
+          cmd_buffer.add( RenderCmd.DRAW_TRIANGLES )
+        case LINES
+          cmd_buffer.add( RenderCmd.DRAW_LINES )
+      endWhich
+
+      cmd_buffer.add( vertex_buffer.count )
+
+      native @|memcpy(
+              |  $cmd_buffer->as_int32s + $cmd_buffer->count,
+              |  $vertex_buffer->as_int32s,
+              |  $n_slots * 4
+              |);
+      cmd_buffer.count += n_slots
+
+      cmd_buffer[VCOUNT_INDEX] = CmdData( (cmd_buffer[VCOUNT_INDEX].int32 + vertex_buffer.count) )
+
+      vertex_buffer.clear
+
+    method set_primitive_type( new_type:PrimitiveType )
+      if (new_type == @primitive_type) return
+      flush
+      @primitive_type = new_type
+endClass

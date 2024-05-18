@@ -16,9 +16,9 @@ Window::~Window()
   }
 }
 
-void Window::render()
+void Window::render( CmdData* data )
 {
-  render_context->render();
+  render_context->render( data );
 }
 
 void Window::update_pixel_size()
