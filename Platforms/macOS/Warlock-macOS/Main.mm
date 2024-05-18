@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
   RogueInterface_launch();
 
   Balefire balefire( new FrameworkSDLVulkan() );
-  balefire.create_window( "Warlock Engine" );
+  balefire.create_window( 1, "Warlock Engine" );
 
 	//const array of positions for the triangle
 	//const vec3 positions[3] = {

@@ -10,7 +10,7 @@ namespace BALEFIRE
   struct FrameworkSDL : Framework
   {
     virtual void configure();
-    virtual WindowID create_window( std::string name );
+    virtual Window*  create_window( int index, std::string name );
     virtual bool     handle_events();
   };
 };

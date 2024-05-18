@@ -14,15 +14,15 @@ namespace BALEFIRE
   struct Window
   {
     Framework* framework;
-    WindowID   id = 0;
+    int index = 0;
     int width, height;
     int pixel_width, pixel_height;
 
     WindowFrameworkContext* framework_context = nullptr;
     WindowRenderContext*    render_context = nullptr;
 
-    Window( Framework* framework, int width, int height ) : framework(framework),
-        width(width), height(height), pixel_width(width), pixel_height(height) {}
+    Window( Framework* framework, int index, int width, int height ) : framework(framework),
+        index(index), width(width), height(height), pixel_width(width), pixel_height(height) {}
 
     virtual ~Window();
 

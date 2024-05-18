@@ -6,9 +6,9 @@ void FrameworkSDL::configure()
   SDL_Init( SDL_INIT_VIDEO );
 }
 
-WindowID FrameworkSDL::create_window( std::string name )
+Window* FrameworkSDL::create_window( int index, std::string name )
 {
-  return 0;
+  return nullptr;
 }
 
 bool FrameworkSDL::handle_events()

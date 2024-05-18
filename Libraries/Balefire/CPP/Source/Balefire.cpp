@@ -8,7 +8,11 @@ Balefire::Balefire( Framework* framework )
 
 Balefire::~Balefire()
 {
-  while (windows.count) delete windows.remove_last();
+  for (int i=0; i<windows.size(); ++i)
+  {
+    Window* window = windows[i];
+    if (window) delete window;
+  }
   windows.clear();
 
   if (this->framework)
@@ -26,11 +30,11 @@ void Balefire::configure( Framework* framework )
   if (framework) framework->configure();
 }
 
-WindowID Balefire::create_window( std::string name )
+Window* Balefire::create_window( int index, std::string name )
 {
   if (framework)
   {
-    return framework->create_window( name );
+    return framework->create_window( index, name );
   }
   else
   {
@@ -46,10 +50,9 @@ bool Balefire::handle_events()
 
 void Balefire::render( CmdData* data )
 {
-  for (WindowID id : windows.ids)
+  for (Window* window : windows)
   {
-    Window* window = windows[id];
-    framework->render( window, data );
+    if (window) framework->render( window, data );
   }
 }
 

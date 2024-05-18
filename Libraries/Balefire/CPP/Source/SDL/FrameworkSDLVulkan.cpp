@@ -17,7 +17,7 @@ void FrameworkSDLVulkan::configure()
   renderer->configure();
 }
 
-WindowID FrameworkSDLVulkan::create_window( std::string name )
+Window* FrameworkSDLVulkan::create_window( int index, std::string name )
 {
   int w = 1024;
   int h = 768;
@@ -50,7 +50,7 @@ WindowID FrameworkSDLVulkan::create_window( std::string name )
 
   RendererVulkan* renderer = (RendererVulkan*)this->renderer;
 
-  Window* window = new Window( this, w, h );
+  Window* window = new Window( this, index, w, h );
   SDL_Vulkan_GetDrawableSize( sdl_window, &window->pixel_width, &window->pixel_height );
 
   WindowFrameworkContextSDL* framework_context = new WindowFrameworkContextSDL( window, sdl_window );
@@ -58,8 +58,9 @@ WindowID FrameworkSDLVulkan::create_window( std::string name )
   window->framework_context = framework_context;
   window->render_context = render_context;
 
-  window->id = balefire->windows.add( window );
-  printf("window id:%d\n",window->id);
+  if (balefire->windows.size() <= index) balefire->windows.resize( index+1 );
+  balefire->windows[index] = window;
+  printf("Created window %d\n", window->index);
 
   VkSurfaceKHR surface;
   if (SDL_TRUE != SDL_Vulkan_CreateSurface(
@@ -76,7 +77,7 @@ WindowID FrameworkSDLVulkan::create_window( std::string name )
 
   renderer->configure_window( window );
 
-  return window->id;
+  return window;
 }
 
 void FrameworkSDLVulkan::render( Window* window, CmdData* data )

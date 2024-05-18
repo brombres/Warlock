@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include <vector>
 #include <string>
 
 namespace BALEFIRE
@@ -16,7 +17,6 @@ namespace BALEFIRE
 #include "Balefire/Core/Window.h"
 #include "Balefire/Core/Framework.h"
 #include "Balefire/Core/Renderer.h"
-#include "Balefire/Core/ResourceBank.h"
 #include "Balefire/Core/WindowFrameworkContext.h"
 #include "Balefire/Core/WindowRenderContext.h"
 
@@ -24,7 +24,7 @@ namespace BALEFIRE
 {
   struct Balefire
   {
-    ResourceBank<WindowID,Window*> windows;
+    std::vector<Window*> windows;
 
     Framework* framework = nullptr;
 
@@ -33,7 +33,7 @@ namespace BALEFIRE
 
     ~Balefire();
     void     configure( Framework* framework );
-    WindowID create_window( std::string name );
+    Window*  create_window( int index, std::string name );
     bool     handle_events();
     void     render( CmdData* data );
   };
