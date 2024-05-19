@@ -3,6 +3,7 @@ module Warlock
 class Vertex( x:Real32, y:Real32, z:Real32, color:Int32, u:Real32, v:Real32 ) [compound]
   DEFINITIONS
     PROPERTY_COUNT = 6
+    COLOR_OFFSET   = 3
 
   GLOBAL METHODS
     method create( xy:XY, color:Color )->Vertex

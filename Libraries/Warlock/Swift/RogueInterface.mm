@@ -1,5 +1,4 @@
 #include "RogueInterface.h"
-#include "RogueProgram.h"
 
 //#import <AVFoundation/AVAudioPlayer.h>
 

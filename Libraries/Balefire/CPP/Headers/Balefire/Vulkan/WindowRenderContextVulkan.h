@@ -21,9 +21,6 @@ namespace BALEFIRE
     VKZ::Context*   context = nullptr;
     VkSurfaceKHR    surface = nullptr;
 
-    //size_t current_frame = 0;
-    //int frame_count = 0;  // FIXME
-
     // CONSTRUCTORS
     WindowRenderContextVulkan( Window* window, RendererVulkan* renderer )
       : WindowRenderContext(window), renderer(renderer) {}
@@ -33,6 +30,8 @@ namespace BALEFIRE
     virtual void configure();
     virtual void configure( VkSurfaceKHR surface );
     virtual void render( CmdData* data );
+
+    virtual int  _add_verticles( CmdData* data, int i, std::vector<VKZ::StandardVertex>& vertices );
   };
 };
 

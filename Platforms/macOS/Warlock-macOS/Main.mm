@@ -14,7 +14,6 @@ using namespace BALEFIRE;
 #import "RogueInterface.h"
 
 #include <iostream>
-#include <thread>
 using namespace std;
 
 #include <SDL2/SDL.h>
@@ -26,12 +25,27 @@ using namespace std;
 //#include <glm/vec4.hpp>
 //using namespace glm;
 
+CmdData* begin_render_handler( Window* window, void* app_data )
+{
+  WarlockCmdDataList* list = WarlockWarlock__begin_render__RogueInt( window->index );
+  if ( !list ) return nullptr;
+  return (CmdData*)(list->data);
+}
+
+void end_render_handler( Window* window, void* app_data )
+{
+  WarlockWarlock__end_render__RogueInt( window->index );
+}
+
+
 int main(int argc, char *argv[])
 {
   RogueInterface_configure( argc, argv );
   RogueInterface_launch();
 
   Balefire balefire( new FrameworkSDLVulkan() );
+  balefire.set_render_handlers( begin_render_handler, end_render_handler );
+
   balefire.create_window( 1, "Warlock Engine" );
 
 	//const array of positions for the triangle
@@ -43,41 +57,6 @@ int main(int argc, char *argv[])
 
   while (balefire.handle_events()) balefire.render();
 
-  //SDL_Event e;
-  //bool running = true;
-  //bool pause_rendering = false;
-  //while(running)
-  //{
-  //  while(SDL_PollEvent(&e))
-  //  {
-  //    switch (e.type)
-  //    {
-  //      case SDL_QUIT:
-  //        running = false;
-  //        break;
-
-  //      case SDL_WINDOWEVENT:
-  //        if (e.window.event == SDL_WINDOWEVENT_MINIMIZED || e.window.event == SDL_WINDOWEVENT_HIDDEN)
-  //        {
-  //          printf("PAUSE RENDERING\n");
-  //          pause_rendering = true;
-  //        }
-  //        else if (e.window.event == SDL_WINDOWEVENT_RESTORED || e.window.event == SDL_WINDOWEVENT_SHOWN)
-  //        {
-  //          printf("RESUME RENDERING\n");
-  //          pause_rendering = false;
-  //        }
-  //        break;
-  //    }
-  //  }
-
-  //  if (pause_rendering) {
-  //    std::this_thread::sleep_for( std::chrono::milliseconds(100) );
-  //    continue;
-  //  }
-
-  //  balefire.render();
-  //}
 
   SDL_Quit();
   return 0;

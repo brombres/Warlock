@@ -52,6 +52,24 @@ void WindowRenderContextVulkan::render( CmdData* data )
     vertices.push_back( StandardVertex(-0.5f,-0.5f, 0, 0xff0000ff) );
     vertices.push_back( StandardVertex( 0.5f,-0.5f, 0, 0xffff0000) );
     vertices.push_back( StandardVertex( 0.5f, 0.5f, 0, 0xff00ff00) );
+
+    int data_count = data[0].int32;
+    for (int i=3; i<data_count; )
+    {
+      switch (data[i++].int32)
+      {
+        case RenderCmd::DRAW_TRIANGLES:
+          i = _add_verticles( data, i, vertices );
+          continue;
+        case RenderCmd::DRAW_LINES:
+          i = _add_verticles( data, i, vertices );
+          continue;
+        default:
+          fprintf( stderr, "[Balefire] Unhandled RenderCmd opcode %d (%f)\n", data[i-1].int32, data[i-1].real32 );
+      }
+      break;
+    }
+
     context->staging_buffer.clear();
     context->staging_buffer.copy_from( vertices.data(), (uint32_t)vertices.size() );
     context->vertex_buffer.clear();
@@ -64,4 +82,15 @@ void WindowRenderContextVulkan::render( CmdData* data )
     context->execute( "render.end" );
   }
 
+}
+
+int WindowRenderContextVulkan::_add_verticles( CmdData* data, int i, std::vector<StandardVertex>& vertices )
+{
+  int n = data[i++].int32;
+  while (--n >= 0)
+  {
+    vertices.push_back( StandardVertex(data[i].real32, data[i+1].real32, data[i+2].real32, data[i+3].int32) );
+    i += 6;
+  }
+  return i;
 }

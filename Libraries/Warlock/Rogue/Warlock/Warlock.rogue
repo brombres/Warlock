@@ -18,9 +18,11 @@ class Warlock [essential singleton]
       @trace d1.int32, d2.real32
 
   GLOBAL METHODS
-    method end_render
+    method begin_render( window_id:Int )->CmdData[]
+      Renderer.fill( Triangle(XY(-0.5,-0.5), XY(0.5,0.5), XY(-0.5,0.5)), Color.YELLOW )
+      return Renderer.finalized_cmd_buffer
+
+    method end_render( window_id:Int )
       Renderer.clear
 
-    method render->CmdData[]
-      return Renderer.finalized_cmd_buffer
 endClass

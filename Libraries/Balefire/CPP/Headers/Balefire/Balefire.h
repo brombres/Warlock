@@ -6,12 +6,6 @@
 #include <vector>
 #include <string>
 
-namespace BALEFIRE
-{
-  typedef int  WindowID;
-  typedef void (*Callback)(void* data);
-};
-
 #include "Balefire/Core/CmdData.h"
 #include "Balefire/Core/RenderCmd.h"
 #include "Balefire/Core/Window.h"
@@ -22,8 +16,15 @@ namespace BALEFIRE
 
 namespace BALEFIRE
 {
+  typedef CmdData* (*BeginRenderHandler)(Window* window, void* app_data);
+  typedef void     (*EndRenderHandler)(Window* window, void* app_data);
+
   struct Balefire
   {
+    BeginRenderHandler begin_render_handler;
+    EndRenderHandler   end_render_handler;
+    void*              handler_app_data;
+
     std::vector<Window*> windows;
 
     Framework* framework = nullptr;
@@ -31,11 +32,13 @@ namespace BALEFIRE
     Balefire() {}
     Balefire( Framework* framework );
 
-    ~Balefire();
-    void     configure( Framework* framework );
-    Window*  create_window( int index, std::string name );
-    bool     handle_events();
-    void     render();
+    virtual ~Balefire();
+    virtual void     configure( Framework* framework );
+    virtual Window*  create_window( int index, std::string name );
+    virtual bool     handle_events();
+    virtual void     render();
+    virtual void     set_render_handlers( BeginRenderHandler begin_render, EndRenderHandler end_render,
+                                          void* app_data=nullptr );
   };
 };
 

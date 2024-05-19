@@ -31,8 +31,14 @@ class Renderer [singleton]
       primitive_type = PrimitiveType.UNDEFINED
 
     method fill( triangle:Triangle, color:Color )
+      primitive_type = PrimitiveType.TRIANGLES
+      local argb = color.argb
+      vertex_buffer.add( Vertex(triangle.a,argb) )
+      vertex_buffer.add( Vertex(triangle.b,argb) )
+      vertex_buffer.add( Vertex(triangle.c,argb) )
 
     method finalized_cmd_buffer->CmdData[]
+      flush
       cmd_buffer[TOTAL_COUNT_INDEX] = CmdData( cmd_buffer.count )
       return cmd_buffer
 
@@ -51,11 +57,26 @@ class Renderer [singleton]
 
       cmd_buffer.add( vertex_buffer.count )
 
-      native @|memcpy(
-              |  $cmd_buffer->as_int32s + $cmd_buffer->count,
-              |  $vertex_buffer->as_int32s,
-              |  $n_slots * 4
-              |);
+      # Convert ARGB -> ABGR
+      local color_offset = Vertex.COLOR_OFFSET
+      local vertex_step  = Vertex.PROPERTY_COUNT
+      local n = vertex_buffer.count
+      native
+      @|RogueInt32* cur = $vertex_buffer->as_int32s + $color_offset;
+       |while (--$n >=0)
+       |{
+       |  RogueInt32 argb = *cur;
+       |  *cur = (argb & 0xFF00FF00) | ((argb<<16) & 0x00FF0000) | ((argb>>16) & 0x000000FF);
+       |  cur += $vertex_step;
+       |}
+
+      native
+      @|memcpy(
+       |  $cmd_buffer->as_int32s + $cmd_buffer->count,
+       |  $vertex_buffer->as_int32s,
+       |  $n_slots * 4
+       |);
+
       cmd_buffer.count += n_slots
 
       cmd_buffer[VCOUNT_INDEX] = CmdData( (cmd_buffer[VCOUNT_INDEX].int32 + vertex_buffer.count) )

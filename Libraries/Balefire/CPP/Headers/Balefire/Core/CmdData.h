@@ -4,7 +4,7 @@
 
 namespace BALEFIRE
 {
-  struct CmdData
+  union CmdData
   {
     int   int32;
     float real32;
