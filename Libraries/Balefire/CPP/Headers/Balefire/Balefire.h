@@ -35,7 +35,7 @@ namespace BALEFIRE
     void     configure( Framework* framework );
     Window*  create_window( int index, std::string name );
     bool     handle_events();
-    void     render( CmdData* data );
+    void     render();
   };
 };
 

@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
 	//	vec3(0.f,-1.f, 0.0f)
 	//};
 
-  while (balefire.handle_events()) balefire.render( nullptr );
+  while (balefire.handle_events()) balefire.render();
 
   //SDL_Event e;
   //bool running = true;

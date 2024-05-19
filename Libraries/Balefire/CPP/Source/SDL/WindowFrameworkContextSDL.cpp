@@ -4,6 +4,7 @@ using namespace BALEFIRE;
 WindowFrameworkContextSDL::WindowFrameworkContextSDL( Window* window, SDL_Window* sdl_window )
   : WindowFrameworkContext(window), sdl_window(sdl_window)
 {
+  sdl_window_id = SDL_GetWindowID( sdl_window );
 }
 
 WindowFrameworkContextSDL::~WindowFrameworkContextSDL()

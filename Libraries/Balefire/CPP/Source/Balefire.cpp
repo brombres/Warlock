@@ -48,11 +48,14 @@ bool Balefire::handle_events()
   return false;
 }
 
-void Balefire::render( CmdData* data )
+void Balefire::render()
 {
   for (Window* window : windows)
   {
-    if (window) framework->render( window, data );
+    if (window && !window->rendering_paused)
+    {
+      framework->render( window, nullptr );
+    }
   }
 }
 

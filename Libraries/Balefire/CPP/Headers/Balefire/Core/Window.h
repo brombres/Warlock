@@ -14,9 +14,10 @@ namespace BALEFIRE
   struct Window
   {
     Framework* framework;
-    int index = 0;
-    int width, height;
-    int pixel_width, pixel_height;
+    int  index = 0;
+    int  width, height;
+    int  pixel_width, pixel_height;
+    bool rendering_paused = false;
 
     WindowFrameworkContext* framework_context = nullptr;
     WindowRenderContext*    render_context = nullptr;

@@ -9,8 +9,9 @@ namespace BALEFIRE
 {
   struct FrameworkSDL : Framework
   {
-    virtual void configure();
+    virtual void     configure();
     virtual Window*  create_window( int index, std::string name );
+    virtual Window*  find_window( Uint32 sdl_id );
     virtual bool     handle_events();
   };
 };

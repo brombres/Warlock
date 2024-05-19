@@ -13,6 +13,7 @@ namespace BALEFIRE
   struct WindowFrameworkContextSDL : WindowFrameworkContext
   {
     SDL_Window* sdl_window = nullptr;
+    Uint32      sdl_window_id;
 
     WindowFrameworkContextSDL( Window* window, SDL_Window* sdl_window );
     virtual ~WindowFrameworkContextSDL();
