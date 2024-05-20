@@ -33,6 +33,7 @@
 		307706362BA8B3AC00122E50 /* Context.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 307706352BA8B3AC00122E50 /* Context.cpp */; };
 		308222352BEEEA43006367E7 /* Buffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 308222342BEEEA43006367E7 /* Buffer.cpp */; };
 		30B5A2AF2BFACFE90030183A /* NativeInterface.mm in Sources */ = {isa = PBXBuildFile; fileRef = 30B5A2AE2BFACFE90030183A /* NativeInterface.mm */; };
+		30B5A2C02BFB95180030183A /* ConfigureGFXLineListColor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30B5A2BF2BFB95180030183A /* ConfigureGFXLineListColor.cpp */; };
 		30C7A0132BC574B5004A98B7 /* Process.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30C7A0072BC574B5004A98B7 /* Process.cpp */; };
 		30C7A0292BC59DEF004A98B7 /* libGenericCodeGen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30C7A0242BC59DEF004A98B7 /* libGenericCodeGen.a */; };
 		30C7A02A2BC59DEF004A98B7 /* libglslang.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30C7A0252BC59DEF004A98B7 /* libglslang.a */; };
@@ -57,7 +58,7 @@
 		30F271D92BDD5941000AD163 /* ConfigureQueues.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30F271C72BDD5941000AD163 /* ConfigureQueues.cpp */; };
 		30F271DA2BDD5941000AD163 /* ConfigureRenderPass.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30F271C82BDD5941000AD163 /* ConfigureRenderPass.cpp */; };
 		30F271DB2BDD5941000AD163 /* ConfigureSemaphores.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30F271C92BDD5941000AD163 /* ConfigureSemaphores.cpp */; };
-		30F271DD2BDD5941000AD163 /* ConfigureStandardGraphicsPipeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30F271CB2BDD5941000AD163 /* ConfigureStandardGraphicsPipeline.cpp */; };
+		30F271DD2BDD5941000AD163 /* ConfigureGFXTriangleListColor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30F271CB2BDD5941000AD163 /* ConfigureGFXTriangleListColor.cpp */; };
 		30F271DE2BDD5941000AD163 /* ConfigureStandardVertexBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30F271CC2BDD5941000AD163 /* ConfigureStandardVertexBuffer.cpp */; };
 		30F271DF2BDD5941000AD163 /* ConfigureSurfaceSize.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30F271CD2BDD5941000AD163 /* ConfigureSurfaceSize.cpp */; };
 		30F271E02BDD5941000AD163 /* ConfigureSwapchain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30F271CE2BDD5941000AD163 /* ConfigureSwapchain.cpp */; };
@@ -228,7 +229,7 @@
 		300C88DD2BC431D600FFBB85 /* Versions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Versions.cpp; sourceTree = "<group>"; };
 		300C88DE2BC431D600FFBB85 /* Versions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Versions.h; sourceTree = "<group>"; };
 		300C88FD2BC4320800FFBB85 /* glslang_c_interface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glslang_c_interface.cpp; sourceTree = "<group>"; };
-		3019596B2BDF040100D9D51B /* GraphicsPipeline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GraphicsPipeline.h; path = Vulkanize/GraphicsPipeline.h; sourceTree = "<group>"; };
+		3019596B2BDF040100D9D51B /* GraphicsPipeline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GraphicsPipeline.h; sourceTree = "<group>"; };
 		301959772BDF040C00D9D51B /* GraphicsPipeline.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GraphicsPipeline.cpp; sourceTree = "<group>"; };
 		3019597A2BDFDF1D00D9D51B /* RenderPass.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RenderPass.cpp; sourceTree = "<group>"; };
 		3019850D2B94DC6000CBECCB /* Window.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Window.cpp; sourceTree = "<group>"; };
@@ -325,6 +326,8 @@
 		308222342BEEEA43006367E7 /* Buffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Buffer.cpp; sourceTree = "<group>"; };
 		30B5A2A22BFACB1E0030183A /* NativeInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NativeInterface.h; path = ../../Libraries/Warlock/ObjC/NativeInterface.h; sourceTree = "<group>"; };
 		30B5A2AE2BFACFE90030183A /* NativeInterface.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = NativeInterface.mm; path = ../../Libraries/Warlock/ObjC/NativeInterface.mm; sourceTree = "<group>"; };
+		30B5A2B32BFB94F90030183A /* ConfigureGFXLineListColor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConfigureGFXLineListColor.h; sourceTree = "<group>"; };
+		30B5A2BF2BFB95180030183A /* ConfigureGFXLineListColor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureGFXLineListColor.cpp; sourceTree = "<group>"; };
 		30C79EBA2BC44878004A98B7 /* libglslang.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libglslang.a; path = ../../Libraries/glslang/build/glslang/libglslang.a; sourceTree = "<group>"; };
 		30C79F672BC448E3004A98B7 /* libOSDependent.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libOSDependent.a; sourceTree = "<group>"; };
 		30C79F6C2BC448E3004A98B7 /* libGenericCodeGen.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libGenericCodeGen.a; sourceTree = "<group>"; };
@@ -368,7 +371,7 @@
 		30F271C72BDD5941000AD163 /* ConfigureQueues.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureQueues.cpp; sourceTree = "<group>"; };
 		30F271C82BDD5941000AD163 /* ConfigureRenderPass.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureRenderPass.cpp; sourceTree = "<group>"; };
 		30F271C92BDD5941000AD163 /* ConfigureSemaphores.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureSemaphores.cpp; sourceTree = "<group>"; };
-		30F271CB2BDD5941000AD163 /* ConfigureStandardGraphicsPipeline.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureStandardGraphicsPipeline.cpp; sourceTree = "<group>"; };
+		30F271CB2BDD5941000AD163 /* ConfigureGFXTriangleListColor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureGFXTriangleListColor.cpp; sourceTree = "<group>"; };
 		30F271CC2BDD5941000AD163 /* ConfigureStandardVertexBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureStandardVertexBuffer.cpp; sourceTree = "<group>"; };
 		30F271CD2BDD5941000AD163 /* ConfigureSurfaceSize.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureSurfaceSize.cpp; sourceTree = "<group>"; };
 		30F271CE2BDD5941000AD163 /* ConfigureSwapchain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureSwapchain.cpp; sourceTree = "<group>"; };
@@ -386,7 +389,7 @@
 		30F271EF2BDD5976000AD163 /* ConfigureQueues.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigureQueues.h; sourceTree = "<group>"; };
 		30F271F02BDD5976000AD163 /* ConfigureRenderPass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigureRenderPass.h; sourceTree = "<group>"; };
 		30F271F12BDD5976000AD163 /* ConfigureSemaphores.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigureSemaphores.h; sourceTree = "<group>"; };
-		30F271F32BDD5976000AD163 /* ConfigureStandardGraphicsPipeline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigureStandardGraphicsPipeline.h; sourceTree = "<group>"; };
+		30F271F32BDD5976000AD163 /* ConfigureGFXTriangleListColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigureGFXTriangleListColor.h; sourceTree = "<group>"; };
 		30F271F42BDD5976000AD163 /* ConfigureStandardVertexBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigureStandardVertexBuffer.h; sourceTree = "<group>"; };
 		30F271F52BDD5976000AD163 /* ConfigureSurfaceSize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigureSurfaceSize.h; sourceTree = "<group>"; };
 		30F271F62BDD5976000AD163 /* ConfigureSwapchain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigureSwapchain.h; sourceTree = "<group>"; };
@@ -804,6 +807,7 @@
 		3077062D2BA896D500122E50 /* Vulkanize */ = {
 			isa = PBXGroup;
 			children = (
+				3019596B2BDF040100D9D51B /* GraphicsPipeline.h */,
 				308222332BEEEA38006367E7 /* Buffer.h */,
 				30F271FA2BDD597D000AD163 /* Render */,
 				30F271F72BDD5976000AD163 /* Configure */,
@@ -831,7 +835,6 @@
 		3077062E2BA896D500122E50 /* Headers */ = {
 			isa = PBXGroup;
 			children = (
-				3019596B2BDF040100D9D51B /* GraphicsPipeline.h */,
 				3077062D2BA896D500122E50 /* Vulkanize */,
 			);
 			name = Headers;
@@ -904,6 +907,7 @@
 		30F271CF2BDD5941000AD163 /* Configure */ = {
 			isa = PBXGroup;
 			children = (
+				30B5A2BF2BFB95180030183A /* ConfigureGFXLineListColor.cpp */,
 				30F271BE2BDD5941000AD163 /* ConfigureCommandBuffers.cpp */,
 				30F271BF2BDD5941000AD163 /* ConfigureCommandPool.cpp */,
 				30F271C02BDD5941000AD163 /* ConfigureDepthStencil.cpp */,
@@ -916,7 +920,7 @@
 				30F271C72BDD5941000AD163 /* ConfigureQueues.cpp */,
 				30F271C82BDD5941000AD163 /* ConfigureRenderPass.cpp */,
 				30F271C92BDD5941000AD163 /* ConfigureSemaphores.cpp */,
-				30F271CB2BDD5941000AD163 /* ConfigureStandardGraphicsPipeline.cpp */,
+				30F271CB2BDD5941000AD163 /* ConfigureGFXTriangleListColor.cpp */,
 				30F271CC2BDD5941000AD163 /* ConfigureStandardVertexBuffer.cpp */,
 				30F271CD2BDD5941000AD163 /* ConfigureSurfaceSize.cpp */,
 				30F271CE2BDD5941000AD163 /* ConfigureSwapchain.cpp */,
@@ -936,6 +940,7 @@
 		30F271F72BDD5976000AD163 /* Configure */ = {
 			isa = PBXGroup;
 			children = (
+				30B5A2B32BFB94F90030183A /* ConfigureGFXLineListColor.h */,
 				30F271E62BDD5976000AD163 /* ConfigureCommandBuffers.h */,
 				30F271E72BDD5976000AD163 /* ConfigureCommandPool.h */,
 				30F271E82BDD5976000AD163 /* ConfigureDepthStencil.h */,
@@ -948,7 +953,7 @@
 				30F271EF2BDD5976000AD163 /* ConfigureQueues.h */,
 				30F271F02BDD5976000AD163 /* ConfigureRenderPass.h */,
 				30F271F12BDD5976000AD163 /* ConfigureSemaphores.h */,
-				30F271F32BDD5976000AD163 /* ConfigureStandardGraphicsPipeline.h */,
+				30F271F32BDD5976000AD163 /* ConfigureGFXTriangleListColor.h */,
 				30F271F42BDD5976000AD163 /* ConfigureStandardVertexBuffer.h */,
 				30F271F52BDD5976000AD163 /* ConfigureSurfaceSize.h */,
 				30F271F62BDD5976000AD163 /* ConfigureSwapchain.h */,
@@ -1164,6 +1169,7 @@
 				307706332BA896D500122E50 /* Vulkanize.cpp in Sources */,
 				30E9EA802BCD84B000E45E9F /* GLSLangInterface.cpp in Sources */,
 				306912E12B5E7E1D00B14F73 /* Warlock.swift in Sources */,
+				30B5A2C02BFB95180030183A /* ConfigureGFXLineListColor.cpp in Sources */,
 				30F271D32BDD5941000AD163 /* ConfigureDevice.cpp in Sources */,
 				30F271D62BDD5941000AD163 /* ConfigureFramebuffers.cpp in Sources */,
 				30F271D52BDD5941000AD163 /* ConfigureFormats.cpp in Sources */,
@@ -1171,7 +1177,7 @@
 				301959782BDF040C00D9D51B /* GraphicsPipeline.cpp in Sources */,
 				305AA2B12BAF4B5600BDAE68 /* Operation.cpp in Sources */,
 				3019597B2BDFDF1D00D9D51B /* RenderPass.cpp in Sources */,
-				30F271DD2BDD5941000AD163 /* ConfigureStandardGraphicsPipeline.cpp in Sources */,
+				30F271DD2BDD5941000AD163 /* ConfigureGFXTriangleListColor.cpp in Sources */,
 				30F271DE2BDD5941000AD163 /* ConfigureStandardVertexBuffer.cpp in Sources */,
 				30C7A0132BC574B5004A98B7 /* Process.cpp in Sources */,
 				30F271DF2BDD5941000AD163 /* ConfigureSurfaceSize.cpp in Sources */,

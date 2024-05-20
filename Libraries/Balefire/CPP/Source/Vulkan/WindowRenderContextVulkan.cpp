@@ -42,9 +42,6 @@ void WindowRenderContextVulkan::render( CmdData* data )
 
   if (context->execute("render.begin"))
   {
-    context->standard_pipeline.cmd_bind( context->cmd );
-    context->standard_pipeline.cmd_set_default_viewports_and_scissor_rects( context->cmd );
-
     std::vector<StandardVertex> vertices;
     vertices.push_back( StandardVertex(-0.5f,-0.5f, 0, 0xff0000ff) );
     vertices.push_back( StandardVertex( 0.5f, 0.5f, 0, 0xff00ff00) );
@@ -53,6 +50,7 @@ void WindowRenderContextVulkan::render( CmdData* data )
     vertices.push_back( StandardVertex( 0.5f,-0.5f, 0, 0xffff0000) );
     vertices.push_back( StandardVertex( 0.5f, 0.5f, 0, 0xff00ff00) );
 
+    // Copy all vertices from all draw commands into same 'vertices' buffer.
     int data_count = data[0].int32;
     for (int i=3; i<data_count; )
     {
@@ -74,10 +72,48 @@ void WindowRenderContextVulkan::render( CmdData* data )
     context->staging_buffer.copy_from( vertices.data(), (uint32_t)vertices.size() );
     context->vertex_buffer.clear();
     context->vertex_buffer.copy_from( context->staging_buffer );
-
     context->vertex_buffer.cmd_bind( context->cmd );
 
-    context->device_dispatch.cmdDraw( context->cmd, (uint32_t)context->vertex_buffer.count, 1, 0, 0 );
+    // TEST
+    context->gfx_triangle_list_color.cmd_bind( context->cmd );
+    context->gfx_triangle_list_color.cmd_set_default_viewports_and_scissor_rects( context->cmd );
+    context->device_dispatch.cmdDraw( context->cmd, 6, 1, 0, 0 );
+    int vertex_i = 6;
+
+    // Perform render
+    for (int i=3; i<data_count; )
+    {
+      switch (data[i++].int32)
+      {
+        case RenderCmd::DRAW_TRIANGLES:
+        {
+          context->gfx_triangle_list_color.cmd_bind( context->cmd );
+          context->gfx_triangle_list_color.cmd_set_default_viewports_and_scissor_rects( context->cmd );
+          int vertex_count = data[i++].int32;
+          context->device_dispatch.cmdDraw( context->cmd, vertex_count, 1, vertex_i, 0 );
+          vertex_i += vertex_count;
+          i += vertex_count * 6;
+          continue;
+        }
+        case RenderCmd::DRAW_LINES:
+        {
+          context->gfx_line_list_color.cmd_bind( context->cmd );
+          context->gfx_line_list_color.cmd_set_default_viewports_and_scissor_rects( context->cmd );
+
+          int vertex_count = data[i++].int32;
+          context->device_dispatch.cmdDraw( context->cmd, vertex_count, 1, vertex_i, 0 );
+          vertex_i += vertex_count;
+          i += vertex_count * 6;
+          continue;
+        }
+        default:
+          fprintf( stderr, "[Balefire] Unhandled RenderCmd opcode %d (%f)\n", data[i-1].int32, data[i-1].real32 );
+      }
+      break;
+    }
+
+    //context->gfx_line_list_color.cmd_bind( context->cmd );
+    //context->gfx_line_list_color.cmd_set_default_viewports_and_scissor_rects( context->cmd );
 
     context->execute( "render.end" );
   }

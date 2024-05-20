@@ -30,6 +30,16 @@ class Renderer [singleton]
       vertex_buffer.clear
       primitive_type = PrimitiveType.UNDEFINED
 
+    method draw( triangle:Triangle, color:Color )
+      primitive_type = PrimitiveType.LINES
+      local argb = color.argb
+      vertex_buffer.add( Vertex(triangle.a,argb) )
+      vertex_buffer.add( Vertex(triangle.b,argb) )
+      vertex_buffer.add( Vertex(triangle.b,argb) )
+      vertex_buffer.add( Vertex(triangle.c,argb) )
+      vertex_buffer.add( Vertex(triangle.c,argb) )
+      vertex_buffer.add( Vertex(triangle.a,argb) )
+
     method fill( triangle:Triangle, color:Color )
       primitive_type = PrimitiveType.TRIANGLES
       local argb = color.argb

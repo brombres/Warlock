@@ -23,6 +23,7 @@ class Warlock [essential singleton]
   GLOBAL METHODS
     method begin_render( window_id:Int )->CmdData[] [api]
       Renderer.fill( Triangle(XY(-0.5,-0.5), XY(0.5,0.5), XY(-0.5,0.5)), Color.YELLOW )
+      Renderer.draw( Triangle(XY(-0.5,-0.5), XY(0.5,0.5), XY(-0.5,0.5)), Color.RED )
       return Renderer.finalized_cmd_buffer
 
     method end_render( window_id:Int ) [api]
