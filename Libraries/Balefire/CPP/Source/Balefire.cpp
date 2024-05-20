@@ -4,8 +4,11 @@ using namespace BALEFIRE;
 #include <thread>
 using namespace std;
 
+Balefire* Balefire::instance = nullptr;
+
 Balefire::Balefire( Framework* framework )
 {
+  instance = this;
   configure( framework );
 }
 
@@ -23,6 +26,8 @@ Balefire::~Balefire()
     delete this->framework;
     this->framework = nullptr;
   }
+
+  instance = nullptr;
 }
 
 void Balefire::configure( Framework* framework )

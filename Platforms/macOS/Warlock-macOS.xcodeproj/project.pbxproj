@@ -32,6 +32,7 @@
 		307706332BA896D500122E50 /* Vulkanize.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 307706302BA896D500122E50 /* Vulkanize.cpp */; };
 		307706362BA8B3AC00122E50 /* Context.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 307706352BA8B3AC00122E50 /* Context.cpp */; };
 		308222352BEEEA43006367E7 /* Buffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 308222342BEEEA43006367E7 /* Buffer.cpp */; };
+		30B5A2AF2BFACFE90030183A /* NativeInterface.mm in Sources */ = {isa = PBXBuildFile; fileRef = 30B5A2AE2BFACFE90030183A /* NativeInterface.mm */; };
 		30C7A0132BC574B5004A98B7 /* Process.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30C7A0072BC574B5004A98B7 /* Process.cpp */; };
 		30C7A0292BC59DEF004A98B7 /* libGenericCodeGen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30C7A0242BC59DEF004A98B7 /* libGenericCodeGen.a */; };
 		30C7A02A2BC59DEF004A98B7 /* libglslang.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30C7A0252BC59DEF004A98B7 /* libglslang.a */; };
@@ -322,6 +323,8 @@
 		307DC3042BB9AE27009297EA /* Node.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Node.h; sourceTree = "<group>"; };
 		308222332BEEEA38006367E7 /* Buffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Buffer.h; sourceTree = "<group>"; };
 		308222342BEEEA43006367E7 /* Buffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Buffer.cpp; sourceTree = "<group>"; };
+		30B5A2A22BFACB1E0030183A /* NativeInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NativeInterface.h; path = ../../Libraries/Warlock/ObjC/NativeInterface.h; sourceTree = "<group>"; };
+		30B5A2AE2BFACFE90030183A /* NativeInterface.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = NativeInterface.mm; path = ../../Libraries/Warlock/ObjC/NativeInterface.mm; sourceTree = "<group>"; };
 		30C79EBA2BC44878004A98B7 /* libglslang.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libglslang.a; path = ../../Libraries/glslang/build/glslang/libglslang.a; sourceTree = "<group>"; };
 		30C79F672BC448E3004A98B7 /* libOSDependent.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libOSDependent.a; sourceTree = "<group>"; };
 		30C79F6C2BC448E3004A98B7 /* libGenericCodeGen.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libGenericCodeGen.a; sourceTree = "<group>"; };
@@ -341,8 +344,8 @@
 		30C7A0402BC6D3D4004A98B7 /* libSPVRemapper.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSPVRemapper.a; path = ../../Libraries/glslang/build/install/lib/libSPVRemapper.a; sourceTree = "<group>"; };
 		30CB68CE2BF549B0008A95B7 /* RogueProgram.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RogueProgram.cpp; path = ../../Build/macOS/Source/RogueProgram.cpp; sourceTree = "<group>"; };
 		30CB68CF2BF549B0008A95B7 /* RogueProgram.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RogueProgram.h; path = ../../Build/macOS/Source/RogueProgram.h; sourceTree = "<group>"; };
-		30CB68D12BF549D4008A95B7 /* RogueInterface.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = RogueInterface.mm; path = ../../Libraries/Warlock/Swift/RogueInterface.mm; sourceTree = "<group>"; };
-		30CB68D22BF549D4008A95B7 /* RogueInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RogueInterface.h; path = ../../Libraries/Warlock/Swift/RogueInterface.h; sourceTree = "<group>"; };
+		30CB68D12BF549D4008A95B7 /* RogueInterface.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = RogueInterface.mm; path = ../../Libraries/Warlock/ObjC/RogueInterface.mm; sourceTree = "<group>"; };
+		30CB68D22BF549D4008A95B7 /* RogueInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RogueInterface.h; path = ../../Libraries/Warlock/ObjC/RogueInterface.h; sourceTree = "<group>"; };
 		30E9EA732BCD84A600E45E9F /* GLSLangInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GLSLangInterface.h; sourceTree = "<group>"; };
 		30E9EA7F2BCD84B000E45E9F /* GLSLangInterface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLSLangInterface.cpp; sourceTree = "<group>"; };
 		30E9EA852BD16CF300E45E9F /* StandardVertexDescription.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StandardVertexDescription.h; sourceTree = "<group>"; };
@@ -888,6 +891,8 @@
 		30CB68C22BF54994008A95B7 /* Rogue */ = {
 			isa = PBXGroup;
 			children = (
+				30B5A2AE2BFACFE90030183A /* NativeInterface.mm */,
+				30B5A2A22BFACB1E0030183A /* NativeInterface.h */,
 				30CB68D22BF549D4008A95B7 /* RogueInterface.h */,
 				30CB68D12BF549D4008A95B7 /* RogueInterface.mm */,
 				30CB68CE2BF549B0008A95B7 /* RogueProgram.cpp */,
@@ -1153,6 +1158,7 @@
 				30F271D42BDD5941000AD163 /* ConfigureFences.cpp in Sources */,
 				301985362B94DC6000CBECCB /* FrameworkSDL.cpp in Sources */,
 				306912D12B5E7D7400B14F73 /* AppDelegate.m in Sources */,
+				30B5A2AF2BFACFE90030183A /* NativeInterface.mm in Sources */,
 				30F271DB2BDD5941000AD163 /* ConfigureSemaphores.cpp in Sources */,
 				3004D1EA2BBDA14000572087 /* Image.cpp in Sources */,
 				307706332BA896D500122E50 /* Vulkanize.cpp in Sources */,

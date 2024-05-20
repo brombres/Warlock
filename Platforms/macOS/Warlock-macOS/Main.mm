@@ -40,13 +40,11 @@ void end_render_handler( Window* window, void* app_data )
 
 int main(int argc, char *argv[])
 {
-  RogueInterface_configure( argc, argv );
-  RogueInterface_launch();
-
   Balefire balefire( new FrameworkSDLVulkan() );
   balefire.set_render_handlers( begin_render_handler, end_render_handler );
 
-  balefire.create_window( 1, "Warlock Engine" );
+  RogueInterface_configure( argc, argv );
+  RogueInterface_launch();
 
 	//const array of positions for the triangle
 	//const vec3 positions[3] = {

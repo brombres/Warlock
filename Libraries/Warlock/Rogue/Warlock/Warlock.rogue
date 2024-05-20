@@ -1,4 +1,6 @@
-module Warlock [api]
+module Warlock
+
+nativeHeader @|#include "NativeInterface.h"
 
 uses Geometry [export]
 uses Graphics [export]
@@ -6,23 +8,24 @@ uses Graphics [export]
 $include CmdData
 $include RenderCmd
 $include Renderer
+$include ResourceBank
 $include Vertex
+$include Window
 
 class Warlock [essential singleton]
   PROPERTIES
+    windows = ResourceBank<<Window>>()
+
   METHODS
     method init
-      local d1 = CmdData(3)
-      local d2 = CmdData(4.5)
-      println "Hello Warlock!!"
-      @trace d1.int32, d2.real32
+      Window( "Rogue Warlock" )
 
   GLOBAL METHODS
-    method begin_render( window_id:Int )->CmdData[]
+    method begin_render( window_id:Int )->CmdData[] [api]
       Renderer.fill( Triangle(XY(-0.5,-0.5), XY(0.5,0.5), XY(-0.5,0.5)), Color.YELLOW )
       return Renderer.finalized_cmd_buffer
 
-    method end_render( window_id:Int )
+    method end_render( window_id:Int ) [api]
       Renderer.clear
 
 endClass

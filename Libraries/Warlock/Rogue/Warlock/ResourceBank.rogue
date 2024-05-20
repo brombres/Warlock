@@ -1,0 +1,50 @@
+module Warlock
+
+class ResourceBank<<$ResourceType>>
+  PROPERTIES
+    resources = $ResourceType[]
+    used_ids  = Int[]
+    free_ids  = Int[]
+
+  METHODS
+    method init
+      clear
+
+    method add( resource:$ResourceType )->Int
+      local id : Int
+      if (free_ids.count)
+        id = free_ids.remove_last
+      else
+        id = resources.count
+        resources.add( $defaultValue<<$ResourceType>> )
+      endIf
+
+      used_ids.add( id )
+      resources[id] = resource
+      return id
+
+    method clear
+      resources.clear
+      resources.add( $defaultValue<<$ResourceType>> )  # keep id 0 unused
+      used_ids.clear
+      free_ids.clear
+
+    method get( id:Int )->$ResourceType
+      return resources[id]
+
+    method iterator->ResourceBankIterator<<$ResourceType>>
+      return ResourceBankIterator<<$ResourceType>>( this )
+
+    method remove( id:Int )
+      resources[id] = $defaultValue<<$ResourceType>>
+      free_ids.add( id )
+endClass
+
+class ResourceBankIterator<<$ResourceType>>( resource_bank:ResourceBank<<$ResourceType>>, index=0:Int32 ) [compound]
+  METHODS
+    method read_another->$ResourceType [mutating]
+      if (index >= resource_bank.used_ids.count) return null
+      ++index
+      return resource_bank.resources[ resource_bank.used_ids[index-1] ]
+endClass
+

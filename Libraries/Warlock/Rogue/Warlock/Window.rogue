@@ -1,0 +1,11 @@
+module Warlock
+
+class Window
+  PROPERTIES
+    id : Int
+
+  METHODS
+    method init( title:String )
+      id = Warlock.windows.add( this )
+      native @|NativeInterface_create_window( $id, $title );
+endClass

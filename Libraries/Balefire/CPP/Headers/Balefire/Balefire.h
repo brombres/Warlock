@@ -21,6 +21,8 @@ namespace BALEFIRE
 
   struct Balefire
   {
+    static Balefire* instance;
+
     BeginRenderHandler begin_render_handler;
     EndRenderHandler   end_render_handler;
     void*              handler_app_data;
@@ -29,7 +31,7 @@ namespace BALEFIRE
 
     Framework* framework = nullptr;
 
-    Balefire() {}
+    Balefire() { instance = this; }
     Balefire( Framework* framework );
 
     virtual ~Balefire();
