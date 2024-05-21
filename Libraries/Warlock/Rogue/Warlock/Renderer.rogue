@@ -14,84 +14,79 @@ class Renderer [singleton]
     VCOUNT_INDEX      = 2
 
   PROPERTIES
-    cmd_buffer     = CmdData[]
-    vertex_buffer  = Vertex[]
-    primitive_type : PrimitiveType
+    cmd_data           = RenderCmdData[]
+    cur_vertex_data    = Vertex[]
+    all_vertex_data    = Vertex[]
+    finalized_cmd_data = RenderCmdData[]
+    primitive_type     : PrimitiveType
 
   METHODS
     method init
       clear
 
     method clear
-      cmd_buffer.clear
-      cmd_buffer.add( 0 )  # total data count
-      cmd_buffer.add( VERSION )
-      cmd_buffer.add( 0 )  # total dynamic vertex count
-      vertex_buffer.clear
+      cmd_data.clear
+      all_vertex_data.clear
+      cur_vertex_data.clear
       primitive_type = PrimitiveType.UNDEFINED
 
     method draw( triangle:Triangle, color:Color )
       primitive_type = PrimitiveType.LINES
       local argb = color.argb
-      vertex_buffer.add( Vertex(triangle.a,argb) )
-      vertex_buffer.add( Vertex(triangle.b,argb) )
-      vertex_buffer.add( Vertex(triangle.b,argb) )
-      vertex_buffer.add( Vertex(triangle.c,argb) )
-      vertex_buffer.add( Vertex(triangle.c,argb) )
-      vertex_buffer.add( Vertex(triangle.a,argb) )
+      cur_vertex_data.add( Vertex(triangle.a,argb) )
+      cur_vertex_data.add( Vertex(triangle.b,argb) )
+      cur_vertex_data.add( Vertex(triangle.b,argb) )
+      cur_vertex_data.add( Vertex(triangle.c,argb) )
+      cur_vertex_data.add( Vertex(triangle.c,argb) )
+      cur_vertex_data.add( Vertex(triangle.a,argb) )
 
     method fill( triangle:Triangle, color:Color )
       primitive_type = PrimitiveType.TRIANGLES
       local argb = color.argb
-      vertex_buffer.add( Vertex(triangle.a,argb) )
-      vertex_buffer.add( Vertex(triangle.b,argb) )
-      vertex_buffer.add( Vertex(triangle.c,argb) )
+      cur_vertex_data.add( Vertex(triangle.a,argb) )
+      cur_vertex_data.add( Vertex(triangle.b,argb) )
+      cur_vertex_data.add( Vertex(triangle.c,argb) )
 
-    method finalized_cmd_buffer->CmdData[]
+    method finalized_cmd_data->RenderCmdData[]
       flush
-      cmd_buffer[TOTAL_COUNT_INDEX] = CmdData( cmd_buffer.count )
-      return cmd_buffer
+
+      local total_count = cmd_data.count + all_vertex_data.count*Vertex.PROPERTY_COUNT + 4
+      @finalized_cmd_data.clear
+      @finalized_cmd_data.reserve( total_count )
+      @finalized_cmd_data.add( total_count )
+      @finalized_cmd_data.add( VERSION )
+
+      @finalized_cmd_data.add( RenderCmd.VERTEX_DATA )
+      @finalized_cmd_data.add( all_vertex_data.count )
+
+      # all_vertex_data: copy to finalized_cmd_data
+      local n_vertex_slots = all_vertex_data.count * Vertex.PROPERTY_COUNT
+      native
+      @|memcpy(
+       |  $finalized_cmd_data->as_int32s + $finalized_cmd_data->count,
+       |  $all_vertex_data->as_int32s,
+       |  $n_vertex_slots * 4
+       |);
+      @finalized_cmd_data.count += n_vertex_slots
+
+      @finalized_cmd_data.add( cmd_data )
+
+      return @finalized_cmd_data
 
     method flush
-      if (vertex_buffer.is_empty) return
-
-      local n_slots = vertex_buffer.count * Vertex.PROPERTY_COUNT
-      cmd_buffer.reserve( n_slots + 2 )
+      if (cur_vertex_data.is_empty) return
 
       which (primitive_type)
         case TRIANGLES
-          cmd_buffer.add( RenderCmd.DRAW_TRIANGLES )
+          cmd_data.add( RenderCmd.DRAW_TRIANGLES )
+          cmd_data.add( cur_vertex_data.count )
         case LINES
-          cmd_buffer.add( RenderCmd.DRAW_LINES )
+          cmd_data.add( RenderCmd.DRAW_LINES )
+          cmd_data.add( cur_vertex_data.count )
       endWhich
 
-      cmd_buffer.add( vertex_buffer.count )
-
-      # Convert ARGB -> ABGR
-      local color_offset = Vertex.COLOR_OFFSET
-      local vertex_step  = Vertex.PROPERTY_COUNT
-      local n = vertex_buffer.count
-      native
-      @|RogueInt32* cur = $vertex_buffer->as_int32s + $color_offset;
-       |while (--$n >=0)
-       |{
-       |  RogueInt32 argb = *cur;
-       |  *cur = (argb & 0xFF00FF00) | ((argb<<16) & 0x00FF0000) | ((argb>>16) & 0x000000FF);
-       |  cur += $vertex_step;
-       |}
-
-      native
-      @|memcpy(
-       |  $cmd_buffer->as_int32s + $cmd_buffer->count,
-       |  $vertex_buffer->as_int32s,
-       |  $n_slots * 4
-       |);
-
-      cmd_buffer.count += n_slots
-
-      cmd_buffer[VCOUNT_INDEX] = CmdData( (cmd_buffer[VCOUNT_INDEX].int32 + vertex_buffer.count) )
-
-      vertex_buffer.clear
+      all_vertex_data.add( cur_vertex_data )
+      cur_vertex_data.clear
 
     method set_primitive_type( new_type:PrimitiveType )
       if (new_type == @primitive_type) return

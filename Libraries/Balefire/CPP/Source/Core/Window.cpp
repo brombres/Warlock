@@ -16,7 +16,7 @@ Window::~Window()
   }
 }
 
-void Window::render( CmdData* data )
+void Window::render( RenderCmdData* data )
 {
   render_context->render( data );
 }

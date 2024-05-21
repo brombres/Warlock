@@ -1,0 +1,24 @@
+module Warlock
+
+class RenderCmdData [compound]
+  GLOBAL METHODS
+    method create( cmd:RenderCmd )->RenderCmdData
+      return native( "(%Ns%WarlockRenderCmdData) {  {.int32=(RogueInt32)$cmd.value} }" )->RenderCmdData
+
+    method create( value:Int )->RenderCmdData
+      return native( "(%Ns%WarlockRenderCmdData) {  {.int32=(RogueInt32)$value} }" )->RenderCmdData
+
+    method create( value:Real )->RenderCmdData
+      return native( "(%Ns%WarlockRenderCmdData) {  {.real32=(RogueReal32)$value} }" )->RenderCmdData
+
+  PROPERTIES
+    int32  : Int32  [faux]
+    real32 : Real32 [faux]
+
+    native
+      @|union
+       |{
+       |  %Ns%RogueInt32  int32;
+       |  %Ns%RogueReal32 real32;
+       |};
+endClass

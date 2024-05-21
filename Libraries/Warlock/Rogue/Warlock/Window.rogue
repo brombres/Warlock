@@ -7,5 +7,5 @@ class Window
   METHODS
     method init( title:String )
       id = Warlock.windows.add( this )
-      native @|NativeInterface_create_window( $id, $title );
+      native @|NativeInterface_create_window( (RogueInt32)$id, $title );
 endClass

@@ -5,7 +5,7 @@ nativeHeader @|#include "NativeInterface.h"
 uses Geometry [export]
 uses Graphics [export]
 
-$include CmdData
+$include RenderCmdData
 $include RenderCmd
 $include Renderer
 $include ResourceBank
@@ -21,10 +21,10 @@ class Warlock [essential singleton]
       Window( "Rogue Warlock" )
 
   GLOBAL METHODS
-    method begin_render( window_id:Int )->CmdData[] [api]
+    method begin_render( window_id:Int )->RenderCmdData[] [api]
       Renderer.fill( Triangle(XY(-0.5,-0.5), XY(0.5,0.5), XY(-0.5,0.5)), Color.YELLOW )
       Renderer.draw( Triangle(XY(-0.5,-0.5), XY(0.5,0.5), XY(-0.5,0.5)), Color.RED )
-      return Renderer.finalized_cmd_buffer
+      return Renderer.finalized_cmd_data
 
     method end_render( window_id:Int ) [api]
       Renderer.clear

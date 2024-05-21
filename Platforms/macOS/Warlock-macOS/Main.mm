@@ -25,11 +25,11 @@ using namespace std;
 //#include <glm/vec4.hpp>
 //using namespace glm;
 
-CmdData* begin_render_handler( Window* window, void* app_data )
+RenderCmdData* begin_render_handler( Window* window, void* app_data )
 {
-  WarlockCmdDataList* list = WarlockWarlock__begin_render__RogueInt( window->index );
+  WarlockRenderCmdDataList* list = WarlockWarlock__begin_render__RogueInt( window->index );
   if ( !list ) return nullptr;
-  return (CmdData*)(list->data);
+  return (RenderCmdData*)(list->data);
 }
 
 void end_render_handler( Window* window, void* app_data )

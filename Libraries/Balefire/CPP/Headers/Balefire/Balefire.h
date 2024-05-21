@@ -6,7 +6,7 @@
 #include <vector>
 #include <string>
 
-#include "Balefire/Core/CmdData.h"
+#include "Balefire/Core/RenderCmdData.h"
 #include "Balefire/Core/RenderCmd.h"
 #include "Balefire/Core/Window.h"
 #include "Balefire/Core/Framework.h"
@@ -16,7 +16,7 @@
 
 namespace BALEFIRE
 {
-  typedef CmdData* (*BeginRenderHandler)(Window* window, void* app_data);
+  typedef RenderCmdData* (*BeginRenderHandler)(Window* window, void* app_data);
   typedef void     (*EndRenderHandler)(Window* window, void* app_data);
 
   struct Balefire

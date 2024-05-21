@@ -1,6 +1,7 @@
 module Warlock
 
 enum RenderCmd
-  DRAW_TRIANGLES # vertex_count, vertex_data[ vertex_count * Vertex.PROPERTY_COUNT ]
-  DRAW_LINES     # vertex_count, vertex_data[ vertex_count * Vertex.PROPERTY_COUNT ]
+  VERTEX_DATA    # vertex_count, vertex_data[ vertex_count * Vertex.PROPERTY_COUNT ]
+  DRAW_TRIANGLES # vertex_count
+  DRAW_LINES     # vertex_count
 endEnum

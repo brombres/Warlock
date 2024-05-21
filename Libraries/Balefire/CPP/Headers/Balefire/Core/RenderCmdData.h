@@ -4,7 +4,7 @@
 
 namespace BALEFIRE
 {
-  union CmdData
+  union RenderCmdData
   {
     int   int32;
     float real32;

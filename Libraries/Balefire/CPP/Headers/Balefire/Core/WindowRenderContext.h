@@ -18,7 +18,7 @@ namespace BALEFIRE
     virtual ~WindowRenderContext() {}
 
     virtual void configure() {}
-    virtual void render( CmdData* data ) {}
+    virtual void render( RenderCmdData* data ) {}
   };
 };
 
