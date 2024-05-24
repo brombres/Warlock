@@ -42,7 +42,7 @@ void WindowRenderContextVulkan::render( RenderCmdData* data )
 
   if (context->execute("render.begin"))
   {
-    std::vector<StandardVertex> vertices;
+    //std::vector<StandardVertex> vertices;
     //vertices.push_back( StandardVertex(-0.5f,-0.5f, 0, 0xff0000ff) );
     //vertices.push_back( StandardVertex( 0.5f, 0.5f, 0, 0xff00ff00) );
     //vertices.push_back( StandardVertex(-0.5f, 0.5f, 0, 0xffff0000) );
@@ -61,11 +61,11 @@ void WindowRenderContextVulkan::render( RenderCmdData* data )
     {
       ++i;
       int n = data[i++].int32;
-      vertices.reserve( vertices.size() + n );
+      //vertices.reserve( vertices.size() + n );
 
       // Convert color ARGB -> ABGR
       int color_offset = 3;
-      int vertex_step  = 6;
+      int vertex_step  = BALEFIRE::VERTEX_PROPERTY_COUNT;
       int remaining = n;
       int* cur = &data[i].int32 + color_offset;
       while (--remaining >=0)
@@ -75,25 +75,25 @@ void WindowRenderContextVulkan::render( RenderCmdData* data )
         cur += vertex_step;
       }
 
-      //context->staging_buffer.clear();
-      //context->staging_buffer.copy_from( &data[i], (uint32_t)n );
-      //context->vertex_buffer.clear();
-      //context->vertex_buffer.copy_from( context->staging_buffer );
-      //context->vertex_buffer.cmd_bind( context->cmd );
-      //i += n * 6;
-
-      // Copy vertex data to 'vertices'
-      while (--n >= 0)
-      {
-        vertices.push_back( StandardVertex(data[i].real32, data[i+1].real32, data[i+2].real32, data[i+3].int32) );
-        i += 6;
-      }
-
       context->staging_buffer.clear();
-      context->staging_buffer.copy_from( vertices.data(), (uint32_t)vertices.size() );
+      context->staging_buffer.copy_from( &data[i], (uint32_t)n );
       context->vertex_buffer.clear();
       context->vertex_buffer.copy_from( context->staging_buffer );
       context->vertex_buffer.cmd_bind( context->cmd );
+      i += n * BALEFIRE::VERTEX_PROPERTY_COUNT;
+
+      // Copy vertex data to 'vertices'
+      //while (--n >= 0)
+      //{
+      //  vertices.push_back( StandardVertex(data[i].real32, data[i+1].real32, data[i+2].real32, data[i+3].int32) );
+      //  i += BALEFIRE::VERTEX_PROPERTY_COUNT;
+      //}
+
+      //context->staging_buffer.clear();
+      //context->staging_buffer.copy_from( vertices.data(), (uint32_t)vertices.size() );
+      //context->vertex_buffer.clear();
+      //context->vertex_buffer.copy_from( context->staging_buffer );
+      //context->vertex_buffer.cmd_bind( context->cmd );
     }
 
     // TEST
@@ -134,9 +134,6 @@ void WindowRenderContextVulkan::render( RenderCmdData* data )
       break;
     }
 
-    //context->gfx_line_list_color.cmd_bind( context->cmd );
-    //context->gfx_line_list_color.cmd_set_default_viewports_and_scissor_rects( context->cmd );
-
     context->execute( "render.end" );
   }
 
@@ -148,7 +145,7 @@ int WindowRenderContextVulkan::_add_verticles( RenderCmdData* data, int i, std::
   while (--n >= 0)
   {
     vertices.push_back( StandardVertex(data[i].real32, data[i+1].real32, data[i+2].real32, data[i+3].int32) );
-    i += 6;
+    i += BALEFIRE::VERTEX_PROPERTY_COUNT;
   }
   return i;
 }

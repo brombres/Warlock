@@ -20,10 +20,22 @@ class Warlock [essential singleton]
     method init
       Window( "Rogue Warlock" )
 
+  GLOBAL PROPERTIES
+    degrees = Degrees(0)
+
   GLOBAL METHODS
     method begin_render( window_id:Int )->RenderCmdData[] [api]
-      Renderer.fill( Triangle(XY(-0.5,-0.5), XY(0.5,0.5), XY(-0.5,0.5)), Color.YELLOW )
-      Renderer.draw( Triangle(XY(-0.5,-0.5), XY(0.5,0.5), XY(-0.5,0.5)), Color.RED )
+      local pt = XY(0,-0.5).rotated( degrees )
+      degrees += Degrees(1)
+
+      local triangle = Triangle(
+        pt,
+        pt.rotated( Degrees(120) )
+        pt.rotated( Degrees(240) )
+      )
+      Renderer.fill( triangle, Color.YELLOW )
+      Renderer.draw( triangle, Color.RED )
+
       return Renderer.finalized_cmd_data
 
     method end_render( window_id:Int ) [api]

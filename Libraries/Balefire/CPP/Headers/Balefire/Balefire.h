@@ -19,6 +19,8 @@ namespace BALEFIRE
   typedef RenderCmdData* (*BeginRenderHandler)(Window* window, void* app_data);
   typedef void     (*EndRenderHandler)(Window* window, void* app_data);
 
+  const int VERTEX_PROPERTY_COUNT = 7;
+
   struct Balefire
   {
     static Balefire* instance;
