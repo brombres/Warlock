@@ -4,13 +4,7 @@
 #pragma once
 
 #include <vector>
-#include <vulkan/vulkan.h>
-
-#include "Balefire/Balefire.h"
 #include "Balefire/Vulkan/RendererVulkan.h"
-
-#include "Vulkanize/Vulkanize.h"
-
 
 namespace BALEFIRE
 {
@@ -18,7 +12,7 @@ namespace BALEFIRE
   {
     // PROPERTIES
     RendererVulkan* renderer;
-    VKZ::Context*   context = nullptr;
+    VulkanContext*  context = nullptr;
     VkSurfaceKHR    surface = nullptr;
 
     // CONSTRUCTORS

@@ -9,21 +9,7 @@
 #include "Balefire/Balefire.h"
 #include "Vulkanize/Vulkanize.h"
 
-#define VK_LOG_ERROR(stage) fprintf( stderr, "[ERROR] Balefire Vulkan: error %s.\n", stage );
-
-#define ON_VK_ERROR(stage,cmd,body)                              \
-	{                                                              \
-		VkResult err = cmd;                                          \
-		if ((err=cmd))                                               \
-		{                                                            \
-      fprintf( stderr,                                           \
-          "[ERROR] Balefire Vulkan: error %s (%s).\n",           \
-          stage, RendererVulkan::vkResult_to_c_string(err) );    \
-      body;                                                      \
-		}                                                            \
-	}
-
-#define VK_CHECK(stage,cmd) ON_VK_ERROR(stage,cmd,abort())
+#include "Balefire/Vulkan/VulkanContext.h"
 
 namespace BALEFIRE
 {
@@ -52,5 +38,9 @@ namespace BALEFIRE
     return result.value();
   }
 };
+
+#include "Balefire/Vulkan/Configure/ConfigureGFXLineListColor.h"
+#include "Balefire/Vulkan/Configure/ConfigureGFXTriangleListColor.h"
+#include "Balefire/Vulkan/WindowRenderContextVulkan.h"
 
 #endif // BALEFIRE_RENDERER_VULKAN_H
