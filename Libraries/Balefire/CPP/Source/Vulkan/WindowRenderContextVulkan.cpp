@@ -42,14 +42,6 @@ void WindowRenderContextVulkan::render( RenderCmdData* data )
 
   if (context->execute("render.begin"))
   {
-    //std::vector<StandardVertex> vertices;
-    //vertices.push_back( StandardVertex(-0.5f,-0.5f, 0, 0xff0000ff) );
-    //vertices.push_back( StandardVertex( 0.5f, 0.5f, 0, 0xff00ff00) );
-    //vertices.push_back( StandardVertex(-0.5f, 0.5f, 0, 0xffff0000) );
-    //vertices.push_back( StandardVertex(-0.5f,-0.5f, 0, 0xff0000ff) );
-    //vertices.push_back( StandardVertex( 0.5f,-0.5f, 0, 0xffff0000) );
-    //vertices.push_back( StandardVertex( 0.5f, 0.5f, 0, 0xff00ff00) );
-
     int data_count = data[0].int32;
     // int version = data[1].int32;
     int i = 2;
@@ -75,32 +67,13 @@ void WindowRenderContextVulkan::render( RenderCmdData* data )
         cur += vertex_step;
       }
 
-      context->staging_buffer.clear();
-      context->staging_buffer.copy_from( &data[i], (uint32_t)n );
-      context->vertex_buffer.clear();
-      context->vertex_buffer.copy_from( context->staging_buffer );
-      context->vertex_buffer.cmd_bind( context->cmd );
+      context->staging_buffer->clear();
+      context->staging_buffer->copy_from( &data[i], (uint32_t)n );
+      context->vertex_buffer->clear();
+      context->vertex_buffer->copy_from( context->staging_buffer );
+      context->vertex_buffer->cmd_bind( context->cmd );
       i += n * BALEFIRE::VERTEX_PROPERTY_COUNT;
-
-      // Copy vertex data to 'vertices'
-      //while (--n >= 0)
-      //{
-      //  vertices.push_back( StandardVertex(data[i].real32, data[i+1].real32, data[i+2].real32, data[i+3].int32) );
-      //  i += BALEFIRE::VERTEX_PROPERTY_COUNT;
-      //}
-
-      //context->staging_buffer.clear();
-      //context->staging_buffer.copy_from( vertices.data(), (uint32_t)vertices.size() );
-      //context->vertex_buffer.clear();
-      //context->vertex_buffer.copy_from( context->staging_buffer );
-      //context->vertex_buffer.cmd_bind( context->cmd );
     }
-
-    // TEST
-    //context->gfx_triangle_list_color.cmd_bind( context->cmd );
-    //context->gfx_triangle_list_color.cmd_set_default_viewports_and_scissor_rects( context->cmd );
-    //context->device_dispatch.cmdDraw( context->cmd, 6, 1, 0, 0 );
-    //int vertex_i = 6;
 
     int vertex_i = 0;
 
