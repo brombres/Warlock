@@ -1,6 +1,6 @@
 module Warlock
 
-nativeHeader @|#include "NativeInterface.h"
+nativeHeader @|#include "WarlockInterface.h"
 
 uses Geometry [export]
 uses Graphics [export]
@@ -15,10 +15,19 @@ $include Window
 class Warlock [essential singleton]
   PROPERTIES
     windows = ResourceBank<<Window>>()
+    #bitmap  = Bitmap("Test.png")
 
   METHODS
     method init
       Window( "Rogue Warlock" )
+      if local file = find_asset( "Assets/Images/Warlock.png" )
+        local bitmap = Bitmap( file )
+      endIf
+
+    method find_asset( name:String )->File?
+      local filepath = native("WarlockInterface_find_asset($name)")->String
+      if (filepath) return File( filepath )
+      else          return null
 
   GLOBAL PROPERTIES
     degrees = Degrees(0)

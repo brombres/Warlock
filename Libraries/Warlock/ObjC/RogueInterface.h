@@ -37,14 +37,14 @@ extern "C" {
 void RogueInterface_configure( int argc, char* argv[] );
 void RogueInterface_launch();
 
-//void NativeInterface_create_window( int id, RogueString* title );
+//void WarlockInterface_create_window( int id, RogueString* title );
 
 //NSData* RogueInterface_post_messages( const unsigned char* data, int count );
 //NSData* RogueInterface_send_message( const unsigned char* data, int count );
 //void    RogueInterface_set_arg_count( int count );
 //void    RogueInterface_set_arg_value( int index, const char* value );
 
-#import "NativeInterface.h"
+#import "WarlockInterface.h"
 
 #ifdef __cplusplus
 } // extern "C"
