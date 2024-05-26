@@ -236,6 +236,8 @@
 		300D4F762C0240A60068824B /* VulkanContext.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VulkanContext.cpp; sourceTree = "<group>"; };
 		300D4F7A2C02457C0068824B /* ConfigureGFXLineListColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigureGFXLineListColor.h; sourceTree = "<group>"; };
 		300D4F7B2C0245850068824B /* ConfigureGFXLineListColor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureGFXLineListColor.cpp; sourceTree = "<group>"; };
+		300D4F8A2C0377F90068824B /* VertexDescription.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VertexDescription.h; sourceTree = "<group>"; };
+		300D4F962C0377F90068824B /* Vertex.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Vertex.h; sourceTree = "<group>"; };
 		3019596B2BDF040100D9D51B /* GraphicsPipeline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GraphicsPipeline.h; sourceTree = "<group>"; };
 		301959772BDF040C00D9D51B /* GraphicsPipeline.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GraphicsPipeline.cpp; sourceTree = "<group>"; };
 		3019597A2BDFDF1D00D9D51B /* RenderPass.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RenderPass.cpp; sourceTree = "<group>"; };
@@ -648,6 +650,8 @@
 		3019852C2B94DC6000CBECCB /* Vulkan */ = {
 			isa = PBXGroup;
 			children = (
+				300D4F962C0377F90068824B /* Vertex.h */,
+				300D4F8A2C0377F90068824B /* VertexDescription.h */,
 				300D4F712C02408B0068824B /* Configure */,
 				300D4F6B2C023D490068824B /* VulkanContext.h */,
 				3049E6AC2B9518D9008554DD /* WindowRenderContextVulkan.h */,

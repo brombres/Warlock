@@ -24,8 +24,6 @@ namespace BALEFIRE
     virtual void configure();
     virtual void configure( VkSurfaceKHR surface );
     virtual void render( RenderCmdData* data );
-
-    virtual int  _add_verticles( RenderCmdData* data, int i, std::vector<VKZ::StandardVertex>& vertices );
   };
 };
 

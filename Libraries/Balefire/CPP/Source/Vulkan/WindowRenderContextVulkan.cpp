@@ -112,13 +112,3 @@ void WindowRenderContextVulkan::render( RenderCmdData* data )
 
 }
 
-int WindowRenderContextVulkan::_add_verticles( RenderCmdData* data, int i, std::vector<StandardVertex>& vertices )
-{
-  int n = data[i++].int32;
-  while (--n >= 0)
-  {
-    vertices.push_back( StandardVertex(data[i].real32, data[i+1].real32, data[i+2].real32, data[i+3].int32) );
-    i += BALEFIRE::VERTEX_PROPERTY_COUNT;
-  }
-  return i;
-}
