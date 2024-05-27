@@ -13,6 +13,8 @@
 		300D4F7C2C0245850068824B /* ConfigureGFXLineListColor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 300D4F7B2C0245850068824B /* ConfigureGFXLineListColor.cpp */; };
 		300D4FAD2C0383510068824B /* Assets in Resources */ = {isa = PBXBuildFile; fileRef = 300D4FAC2C0383510068824B /* Assets */; };
 		300D4FAF2C038DFB0068824B /* RogueProgram.mm in Sources */ = {isa = PBXBuildFile; fileRef = 300D4FAE2C038DFB0068824B /* RogueProgram.mm */; };
+		300D4FB62C04CA4A0068824B /* ConfigureDescriptorSet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 300D4FB42C04CA4A0068824B /* ConfigureDescriptorSet.cpp */; };
+		300D4FB72C04CA4A0068824B /* ConfigureDescriptorSetLayout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 300D4FB52C04CA4A0068824B /* ConfigureDescriptorSetLayout.cpp */; };
 		301959782BDF040C00D9D51B /* GraphicsPipeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 301959772BDF040C00D9D51B /* GraphicsPipeline.cpp */; };
 		3019597B2BDFDF1D00D9D51B /* RenderPass.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3019597A2BDFDF1D00D9D51B /* RenderPass.cpp */; };
 		301985302B94DC6000CBECCB /* Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3019850D2B94DC6000CBECCB /* Window.cpp */; };
@@ -37,6 +39,7 @@
 		307706332BA896D500122E50 /* Vulkanize.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 307706302BA896D500122E50 /* Vulkanize.cpp */; };
 		307706362BA8B3AC00122E50 /* Context.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 307706352BA8B3AC00122E50 /* Context.cpp */; };
 		308222352BEEEA43006367E7 /* Buffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 308222342BEEEA43006367E7 /* Buffer.cpp */; };
+		308542F32C0509BC0050704A /* ConfigureDescriptorPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 308542E72C0509BC0050704A /* ConfigureDescriptorPool.cpp */; };
 		30B5A2AF2BFACFE90030183A /* WarlockInterface.mm in Sources */ = {isa = PBXBuildFile; fileRef = 30B5A2AE2BFACFE90030183A /* WarlockInterface.mm */; };
 		30C7A0132BC574B5004A98B7 /* Process.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30C7A0072BC574B5004A98B7 /* Process.cpp */; };
 		30C7A0292BC59DEF004A98B7 /* libGenericCodeGen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30C7A0242BC59DEF004A98B7 /* libGenericCodeGen.a */; };
@@ -241,6 +244,12 @@
 		300D4F962C0377F90068824B /* Vertex.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Vertex.h; sourceTree = "<group>"; };
 		300D4FAC2C0383510068824B /* Assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Assets; path = ../../../Build/macOS/Assets; sourceTree = "<group>"; };
 		300D4FAE2C038DFB0068824B /* RogueProgram.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = RogueProgram.mm; path = ../../Build/macOS/Source/RogueProgram.mm; sourceTree = "<group>"; };
+		300D4FB02C04CA310068824B /* DescriptorSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DescriptorSet.h; sourceTree = "<group>"; };
+		300D4FB12C04CA310068824B /* DescriptorSetLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DescriptorSetLayout.h; sourceTree = "<group>"; };
+		300D4FB22C04CA390068824B /* ConfigureDescriptorSetLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigureDescriptorSetLayout.h; sourceTree = "<group>"; };
+		300D4FB32C04CA390068824B /* ConfigureDescriptorSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigureDescriptorSet.h; sourceTree = "<group>"; };
+		300D4FB42C04CA4A0068824B /* ConfigureDescriptorSet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureDescriptorSet.cpp; sourceTree = "<group>"; };
+		300D4FB52C04CA4A0068824B /* ConfigureDescriptorSetLayout.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureDescriptorSetLayout.cpp; sourceTree = "<group>"; };
 		3019596B2BDF040100D9D51B /* GraphicsPipeline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GraphicsPipeline.h; sourceTree = "<group>"; };
 		301959772BDF040C00D9D51B /* GraphicsPipeline.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GraphicsPipeline.cpp; sourceTree = "<group>"; };
 		3019597A2BDFDF1D00D9D51B /* RenderPass.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RenderPass.cpp; sourceTree = "<group>"; };
@@ -335,6 +344,8 @@
 		307DC3042BB9AE27009297EA /* Node.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Node.h; sourceTree = "<group>"; };
 		308222332BEEEA38006367E7 /* Buffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Buffer.h; sourceTree = "<group>"; };
 		308222342BEEEA43006367E7 /* Buffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Buffer.cpp; sourceTree = "<group>"; };
+		308542E72C0509BC0050704A /* ConfigureDescriptorPool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureDescriptorPool.cpp; sourceTree = "<group>"; };
+		308542F42C0509C90050704A /* ConfigureDescriptorPool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigureDescriptorPool.h; sourceTree = "<group>"; };
 		30B5A2A22BFACB1E0030183A /* WarlockInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WarlockInterface.h; path = ../../Libraries/Warlock/ObjC/WarlockInterface.h; sourceTree = "<group>"; };
 		30B5A2AE2BFACFE90030183A /* WarlockInterface.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = WarlockInterface.mm; path = ../../Libraries/Warlock/ObjC/WarlockInterface.mm; sourceTree = "<group>"; };
 		30C79EBA2BC44878004A98B7 /* libglslang.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libglslang.a; path = ../../Libraries/glslang/build/glslang/libglslang.a; sourceTree = "<group>"; };
@@ -359,9 +370,7 @@
 		30CB68D22BF549D4008A95B7 /* RogueInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RogueInterface.h; path = ../../Libraries/Warlock/ObjC/RogueInterface.h; sourceTree = "<group>"; };
 		30E9EA732BCD84A600E45E9F /* GLSLangInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GLSLangInterface.h; sourceTree = "<group>"; };
 		30E9EA7F2BCD84B000E45E9F /* GLSLangInterface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLSLangInterface.cpp; sourceTree = "<group>"; };
-		30E9EA852BD16CF300E45E9F /* StandardVertexDescription.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StandardVertexDescription.h; sourceTree = "<group>"; };
 		30E9EA912BD16CF300E45E9F /* VertexDescription.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VertexDescription.h; sourceTree = "<group>"; };
-		30E9EAA52BD2CC4100E45E9F /* StandardVertex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StandardVertex.h; sourceTree = "<group>"; };
 		30E9EAA92BD4139200E45E9F /* CustomVertexDescription.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomVertexDescription.h; sourceTree = "<group>"; };
 		30E9EAC82BD58DA900E45E9F /* ContextOperation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContextOperation.h; sourceTree = "<group>"; };
 		30E9EAD62BD5F00700E45E9F /* ShaderStageInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShaderStageInfo.h; sourceTree = "<group>"; };
@@ -837,6 +846,8 @@
 		3077062D2BA896D500122E50 /* Vulkanize */ = {
 			isa = PBXGroup;
 			children = (
+				300D4FB02C04CA310068824B /* DescriptorSet.h */,
+				300D4FB12C04CA310068824B /* DescriptorSetLayout.h */,
 				3019596B2BDF040100D9D51B /* GraphicsPipeline.h */,
 				308222332BEEEA38006367E7 /* Buffer.h */,
 				30F271FA2BDD597D000AD163 /* Render */,
@@ -845,8 +856,6 @@
 				30E9EAD62BD5F00700E45E9F /* ShaderStageInfo.h */,
 				30E9EAC82BD58DA900E45E9F /* ContextOperation.h */,
 				30E9EAA92BD4139200E45E9F /* CustomVertexDescription.h */,
-				30E9EAA52BD2CC4100E45E9F /* StandardVertex.h */,
-				30E9EA852BD16CF300E45E9F /* StandardVertexDescription.h */,
 				30E9EA912BD16CF300E45E9F /* VertexDescription.h */,
 				30E9EA732BCD84A600E45E9F /* GLSLangInterface.h */,
 				30C7A0142BC574C0004A98B7 /* Process.h */,
@@ -937,6 +946,9 @@
 		30F271CF2BDD5941000AD163 /* Configure */ = {
 			isa = PBXGroup;
 			children = (
+				308542E72C0509BC0050704A /* ConfigureDescriptorPool.cpp */,
+				300D4FB52C04CA4A0068824B /* ConfigureDescriptorSetLayout.cpp */,
+				300D4FB42C04CA4A0068824B /* ConfigureDescriptorSet.cpp */,
 				30F271BE2BDD5941000AD163 /* ConfigureCommandBuffers.cpp */,
 				30F271BF2BDD5941000AD163 /* ConfigureCommandPool.cpp */,
 				30F271C02BDD5941000AD163 /* ConfigureDepthStencil.cpp */,
@@ -968,6 +980,9 @@
 		30F271F72BDD5976000AD163 /* Configure */ = {
 			isa = PBXGroup;
 			children = (
+				308542F42C0509C90050704A /* ConfigureDescriptorPool.h */,
+				300D4FB22C04CA390068824B /* ConfigureDescriptorSetLayout.h */,
+				300D4FB32C04CA390068824B /* ConfigureDescriptorSet.h */,
 				30F271E62BDD5976000AD163 /* ConfigureCommandBuffers.h */,
 				30F271E72BDD5976000AD163 /* ConfigureCommandPool.h */,
 				30F271E82BDD5976000AD163 /* ConfigureDepthStencil.h */,
@@ -1192,6 +1207,7 @@
 				30F271D42BDD5941000AD163 /* ConfigureFences.cpp in Sources */,
 				301985362B94DC6000CBECCB /* FrameworkSDL.cpp in Sources */,
 				306912D12B5E7D7400B14F73 /* AppDelegate.m in Sources */,
+				300D4FB72C04CA4A0068824B /* ConfigureDescriptorSetLayout.cpp in Sources */,
 				30B5A2AF2BFACFE90030183A /* WarlockInterface.mm in Sources */,
 				30F271DB2BDD5941000AD163 /* ConfigureSemaphores.cpp in Sources */,
 				3004D1EA2BBDA14000572087 /* Image.cpp in Sources */,
@@ -1203,6 +1219,7 @@
 				30F271D52BDD5941000AD163 /* ConfigureFormats.cpp in Sources */,
 				30F271E52BDD594C000AD163 /* RenderEnd.cpp in Sources */,
 				300D4F792C0240A60068824B /* VulkanContext.cpp in Sources */,
+				308542F32C0509BC0050704A /* ConfigureDescriptorPool.cpp in Sources */,
 				301959782BDF040C00D9D51B /* GraphicsPipeline.cpp in Sources */,
 				305AA2B12BAF4B5600BDAE68 /* Operation.cpp in Sources */,
 				3019597B2BDFDF1D00D9D51B /* RenderPass.cpp in Sources */,
@@ -1213,6 +1230,7 @@
 				3049E6A72B94FBF4008554DD /* Balefire.cpp in Sources */,
 				301985332B94DC6000CBECCB /* Renderer.cpp in Sources */,
 				30F271E02BDD5941000AD163 /* ConfigureSwapchain.cpp in Sources */,
+				300D4FB62C04CA4A0068824B /* ConfigureDescriptorSet.cpp in Sources */,
 				301985392B94DC6000CBECCB /* RendererVulkan.cpp in Sources */,
 				30F271DA2BDD5941000AD163 /* ConfigureRenderPass.cpp in Sources */,
 				307706362BA8B3AC00122E50 /* Context.cpp in Sources */,
