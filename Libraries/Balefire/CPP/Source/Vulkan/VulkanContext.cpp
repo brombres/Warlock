@@ -5,7 +5,9 @@ using namespace VKZ;
 void VulkanContext::configure_operations()
 {
   Context::configure_operations();
-  set_operation( "configure.graphics_pipelines", new BALEFIRE::ConfigureGFXTriangleListColor(&gfx_triangle_list_color) );
-  add_operation( "configure.graphics_pipelines", new BALEFIRE::ConfigureGFXLineListColor(&gfx_line_list_color) );
-  set_operation( "configure.vertex_buffers",     new ConfigureVertexBuffers(sizeof(Vertex)) );
+
+  set_operation( "configure.descriptors",        new BALEFIRE::ConfigureDescriptors(&descriptors) );
+  set_operation( "configure.graphics_pipelines", new ConfigureGFXTriangleListColor(&gfx_triangle_list_color) );
+  add_operation( "configure.graphics_pipelines", new ConfigureGFXLineListColor(&gfx_line_list_color) );
+  set_operation( "configure.buffers",            new ConfigureVertexBuffers(sizeof(Vertex)) );
 }

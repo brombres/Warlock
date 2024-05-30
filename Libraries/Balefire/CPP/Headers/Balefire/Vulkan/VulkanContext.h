@@ -7,6 +7,8 @@ namespace BALEFIRE
   struct VulkanContext : VKZ::Context
   {
     // PROPERTIES
+    VKZ::Descriptors      descriptors;
+
     VKZ::GraphicsPipeline gfx_line_list_color;
     VKZ::GraphicsPipeline gfx_triangle_list_color;
 

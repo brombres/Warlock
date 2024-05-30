@@ -13,6 +13,17 @@
 
 namespace BALEFIRE
 {
+  struct Vec4
+  {
+    float b;
+    float g;
+    float r;
+    float a;
+
+    Vec4() : r(0), g(0), b(0), a(1) {}
+    Vec4( float r, float g, float b, float a=1.0 ) : r(r), g(g), b(b), a(a) {}
+  };
+
   struct RendererVulkan : Renderer
   {
     VKZ::Vulkanize             vulkanize;
@@ -41,6 +52,7 @@ namespace BALEFIRE
 
 #include "Balefire/Vulkan/Vertex.h"
 #include "Balefire/Vulkan/VertexDescription.h"
+#include "Balefire/Vulkan/Configure/ConfigureDescriptors.h"
 #include "Balefire/Vulkan/Configure/ConfigureGFXLineListColor.h"
 #include "Balefire/Vulkan/Configure/ConfigureGFXTriangleListColor.h"
 #include "Balefire/Vulkan/WindowRenderContextVulkan.h"

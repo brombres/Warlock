@@ -8,10 +8,14 @@ void BALEFIRE::ConfigureGFXTriangleListColor::on_configure()
 
   add_vertex_description( new VertexDescription() );
 
+  set_descriptors( &(dynamic_cast<VulkanContext*>(context)->descriptors) );
+
   add_shader_stage( VK_SHADER_STAGE_VERTEX_BIT,
     "shader.vert",
     "#version 450\n"
     "#extension GL_ARB_separate_shader_objects : enable\n"
+    "\n"
+    "//layout (binding = 0) uniform Global {vec4 color;} global;\n"
     "\n"
     "layout (location = 0) in vec2 position;\n"
     "layout (location = 1) in vec3 color;\n"
@@ -22,6 +26,7 @@ void BALEFIRE::ConfigureGFXTriangleListColor::on_configure()
     "{\n"
       "gl_Position = vec4 (position, 0.0, 1.0);\n"
       "fragColor = color;\n"
+      "//fragColor = global.color.rgb;\n"
     "}\n"
   );
 
