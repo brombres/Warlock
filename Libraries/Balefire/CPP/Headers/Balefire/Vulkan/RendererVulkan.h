@@ -15,9 +15,9 @@ namespace BALEFIRE
 {
   struct Vec4
   {
-    float b;
-    float g;
     float r;
+    float g;
+    float b;
     float a;
 
     Vec4() : r(0), g(0), b(0), a(1) {}
