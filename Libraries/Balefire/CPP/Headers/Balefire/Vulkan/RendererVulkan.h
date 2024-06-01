@@ -52,7 +52,7 @@ namespace BALEFIRE
 
 #include "Balefire/Vulkan/Vertex.h"
 #include "Balefire/Vulkan/VertexDescription.h"
-#include "Balefire/Vulkan/Configure/ConfigureDescriptors.h"
+#include "Balefire/Vulkan/Configure/ConfigureBalefireDescriptors.h"
 #include "Balefire/Vulkan/Configure/ConfigureGFXLineListColor.h"
 #include "Balefire/Vulkan/Configure/ConfigureGFXTriangleListColor.h"
 #include "Balefire/Vulkan/WindowRenderContextVulkan.h"

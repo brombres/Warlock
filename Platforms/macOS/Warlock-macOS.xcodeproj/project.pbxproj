@@ -39,7 +39,7 @@
 		307E446C2C0626B000C73A44 /* ConfigureDescriptors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 307E446B2C0626AF00C73A44 /* ConfigureDescriptors.cpp */; };
 		308222352BEEEA43006367E7 /* Buffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 308222342BEEEA43006367E7 /* Buffer.cpp */; };
 		308542F72C055F740050704A /* Descriptors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 308542F62C055F740050704A /* Descriptors.cpp */; };
-		309D52B92C08D36100CCA5B3 /* ConfigureDescriptors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 309D52B82C08D36100CCA5B3 /* ConfigureDescriptors.cpp */; };
+		309D52CD2C0B761F00CCA5B3 /* ConfigureBalefireDescriptors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 309D52CC2C0B761F00CCA5B3 /* ConfigureBalefireDescriptors.cpp */; };
 		30B5A2AF2BFACFE90030183A /* WarlockInterface.mm in Sources */ = {isa = PBXBuildFile; fileRef = 30B5A2AE2BFACFE90030183A /* WarlockInterface.mm */; };
 		30C7A0132BC574B5004A98B7 /* Process.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30C7A0072BC574B5004A98B7 /* Process.cpp */; };
 		30C7A0292BC59DEF004A98B7 /* libGenericCodeGen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30C7A0242BC59DEF004A98B7 /* libGenericCodeGen.a */; };
@@ -342,8 +342,8 @@
 		308222342BEEEA43006367E7 /* Buffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Buffer.cpp; sourceTree = "<group>"; };
 		308542F52C055F690050704A /* Descriptors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Descriptors.h; sourceTree = "<group>"; };
 		308542F62C055F740050704A /* Descriptors.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Descriptors.cpp; sourceTree = "<group>"; };
-		309D52AC2C08D35800CCA5B3 /* ConfigureDescriptors.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConfigureDescriptors.h; sourceTree = "<group>"; };
-		309D52B82C08D36100CCA5B3 /* ConfigureDescriptors.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureDescriptors.cpp; sourceTree = "<group>"; };
+		309D52CB2C0B761100CCA5B3 /* ConfigureBalefireDescriptors.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConfigureBalefireDescriptors.h; sourceTree = "<group>"; };
+		309D52CC2C0B761F00CCA5B3 /* ConfigureBalefireDescriptors.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureBalefireDescriptors.cpp; sourceTree = "<group>"; };
 		30B5A2A22BFACB1E0030183A /* WarlockInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WarlockInterface.h; path = ../../Libraries/Warlock/ObjC/WarlockInterface.h; sourceTree = "<group>"; };
 		30B5A2AE2BFACFE90030183A /* WarlockInterface.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = WarlockInterface.mm; path = ../../Libraries/Warlock/ObjC/WarlockInterface.mm; sourceTree = "<group>"; };
 		30C79EBA2BC44878004A98B7 /* libglslang.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libglslang.a; path = ../../Libraries/glslang/build/glslang/libglslang.a; sourceTree = "<group>"; };
@@ -546,7 +546,7 @@
 		300D4F712C02408B0068824B /* Configure */ = {
 			isa = PBXGroup;
 			children = (
-				309D52AC2C08D35800CCA5B3 /* ConfigureDescriptors.h */,
+				309D52CB2C0B761100CCA5B3 /* ConfigureBalefireDescriptors.h */,
 				300D4F7A2C02457C0068824B /* ConfigureGFXLineListColor.h */,
 				300D4F702C02408B0068824B /* ConfigureGFXTriangleListColor.h */,
 			);
@@ -556,7 +556,7 @@
 		300D4F752C0240A60068824B /* Configure */ = {
 			isa = PBXGroup;
 			children = (
-				309D52B82C08D36100CCA5B3 /* ConfigureDescriptors.cpp */,
+				309D52CC2C0B761F00CCA5B3 /* ConfigureBalefireDescriptors.cpp */,
 				300D4F7B2C0245850068824B /* ConfigureGFXLineListColor.cpp */,
 				300D4F742C0240A60068824B /* ConfigureGFXTriangleListColor.cpp */,
 			);
@@ -1195,7 +1195,6 @@
 				30F2718E2BDD4346000AD163 /* ShaderStageInfo.cpp in Sources */,
 				30F271D72BDD5941000AD163 /* ConfigureGLSLang.cpp in Sources */,
 				30CB68D32BF549D4008A95B7 /* RogueInterface.mm in Sources */,
-				309D52B92C08D36100CCA5B3 /* ConfigureDescriptors.cpp in Sources */,
 				3069132E2B5E8A1A00B14F73 /* Main.mm in Sources */,
 				300D4F7C2C0245850068824B /* ConfigureGFXLineListColor.cpp in Sources */,
 				30F271D02BDD5941000AD163 /* ConfigureCommandBuffers.cpp in Sources */,
@@ -1229,6 +1228,7 @@
 				30F271E02BDD5941000AD163 /* ConfigureSwapchain.cpp in Sources */,
 				301985392B94DC6000CBECCB /* RendererVulkan.cpp in Sources */,
 				30F271DA2BDD5941000AD163 /* ConfigureRenderPass.cpp in Sources */,
+				309D52CD2C0B761F00CCA5B3 /* ConfigureBalefireDescriptors.cpp in Sources */,
 				307706362BA8B3AC00122E50 /* Context.cpp in Sources */,
 				308222352BEEEA43006367E7 /* Buffer.cpp in Sources */,
 				30F271D82BDD5941000AD163 /* ConfigureGraphicsPipeline.cpp in Sources */,
