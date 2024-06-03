@@ -70,7 +70,7 @@ void WindowRenderContextVulkan::render( RenderCmdData* data )
       context->staging_buffer->clear();
       context->staging_buffer->copy_from( &data[i], (uint32_t)n );
       context->vertex_buffer->clear();
-      context->vertex_buffer->copy_from( context->staging_buffer );
+      context->vertex_buffer->copy_from( *context->staging_buffer );
       context->vertex_buffer->cmd_bind( context->cmd );
       i += n * BALEFIRE::VERTEX_PROPERTY_COUNT;
     }
