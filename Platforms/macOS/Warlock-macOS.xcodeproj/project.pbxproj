@@ -40,6 +40,8 @@
 		308222352BEEEA43006367E7 /* Buffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 308222342BEEEA43006367E7 /* Buffer.cpp */; };
 		308542F72C055F740050704A /* Descriptors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 308542F62C055F740050704A /* Descriptors.cpp */; };
 		309D52CD2C0B761F00CCA5B3 /* ConfigureBalefireDescriptors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 309D52CC2C0B761F00CCA5B3 /* ConfigureBalefireDescriptors.cpp */; };
+		309D52D22C0DFC1C00CCA5B3 /* ConfigureTextureSampler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 309D52D12C0DFC1C00CCA5B3 /* ConfigureTextureSampler.cpp */; };
+		309D52E12C0F6D8E00CCA5B3 /* Sampler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 309D52E02C0F6D8E00CCA5B3 /* Sampler.cpp */; };
 		30B5A2AF2BFACFE90030183A /* WarlockInterface.mm in Sources */ = {isa = PBXBuildFile; fileRef = 30B5A2AE2BFACFE90030183A /* WarlockInterface.mm */; };
 		30C7A0132BC574B5004A98B7 /* Process.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30C7A0072BC574B5004A98B7 /* Process.cpp */; };
 		30C7A0292BC59DEF004A98B7 /* libGenericCodeGen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30C7A0242BC59DEF004A98B7 /* libGenericCodeGen.a */; };
@@ -344,6 +346,10 @@
 		308542F62C055F740050704A /* Descriptors.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Descriptors.cpp; sourceTree = "<group>"; };
 		309D52CB2C0B761100CCA5B3 /* ConfigureBalefireDescriptors.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConfigureBalefireDescriptors.h; sourceTree = "<group>"; };
 		309D52CC2C0B761F00CCA5B3 /* ConfigureBalefireDescriptors.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureBalefireDescriptors.cpp; sourceTree = "<group>"; };
+		309D52D02C0DFC1300CCA5B3 /* ConfigureTextureSampler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigureTextureSampler.h; sourceTree = "<group>"; };
+		309D52D12C0DFC1C00CCA5B3 /* ConfigureTextureSampler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureTextureSampler.cpp; sourceTree = "<group>"; };
+		309D52D42C0F6D8200CCA5B3 /* Sampler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sampler.h; sourceTree = "<group>"; };
+		309D52E02C0F6D8E00CCA5B3 /* Sampler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Sampler.cpp; sourceTree = "<group>"; };
 		30B5A2A22BFACB1E0030183A /* WarlockInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WarlockInterface.h; path = ../../Libraries/Warlock/ObjC/WarlockInterface.h; sourceTree = "<group>"; };
 		30B5A2AE2BFACFE90030183A /* WarlockInterface.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = WarlockInterface.mm; path = ../../Libraries/Warlock/ObjC/WarlockInterface.mm; sourceTree = "<group>"; };
 		30C79EBA2BC44878004A98B7 /* libglslang.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libglslang.a; path = ../../Libraries/glslang/build/glslang/libglslang.a; sourceTree = "<group>"; };
@@ -846,6 +852,7 @@
 		3077062D2BA896D500122E50 /* Vulkanize */ = {
 			isa = PBXGroup;
 			children = (
+				309D52D42C0F6D8200CCA5B3 /* Sampler.h */,
 				308542F52C055F690050704A /* Descriptors.h */,
 				3019596B2BDF040100D9D51B /* GraphicsPipeline.h */,
 				308222332BEEEA38006367E7 /* Buffer.h */,
@@ -882,6 +889,7 @@
 		307706312BA896D500122E50 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				309D52E02C0F6D8E00CCA5B3 /* Sampler.cpp */,
 				308542F62C055F740050704A /* Descriptors.cpp */,
 				308222342BEEEA43006367E7 /* Buffer.cpp */,
 				3019597A2BDFDF1D00D9D51B /* RenderPass.cpp */,
@@ -946,6 +954,7 @@
 		30F271CF2BDD5941000AD163 /* Configure */ = {
 			isa = PBXGroup;
 			children = (
+				309D52D12C0DFC1C00CCA5B3 /* ConfigureTextureSampler.cpp */,
 				307E446B2C0626AF00C73A44 /* ConfigureDescriptors.cpp */,
 				30F271BE2BDD5941000AD163 /* ConfigureCommandBuffers.cpp */,
 				30F271BF2BDD5941000AD163 /* ConfigureCommandPool.cpp */,
@@ -978,6 +987,7 @@
 		30F271F72BDD5976000AD163 /* Configure */ = {
 			isa = PBXGroup;
 			children = (
+				309D52D02C0DFC1300CCA5B3 /* ConfigureTextureSampler.h */,
 				307E445F2C06269700C73A44 /* ConfigureDescriptors.h */,
 				30F271E62BDD5976000AD163 /* ConfigureCommandBuffers.h */,
 				30F271E72BDD5976000AD163 /* ConfigureCommandPool.h */,
@@ -1202,6 +1212,7 @@
 				300D4FAF2C038DFB0068824B /* RogueProgram.mm in Sources */,
 				30F271D92BDD5941000AD163 /* ConfigureQueues.cpp in Sources */,
 				30F271D42BDD5941000AD163 /* ConfigureFences.cpp in Sources */,
+				309D52D22C0DFC1C00CCA5B3 /* ConfigureTextureSampler.cpp in Sources */,
 				301985362B94DC6000CBECCB /* FrameworkSDL.cpp in Sources */,
 				306912D12B5E7D7400B14F73 /* AppDelegate.m in Sources */,
 				30B5A2AF2BFACFE90030183A /* WarlockInterface.mm in Sources */,
@@ -1212,6 +1223,7 @@
 				306912E12B5E7E1D00B14F73 /* Warlock.swift in Sources */,
 				30F271D32BDD5941000AD163 /* ConfigureDevice.cpp in Sources */,
 				30F271D62BDD5941000AD163 /* ConfigureFramebuffers.cpp in Sources */,
+				309D52E12C0F6D8E00CCA5B3 /* Sampler.cpp in Sources */,
 				30F271D52BDD5941000AD163 /* ConfigureFormats.cpp in Sources */,
 				30F271E52BDD594C000AD163 /* RenderEnd.cpp in Sources */,
 				300D4F792C0240A60068824B /* VulkanContext.cpp in Sources */,

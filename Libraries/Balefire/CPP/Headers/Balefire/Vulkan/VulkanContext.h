@@ -13,6 +13,7 @@ namespace BALEFIRE
     VKZ::GraphicsPipeline gfx_triangle_list_color;
 
     VKZ::Image test_image;
+    VkSampler  test_sampler;
 
     // METHODS
     VulkanContext( VkSurfaceKHR surface ) : VKZ::Context(surface) {}

@@ -72,13 +72,15 @@ routine compile_rogue( platform:String, &debug, &rebuild )
   local files = Files( "Libraries/Warlock/Rogue/**.rogue" )
   local source_folder = File("Build/$/Source"(platform)).[create_folder]
 
-  if (rebuild or files.any_newer_than(source_folder/"RogueProgram.cpp"))
+  local is_apple = (platform == "macOS" or platform == "iOS")
+  local source_filename = "RogueProgram.$"(which{ is_apple:"mm" || "cpp" })
+  if (rebuild or files.any_newer_than(source_folder/source_filename))
     block cmd = "roguec Warlock"
       cmd .= appending( "Warlock/Platform/$.rogue"(platform) )
       if (debug) cmd .= appending( "--debug" )
       cmd .= appending( "--libraries=Libraries/Warlock/Rogue" )
       cmd .= appending( "--target=C++,Warlock,SDL,Vulkan,$"(platform) )
-      if (platform == "macOS" or platform == "iOS") cmd += ",ObjC"
+      if (is_apple) cmd += ",ObjC"
       cmd .= appending( "--gc=manual" )
       cmd .= appending( "--output=$/RogueProgram"(source_folder.esc) )
       execute cmd
