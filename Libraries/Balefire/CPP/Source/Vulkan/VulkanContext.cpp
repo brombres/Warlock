@@ -36,14 +36,28 @@ struct ConfigureTestImage : ContextOperation<VulkanContext>
   }
 };
 
+struct ConfigureSamplers : ContextOperation<VulkanContext>
+{
+  bool on_activate() override
+  {
+    SamplerInfo info( context );
+    return context->test_sampler.create( info );
+  }
+
+  void on_deactivate() override
+  {
+    context->test_sampler.destroy();
+  }
+};
+
 void VulkanContext::configure_operations()
 {
   Context::configure_operations();
 
-  set_operation( "configure.descriptors",        new ConfigureBalefireDescriptors(&descriptors) );
-  set_operation( "configure.graphics_pipelines", new ConfigureGFXTriangleListColor(&gfx_triangle_list_color) );
+  add_operation( "configure.buffers",            new ConfigureVertexBuffers(sizeof(Vertex)) );
+  add_operation( "configure.images.test_image",  new ConfigureTestImage() );
+  add_operation( "configure.samplers",           new ConfigureSamplers() );
+  add_operation( "configure.descriptors",        new ConfigureBalefireDescriptors(&descriptors) );
+  add_operation( "configure.graphics_pipelines", new ConfigureGFXTriangleListColor(&gfx_triangle_list_color) );
   add_operation( "configure.graphics_pipelines", new ConfigureGFXLineListColor(&gfx_line_list_color) );
-  set_operation( "configure.buffers",            new ConfigureVertexBuffers(sizeof(Vertex)) );
-  add_operation( "configure.test_image",         new ConfigureTestImage() );
-  add_operation( "configure.samplers",           new ConfigureTextureSampler(&test_sampler) );
 }

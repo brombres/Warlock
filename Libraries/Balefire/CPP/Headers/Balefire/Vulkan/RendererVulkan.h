@@ -9,8 +9,6 @@
 #include "Balefire/Balefire.h"
 #include "Vulkanize/Vulkanize.h"
 
-#include "Balefire/Vulkan/VulkanContext.h"
-
 namespace BALEFIRE
 {
   struct Vec4
@@ -23,7 +21,12 @@ namespace BALEFIRE
     Vec4() : r(0), g(0), b(0), a(1) {}
     Vec4( float r, float g, float b, float a=1.0 ) : r(r), g(g), b(b), a(a) {}
   };
+};
 
+#include "Balefire/Vulkan/VulkanContext.h"
+
+namespace BALEFIRE
+{
   struct RendererVulkan : Renderer
   {
     VKZ::Vulkanize             vulkanize;
