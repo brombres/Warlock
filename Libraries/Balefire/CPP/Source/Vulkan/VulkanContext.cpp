@@ -7,13 +7,13 @@ struct ConfigureTestImage : ContextOperation<VulkanContext>
   bool on_activate() override
   {
     Buffer staging_buffer;
-    staging_buffer.create_staging_buffer( context, 4, 16 );
-    int pixels[] = {-1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1 };
-    staging_buffer.copy_from( pixels, 16 );
+    staging_buffer.create_staging_buffer( context, 4, 4 );
+    uint32_t pixels[] = {0xffffffff,0xffffffff,0xff0000ff,0xff0000ff};
+    staging_buffer.copy_from( pixels, 4 );
 
     ImageInfo info(
       context,
-      4, 4,
+      2, 2,
       VK_FORMAT_R8G8B8A8_SRGB,
       VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT,
       VK_IMAGE_ASPECT_COLOR_BIT,
@@ -55,7 +55,7 @@ void VulkanContext::configure_operations()
   Context::configure_operations();
 
   add_operation( "configure.buffers",            new ConfigureVertexBuffers(sizeof(Vertex)) );
-  add_operation( "configure.images.test_image",  new ConfigureTestImage() );
+  add_operation( "configure.images",             new ConfigureTestImage() );
   add_operation( "configure.samplers",           new ConfigureSamplers() );
   add_operation( "configure.descriptors",        new ConfigureBalefireDescriptors(&descriptors) );
   add_operation( "configure.graphics_pipelines", new ConfigureGFXTriangleListColor(&gfx_triangle_list_color) );

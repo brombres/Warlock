@@ -43,9 +43,9 @@ class Renderer [singleton]
     method fill( triangle:Triangle, color:Color )
       primitive_type = PrimitiveType.TRIANGLES
       local argb = color.argb
-      cur_vertex_data.add( Vertex(triangle.a,argb) )
-      cur_vertex_data.add( Vertex(triangle.b,argb) )
-      cur_vertex_data.add( Vertex(triangle.c,argb) )
+      cur_vertex_data.add( Vertex(triangle.a,argb,XY(0,0)) )
+      cur_vertex_data.add( Vertex(triangle.b,argb,XY(1,1)) )
+      cur_vertex_data.add( Vertex(triangle.c,argb,XY(0,1)) )
 
     method finalized_cmd_data->RenderCmdData[]
       flush
