@@ -14,7 +14,7 @@ void Framework::configure()
 {
 }
 
-void Framework::render( Window* window, RenderCmdData* data )
+void Framework::render( Window* window, const char* data, int count )
 {
 }
 

@@ -25,11 +25,13 @@ using namespace std;
 //#include <glm/vec4.hpp>
 //using namespace glm;
 
-RenderCmdData* begin_render_handler( Window* window, void* app_data )
+bool begin_render_handler( Window* window, void* app_data, const char** render_data, int* count  )
 {
-  WarlockRenderCmdDataList* list = WarlockWarlock__begin_render__RogueInt( window->index );
-  if ( !list ) return nullptr;
-  return (RenderCmdData*)(list->data);
+  RogueByteList* list = WarlockWarlock__begin_render__RogueInt( window->index );
+  if ( !list ) return false;
+  *render_data = (const char*)list->data;
+  *count = (int)list->count;
+  return true;
 }
 
 void end_render_handler( Window* window, void* app_data )
@@ -45,13 +47,6 @@ int main(int argc, char *argv[])
 
   RogueInterface_configure( argc, argv );
   RogueInterface_launch();
-
-	//const array of positions for the triangle
-	//const vec3 positions[3] = {
-	//	vec3(1.f,1.f, 0.0f),
-	//	vec3(-1.f,1.f, 0.0f),
-	//	vec3(0.f,-1.f, 0.0f)
-	//};
 
   while (balefire.handle_events()) balefire.render();
 

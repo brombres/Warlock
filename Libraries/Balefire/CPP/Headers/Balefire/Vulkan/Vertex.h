@@ -15,6 +15,12 @@ namespace BALEFIRE
     {
       position = { x, y, z };
     }
+
+    Vertex( float x, float y, float z, uint32_t color, float u, float v ) : color(color)
+    {
+      position = { x, y, z };
+      uv = { u, v };
+    }
   };
 };
 

@@ -6,7 +6,7 @@
 #include <vector>
 #include <string>
 
-#include "Balefire/Core/RenderCmdData.h"
+#include "Balefire/Core/DataReader.h"
 #include "Balefire/Core/RenderCmd.h"
 #include "Balefire/Core/Window.h"
 #include "Balefire/Core/Framework.h"
@@ -16,8 +16,8 @@
 
 namespace BALEFIRE
 {
-  typedef RenderCmdData* (*BeginRenderHandler)(Window* window, void* app_data);
-  typedef void     (*EndRenderHandler)(Window* window, void* app_data);
+  typedef bool (*BeginRenderHandler)(Window* window, void* app_data, const char** render_data, int* count );
+  typedef void (*EndRenderHandler)(Window* window, void* app_data);
 
   const int VERTEX_PROPERTY_COUNT = 7;
 
@@ -45,5 +45,8 @@ namespace BALEFIRE
                                           void* app_data=nullptr );
   };
 };
+
+#define BALEFIRE_LOG_ERROR( message ) \
+  fprintf( stderr, "[Balefire] %s\n", message );
 
 #endif // BALEFIRE_H

@@ -14,79 +14,84 @@ class Renderer [singleton]
     VCOUNT_INDEX      = 2
 
   PROPERTIES
-    cmd_data           = RenderCmdData[]
-    cur_vertex_data    = Vertex[]
-    all_vertex_data    = Vertex[]
-    finalized_cmd_data = RenderCmdData[]
+    render_data        = DataWriter()
+
+    vertices           = Vertex[]
     primitive_type     : PrimitiveType
+
+    total_vertex_count : Int
 
   METHODS
     method init
-      clear
+      reset
 
-    method clear
-      cmd_data.clear
-      all_vertex_data.clear
-      cur_vertex_data.clear
+    method reset
       primitive_type = PrimitiveType.UNDEFINED
+      vertices.clear
+      total_vertex_count = 0
+      render_data.reset
+      render_data.write_int32( VERSION )
+      render_data.write_int32( 0 )  # total vertex count
 
     method draw( triangle:Triangle, color:Color )
       primitive_type = PrimitiveType.LINES
       local argb = color.argb
-      cur_vertex_data.add( Vertex(triangle.a,argb) )
-      cur_vertex_data.add( Vertex(triangle.b,argb) )
-      cur_vertex_data.add( Vertex(triangle.b,argb) )
-      cur_vertex_data.add( Vertex(triangle.c,argb) )
-      cur_vertex_data.add( Vertex(triangle.c,argb) )
-      cur_vertex_data.add( Vertex(triangle.a,argb) )
+      vertices.add( Vertex(triangle.a,argb) )
+      vertices.add( Vertex(triangle.b,argb) )
+      vertices.add( Vertex(triangle.b,argb) )
+      vertices.add( Vertex(triangle.c,argb) )
+      vertices.add( Vertex(triangle.c,argb) )
+      vertices.add( Vertex(triangle.a,argb) )
 
     method fill( triangle:Triangle, color:Color )
       primitive_type = PrimitiveType.TRIANGLES
       local argb = color.argb
-      cur_vertex_data.add( Vertex(triangle.a,argb,XY(0,0)) )
-      cur_vertex_data.add( Vertex(triangle.b,argb,XY(1,1)) )
-      cur_vertex_data.add( Vertex(triangle.c,argb,XY(0,1)) )
+      vertices.add( Vertex(triangle.a,argb,XY(0,0)) )
+      vertices.add( Vertex(triangle.b,argb,XY(1,1)) )
+      vertices.add( Vertex(triangle.c,argb,XY(0,1)) )
 
-    method finalized_cmd_data->RenderCmdData[]
+    method finalized_render_data->Byte[]
       flush
-
-      local total_count = cmd_data.count + all_vertex_data.count*Vertex.PROPERTY_COUNT + 4
-      @finalized_cmd_data.clear
-      @finalized_cmd_data.reserve( total_count )
-      @finalized_cmd_data.add( total_count )
-      @finalized_cmd_data.add( VERSION )
-
-      @finalized_cmd_data.add( RenderCmd.VERTEX_DATA )
-      @finalized_cmd_data.add( all_vertex_data.count )
-
-      # all_vertex_data: copy to finalized_cmd_data
-      local n_vertex_slots = all_vertex_data.count * Vertex.PROPERTY_COUNT
-      native
-      @|memcpy(
-       |  $finalized_cmd_data->as_int32s + $finalized_cmd_data->count,
-       |  $all_vertex_data->as_int32s,
-       |  $n_vertex_slots * 4
-       |);
-      @finalized_cmd_data.count += n_vertex_slots
-
-      @finalized_cmd_data.add( cmd_data )
-
-      return @finalized_cmd_data
+      render_data.write_int32x( RenderCmd.END_DRAWING )
+      render_data.seek( 4 )
+      render_data.write_int32( total_vertex_count )
+      return render_data.output_bytes
 
     method flush
-      if (cur_vertex_data.is_empty) return
+      if (vertices.is_empty) return
 
       which (primitive_type)
+
         case TRIANGLES
-          cmd_data.add( RenderCmd.DRAW_TRIANGLES )
-          cmd_data.add( cur_vertex_data.count )
+          render_data.write_int32x( RenderCmd.DRAW_TRIANGLES )
+          render_data.write_int32x( vertices.count / 3 )
+          local data_count_pos = render_data.position
+          render_data.write_int32( 0 )
+          forEach (v in vertices)
+            render_data.write_real32( v.x )
+            render_data.write_real32( v.y )
+            render_data.write_real32( v.z )
+            render_data.write_int32( v.color )
+          endForEach
+          render_data.patch_int32( data_count_pos, (render_data.position - data_count_pos) - 4 )
+
         case LINES
-          cmd_data.add( RenderCmd.DRAW_LINES )
-          cmd_data.add( cur_vertex_data.count )
+          render_data.write_int32x( RenderCmd.DRAW_LINES )
+          render_data.write_int32x( vertices.count / 2 )
+          local data_count_pos = render_data.position
+          render_data.write_int32( 0 )
+          forEach (v in vertices)
+            render_data.write_real32( v.x )
+            render_data.write_real32( v.y )
+            render_data.write_real32( v.z )
+            render_data.write_int32( v.color )
+          endForEach
+          render_data.patch_int32( data_count_pos, (render_data.position - data_count_pos) - 4 )
+
       endWhich
 
-      all_vertex_data.add( cur_vertex_data )
-      cur_vertex_data.clear
+      total_vertex_count += vertices.count
+      vertices.clear
 
     method set_primitive_type( new_type:PrimitiveType )
       if (new_type == @primitive_type) return

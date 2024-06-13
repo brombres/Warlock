@@ -26,6 +26,7 @@
 		3049E6AE2B952FBE008554DD /* WindowRenderContextVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3049E6AD2B952FBE008554DD /* WindowRenderContextVulkan.cpp */; };
 		3049E6B02B953545008554DD /* WindowFrameworkContextSDL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3049E6AF2B953545008554DD /* WindowFrameworkContextSDL.cpp */; };
 		305AA2B12BAF4B5600BDAE68 /* Operation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 305AA2B02BAF4B5600BDAE68 /* Operation.cpp */; };
+		3060335E2C1A4B62002E8229 /* DataReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3060335D2C1A4B62002E8229 /* DataReader.cpp */; };
 		306912D12B5E7D7400B14F73 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 306912D02B5E7D7400B14F73 /* AppDelegate.m */; };
 		306912D32B5E7D7500B14F73 /* ProjectAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 306912D22B5E7D7500B14F73 /* ProjectAssets.xcassets */; };
 		306912E12B5E7E1D00B14F73 /* Warlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 306912E02B5E7E1D00B14F73 /* Warlock.swift */; };
@@ -274,6 +275,9 @@
 		3049E6AD2B952FBE008554DD /* WindowRenderContextVulkan.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WindowRenderContextVulkan.cpp; sourceTree = "<group>"; };
 		3049E6AF2B953545008554DD /* WindowFrameworkContextSDL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WindowFrameworkContextSDL.cpp; sourceTree = "<group>"; };
 		305AA2B02BAF4B5600BDAE68 /* Operation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Operation.cpp; sourceTree = "<group>"; };
+		306033502C1A4B58002E8229 /* DataReader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DataReader.h; sourceTree = "<group>"; };
+		3060335C2C1A4B58002E8229 /* RenderCmd.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RenderCmd.h; sourceTree = "<group>"; };
+		3060335D2C1A4B62002E8229 /* DataReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DataReader.cpp; sourceTree = "<group>"; };
 		306912CC2B5E7D7400B14F73 /* Warlock-macOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Warlock-macOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		306912CF2B5E7D7400B14F73 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		306912D02B5E7D7400B14F73 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -593,6 +597,7 @@
 		3019850C2B94DC6000CBECCB /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				3060335D2C1A4B62002E8229 /* DataReader.cpp */,
 				3019853A2B94DDBB00CBECCB /* Framework.cpp */,
 				3019850D2B94DC6000CBECCB /* Window.cpp */,
 				301985102B94DC6000CBECCB /* Renderer.cpp */,
@@ -644,6 +649,8 @@
 		3019851B2B94DC6000CBECCB /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				306033502C1A4B58002E8229 /* DataReader.h */,
+				3060335C2C1A4B58002E8229 /* RenderCmd.h */,
 				3049E6AA2B9518C8008554DD /* WindowFrameworkContext.h */,
 				3049E6A92B9518C8008554DD /* WindowRenderContext.h */,
 				3019851D2B94DC6000CBECCB /* Types.h */,
@@ -1241,6 +1248,7 @@
 				301985392B94DC6000CBECCB /* RendererVulkan.cpp in Sources */,
 				30F271DA2BDD5941000AD163 /* ConfigureRenderPass.cpp in Sources */,
 				309D52CD2C0B761F00CCA5B3 /* ConfigureBalefireDescriptors.cpp in Sources */,
+				3060335E2C1A4B62002E8229 /* DataReader.cpp in Sources */,
 				307706362BA8B3AC00122E50 /* Context.cpp in Sources */,
 				308222352BEEEA43006367E7 /* Buffer.cpp in Sources */,
 				30F271D82BDD5941000AD163 /* ConfigureGraphicsPipeline.cpp in Sources */,

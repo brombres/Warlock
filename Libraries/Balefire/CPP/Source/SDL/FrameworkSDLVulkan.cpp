@@ -80,9 +80,9 @@ Window* FrameworkSDLVulkan::create_window( int index, std::string name )
   return window;
 }
 
-void FrameworkSDLVulkan::render( Window* window, RenderCmdData* data )
+void FrameworkSDLVulkan::render( Window* window, const char* render_data, int count )
 {
-  window->render( data );
+  window->render( render_data, count );
 }
 
 void FrameworkSDLVulkan::update_pixel_size( Window* window )

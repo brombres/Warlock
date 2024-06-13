@@ -5,7 +5,6 @@ nativeHeader @|#include "WarlockInterface.h"
 uses Geometry [export]
 uses Graphics [export]
 
-$include RenderCmdData
 $include RenderCmd
 $include Renderer
 $include ResourceBank
@@ -33,7 +32,7 @@ class Warlock [essential singleton]
     degrees = Degrees(0)
 
   GLOBAL METHODS
-    method begin_render( window_id:Int )->RenderCmdData[] [api]
+    method begin_render( window_id:Int )->Byte[] [api]
       local pt = XY(0,-0.5).rotated( degrees )
       degrees += Degrees(1)
 
@@ -45,9 +44,9 @@ class Warlock [essential singleton]
       Renderer.fill( triangle, Color.YELLOW )
       Renderer.draw( triangle, Color.RED )
 
-      return Renderer.finalized_cmd_data
+      return Renderer.finalized_render_data
 
     method end_render( window_id:Int ) [api]
-      Renderer.clear
+      Renderer.reset
 
 endClass

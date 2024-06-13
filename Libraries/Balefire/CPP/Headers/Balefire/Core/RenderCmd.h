@@ -6,8 +6,9 @@ namespace BALEFIRE
 {
   enum RenderCmd
   {
-    VERTEX_DATA,
+    END_DRAWING,
+    DRAW_LINES,
     DRAW_TRIANGLES,
-    DRAW_LINES
+    DRAW_TEXTURED_TRIANGLES
   };
 };

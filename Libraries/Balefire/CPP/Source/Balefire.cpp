@@ -69,11 +69,12 @@ void Balefire::render()
         all_paused = false;
         if (begin_render_handler)
         {
-          RenderCmdData* data = begin_render_handler( window, handler_app_data );
-          if (data)
+          const char* render_data;
+          int count;
+          if (begin_render_handler(window, handler_app_data, &render_data, &count))
           {
             any_rendered = true;
-            framework->render( window, data );
+            framework->render( window, render_data, count );
             if (end_render_handler) end_render_handler( window, handler_app_data );
           }
         }

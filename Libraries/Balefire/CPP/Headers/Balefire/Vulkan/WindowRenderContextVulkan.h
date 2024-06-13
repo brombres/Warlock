@@ -15,6 +15,8 @@ namespace BALEFIRE
     VulkanContext*  context = nullptr;
     VkSurfaceKHR    surface = nullptr;
 
+    std::vector<Vertex> vertices;
+
     // CONSTRUCTORS
     WindowRenderContextVulkan( Window* window, RendererVulkan* renderer )
       : WindowRenderContext(window), renderer(renderer) {}
@@ -23,7 +25,7 @@ namespace BALEFIRE
     // METHODS
     virtual void configure();
     virtual void configure( VkSurfaceKHR surface );
-    virtual void render( RenderCmdData* data );
+    virtual void render( const char* data, int count );
   };
 };
 
