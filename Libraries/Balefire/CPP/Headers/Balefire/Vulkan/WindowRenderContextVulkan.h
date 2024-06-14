@@ -25,7 +25,7 @@ namespace BALEFIRE
     // METHODS
     virtual void configure();
     virtual void configure( VkSurfaceKHR surface );
-    virtual void render( const char* data, int count );
+    virtual void render( unsigned char* data, int count );
   };
 };
 

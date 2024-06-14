@@ -25,11 +25,11 @@ using namespace std;
 //#include <glm/vec4.hpp>
 //using namespace glm;
 
-bool begin_render_handler( Window* window, void* app_data, const char** render_data, int* count  )
+bool begin_render_handler( Window* window, void* app_data, unsigned char** render_data, int* count  )
 {
   RogueByteList* list = WarlockWarlock__begin_render__RogueInt( window->index );
   if ( !list ) return false;
-  *render_data = (const char*)list->data;
+  *render_data = list->as_bytes;
   *count = (int)list->count;
   return true;
 }

@@ -1,0 +1,18 @@
+module Warlock
+
+class Asset<<$ExtendedType>>
+  GLOBAL PROPERTIES
+    id_bank = IDBank()
+
+  PROPERTIES
+    id = id_bank.get_id : Int
+    name                : String
+
+  METHODS
+    method init( name )
+
+    method on_cleanup
+      id_bank.free_id( id )
+      id = 0
+endClass
+

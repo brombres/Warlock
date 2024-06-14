@@ -2,7 +2,7 @@
 using namespace BALEFIRE;
 using namespace VKZ;
 
-struct ConfigureTestImage : ContextOperation<VulkanContext>
+struct ConfigureTextures : ContextOperation<VulkanContext>
 {
   bool on_activate() override
   {
@@ -13,6 +13,16 @@ struct ConfigureTestImage : ContextOperation<VulkanContext>
   void on_deactivate() override
   {
     context->test_image.destroy();
+
+    for (Image* texture : context->textures)
+    {
+      if (texture)
+      {
+        texture->destroy();
+        delete texture;
+      }
+    }
+    context->textures.clear();
   }
 };
 
@@ -35,7 +45,7 @@ void VulkanContext::configure_operations()
   Context::configure_operations();
 
   add_operation( "configure.buffers",            new ConfigureVertexBuffers(sizeof(Vertex)) );
-  add_operation( "configure.images",             new ConfigureTestImage() );
+  add_operation( "configure.images",             new ConfigureTextures() );
   add_operation( "configure.samplers",           new ConfigureSamplers() );
   add_operation( "configure.descriptors",        new ConfigureBalefireDescriptors(&descriptors) );
   add_operation( "configure.graphics_pipelines", new ConfigureGFXTriangleListColor(&gfx_triangle_list_color) );

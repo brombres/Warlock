@@ -7,8 +7,10 @@ namespace BALEFIRE
   enum RenderCmd
   {
     END_DRAWING,
-    DRAW_LINES,
-    DRAW_TRIANGLES,
-    DRAW_TEXTURED_TRIANGLES
+    DRAW_LINES,      // line_count:IntX, line_count * 2 * [x,y,z:Real32, argb:Int32]
+    DRAW_TRIANGLES,  // triangle_count:IntX, triangle_count * 3 * [x,y,z:Real32, argb:Int32]
+    DRAW_TEXTURED_TRIANGLES, // triangle_count:IntX, triangle_count * 3 * [x,y,z:Real32, argb:Int32, u,v:Real32]
+    LOAD_TEXTURE,    // [id, width, height:IntX], argb:Int32s
+    FREE_TEXTURE     // id:IntX
   };
 };

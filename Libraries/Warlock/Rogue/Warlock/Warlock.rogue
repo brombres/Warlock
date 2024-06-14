@@ -5,6 +5,9 @@ nativeHeader @|#include "WarlockInterface.h"
 uses Geometry [export]
 uses Graphics [export]
 
+$include Asset
+$include IDBank
+$include Image
 $include RenderCmd
 $include Renderer
 $include ResourceBank
@@ -16,17 +19,45 @@ class Warlock [essential singleton]
     windows = ResourceBank<<Window>>()
     #bitmap  = Bitmap("Test.png")
 
+    image_extensions = ["png","jpg","jpeg"]
+
   METHODS
     method init
       Window( "Rogue Warlock" )
-      if local file = find_asset( "Assets/Images/Warlock.png" )
-        local bitmap = Bitmap( file )
-      endIf
+      Image( "Warlock" ).load
+      #trace img.id
+      #@trace find_image( "Warlock" )
+      #if local file = find_asset( "Assets/Images/Warlock.png" )
+      #local bitmap = Bitmap( file )
+      #endIf
 
     method find_asset( name:String )->File?
       local filepath = native("WarlockInterface_find_asset($name)")->String
       if (filepath) return File( filepath )
       else          return null
+
+    method find_image( name:String )->File?
+      if local result = find_asset( name )
+        return File(result)
+      endIf
+
+      if (not name.begins_with("Assets/"))
+        if (name.begins_with("Images/")) name = "Assets"/name
+        else                             name = "Assets/Images"/name
+      endIf
+
+      if local result = find_asset( name )
+        return File(result)
+      endIf
+
+      forEach (ext in image_extensions)
+        local filepath = "$.$"(name,ext)
+        if local result = find_asset( filepath )
+          return File(result)
+        endIf
+      endForEach
+
+      return null
 
   GLOBAL PROPERTIES
     degrees = Degrees(0)

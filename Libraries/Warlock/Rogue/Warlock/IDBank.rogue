@@ -1,0 +1,20 @@
+module Warlock
+
+class IDBank
+  PROPERTIES
+    next_id  = 1
+    free_ids = Int[]
+
+  METHODS
+    method get_id->Int
+      if (free_ids.count) return free_ids.remove_last
+
+      local result = next_id
+      ++next_id
+      return result
+
+    method free_id( id:Int )
+      free_ids.add( id )
+
+endClass
+

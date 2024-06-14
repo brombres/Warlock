@@ -93,6 +93,22 @@ class Renderer [singleton]
       total_vertex_count += vertices.count
       vertices.clear
 
+    method load_texture( id:Int, name:String )
+      flush
+      if local file = Warlock.find_image( name )
+        if local bitmap = Bitmap.load( file )
+          render_data.write_int32x( RenderCmd.LOAD_TEXTURE )
+          render_data.write_int32x( id )
+          render_data.write_int32x( bitmap.width )
+          render_data.write_int32x( bitmap.height )
+          render_data.write_colors( bitmap.pixels )
+        else
+          error.println "[Warlock] Error loading '$' - unable to decode image."(file)
+        endIf
+      else
+        error.println "[Warlock] Error loading '$' - file not found."(name)
+      endIf
+
     method set_primitive_type( new_type:PrimitiveType )
       if (new_type == @primitive_type) return
       flush

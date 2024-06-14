@@ -36,7 +36,7 @@ void WindowRenderContextVulkan::configure( VkSurfaceKHR surface )
 	initialized = true;
 }
 
-void WindowRenderContextVulkan::render( const char* data, int count )
+void WindowRenderContextVulkan::render( unsigned char* data, int count )
 {
   if ( !initialized ) return;
 
@@ -50,9 +50,11 @@ void WindowRenderContextVulkan::render( const char* data, int count )
     vertices.clear();
     vertices.reserve( total_vertex_count );
 
+    bool error = false;
+
     // First pass: collect vertices
     int pass_start_pos = reader.position;
-    for (;;)
+    while ( !error )
     {
       int cmd = reader.read_int32x();
       if (cmd == RenderCmd::END_DRAWING) break;
@@ -106,6 +108,28 @@ void WindowRenderContextVulkan::render( const char* data, int count )
           break;
         }
 
+        case RenderCmd::LOAD_TEXTURE:
+        {
+          int id = reader.read_int32x();
+          int width = reader.read_int32x();
+          int height = reader.read_int32x();
+          int* pixels = reader.read_int32s();
+
+          if (id <= 0) break;
+          if (id >= context->textures.size()) context->textures.resize( id + 1 );
+
+          Image* image = new Image();
+          context->textures[id] = image;
+
+          if ( !image->create(context, pixels, width, height) )
+          {
+            BALEFIRE_LOG_ERROR_WITH_INT( "Error creating texture %d.", id );
+          }
+          break;
+        };
+
+        case RenderCmd::FREE_TEXTURE:
+
         default:
         {
           char message[120];
@@ -115,77 +139,95 @@ void WindowRenderContextVulkan::render( const char* data, int count )
             cmd
           );
           BALEFIRE_LOG_ERROR( message );
+          error = true;
+          break;
         }
       }
     }
 
-    // Convert color ARGB -> ABGR
-    int remaining = total_vertex_count;
-    Vertex* vertex = vertices.data();
-    while (--remaining >=0)
+    if ( !error )
     {
-      uint32_t argb = vertex->color;
-      vertex->color = (argb & 0xFF00FF00) | ((argb<<16) & 0x00FF0000) | ((argb>>16) & 0x000000FF);
-      ++vertex;
-    }
-
-    // Copy vertex data to staging buffer to vertex buffer
-    context->staging_buffer->clear();
-    context->staging_buffer->copy_from( vertices.data(), (uint32_t)vertices.size() );
-    context->vertex_buffer->clear();
-    context->vertex_buffer->copy_from( *context->staging_buffer );
-    context->vertex_buffer->cmd_bind( context->cmd );
-
-    // Second pass: draw
-    reader.position = pass_start_pos;
-    int vertex_i = 0;
-    for (;;)
-    {
-      int cmd = reader.read_int32x();
-      if (cmd == RenderCmd::END_DRAWING) break;
-
-      switch (cmd)
+      // Convert color ARGB -> ABGR
+      int remaining = total_vertex_count;
+      Vertex* vertex = vertices.data();
+      while (--remaining >=0)
       {
-        case RenderCmd::DRAW_LINES:
+        uint32_t argb = vertex->color;
+        vertex->color = (argb & 0xFF00FF00) | ((argb<<16) & 0x00FF0000) | ((argb>>16) & 0x000000FF);
+        ++vertex;
+      }
+
+      // Copy vertex data to staging buffer to vertex buffer
+      context->staging_buffer->clear();
+      context->staging_buffer->copy_from( vertices.data(), (uint32_t)vertices.size() );
+      context->vertex_buffer->clear();
+      context->vertex_buffer->copy_from( *context->staging_buffer );
+      context->vertex_buffer->cmd_bind( context->cmd );
+
+      // Second pass: draw
+      reader.position = pass_start_pos;
+      int vertex_i = 0;
+      while ( !error )
+      {
+        int cmd = reader.read_int32x();
+        if (cmd == RenderCmd::END_DRAWING) break;
+
+        switch (cmd)
         {
-          int vertex_count = reader.read_int32x() * 2;
-          reader.skip( reader.read_int32() );
+          case RenderCmd::DRAW_LINES:
+          {
+            int vertex_count = reader.read_int32x() * 2;
+            reader.skip( reader.read_int32() );
 
-          context->gfx_line_list_color.cmd_bind( context->cmd );
-          context->gfx_line_list_color.cmd_set_default_viewports_and_scissor_rects( context->cmd );
-          context->device_dispatch.cmdDraw( context->cmd, vertex_count, 1, vertex_i, 0 );
-          vertex_i += vertex_count;
-          break;
-        }
+            context->gfx_line_list_color.cmd_bind( context->cmd );
+            context->gfx_line_list_color.cmd_set_default_viewports_and_scissor_rects( context->cmd );
+            context->device_dispatch.cmdDraw( context->cmd, vertex_count, 1, vertex_i, 0 );
+            vertex_i += vertex_count;
+            break;
+          }
 
-        case RenderCmd::DRAW_TRIANGLES:
-        {
-          int vertex_count = reader.read_int32x() * 3;
-          reader.skip( reader.read_int32() );
+          case RenderCmd::DRAW_TRIANGLES:
+          {
+            int vertex_count = reader.read_int32x() * 3;
+            reader.skip( reader.read_int32() );
 
-          context->gfx_triangle_list_color.cmd_bind( context->cmd );
-          context->gfx_triangle_list_color.cmd_set_default_viewports_and_scissor_rects( context->cmd );
-          context->device_dispatch.cmdDraw( context->cmd, vertex_count, 1, vertex_i, 0 );
-          vertex_i += vertex_count;
-          break;
-        }
+            context->gfx_triangle_list_color.cmd_bind( context->cmd );
+            context->gfx_triangle_list_color.cmd_set_default_viewports_and_scissor_rects( context->cmd );
+            context->device_dispatch.cmdDraw( context->cmd, vertex_count, 1, vertex_i, 0 );
+            vertex_i += vertex_count;
+            break;
+          }
 
-        case RenderCmd::DRAW_TEXTURED_TRIANGLES:
-        {
-          int vertex_count = reader.read_int32x() * 3;
-          reader.skip( reader.read_int32() );
-          break;
-        }
+          case RenderCmd::DRAW_TEXTURED_TRIANGLES:
+          {
+            int vertex_count = reader.read_int32x() * 3;
+            reader.skip( reader.read_int32() );
+            break;
+          }
 
-        default:
-        {
-          char message[120];
-          snprintf(
-            message, 120,
-            "Internal error in WindowRenderContextVulkan::render() - command code %d is unsupported (pass 2).",
-            cmd
-          );
-          BALEFIRE_LOG_ERROR( message );
+          case RenderCmd::LOAD_TEXTURE:
+            reader.read_int32x();  // id
+            reader.read_int32x();  // width
+            reader.read_int32x();  // height
+            reader.read_int32s();  // argb pixel data
+            break;
+
+          case RenderCmd::FREE_TEXTURE:
+            reader.read_int32x();  // id
+            break;
+
+          default:
+          {
+            char message[120];
+            snprintf(
+              message, 120,
+              "Internal error in WindowRenderContextVulkan::render() - command code %d is unsupported (pass 2).",
+              cmd
+            );
+            BALEFIRE_LOG_ERROR( message );
+            error = true;
+            break;
+          }
         }
       }
     }

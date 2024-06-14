@@ -18,7 +18,7 @@ namespace BALEFIRE
     virtual ~WindowRenderContext() {}
 
     virtual void configure() {}
-    virtual void render( const char* data, int count ) {}
+    virtual void render( unsigned char* data, int count ) {}
   };
 };
 

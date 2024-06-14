@@ -16,7 +16,7 @@
 
 namespace BALEFIRE
 {
-  typedef bool (*BeginRenderHandler)(Window* window, void* app_data, const char** render_data, int* count );
+  typedef bool (*BeginRenderHandler)(Window* window, void* app_data, unsigned char** render_data, int* count );
   typedef void (*EndRenderHandler)(Window* window, void* app_data);
 
   const int VERTEX_PROPERTY_COUNT = 7;
@@ -48,5 +48,12 @@ namespace BALEFIRE
 
 #define BALEFIRE_LOG_ERROR( message ) \
   fprintf( stderr, "[Balefire] %s\n", message );
+
+#define BALEFIRE_LOG_ERROR_WITH_INT( message, value ) \
+  {                                                   \
+    char buffer[120];                                 \
+    snprintf( buffer, 120, message, value );          \
+    BALEFIRE_LOG_ERROR( buffer );                     \
+  }
 
 #endif // BALEFIRE_H

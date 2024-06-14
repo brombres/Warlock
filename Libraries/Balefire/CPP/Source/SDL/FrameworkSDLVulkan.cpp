@@ -80,7 +80,7 @@ Window* FrameworkSDLVulkan::create_window( int index, std::string name )
   return window;
 }
 
-void FrameworkSDLVulkan::render( Window* window, const char* render_data, int count )
+void FrameworkSDLVulkan::render( Window* window, unsigned char* render_data, int count )
 {
   window->render( render_data, count );
 }

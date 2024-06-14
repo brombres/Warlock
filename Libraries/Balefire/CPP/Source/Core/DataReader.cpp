@@ -12,6 +12,44 @@ int DataReader::read_byte()
   return data[position++];
 }
 
+unsigned char* DataReader::read_bytes()
+{
+  int byte_count = read_int32x();
+  unsigned char* result = data + position;
+  position += byte_count;
+  return result;
+}
+
+int* DataReader::read_int32s()
+{
+  int int32_count = read_int32x();
+
+  while (position & 3) ++position;  // alignment padding
+
+  int* int32s = (int*)(data + position);
+  int byte_order_marker = *int32s;
+  if (byte_order_marker != 0x11223344)
+  {
+    // Rewrite the data, flipping the byte order. BOM gets flipped as well.
+    int* cur = int32s - 1;
+    int n = int32_count + 1;
+    while (--n >= 0)
+    {
+      // aabbccdd ->   dd000000
+      //             | 00cc0000
+      //             | 0000bb00
+      //             | 000000aa
+      int x = *(++cur);
+      *cur = (x << 24) | ((x << 8) & 0xff0000) | ((x >> 8) & 0xff00) | ((x >> 24) & 0xff);
+    }
+  }
+
+  int* result = int32s + 1;
+  position += (int32_count + 1) * 4;
+
+  return result;
+}
+
 int DataReader::read_int32()
 {
   if (position+4 > count)
