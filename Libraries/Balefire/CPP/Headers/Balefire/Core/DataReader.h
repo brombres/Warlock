@@ -14,7 +14,7 @@ namespace BALEFIRE
 
     int            read_byte();
     unsigned char* read_bytes();
-    int*           read_int32s();
+    int            read_int32s( int** data_pointer );
     int            read_int32();
     int            read_int32x();
     float          read_real32();

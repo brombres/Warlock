@@ -7,24 +7,27 @@ uses Graphics [export]
 
 $include Asset
 $include IDBank
-$include Image
 $include RenderCmd
 $include Renderer
 $include ResourceBank
+$include Texture
 $include Vertex
 $include Window
 
 class Warlock [essential singleton]
+  GLOBAL PROPERTIES
+    image_extensions = ["png","jpg","jpeg"]
+
   PROPERTIES
     windows = ResourceBank<<Window>>()
-    #bitmap  = Bitmap("Test.png")
+    texture = Texture( "Warlock" )
 
-    image_extensions = ["png","jpg","jpeg"]
+    rendering = false # false during initial configuration; permanently set to true afterwards
 
   METHODS
     method init
-      Window( "Rogue Warlock" )
-      Image( "Warlock" ).load
+      println "Initializing Warlock"
+      Window( "Warlock" )
       #trace img.id
       #@trace find_image( "Warlock" )
       #if local file = find_asset( "Assets/Images/Warlock.png" )
@@ -64,6 +67,8 @@ class Warlock [essential singleton]
 
   GLOBAL METHODS
     method begin_render( window_id:Int )->Byte[] [api]
+      Warlock.rendering = true
+
       local pt = XY(0,-0.5).rotated( degrees )
       degrees += Degrees(1)
 
@@ -72,8 +77,9 @@ class Warlock [essential singleton]
         pt.rotated( Degrees(120) )
         pt.rotated( Degrees(240) )
       )
-      Renderer.fill( triangle, Color.YELLOW )
-      Renderer.draw( triangle, Color.RED )
+
+      Renderer.fill( triangle, Warlock.texture, Triangle(XY(0,0),XY(1,0),XY(1,1)) )
+      Renderer.draw( triangle, Color.YELLOW )
 
       return Renderer.finalized_render_data
 

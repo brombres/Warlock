@@ -3,6 +3,7 @@ module Warlock
 enum PrimitiveType
   UNDEFINED,
   TRIANGLES,
+  TEXTURED_TRIANGLES,
   LINES
 endEnum
 
@@ -18,6 +19,7 @@ class Renderer [singleton]
 
     vertices           = Vertex[]
     primitive_type     : PrimitiveType
+    texture            : Texture
 
     total_vertex_count : Int
 
@@ -27,6 +29,7 @@ class Renderer [singleton]
 
     method reset
       primitive_type = PrimitiveType.UNDEFINED
+      texture = null
       vertices.clear
       total_vertex_count = 0
       render_data.reset
@@ -49,6 +52,13 @@ class Renderer [singleton]
       vertices.add( Vertex(triangle.a,argb,XY(0,0)) )
       vertices.add( Vertex(triangle.b,argb,XY(1,1)) )
       vertices.add( Vertex(triangle.c,argb,XY(0,1)) )
+
+    method fill( triangle:Triangle, texture, uv:Triangle, color=Color.WHITE:Color )
+      primitive_type = PrimitiveType.TEXTURED_TRIANGLES
+      local argb = color.argb
+      vertices.add( Vertex(triangle.a, argb, uv.a) )
+      vertices.add( Vertex(triangle.b, argb, uv.b) )
+      vertices.add( Vertex(triangle.c, argb, uv.c) )
 
     method finalized_render_data->Byte[]
       flush
@@ -75,6 +85,23 @@ class Renderer [singleton]
           endForEach
           render_data.patch_int32( data_count_pos, (render_data.position - data_count_pos) - 4 )
 
+        case TEXTURED_TRIANGLES
+          render_data.write_int32x( RenderCmd.DRAW_TEXTURED_TRIANGLES )
+          if (texture) render_data.write_int32x( texture.id )
+          else         render_data.write_int32x( 0 )
+          render_data.write_int32x( vertices.count / 3 )
+          local data_count_pos = render_data.position
+          render_data.write_int32( 0 )
+          forEach (v in vertices)
+            render_data.write_real32( v.x )
+            render_data.write_real32( v.y )
+            render_data.write_real32( v.z )
+            render_data.write_int32( v.color )
+            render_data.write_real32( v.u )
+            render_data.write_real32( v.v )
+          endForEach
+          render_data.patch_int32( data_count_pos, (render_data.position - data_count_pos) - 4 )
+
         case LINES
           render_data.write_int32x( RenderCmd.DRAW_LINES )
           render_data.write_int32x( vertices.count / 2 )
@@ -93,24 +120,23 @@ class Renderer [singleton]
       total_vertex_count += vertices.count
       vertices.clear
 
-    method load_texture( id:Int, name:String )
+    method load_texture( id:Int, bitmap:Bitmap )
       flush
-      if local file = Warlock.find_image( name )
-        if local bitmap = Bitmap.load( file )
-          render_data.write_int32x( RenderCmd.LOAD_TEXTURE )
-          render_data.write_int32x( id )
-          render_data.write_int32x( bitmap.width )
-          render_data.write_int32x( bitmap.height )
-          render_data.write_colors( bitmap.pixels )
-        else
-          error.println "[Warlock] Error loading '$' - unable to decode image."(file)
-        endIf
-      else
-        error.println "[Warlock] Error loading '$' - file not found."(name)
-      endIf
+      render_data.write_int32x( RenderCmd.LOAD_TEXTURE )
+      render_data.write_int32x( id )
+      render_data.write_int32x( bitmap.width )
+      render_data.write_int32x( bitmap.height )
+      render_data.write_colors( bitmap.pixels )
 
     method set_primitive_type( new_type:PrimitiveType )
       if (new_type == @primitive_type) return
       flush
       @primitive_type = new_type
+
+    method set_texture( new_texture:Texture )
+      if (texture is new_texture) return
+      flush
+      @texture = new_texture
+      if (new_texture) new_texture.load
+
 endClass

@@ -39,7 +39,6 @@ void end_render_handler( Window* window, void* app_data )
   WarlockWarlock__end_render__RogueInt( window->index );
 }
 
-
 int main(int argc, char *argv[])
 {
   Balefire balefire( new FrameworkSDLVulkan() );

@@ -6,7 +6,7 @@ struct ConfigureTextures : ContextOperation<VulkanContext>
 {
   bool on_activate() override
   {
-    uint32_t pixels[] = {0xff00ffff,0xff00ffff,0xff00ffff,0xff00ffff};
+    uint32_t pixels[] = {0xff0000ff,0xff0000ff,0xff0000ff,0xff0000ff};
     return context->test_image.create( context, pixels, 2, 2 );
   }
 
@@ -48,6 +48,7 @@ void VulkanContext::configure_operations()
   add_operation( "configure.images",             new ConfigureTextures() );
   add_operation( "configure.samplers",           new ConfigureSamplers() );
   add_operation( "configure.descriptors",        new ConfigureBalefireDescriptors(&descriptors) );
-  add_operation( "configure.graphics_pipelines", new ConfigureGFXTriangleListColor(&gfx_triangle_list_color) );
   add_operation( "configure.graphics_pipelines", new ConfigureGFXLineListColor(&gfx_line_list_color) );
+  add_operation( "configure.graphics_pipelines", new ConfigureGFXTriangleListColor(&gfx_triangle_list_color) );
+  add_operation( "configure.graphics_pipelines", new ConfigureGFXTriangleListTexture(&gfx_triangle_list_texture) );
 }

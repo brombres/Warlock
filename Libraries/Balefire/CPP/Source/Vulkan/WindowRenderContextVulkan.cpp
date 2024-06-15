@@ -93,6 +93,7 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
 
         case RenderCmd::DRAW_TEXTURED_TRIANGLES:
         {
+          reader.read_int32x(); // discard texture ID
           int vertex_count = reader.read_int32x() * 3;
           reader.read_int32(); // discard data skip count
           for (int i=vertex_count; --i>=0; )
@@ -110,16 +111,26 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
 
         case RenderCmd::LOAD_TEXTURE:
         {
-          int id = reader.read_int32x();
-          int width = reader.read_int32x();
-          int height = reader.read_int32x();
-          int* pixels = reader.read_int32s();
+          int  id = reader.read_int32x();
+          int  width = reader.read_int32x();
+          int  height = reader.read_int32x();
+          int* pixels;
+          int  pixel_count = reader.read_int32s( &pixels );
 
           if (id <= 0) break;
           if (id >= context->textures.size()) context->textures.resize( id + 1 );
 
           Image* image = new Image();
           context->textures[id] = image;
+
+          // Swap red and blue
+          int* cur = pixels + pixel_count;
+          int  n = pixel_count;
+          while (--n >= 0)
+          {
+            int argb = *(--cur);
+            *cur = (argb & 0xff00ff00) | ((argb << 16) & 0x00ff0000) | ((argb >> 16) & 0x000000ff);
+          }
 
           if ( !image->create(context, pixels, width, height) )
           {
@@ -165,6 +176,8 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
       context->vertex_buffer->cmd_bind( context->cmd );
 
       // Second pass: draw
+      Image* texture = nullptr;
+
       reader.position = pass_start_pos;
       int vertex_i = 0;
       while ( !error )
@@ -200,8 +213,23 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
 
           case RenderCmd::DRAW_TEXTURED_TRIANGLES:
           {
+            int texture_id = reader.read_int32x();
+            if (texture_id > 0 && texture_id < context->textures.size())
+            {
+              Image* new_texture = context->textures[texture_id];
+              if (texture != new_texture && new_texture)
+              {
+                context->image_sampler->set( new_texture );
+                texture = new_texture;
+              }
+            }
             int vertex_count = reader.read_int32x() * 3;
             reader.skip( reader.read_int32() );
+
+            context->gfx_triangle_list_texture.cmd_bind( context->cmd );
+            context->gfx_triangle_list_texture.cmd_set_default_viewports_and_scissor_rects( context->cmd );
+            context->device_dispatch.cmdDraw( context->cmd, vertex_count, 1, vertex_i, 0 );
+            vertex_i += vertex_count;
             break;
           }
 
@@ -209,7 +237,7 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
             reader.read_int32x();  // id
             reader.read_int32x();  // width
             reader.read_int32x();  // height
-            reader.read_int32s();  // argb pixel data
+            reader.read_int32s(nullptr);  // argb pixel data
             break;
 
           case RenderCmd::FREE_TEXTURE:

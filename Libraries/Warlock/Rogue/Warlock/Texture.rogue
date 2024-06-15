@@ -1,0 +1,32 @@
+module Warlock
+
+class Texture : Asset<<Texture>>
+  PROPERTIES
+    width  : Int
+    height : Int
+
+    bitmap : Bitmap  # created in init(), nulled in load()
+    loaded = false
+
+  METHODS
+    method init( name:String )
+      prior.init( name )
+      if local file = Warlock.find_image( name )
+        bitmap = Bitmap.load( file )
+        if (bitmap)
+          width  = bitmap.width
+          height = bitmap.height
+        else
+          error.println "[Warlock] Error loading '$' - unable to decode image."(file)
+        endIf
+      else
+        error.println "[Warlock] Error loading '$' - asset not found."(name)
+      endIf
+
+    method load
+      if (loaded) return
+      loaded = true
+      if (bitmap) Renderer.load_texture( id, bitmap )
+      bitmap = null
+endClass
+

@@ -20,13 +20,14 @@ unsigned char* DataReader::read_bytes()
   return result;
 }
 
-int* DataReader::read_int32s()
+int DataReader::read_int32s( int** data_pointer )
 {
   int int32_count = read_int32x();
 
   while (position & 3) ++position;  // alignment padding
 
   int* int32s = (int*)(data + position);
+
   int byte_order_marker = *int32s;
   if (byte_order_marker != 0x11223344)
   {
@@ -44,10 +45,9 @@ int* DataReader::read_int32s()
     }
   }
 
-  int* result = int32s + 1;
   position += (int32_count + 1) * 4;
-
-  return result;
+  if (data_pointer) *data_pointer = int32s + 1;
+  return int32_count;
 }
 
 int DataReader::read_int32()

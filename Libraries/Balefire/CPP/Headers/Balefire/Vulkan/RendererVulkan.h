@@ -58,6 +58,7 @@ namespace BALEFIRE
 #include "Balefire/Vulkan/Configure/ConfigureBalefireDescriptors.h"
 #include "Balefire/Vulkan/Configure/ConfigureGFXLineListColor.h"
 #include "Balefire/Vulkan/Configure/ConfigureGFXTriangleListColor.h"
+#include "Balefire/Vulkan/Configure/ConfigureGFXTriangleListTexture.h"
 #include "Balefire/Vulkan/WindowRenderContextVulkan.h"
 
 #endif // BALEFIRE_RENDERER_VULKAN_H
