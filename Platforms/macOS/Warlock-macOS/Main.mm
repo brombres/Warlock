@@ -37,6 +37,7 @@ bool begin_render_handler( Window* window, void* app_data, unsigned char** rende
 void end_render_handler( Window* window, void* app_data )
 {
   WarlockWarlock__end_render__RogueInt( window->index );
+  Rogue_check_gc();
 }
 
 int main(int argc, char *argv[])

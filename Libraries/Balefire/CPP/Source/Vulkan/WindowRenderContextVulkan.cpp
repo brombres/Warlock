@@ -70,8 +70,9 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
             float x = reader.read_real32();
             float y = reader.read_real32();
             float z = reader.read_real32();
+            float w = reader.read_real32();
             int   color = reader.read_int32();
-            vertices.push_back( Vertex(x,y,z,color) );
+            vertices.push_back( Vertex(x,y,z,w,color) );
           }
           break;
         }
@@ -85,8 +86,9 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
             float x = reader.read_real32();
             float y = reader.read_real32();
             float z = reader.read_real32();
+            float w = reader.read_real32();
             int   color = reader.read_int32();
-            vertices.push_back( Vertex(x,y,z,color) );
+            vertices.push_back( Vertex(x,y,z,w,color) );
           }
           break;
         }
@@ -101,15 +103,16 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
             float x = reader.read_real32();
             float y = reader.read_real32();
             float z = reader.read_real32();
+            float w = reader.read_real32();
             int   color = reader.read_int32();
             float u = reader.read_real32();
             float v = reader.read_real32();
-            vertices.push_back( Vertex(x,y,z,color,u,v) );
+            vertices.push_back( Vertex(x,y,z,w,color,u,v) );
           }
           break;
         }
 
-        case RenderCmd::LOAD_TEXTURE:
+        case RenderCmd::DEFINE_TEXTURE:
         {
           int  id = reader.read_int32x();
           int  width = reader.read_int32x();
@@ -140,16 +143,24 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
         };
 
         case RenderCmd::FREE_TEXTURE:
+        {
+          int id = reader.read_int32x();
+          if (id > 0 && id < context->textures.size())
+          {
+            Image* texture = context->textures[id];
+            texture->destroy();
+            delete texture;
+            context->textures[id] = nullptr;
+          }
+          break;
+        }
 
         default:
         {
-          char message[120];
-          snprintf(
-            message, 120,
+          BALEFIRE_LOG_ERROR_WITH_INT(
             "Internal error in WindowRenderContextVulkan::render() - command code %d is unsupported (pass 1).",
             cmd
           );
-          BALEFIRE_LOG_ERROR( message );
           error = true;
           break;
         }
@@ -233,7 +244,7 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
             break;
           }
 
-          case RenderCmd::LOAD_TEXTURE:
+          case RenderCmd::DEFINE_TEXTURE:
             reader.read_int32x();  // id
             reader.read_int32x();  // width
             reader.read_int32x();  // height
@@ -246,13 +257,10 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
 
           default:
           {
-            char message[120];
-            snprintf(
-              message, 120,
+            BALEFIRE_LOG_ERROR_WITH_INT(
               "Internal error in WindowRenderContextVulkan::render() - command code %d is unsupported (pass 2).",
               cmd
             );
-            BALEFIRE_LOG_ERROR( message );
             error = true;
             break;
           }

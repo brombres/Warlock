@@ -81,6 +81,7 @@ class Renderer [singleton]
             render_data.write_real32( v.x )
             render_data.write_real32( v.y )
             render_data.write_real32( v.z )
+            render_data.write_real32( v.w )
             render_data.write_int32( v.color )
           endForEach
           render_data.patch_int32( data_count_pos, (render_data.position - data_count_pos) - 4 )
@@ -96,6 +97,7 @@ class Renderer [singleton]
             render_data.write_real32( v.x )
             render_data.write_real32( v.y )
             render_data.write_real32( v.z )
+            render_data.write_real32( v.w )
             render_data.write_int32( v.color )
             render_data.write_real32( v.u )
             render_data.write_real32( v.v )
@@ -111,6 +113,7 @@ class Renderer [singleton]
             render_data.write_real32( v.x )
             render_data.write_real32( v.y )
             render_data.write_real32( v.z )
+            render_data.write_real32( v.w )
             render_data.write_int32( v.color )
           endForEach
           render_data.patch_int32( data_count_pos, (render_data.position - data_count_pos) - 4 )
@@ -120,13 +123,20 @@ class Renderer [singleton]
       total_vertex_count += vertices.count
       vertices.clear
 
-    method load_texture( id:Int, bitmap:Bitmap )
+    method free_texture( id:Int )
+      render_data.write_int32x( RenderCmd.FREE_TEXTURE )
+      render_data.write_int32x( id )
+
+    method define_texture( id:Int, bitmap:Bitmap )
       flush
-      render_data.write_int32x( RenderCmd.LOAD_TEXTURE )
+      render_data.write_int32x( RenderCmd.DEFINE_TEXTURE )
       render_data.write_int32x( id )
       render_data.write_int32x( bitmap.width )
       render_data.write_int32x( bitmap.height )
       render_data.write_colors( bitmap.pixels )
+
+    method find_texture( name:String )->Texture
+      return null
 
     method set_primitive_type( new_type:PrimitiveType )
       if (new_type == @primitive_type) return

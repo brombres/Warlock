@@ -39,7 +39,8 @@ routine rogo_debug
 endRoutine
 
 routine rogo_build( &rebuild )
-  rogo_build_debug( &=rebuild )
+  #rogo_build_debug( &=rebuild )
+  build( System.os, &=rebuild )
 endRoutine
 
 routine rogo_rebuild
@@ -49,7 +50,8 @@ endRoutine
 routine rogo_macos
   # SYNTAX: rogo macos [rebuild|release]
   local args = System.command_line_arguments
-  local debug   = args.contains("debug") or not args.contains("release")
+  #local debug   = args.contains("debug") or not args.contains("release")
+  local debug   = args.contains("debug")
   local rebuild = args.contains("rebuild")
   build( "macOS", &=debug, &=rebuild )
 endRoutine

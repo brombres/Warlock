@@ -6,19 +6,19 @@ namespace BALEFIRE
 {
   struct Vertex
   {
-    struct { float x, y, z; } position;
+    struct { float x, y, z, w; } position;
     uint32_t color;
     struct { float u, v; }    uv;
     uint32_t data;
 
-    Vertex( float x, float y, float z, uint32_t color ) : color(color)
+    Vertex( float x, float y, float z, float w, uint32_t color ) : color(color)
     {
-      position = { x, y, z };
+      position = { x, y, z, w };
     }
 
-    Vertex( float x, float y, float z, uint32_t color, float u, float v ) : color(color)
+    Vertex( float x, float y, float z, float w, uint32_t color, float u, float v ) : color(color)
     {
-      position = { x, y, z };
+      position = { x, y, z, w };
       uv = { u, v };
     }
   };

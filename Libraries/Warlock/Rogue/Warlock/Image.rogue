@@ -1,0 +1,13 @@
+module Warlock
+
+class Image
+  PROPERTIES
+    name    : String
+    texture : Texture
+    width   : Int
+    height  : Int
+
+  METHODS
+    method init( name )
+      texture = Renderer.find_texture( name )
+endClass

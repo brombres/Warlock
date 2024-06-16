@@ -7,6 +7,7 @@ uses Graphics [export]
 
 $include Asset
 $include IDBank
+$include Image
 $include RenderCmd
 $include Renderer
 $include ResourceBank

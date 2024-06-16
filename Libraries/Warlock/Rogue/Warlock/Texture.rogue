@@ -26,7 +26,11 @@ class Texture : Asset<<Texture>>
     method load
       if (loaded) return
       loaded = true
-      if (bitmap) Renderer.load_texture( id, bitmap )
+      if (bitmap) Renderer.define_texture( id, bitmap )
       bitmap = null
+
+    method on_cleanup
+      Renderer.free_texture( id )
+      prior.on_cleanup
 endClass
 
