@@ -52,3 +52,9 @@ void VulkanContext::configure_operations()
   add_operation( "configure.graphics_pipelines", new ConfigureGFXTriangleListColor(&gfx_triangle_list_color) );
   add_operation( "configure.graphics_pipelines", new ConfigureGFXTriangleListTexture(&gfx_triangle_list_texture) );
 }
+
+void VulkanContext::on_surface_size_change( int width, int height )
+{
+  window->width = width;
+  window->height = height;
+}

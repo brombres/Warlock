@@ -7,7 +7,9 @@ namespace BALEFIRE
   struct VulkanContext : VKZ::Context
   {
     // PROPERTIES
-    VKZ::Descriptors      descriptors;
+    Window*          window;
+
+    VKZ::Descriptors descriptors;
 
     VKZ::GraphicsPipeline gfx_line_list_color;
     VKZ::GraphicsPipeline gfx_triangle_list_color;
@@ -22,8 +24,9 @@ namespace BALEFIRE
     VKZ::CombinedImageSamplerDescriptor* image_sampler;
 
     // METHODS
-    VulkanContext( VkSurfaceKHR surface ) : VKZ::Context(surface) {}
+    VulkanContext( Window* window, VkSurfaceKHR surface ) : VKZ::Context(surface), window(window) {}
 
-    virtual void configure_operations() override;
+    void configure_operations() override;
+    void on_surface_size_change( int width, int height ) override;
   };
 };

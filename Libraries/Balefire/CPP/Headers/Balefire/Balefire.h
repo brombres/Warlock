@@ -16,7 +16,7 @@
 
 namespace BALEFIRE
 {
-  typedef bool (*BeginRenderHandler)(Window* window, void* app_data, unsigned char** render_data, int* count );
+  typedef bool (*BeginRenderHandler)(Window* window, void* app_data, unsigned char** render_data, int* count);
   typedef void (*EndRenderHandler)(Window* window, void* app_data);
 
   const int VERTEX_PROPERTY_COUNT = 7;

@@ -3,11 +3,32 @@ module Warlock
 class Image
   PROPERTIES
     name    : String
-    texture : Texture
     width   : Int
     height  : Int
+    texture : Texture
+    uv      : Box
 
   METHODS
     method init( name )
-      texture = Renderer.find_texture( name )
+      texture = Texture( name )
+      width  = texture.width
+      height = texture.height
+      uv = Box( 0, 0, 1, 1 )
+
+    method draw( bounds:Box )
+      local tl = bounds.position
+      local br = bounds.bottom_right
+      local uv1 = uv.position
+      local uv2 = uv.bottom_right
+      Renderer.fill(
+        Triangle( tl, XY(br.x,tl.y), br ),
+        texture,
+        Triangle( uv1, XY(uv2.x,uv1.y), uv2 )
+      )
+      Renderer.fill(
+        Triangle( tl, br, XY(tl.x,br.y) ),
+        texture,
+        Triangle( uv1, uv2, XY(uv1.x,uv2.y) )
+      )
+
 endClass

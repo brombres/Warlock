@@ -25,7 +25,7 @@ void WindowRenderContextVulkan::configure()
 
 void WindowRenderContextVulkan::configure( VkSurfaceKHR surface )
 {
-  context = new VulkanContext( surface );
+  context = new VulkanContext( window, surface );
 
   if ( !context->configure() )
   {
