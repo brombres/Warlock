@@ -1,10 +1,16 @@
 module Warlock
 
-class Vertex( x:Real32, y:Real32, z:Real32, w:Real32, color:Int32, u:Real32, v:Real32, data:Int32 ) [compound]
+class Vertex( position:XYZW, color:Color, uv:XY, data:Int32 ) [compound]
   GLOBAL METHODS
     method create( xy:XY, color:Color )->Vertex
-      return Vertex( xy.x, xy.y, 0, 1, color.argb, 0, 0, 0 )
+      return Vertex( XYZW(xy,0,1), color, XY(0,0), 0 )
+
+    method create( position:XYZW, color:Color )->Vertex
+      return Vertex( position, color, XY(0,0), 0 )
 
     method create( xy:XY, color:Color, uv:XY )->Vertex
-      return Vertex( xy.x, xy.y, 0, 1, color.argb, uv.x, uv.y, 0 )
+      return Vertex( XYZW(xy,0,1), color, uv, 0 )
+
+    method create( position:XYZW, color:Color, uv:XY )->Vertex
+      return Vertex( position, color, uv, 0 )
 endClass

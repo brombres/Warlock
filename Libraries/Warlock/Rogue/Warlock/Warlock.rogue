@@ -4,10 +4,13 @@ nativeHeader @|#include "WarlockInterface.h"
 
 uses Geometry [export]
 uses Graphics [export]
+uses Math/Matrix
 
 $include Asset
+$include Display
 $include IDBank
 $include Image
+$include ProjectionMode
 $include RenderCmd
 $include Renderer
 $include ResourceBank
@@ -68,20 +71,30 @@ class Warlock [essential singleton]
 
   GLOBAL METHODS
     method begin_render( window_id:Int, display_width:Int, display_height:Int )->Byte[] [api]
-      @trace display_width, display_height
+      Display.begin_draw( display_width, display_height )
+
+      local w = display_width->Real
+      local h = display_height->Real
+
       Warlock.rendering = true
 
-      local pt = XY(0,-0.5).rotated( degrees )
+      local pt = XY(0,w.or_smaller(h)*0.5).rotated( degrees )
       degrees += Degrees(1)
 
       local triangle = Triangle(
-        pt,
-        pt.rotated( Degrees(120) )
-        pt.rotated( Degrees(240) )
+        XY(w/2,h/2) + pt,
+        XY(w/2,h/2) + pt.rotated( Degrees(120) )
+        XY(w/2,h/2) + pt.rotated( Degrees(240) )
       )
 
-      Warlock.image.draw( Box(-1,-1,2,2) )
+      #Warlock.image.draw( Box(-w/2,-h/2,w,h) )
+      Warlock.image.draw( Box(0,0,w,h) )
       Renderer.draw( triangle, Color.YELLOW )
+      #temporarily Renderer.projection = Matrix.rotate_z(Radians(pi/8)) * Renderer.projection
+      #  Renderer.fill( Box(w/4,h/4,w/2,h/2), Color.CYAN )
+      #endTemporarily
+
+      Display.end_draw
 
       return Renderer.finalized_render_data
 

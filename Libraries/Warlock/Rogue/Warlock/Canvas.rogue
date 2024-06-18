@@ -1,0 +1,13 @@
+module Warlock
+
+class Canvas [singleton]
+  PROPERTIES
+    width, height : Int
+
+  METHODS
+    method begin_draw( width, height )
+      Canvas = this
+
+    method end_draw
+      Canvas = Display
+endClass

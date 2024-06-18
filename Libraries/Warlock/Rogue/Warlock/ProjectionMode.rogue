@@ -1,0 +1,17 @@
+module Warlock
+
+class ProjectionMode [abstract]
+  METHODS
+    method update  [abstract]
+endClass
+
+class ProjectionMode2DX : ProjectionMode [singleton]
+  METHODS
+    method update
+      local perspective_center = Display.perspective_center
+      Display.projection_transform =
+        Matrix.mode_2dx(
+          Display.width, Display.height,
+          &=perspective_center
+        )
+endClass

@@ -36,29 +36,40 @@ class Renderer [singleton]
       render_data.write_int32( VERSION )
       render_data.write_int32( 0 )  # total vertex count
 
+    method add_vertex( position:XY, color:Color )
+      vertices.add( Vertex(XYZW(position,2000,1),color) )
+
+    method add_vertex( position:XY, color:Color, uv:XY )
+      vertices.add( Vertex(XYZW(position,2000,1),color,uv) )
+
     method draw( triangle:Triangle, color:Color )
       primitive_type = PrimitiveType.LINES
-      local argb = color.argb
-      vertices.add( Vertex(triangle.a,argb) )
-      vertices.add( Vertex(triangle.b,argb) )
-      vertices.add( Vertex(triangle.b,argb) )
-      vertices.add( Vertex(triangle.c,argb) )
-      vertices.add( Vertex(triangle.c,argb) )
-      vertices.add( Vertex(triangle.a,argb) )
+      add_vertex( triangle.a, color )
+      add_vertex( triangle.b, color )
+      add_vertex( triangle.b, color )
+      add_vertex( triangle.c, color )
+      add_vertex( triangle.c, color )
+      add_vertex( triangle.a, color )
+
+    method fill( box:Box, color:Color )
+      local tl = box.position
+      local tr = box.top_right
+      local br = box.bottom_right
+      local bl = box.bottom_left
+      fill( Triangle(tl,tr,br), color )
+      fill( Triangle(br,bl,tl), color )
 
     method fill( triangle:Triangle, color:Color )
       primitive_type = PrimitiveType.TRIANGLES
-      local argb = color.argb
-      vertices.add( Vertex(triangle.a,argb,XY(0,0)) )
-      vertices.add( Vertex(triangle.b,argb,XY(1,1)) )
-      vertices.add( Vertex(triangle.c,argb,XY(0,1)) )
+      add_vertex( triangle.a, color )
+      add_vertex( triangle.b, color )
+      add_vertex( triangle.c, color )
 
     method fill( triangle:Triangle, texture, uv:Triangle, color=Color.WHITE:Color )
       primitive_type = PrimitiveType.TEXTURED_TRIANGLES
-      local argb = color.argb
-      vertices.add( Vertex(triangle.a, argb, uv.a) )
-      vertices.add( Vertex(triangle.b, argb, uv.b) )
-      vertices.add( Vertex(triangle.c, argb, uv.c) )
+      add_vertex( triangle.a, color, uv.a )
+      add_vertex( triangle.b, color, uv.b )
+      add_vertex( triangle.c, color, uv.c )
 
     method finalized_render_data->Byte[]
       flush
@@ -70,6 +81,13 @@ class Renderer [singleton]
     method flush
       if (vertices.is_empty) return
 
+      local transform = Display.transform
+      forEach (vertex in rewriter=vertices.rewriter)
+        local pos = Display.transform * vertex.position
+        vertex.position = pos / pos.w
+        rewriter.write( vertex )
+      endForEach
+
       which (primitive_type)
 
         case TRIANGLES
@@ -78,11 +96,11 @@ class Renderer [singleton]
           local data_count_pos = render_data.position
           render_data.write_int32( 0 )
           forEach (v in vertices)
-            render_data.write_real32( v.x )
-            render_data.write_real32( v.y )
-            render_data.write_real32( v.z )
-            render_data.write_real32( v.w )
-            render_data.write_int32( v.color )
+            render_data.write_real32( v.position.x )
+            render_data.write_real32( v.position.y )
+            render_data.write_real32( v.position.z )
+            render_data.write_real32( v.position.w )
+            render_data.write_int32( v.color.argb )
           endForEach
           render_data.patch_int32( data_count_pos, (render_data.position - data_count_pos) - 4 )
 
@@ -94,13 +112,13 @@ class Renderer [singleton]
           local data_count_pos = render_data.position
           render_data.write_int32( 0 )
           forEach (v in vertices)
-            render_data.write_real32( v.x )
-            render_data.write_real32( v.y )
-            render_data.write_real32( v.z )
-            render_data.write_real32( v.w )
-            render_data.write_int32( v.color )
-            render_data.write_real32( v.u )
-            render_data.write_real32( v.v )
+            render_data.write_real32( v.position.x )
+            render_data.write_real32( v.position.y )
+            render_data.write_real32( v.position.z )
+            render_data.write_real32( v.position.w )
+            render_data.write_int32( v.color.argb )
+            render_data.write_real32( v.uv.x )
+            render_data.write_real32( v.uv.y )
           endForEach
           render_data.patch_int32( data_count_pos, (render_data.position - data_count_pos) - 4 )
 
@@ -110,11 +128,11 @@ class Renderer [singleton]
           local data_count_pos = render_data.position
           render_data.write_int32( 0 )
           forEach (v in vertices)
-            render_data.write_real32( v.x )
-            render_data.write_real32( v.y )
-            render_data.write_real32( v.z )
-            render_data.write_real32( v.w )
-            render_data.write_int32( v.color )
+            render_data.write_real32( v.position.x )
+            render_data.write_real32( v.position.y )
+            render_data.write_real32( v.position.z )
+            render_data.write_real32( v.position.w )
+            render_data.write_int32( v.color.argb )
           endForEach
           render_data.patch_int32( data_count_pos, (render_data.position - data_count_pos) - 4 )
 
