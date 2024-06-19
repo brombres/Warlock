@@ -46,7 +46,7 @@ class Display [singleton]
       transform_modified = true
 
     method end_draw
-      noAction
+      Renderer.flush
 
     method push_object_transform( m:Matrix )
       if (object_transforms.count)

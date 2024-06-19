@@ -228,11 +228,7 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
             if (texture_id > 0 && texture_id < context->textures.size())
             {
               Image* new_texture = context->textures[texture_id];
-              if (texture != new_texture && new_texture)
-              {
-                context->image_sampler->set( new_texture );
-                texture = new_texture;
-              }
+              texture = _set_texture( texture, new_texture );
             }
             int vertex_count = reader.read_int32x() * 3;
             reader.skip( reader.read_int32() );
@@ -240,6 +236,7 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
             context->gfx_triangle_list_texture.cmd_bind( context->cmd );
             context->gfx_triangle_list_texture.cmd_set_default_viewports_and_scissor_rects( context->cmd );
             context->device_dispatch.cmdDraw( context->cmd, vertex_count, 1, vertex_i, 0 );
+
             vertex_i += vertex_count;
             break;
           }
@@ -270,6 +267,13 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
 
     context->execute( "render.end" );
   }
+}
 
+Image* WindowRenderContextVulkan::_set_texture( Image* cur_texture, Image* new_texture )
+{
+  if (cur_texture == new_texture || !new_texture) return cur_texture;
+
+  if (cur_texture) cur_texture->cmd_wait_until_drawing_complete( context->cmd );
+  return new_texture;
 }
 

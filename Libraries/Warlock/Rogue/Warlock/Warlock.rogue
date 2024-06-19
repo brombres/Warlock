@@ -25,6 +25,7 @@ class Warlock [essential singleton]
   PROPERTIES
     windows = ResourceBank<<Window>>()
     image = Image( "Warlock" )
+    alpha = Image( "Alpha" )
 
     rendering = false # false during initial configuration; permanently set to true afterwards
 
@@ -89,6 +90,9 @@ class Warlock [essential singleton]
 
       #Warlock.image.draw( Box(-w/2,-h/2,w,h) )
       Warlock.image.draw( Box(0,0,w,h) )
+
+      local alpha = Warlock.alpha
+      alpha.draw( Box(Display.center - alpha.size/2, alpha.size) )
       Renderer.draw( triangle, Color.YELLOW.with_alpha(0.5) )
 
       Display.push_object_transform( Matrix.translate(XY(Display.center)) )

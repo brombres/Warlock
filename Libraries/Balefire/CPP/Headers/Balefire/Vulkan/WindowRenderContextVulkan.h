@@ -26,6 +26,8 @@ namespace BALEFIRE
     virtual void configure();
     virtual void configure( VkSurfaceKHR surface );
     virtual void render( unsigned char* data, int count );
+
+    virtual VKZ::Image* _set_texture( VKZ::Image* cur_texture, VKZ::Image* new_texture );
   };
 };
 

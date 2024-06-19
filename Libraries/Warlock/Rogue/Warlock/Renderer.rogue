@@ -22,6 +22,7 @@ class Renderer [singleton]
     texture            : Texture
 
     total_vertex_count : Int
+    flushing           = false
 
   METHODS
     method init
@@ -80,6 +81,9 @@ class Renderer [singleton]
 
     method flush
       if (vertices.is_empty) return
+
+      if (flushing) return
+      flushing = true
 
       local transform = Display.transform
       forEach (vertex in rewriter=vertices.rewriter)
@@ -140,6 +144,8 @@ class Renderer [singleton]
 
       total_vertex_count += vertices.count
       vertices.clear
+
+      flushing = false
 
     method free_texture( id:Int )
       render_data.write_int32x( RenderCmd.FREE_TEXTURE )
