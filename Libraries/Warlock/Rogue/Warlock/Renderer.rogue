@@ -37,10 +37,10 @@ class Renderer [singleton]
       render_data.write_int32( 0 )  # total vertex count
 
     method add_vertex( position:XY, color:Color )
-      vertices.add( Vertex(XYZW(position,2000,1),color) )
+      vertices.add( Vertex(XYZW(position,0,1),color) )
 
     method add_vertex( position:XY, color:Color, uv:XY )
-      vertices.add( Vertex(XYZW(position,2000,1),color,uv) )
+      vertices.add( Vertex(XYZW(position,0,1),color,uv) )
 
     method draw( triangle:Triangle, color:Color )
       primitive_type = PrimitiveType.LINES

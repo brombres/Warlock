@@ -28,8 +28,8 @@ class Display [singleton]
 
   METHODS
     method begin_draw( width, height )
-      perspective_center = XY(0.5,0.5)
       projection_mode = ProjectionMode2DX
+      perspective_center = XY(0.5,0.5)
       clear_transforms
 
     method bounds->Box
@@ -101,6 +101,7 @@ class Display [singleton]
     method transform->Matrix
       if (transform_modified)
         transform_modified = false
+        Renderer.flush
         transform = projection_transform * world_transform
       endIf
       return @transform

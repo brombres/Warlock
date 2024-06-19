@@ -6,12 +6,19 @@ class ProjectionMode [abstract]
 endClass
 
 class ProjectionMode2DX : ProjectionMode [singleton]
+  PROPERTIES
+    depth_scale = 1.0
+    nominal_z   : Int
+
   METHODS
     method update
+      nominal_z = (Display.width^2 + Display.height^2).sqrt * depth_scale
       local perspective_center = Display.perspective_center
       Display.projection_transform =
         Matrix.mode_2dx(
           Display.width, Display.height,
+          &=nominal_z,
           &=perspective_center
-        )
+        ) *
+        Matrix.translate( XYZ(0,0,nominal_z) )
 endClass

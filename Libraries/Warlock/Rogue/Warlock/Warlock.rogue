@@ -89,10 +89,13 @@ class Warlock [essential singleton]
 
       #Warlock.image.draw( Box(-w/2,-h/2,w,h) )
       Warlock.image.draw( Box(0,0,w,h) )
-      Renderer.draw( triangle, Color.YELLOW )
-      #temporarily Renderer.projection = Matrix.rotate_z(Radians(pi/8)) * Renderer.projection
-      #  Renderer.fill( Box(w/4,h/4,w/2,h/2), Color.CYAN )
-      #endTemporarily
+      Renderer.draw( triangle, Color.YELLOW.with_alpha(0.5) )
+
+      Display.push_object_transform( Matrix.translate(XY(Display.center)) )
+      Display.push_object_transform( Matrix.rotate_y(Degrees(45)) )
+      Display.push_object_transform( Matrix.translate(-XY(Display.center)) )
+      Renderer.fill( Box(w/4,h/4,w/2,h/2), Color.CYAN.with_alpha(0.25) )
+      Display.pop_object_transform( 3 )
 
       Display.end_draw
 
