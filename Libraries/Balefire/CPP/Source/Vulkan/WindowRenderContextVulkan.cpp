@@ -273,7 +273,7 @@ Image* WindowRenderContextVulkan::_set_texture( Image* cur_texture, Image* new_t
 {
   if (cur_texture == new_texture || !new_texture) return cur_texture;
 
-  if (cur_texture) cur_texture->cmd_wait_until_drawing_complete( context->cmd );
+  //if (cur_texture) cur_texture->cmd_wait_until_drawing_complete( context->cmd );
   return new_texture;
 }
 
