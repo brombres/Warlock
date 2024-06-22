@@ -26,6 +26,18 @@ struct ConfigureTextures : ContextOperation<VulkanContext>
   }
 };
 
+struct ConfigureMaterials : ContextOperation<VulkanContext>
+{
+  void on_deactivate() override
+  {
+    for (auto material : context->materials)
+    {
+      if (material) delete material;
+    }
+    context->materials.clear();
+  }
+};
+
 struct ConfigureSamplers : ContextOperation<VulkanContext>
 {
   bool on_activate() override
@@ -48,6 +60,7 @@ void VulkanContext::configure_operations()
   add_operation( "configure.images",             new ConfigureTextures() );
   add_operation( "configure.samplers",           new ConfigureSamplers() );
   add_operation( "configure.descriptors",        new ConfigureBalefireDescriptors(&descriptors) );
+  add_operation( "configure.materials",          new ConfigureMaterials() );
   add_operation( "configure.graphics_pipelines", new ConfigureGFXLineListColor(&gfx_line_list_color) );
   add_operation( "configure.graphics_pipelines", new ConfigureGFXTriangleListColor(&gfx_triangle_list_color) );
   add_operation( "configure.graphics_pipelines", new ConfigureGFXTriangleListTexture(&gfx_triangle_list_texture) );

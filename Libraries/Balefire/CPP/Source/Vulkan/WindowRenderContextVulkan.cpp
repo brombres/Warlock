@@ -121,10 +121,17 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
           int  pixel_count = reader.read_int32s( &pixels );
 
           if (id <= 0) break;
-          if (id >= context->textures.size()) context->textures.resize( id + 1 );
+          if (id >= context->textures.size())
+          {
+            context->textures.resize( id + 1 );
+            context->materials.resize( id + 1 );
+          }
 
           Image* image = new Image();
           context->textures[id] = image;
+
+          Material* material = new Material( context );
+          context->materials[id] = material;
 
           // Swap red and blue
           int* cur = pixels + pixel_count;
@@ -151,6 +158,10 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
             texture->destroy();
             delete texture;
             context->textures[id] = nullptr;
+
+            Material* material = context->materials[id];
+            delete material;
+            context->materials[id] = nullptr;
           }
           break;
         }

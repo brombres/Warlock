@@ -29,6 +29,7 @@
 		3060335E2C1A4B62002E8229 /* DataReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3060335D2C1A4B62002E8229 /* DataReader.cpp */; };
 		3060336E2C1DC5F8002E8229 /* ConfigureGFXTriangleListTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3060336D2C1DC5F8002E8229 /* ConfigureGFXTriangleListTexture.cpp */; };
 		306033802C248335002E8229 /* Material.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3060337F2C248335002E8229 /* Material.cpp */; };
+		306033932C272BC0002E8229 /* Descriptor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 306033922C272BC0002E8229 /* Descriptor.cpp */; };
 		306912D12B5E7D7400B14F73 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 306912D02B5E7D7400B14F73 /* AppDelegate.m */; };
 		306912D32B5E7D7500B14F73 /* ProjectAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 306912D22B5E7D7500B14F73 /* ProjectAssets.xcassets */; };
 		306912E12B5E7E1D00B14F73 /* Warlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 306912E02B5E7E1D00B14F73 /* Warlock.swift */; };
@@ -41,7 +42,7 @@
 		307706362BA8B3AC00122E50 /* Context.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 307706352BA8B3AC00122E50 /* Context.cpp */; };
 		307E446C2C0626B000C73A44 /* ConfigureDescriptors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 307E446B2C0626AF00C73A44 /* ConfigureDescriptors.cpp */; };
 		308222352BEEEA43006367E7 /* Buffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 308222342BEEEA43006367E7 /* Buffer.cpp */; };
-		308542F72C055F740050704A /* Descriptors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 308542F62C055F740050704A /* Descriptors.cpp */; };
+		308542F72C055F740050704A /* OldDescriptors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 308542F62C055F740050704A /* OldDescriptors.cpp */; };
 		309D52CD2C0B761F00CCA5B3 /* ConfigureBalefireDescriptors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 309D52CC2C0B761F00CCA5B3 /* ConfigureBalefireDescriptors.cpp */; };
 		309D52D22C0DFC1C00CCA5B3 /* ConfigureTextureSampler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 309D52D12C0DFC1C00CCA5B3 /* ConfigureTextureSampler.cpp */; };
 		309D52E12C0F6D8E00CCA5B3 /* Sampler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 309D52E02C0F6D8E00CCA5B3 /* Sampler.cpp */; };
@@ -284,6 +285,9 @@
 		3060336D2C1DC5F8002E8229 /* ConfigureGFXTriangleListTexture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureGFXTriangleListTexture.cpp; sourceTree = "<group>"; };
 		306033732C24831F002E8229 /* Material.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Material.h; sourceTree = "<group>"; };
 		3060337F2C248335002E8229 /* Material.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Material.cpp; sourceTree = "<group>"; };
+		306033852C272BB5002E8229 /* RefCounted.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RefCounted.h; sourceTree = "<group>"; };
+		306033912C272BB5002E8229 /* Descriptor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Descriptor.h; sourceTree = "<group>"; };
+		306033922C272BC0002E8229 /* Descriptor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Descriptor.cpp; sourceTree = "<group>"; };
 		306912CC2B5E7D7400B14F73 /* Warlock-macOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Warlock-macOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		306912CF2B5E7D7400B14F73 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		306912D02B5E7D7400B14F73 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -352,8 +356,8 @@
 		307E446B2C0626AF00C73A44 /* ConfigureDescriptors.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureDescriptors.cpp; sourceTree = "<group>"; };
 		308222332BEEEA38006367E7 /* Buffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Buffer.h; sourceTree = "<group>"; };
 		308222342BEEEA43006367E7 /* Buffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Buffer.cpp; sourceTree = "<group>"; };
-		308542F52C055F690050704A /* Descriptors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Descriptors.h; sourceTree = "<group>"; };
-		308542F62C055F740050704A /* Descriptors.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Descriptors.cpp; sourceTree = "<group>"; };
+		308542F52C055F690050704A /* OldDescriptors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OldDescriptors.h; sourceTree = "<group>"; };
+		308542F62C055F740050704A /* OldDescriptors.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OldDescriptors.cpp; sourceTree = "<group>"; };
 		309D52CB2C0B761100CCA5B3 /* ConfigureBalefireDescriptors.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConfigureBalefireDescriptors.h; sourceTree = "<group>"; };
 		309D52CC2C0B761F00CCA5B3 /* ConfigureBalefireDescriptors.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureBalefireDescriptors.cpp; sourceTree = "<group>"; };
 		309D52D02C0DFC1300CCA5B3 /* ConfigureTextureSampler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigureTextureSampler.h; sourceTree = "<group>"; };
@@ -867,9 +871,11 @@
 		3077062D2BA896D500122E50 /* Vulkanize */ = {
 			isa = PBXGroup;
 			children = (
+				306033912C272BB5002E8229 /* Descriptor.h */,
+				306033852C272BB5002E8229 /* RefCounted.h */,
 				306033732C24831F002E8229 /* Material.h */,
 				309D52D42C0F6D8200CCA5B3 /* Sampler.h */,
-				308542F52C055F690050704A /* Descriptors.h */,
+				308542F52C055F690050704A /* OldDescriptors.h */,
 				3019596B2BDF040100D9D51B /* GraphicsPipeline.h */,
 				308222332BEEEA38006367E7 /* Buffer.h */,
 				30F271FA2BDD597D000AD163 /* Render */,
@@ -905,9 +911,10 @@
 		307706312BA896D500122E50 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				306033922C272BC0002E8229 /* Descriptor.cpp */,
 				3060337F2C248335002E8229 /* Material.cpp */,
 				309D52E02C0F6D8E00CCA5B3 /* Sampler.cpp */,
-				308542F62C055F740050704A /* Descriptors.cpp */,
+				308542F62C055F740050704A /* OldDescriptors.cpp */,
 				308222342BEEEA43006367E7 /* Buffer.cpp */,
 				3019597A2BDFDF1D00D9D51B /* RenderPass.cpp */,
 				301959772BDF040C00D9D51B /* GraphicsPipeline.cpp */,
@@ -1217,7 +1224,7 @@
 				3049E6B02B953545008554DD /* WindowFrameworkContextSDL.cpp in Sources */,
 				30F271D12BDD5941000AD163 /* ConfigureCommandPool.cpp in Sources */,
 				3019853B2B94DDBB00CBECCB /* Framework.cpp in Sources */,
-				308542F72C055F740050704A /* Descriptors.cpp in Sources */,
+				308542F72C055F740050704A /* OldDescriptors.cpp in Sources */,
 				30F271D22BDD5941000AD163 /* ConfigureDepthStencil.cpp in Sources */,
 				30F2718E2BDD4346000AD163 /* Shader.cpp in Sources */,
 				30F271D72BDD5941000AD163 /* ConfigureGLSLang.cpp in Sources */,
@@ -1267,6 +1274,7 @@
 				301985302B94DC6000CBECCB /* Window.cpp in Sources */,
 				301985382B94DC6000CBECCB /* VkBootstrap.cpp in Sources */,
 				300D4F782C0240A60068824B /* ConfigureGFXTriangleListColor.cpp in Sources */,
+				306033932C272BC0002E8229 /* Descriptor.cpp in Sources */,
 				30F271E42BDD594C000AD163 /* RenderBegin.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

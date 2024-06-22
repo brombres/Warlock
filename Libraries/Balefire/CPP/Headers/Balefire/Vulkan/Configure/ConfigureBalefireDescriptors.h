@@ -6,7 +6,7 @@ namespace BALEFIRE
 {
   struct ConfigureBalefireDescriptors : VKZ::ConfigureDescriptors
   {
-    ConfigureBalefireDescriptors( VKZ::Descriptors* descriptors )
+    ConfigureBalefireDescriptors( VKZ::OldDescriptors* descriptors )
       : VKZ::ConfigureDescriptors(descriptors) {}
 
     void on_configure() override;

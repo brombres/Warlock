@@ -9,19 +9,20 @@ namespace BALEFIRE
     // PROPERTIES
     Window*          window;
 
-    VKZ::Descriptors descriptors;
+    VKZ::OldDescriptors descriptors;
 
     VKZ::GraphicsPipeline gfx_line_list_color;
     VKZ::GraphicsPipeline gfx_triangle_list_color;
     VKZ::GraphicsPipeline gfx_triangle_list_texture;
 
-    std::vector<VKZ::Image*> textures;
+    std::vector<VKZ::Image*>    textures;
+    std::vector<VKZ::Material*> materials;
 
     VKZ::Image   test_image;
     VKZ::Sampler test_sampler;
 
-    VKZ::UniformBufferDescriptor<Vec4>*  fill_color;
-    VKZ::CombinedImageSamplerDescriptor* image_sampler;
+    VKZ::OldUniformBufferDescriptor<Vec4>*  fill_color;
+    VKZ::OldCombinedImageSamplerDescriptor* image_sampler;
 
     // METHODS
     VulkanContext( Window* window, VkSurfaceKHR surface ) : VKZ::Context(surface), window(window) {}
