@@ -13,15 +13,6 @@ struct ConfigureTextures : ContextOperation<VulkanContext>
   void on_deactivate() override
   {
     context->test_image.destroy();
-
-    for (Image* texture : context->textures)
-    {
-      if (texture)
-      {
-        texture->destroy();
-        delete texture;
-      }
-    }
     context->textures.clear();
   }
 };
@@ -30,10 +21,6 @@ struct ConfigureMaterials : ContextOperation<VulkanContext>
 {
   void on_deactivate() override
   {
-    for (auto material : context->materials)
-    {
-      if (material) delete material;
-    }
     context->materials.clear();
   }
 };

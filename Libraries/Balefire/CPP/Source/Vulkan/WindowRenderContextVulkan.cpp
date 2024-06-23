@@ -127,7 +127,7 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
             context->materials.resize( id + 1 );
           }
 
-          Image* image = new Image();
+          Ref<Image> image = new Image();
           context->textures[id] = image;
 
           Material* material = new Material( context );
@@ -144,8 +144,12 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
 
           if ( !image->create(context, pixels, width, height) )
           {
-            BALEFIRE_LOG_ERROR_WITH_INT( "Error creating texture %d.", id );
+            BALEFIRE_LOG_ERROR_WITH_INT( "[Balefire] Error creating texture %d.", id );
           }
+
+          material->add_vertex_description( new VertexDescription() );
+          material->add_combined_image_sampler( 0, VK_SHADER_STAGE_FRAGMENT_BIT, image );
+
           break;
         };
 
@@ -154,13 +158,7 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
           int id = reader.read_int32x();
           if (id > 0 && id < context->textures.size())
           {
-            Image* texture = context->textures[id];
-            texture->destroy();
-            delete texture;
             context->textures[id] = nullptr;
-
-            Material* material = context->materials[id];
-            delete material;
             context->materials[id] = nullptr;
           }
           break;
@@ -238,7 +236,7 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
             int texture_id = reader.read_int32x();
             if (texture_id > 0 && texture_id < context->textures.size())
             {
-              Image* new_texture = context->textures[texture_id];
+              Ref<Image> new_texture = context->textures[texture_id];
               texture = _set_texture( texture, new_texture );
             }
             int vertex_count = reader.read_int32x() * 3;

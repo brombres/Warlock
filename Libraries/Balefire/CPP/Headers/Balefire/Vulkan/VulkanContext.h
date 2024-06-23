@@ -15,8 +15,8 @@ namespace BALEFIRE
     VKZ::GraphicsPipeline gfx_triangle_list_color;
     VKZ::GraphicsPipeline gfx_triangle_list_texture;
 
-    std::vector<VKZ::Image*>    textures;
-    std::vector<VKZ::Material*> materials;
+    std::vector<VKZ::Ref<VKZ::Image>>    textures;
+    std::vector<VKZ::Ref<VKZ::Material>> materials;
 
     VKZ::Image   test_image;
     VKZ::Sampler test_sampler;
