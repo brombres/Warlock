@@ -15,10 +15,12 @@ namespace BALEFIRE
     VKZ::GraphicsPipeline gfx_triangle_list_color;
     VKZ::GraphicsPipeline gfx_triangle_list_texture;
 
+    VKZ::Ref<VKZ::Shader> color_shader;
+    VKZ::Ref<VKZ::Shader> texture_shader;
+
     std::vector<VKZ::Ref<VKZ::Image>>    textures;
     std::vector<VKZ::Ref<VKZ::Material>> materials;
 
-    VKZ::Image   test_image;
     VKZ::Sampler test_sampler;
 
     VKZ::OldUniformBufferDescriptor<Vec4>*  fill_color;

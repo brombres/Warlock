@@ -16,12 +16,12 @@ void BALEFIRE::ConfigureGFXLineListColor::on_configure()
     "layout (location = 0) in vec4 position;\n"
     "layout (location = 1) in vec4 color;\n"
     "\n"
-    "layout (location = 0) out vec4 fragColor;\n"
+    "layout (location = 0) out vec4 frag_color;\n"
     "\n"
     "void main ()\n"
     "{\n"
       "gl_Position = position;\n"
-      "fragColor = color;\n"
+      "frag_color = color;\n"
     "}\n"
   );
 
@@ -30,10 +30,10 @@ void BALEFIRE::ConfigureGFXLineListColor::on_configure()
     "#version 450\n"
     "#extension GL_ARB_separate_shader_objects : enable\n"
     "\n"
-    "layout (location = 0) in vec4 fragColor;\n"
+    "layout (location = 0) in vec4 color;\n"
     "\n"
-    "layout (location = 0) out vec4 outColor;\n"
+    "layout (location = 0) out vec4 output_color;\n"
     "\n"
-    "void main () { outColor = fragColor; }\n"
+    "void main () { output_color = color; }\n"
   );
 }

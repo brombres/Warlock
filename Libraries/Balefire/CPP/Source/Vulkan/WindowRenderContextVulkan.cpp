@@ -148,7 +148,9 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
           }
 
           material->add_vertex_description( new VertexDescription() );
-          material->add_combined_image_sampler( 0, VK_SHADER_STAGE_FRAGMENT_BIT, image );
+          material->set_shader( context->texture_shader );
+          material->add_combined_image_sampler( 0, image );
+          material->create();
 
           break;
         };

@@ -30,6 +30,8 @@
 		3060336E2C1DC5F8002E8229 /* ConfigureGFXTriangleListTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3060336D2C1DC5F8002E8229 /* ConfigureGFXTriangleListTexture.cpp */; };
 		306033802C248335002E8229 /* Material.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3060337F2C248335002E8229 /* Material.cpp */; };
 		306033932C272BC0002E8229 /* Descriptor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 306033922C272BC0002E8229 /* Descriptor.cpp */; };
+		306033A42C28CA50002E8229 /* Shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 306033972C28CA50002E8229 /* Shader.cpp */; };
+		306033A52C28CA50002E8229 /* DescriptorSet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 306033A32C28CA50002E8229 /* DescriptorSet.cpp */; };
 		306912D12B5E7D7400B14F73 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 306912D02B5E7D7400B14F73 /* AppDelegate.m */; };
 		306912D32B5E7D7500B14F73 /* ProjectAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 306912D22B5E7D7500B14F73 /* ProjectAssets.xcassets */; };
 		306912E12B5E7E1D00B14F73 /* Warlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 306912E02B5E7E1D00B14F73 /* Warlock.swift */; };
@@ -57,7 +59,7 @@
 		30CB68D32BF549D4008A95B7 /* RogueInterface.mm in Sources */ = {isa = PBXBuildFile; fileRef = 30CB68D12BF549D4008A95B7 /* RogueInterface.mm */; };
 		30E9EA712BCB224100E45E9F /* libSPIRV-Tools-opt.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30C7A03C2BC6D3CE004A98B7 /* libSPIRV-Tools-opt.a */; };
 		30E9EA802BCD84B000E45E9F /* GLSLangInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E9EA7F2BCD84B000E45E9F /* GLSLangInterface.cpp */; };
-		30F2718E2BDD4346000AD163 /* Shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30F271822BDD4346000AD163 /* Shader.cpp */; };
+		30F2718E2BDD4346000AD163 /* ShaderStage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30F271822BDD4346000AD163 /* ShaderStage.cpp */; };
 		30F271D02BDD5941000AD163 /* ConfigureCommandBuffers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30F271BE2BDD5941000AD163 /* ConfigureCommandBuffers.cpp */; };
 		30F271D12BDD5941000AD163 /* ConfigureCommandPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30F271BF2BDD5941000AD163 /* ConfigureCommandPool.cpp */; };
 		30F271D22BDD5941000AD163 /* ConfigureDepthStencil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30F271C02BDD5941000AD163 /* ConfigureDepthStencil.cpp */; };
@@ -288,6 +290,10 @@
 		306033852C272BB5002E8229 /* RefCounted.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RefCounted.h; sourceTree = "<group>"; };
 		306033912C272BB5002E8229 /* Descriptor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Descriptor.h; sourceTree = "<group>"; };
 		306033922C272BC0002E8229 /* Descriptor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Descriptor.cpp; sourceTree = "<group>"; };
+		306033972C28CA50002E8229 /* Shader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Shader.cpp; sourceTree = "<group>"; };
+		306033A32C28CA50002E8229 /* DescriptorSet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DescriptorSet.cpp; sourceTree = "<group>"; };
+		306033A62C28CA5F002E8229 /* DescriptorSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DescriptorSet.h; sourceTree = "<group>"; };
+		306033A72C28CA5F002E8229 /* Shader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Shader.h; sourceTree = "<group>"; };
 		306912CC2B5E7D7400B14F73 /* Warlock-macOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Warlock-macOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		306912CF2B5E7D7400B14F73 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		306912D02B5E7D7400B14F73 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -391,8 +397,8 @@
 		30E9EA912BD16CF300E45E9F /* VertexDescription.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VertexDescription.h; sourceTree = "<group>"; };
 		30E9EAA92BD4139200E45E9F /* CustomVertexDescription.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomVertexDescription.h; sourceTree = "<group>"; };
 		30E9EAC82BD58DA900E45E9F /* ContextOperation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContextOperation.h; sourceTree = "<group>"; };
-		30E9EAD62BD5F00700E45E9F /* Shader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Shader.h; sourceTree = "<group>"; };
-		30F271822BDD4346000AD163 /* Shader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Shader.cpp; sourceTree = "<group>"; };
+		30E9EAD62BD5F00700E45E9F /* ShaderStage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShaderStage.h; sourceTree = "<group>"; };
+		30F271822BDD4346000AD163 /* ShaderStage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ShaderStage.cpp; sourceTree = "<group>"; };
 		30F271902BDD590A000AD163 /* Event.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
 		30F271BE2BDD5941000AD163 /* ConfigureCommandBuffers.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureCommandBuffers.cpp; sourceTree = "<group>"; };
 		30F271BF2BDD5941000AD163 /* ConfigureCommandPool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureCommandPool.cpp; sourceTree = "<group>"; };
@@ -871,6 +877,8 @@
 		3077062D2BA896D500122E50 /* Vulkanize */ = {
 			isa = PBXGroup;
 			children = (
+				306033A62C28CA5F002E8229 /* DescriptorSet.h */,
+				306033A72C28CA5F002E8229 /* Shader.h */,
 				306033912C272BB5002E8229 /* Descriptor.h */,
 				306033852C272BB5002E8229 /* RefCounted.h */,
 				306033732C24831F002E8229 /* Material.h */,
@@ -881,7 +889,7 @@
 				30F271FA2BDD597D000AD163 /* Render */,
 				30F271F72BDD5976000AD163 /* Configure */,
 				30F271902BDD590A000AD163 /* Event.h */,
-				30E9EAD62BD5F00700E45E9F /* Shader.h */,
+				30E9EAD62BD5F00700E45E9F /* ShaderStage.h */,
 				30E9EAC82BD58DA900E45E9F /* ContextOperation.h */,
 				30E9EAA92BD4139200E45E9F /* CustomVertexDescription.h */,
 				30E9EA912BD16CF300E45E9F /* VertexDescription.h */,
@@ -911,6 +919,8 @@
 		307706312BA896D500122E50 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				306033A32C28CA50002E8229 /* DescriptorSet.cpp */,
+				306033972C28CA50002E8229 /* Shader.cpp */,
 				306033922C272BC0002E8229 /* Descriptor.cpp */,
 				3060337F2C248335002E8229 /* Material.cpp */,
 				309D52E02C0F6D8E00CCA5B3 /* Sampler.cpp */,
@@ -920,7 +930,7 @@
 				301959772BDF040C00D9D51B /* GraphicsPipeline.cpp */,
 				30F271E32BDD594C000AD163 /* Render */,
 				30F271CF2BDD5941000AD163 /* Configure */,
-				30F271822BDD4346000AD163 /* Shader.cpp */,
+				30F271822BDD4346000AD163 /* ShaderStage.cpp */,
 				30E9EA7F2BCD84B000E45E9F /* GLSLangInterface.cpp */,
 				30C7A0072BC574B5004A98B7 /* Process.cpp */,
 				3004D1E82BBDA14000572087 /* Image.cpp */,
@@ -1226,7 +1236,7 @@
 				3019853B2B94DDBB00CBECCB /* Framework.cpp in Sources */,
 				308542F72C055F740050704A /* OldDescriptors.cpp in Sources */,
 				30F271D22BDD5941000AD163 /* ConfigureDepthStencil.cpp in Sources */,
-				30F2718E2BDD4346000AD163 /* Shader.cpp in Sources */,
+				30F2718E2BDD4346000AD163 /* ShaderStage.cpp in Sources */,
 				30F271D72BDD5941000AD163 /* ConfigureGLSLang.cpp in Sources */,
 				30CB68D32BF549D4008A95B7 /* RogueInterface.mm in Sources */,
 				306033802C248335002E8229 /* Material.cpp in Sources */,
@@ -1239,6 +1249,7 @@
 				30F271D42BDD5941000AD163 /* ConfigureFences.cpp in Sources */,
 				309D52D22C0DFC1C00CCA5B3 /* ConfigureTextureSampler.cpp in Sources */,
 				301985362B94DC6000CBECCB /* FrameworkSDL.cpp in Sources */,
+				306033A42C28CA50002E8229 /* Shader.cpp in Sources */,
 				306912D12B5E7D7400B14F73 /* AppDelegate.m in Sources */,
 				30B5A2AF2BFACFE90030183A /* WarlockInterface.mm in Sources */,
 				30F271DB2BDD5941000AD163 /* ConfigureSemaphores.cpp in Sources */,
@@ -1266,6 +1277,7 @@
 				301985392B94DC6000CBECCB /* RendererVulkan.cpp in Sources */,
 				30F271DA2BDD5941000AD163 /* ConfigureRenderPass.cpp in Sources */,
 				3060336E2C1DC5F8002E8229 /* ConfigureGFXTriangleListTexture.cpp in Sources */,
+				306033A52C28CA50002E8229 /* DescriptorSet.cpp in Sources */,
 				309D52CD2C0B761F00CCA5B3 /* ConfigureBalefireDescriptors.cpp in Sources */,
 				3060335E2C1A4B62002E8229 /* DataReader.cpp in Sources */,
 				307706362BA8B3AC00122E50 /* Context.cpp in Sources */,
