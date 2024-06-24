@@ -198,8 +198,6 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
       context->vertex_buffer->cmd_bind( context->cmd );
 
       // Second pass: draw
-      Image* texture = nullptr;
-
       reader.position = pass_start_pos;
       int vertex_i = 0;
       while ( !error )
@@ -235,18 +233,17 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
 
           case RenderCmd::DRAW_TEXTURED_TRIANGLES:
           {
-            int texture_id = reader.read_int32x();
-            if (texture_id > 0 && texture_id < context->textures.size())
-            {
-              Ref<Image> new_texture = context->textures[texture_id];
-              texture = _set_texture( texture, new_texture );
-            }
+            int material_id = reader.read_int32x();
             int vertex_count = reader.read_int32x() * 3;
-            reader.skip( reader.read_int32() );
+            reader.skip( reader.read_int32() );  // skip vertex data collected in first pass
 
-            context->gfx_triangle_list_texture.cmd_bind( context->cmd );
-            context->gfx_triangle_list_texture.cmd_set_default_viewports_and_scissor_rects( context->cmd );
-            context->device_dispatch.cmdDraw( context->cmd, vertex_count, 1, vertex_i, 0 );
+            if (material_id > 0 && material_id < context->materials.size())
+            {
+              context->gfx_triangle_list_texture.cmd_bind( context->cmd );
+context->materials[material_id]->descriptors.cmd_bind( context->cmd, context->gfx_triangle_list_texture.layout );
+              context->gfx_triangle_list_texture.cmd_set_default_viewports_and_scissor_rects( context->cmd );
+              context->device_dispatch.cmdDraw( context->cmd, vertex_count, 1, vertex_i, 0 );
+            }
 
             vertex_i += vertex_count;
             break;
@@ -278,13 +275,5 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
 
     context->execute( "render.end" );
   }
-}
-
-Image* WindowRenderContextVulkan::_set_texture( Image* cur_texture, Image* new_texture )
-{
-  if (cur_texture == new_texture || !new_texture) return cur_texture;
-
-  context->image_sampler->set( new_texture );
-  return new_texture;
 }
 
