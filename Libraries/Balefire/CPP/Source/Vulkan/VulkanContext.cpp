@@ -2,11 +2,43 @@
 using namespace BALEFIRE;
 using namespace VKZ;
 
-struct ConfigureTextures : ContextOperation<VulkanContext>
+struct BalefireRenderBegin : ContextOperation<VulkanContext>
 {
+  bool on_activate() override
+  {
+    context->staging_buffers.resize( context->swapchain_count );
+    context->vertex_buffers.resize( context->swapchain_count );
+
+    for (int i=0; i<context->swapchain_count; ++i)
+    {
+      if ( !context->staging_buffers[i].create_staging_buffer(context,(uint32_t)sizeof(Vertex)) )
+      {
+        return false;
+      }
+
+      if ( !context->vertex_buffers[i].create_vertex_buffer(context,(uint32_t)sizeof(Vertex)) )
+      {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  bool on_execute() override
+  {
+    context->staging_buffer = &context->staging_buffers[ context->swap_index ];
+    context->vertex_buffer  = &context->vertex_buffers[ context->swap_index ];
+    return true;
+  }
+
   void on_deactivate() override
   {
-    context->textures.clear();
+    context->staging_buffers.clear();
+    context->staging_buffer = nullptr;
+
+    context->vertex_buffers.clear();
+    context->vertex_buffer = nullptr;
   }
 };
 
@@ -122,23 +154,10 @@ struct ConfigureMaterials : ContextOperation<VulkanContext>
 
   void on_deactivate() override
   {
+    context->textures.clear();
     context->materials.clear();
     context->color_line_list_material = nullptr;
     context->color_triangle_list_material = nullptr;
-  }
-};
-
-struct ConfigureSamplers : ContextOperation<VulkanContext>
-{
-  bool on_activate() override
-  {
-    SamplerInfo info( context );
-    return context->test_sampler.create( info );
-  }
-
-  void on_deactivate() override
-  {
-    context->test_sampler.destroy();
   }
 };
 
@@ -146,15 +165,9 @@ void VulkanContext::configure_operations()
 {
   Context::configure_operations();
 
-  add_operation( "configure.buffers",            new ConfigureVertexBuffers(sizeof(Vertex)) );
-  add_operation( "configure.images",             new ConfigureTextures() );
-  add_operation( "configure.samplers",           new ConfigureSamplers() );
-  add_operation( "configure.descriptors",        new ConfigureBalefireDescriptors(&descriptors) );
   add_operation( "configure.shaders",            new ConfigureShaders() );
   add_operation( "configure.materials",          new ConfigureMaterials() );
-  add_operation( "configure.graphics_pipelines", new ConfigureGFXLineListColor(&gfx_line_list_color) );
-  add_operation( "configure.graphics_pipelines", new ConfigureGFXTriangleListColor(&gfx_triangle_list_color) );
-  add_operation( "configure.graphics_pipelines", new ConfigureGFXTriangleListTexture(&gfx_triangle_list_texture) );
+  add_operation( "render.begin",                 new BalefireRenderBegin() );
 }
 
 void VulkanContext::on_surface_size_change( int width, int height )
