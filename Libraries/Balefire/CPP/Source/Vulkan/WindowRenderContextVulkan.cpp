@@ -130,9 +130,6 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
           Ref<Image> image = new Image();
           context->textures[id] = image;
 
-          Material* material = new Material( context );
-          context->materials[id] = material;
-
           // Swap red and blue
           int* cur = pixels + pixel_count;
           int  n = pixel_count;
@@ -147,9 +144,12 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
             BALEFIRE_LOG_ERROR_WITH_INT( "[Balefire] Error creating texture %d.", id );
           }
 
+          Material* material = new Material( context );
+          context->materials[id] = material;
           material->add_vertex_description( new VertexDescription() );
           material->set_shader( context->texture_shader );
-          material->add_combined_image_sampler( 0, image );
+          auto descriptor = material->add_combined_image_sampler( 0, TextureLayer::COUNT );
+          descriptor->set( TextureLayer::ALBEDO, image );
           material->create();
 
           break;

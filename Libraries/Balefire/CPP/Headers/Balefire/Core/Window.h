@@ -1,6 +1,3 @@
-#ifndef BALEFIRE_WINDOW_H
-#define BALEFIRE_WINDOW_H
-
 #pragma once
 
 #include "Balefire/Balefire.h"
@@ -32,4 +29,3 @@ namespace BALEFIRE
   };
 };
 
-#endif // BALEFIRE_WINDOW_H

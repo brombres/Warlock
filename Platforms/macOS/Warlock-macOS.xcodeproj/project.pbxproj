@@ -294,6 +294,8 @@
 		306033A32C28CA50002E8229 /* DescriptorSet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DescriptorSet.cpp; sourceTree = "<group>"; };
 		306033A62C28CA5F002E8229 /* DescriptorSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DescriptorSet.h; sourceTree = "<group>"; };
 		306033A72C28CA5F002E8229 /* Shader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Shader.h; sourceTree = "<group>"; };
+		306033AB2C2B2CDA002E8229 /* UniformBufferData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UniformBufferData.h; sourceTree = "<group>"; };
+		306033AC2C2B32C3002E8229 /* TextureLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextureLayer.h; sourceTree = "<group>"; };
 		306912CC2B5E7D7400B14F73 /* Warlock-macOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Warlock-macOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		306912CF2B5E7D7400B14F73 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		306912D02B5E7D7400B14F73 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -667,6 +669,7 @@
 		3019851B2B94DC6000CBECCB /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				306033AC2C2B32C3002E8229 /* TextureLayer.h */,
 				306033502C1A4B58002E8229 /* DataReader.h */,
 				3060335C2C1A4B58002E8229 /* RenderCmd.h */,
 				3049E6AA2B9518C8008554DD /* WindowFrameworkContext.h */,
@@ -877,6 +880,7 @@
 		3077062D2BA896D500122E50 /* Vulkanize */ = {
 			isa = PBXGroup;
 			children = (
+				306033AB2C2B2CDA002E8229 /* UniformBufferData.h */,
 				306033A62C28CA5F002E8229 /* DescriptorSet.h */,
 				306033A72C28CA5F002E8229 /* Shader.h */,
 				306033912C272BB5002E8229 /* Descriptor.h */,
