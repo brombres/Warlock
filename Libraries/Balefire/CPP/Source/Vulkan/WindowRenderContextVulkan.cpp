@@ -146,7 +146,7 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
 
           Material* material = new Material( context );
           context->materials[id] = material;
-          material->add_vertex_description( new VertexDescription() );
+          material->add_vertex_description( new BalefireVertexDescription() );
           material->set_shader( context->texture_shader );
           auto descriptor = material->add_combined_image_sampler( 0, TextureLayer::COUNT );
           descriptor->set( TextureLayer::ALBEDO, image );
@@ -212,8 +212,8 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
             int vertex_count = reader.read_int32x() * 2;
             reader.skip( reader.read_int32() );
 
-            context->gfx_line_list_color.cmd_bind( context->cmd );
-            context->gfx_line_list_color.cmd_set_default_viewports_and_scissor_rects( context->cmd );
+            context->color_line_list_material->cmd_bind( context->cmd );
+            context->color_line_list_material->cmd_set_default_viewports_and_scissor_rects( context->cmd );
             context->device_dispatch.cmdDraw( context->cmd, vertex_count, 1, vertex_i, 0 );
             vertex_i += vertex_count;
             break;
@@ -224,8 +224,8 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
             int vertex_count = reader.read_int32x() * 3;
             reader.skip( reader.read_int32() );
 
-            context->gfx_triangle_list_color.cmd_bind( context->cmd );
-            context->gfx_triangle_list_color.cmd_set_default_viewports_and_scissor_rects( context->cmd );
+            context->color_triangle_list_material->cmd_bind( context->cmd );
+            context->color_triangle_list_material->cmd_set_default_viewports_and_scissor_rects( context->cmd );
             context->device_dispatch.cmdDraw( context->cmd, vertex_count, 1, vertex_i, 0 );
             vertex_i += vertex_count;
             break;

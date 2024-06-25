@@ -39,7 +39,7 @@ class Display [singleton]
       return size / 2
 
     method clear_transforms
-      Renderer.flush
+      Renderer.apply_vertex_transform
       object_transforms.clear
       view_transforms.clear
       world_transform_modified = true
@@ -49,6 +49,7 @@ class Display [singleton]
       Renderer.flush
 
     method push_object_transform( m:Matrix )
+      Renderer.apply_vertex_transform
       if (object_transforms.count)
         object_transforms.add( object_transforms.last * m )
       else
@@ -59,6 +60,7 @@ class Display [singleton]
       transform_modified = true
 
     method push_view_transform( m:Matrix )
+      Renderer.apply_vertex_transform
       if (view_transforms.count)
         view_transforms.add( view_transforms.last * m )
       else
@@ -69,6 +71,7 @@ class Display [singleton]
       transform_modified = true
 
     method pop_object_transform( n=1:Int32 )
+      Renderer.apply_vertex_transform
       forEach (1..n.or_smaller(object_transforms.count))
         object_transforms.remove_last
       endForEach
@@ -78,6 +81,7 @@ class Display [singleton]
       transform_modified = true
 
     method pop_view_transform( n=1:Int32 )
+      Renderer.apply_vertex_transform
       forEach (1..n.or_smaller(view_transforms.count))
         view_transforms.remove_last
       endForEach
@@ -87,12 +91,14 @@ class Display [singleton]
       transform_modified = true
 
     method set_perspective_center( new_center:XY )
+      Renderer.apply_vertex_transform
       if (new_center != perspective_center)
         @perspective_center = new_center
         projection_mode.update
       endIf
 
     method set_projection_mode( @projection_mode )
+      Renderer.apply_vertex_transform
       projection_mode?.update
 
     method size->XY
@@ -101,7 +107,6 @@ class Display [singleton]
     method transform->Matrix
       if (transform_modified)
         transform_modified = false
-        Renderer.flush
         transform = projection_transform * world_transform
       endIf
       return @transform

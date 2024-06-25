@@ -21,7 +21,8 @@ class Renderer [singleton]
     primitive_type     : PrimitiveType
     texture            : Texture
 
-    total_vertex_count : Int
+    transformed_vertex_count : Int
+    total_vertex_count       : Int
     flushing           = false
 
   METHODS
@@ -32,6 +33,7 @@ class Renderer [singleton]
       primitive_type = PrimitiveType.UNDEFINED
       texture = null
       vertices.clear
+      transformed_vertex_count = 0
       total_vertex_count = 0
       render_data.reset
       render_data.write_int32( VERSION )
@@ -42,6 +44,17 @@ class Renderer [singleton]
 
     method add_vertex( position:XY, color:Color, uv:XY )
       vertices.add( Vertex(XYZW(position,0,1),color,uv) )
+
+    method apply_vertex_transform
+      if (transformed_vertex_count == vertices.count) return
+
+      local transform = Display.transform
+      forEach (vertex in rewriter=vertices.rewriter(&starting_index=transformed_vertex_count))
+        local pos = Display.transform * vertex.position
+        vertex.position = pos / pos.w
+        rewriter.write( vertex )
+      endForEach
+      transformed_vertex_count = vertices.count
 
     method draw( triangle:Triangle, color:Color )
       primitive_type = PrimitiveType.LINES
@@ -85,12 +98,7 @@ class Renderer [singleton]
       if (flushing) return
       flushing = true
 
-      local transform = Display.transform
-      forEach (vertex in rewriter=vertices.rewriter)
-        local pos = Display.transform * vertex.position
-        vertex.position = pos / pos.w
-        rewriter.write( vertex )
-      endForEach
+      apply_vertex_transform
 
       which (primitive_type)
 
@@ -144,6 +152,7 @@ class Renderer [singleton]
 
       total_vertex_count += vertices.count
       vertices.clear
+      transformed_vertex_count = 0
 
       flushing = false
 

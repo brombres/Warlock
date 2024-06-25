@@ -94,7 +94,9 @@ class Warlock [essential singleton]
       local alpha = Warlock.alpha
       alpha.draw( Box(Display.center - alpha.size/2, alpha.size) )
 
-      Renderer.draw( triangle, Color.YELLOW.with_alpha(0.5) )
+      Renderer.draw( triangle, Color.WHITE )
+      Renderer.fill( triangle, Color.YELLOW.with_alpha(0.25) )
+      Renderer.draw( triangle, Color.RED.with_alpha(0.5) );
 
       Display.push_object_transform( Matrix.translate(XY(Display.center)) )
       Display.push_object_transform( Matrix.rotate_y(Degrees(45)) )

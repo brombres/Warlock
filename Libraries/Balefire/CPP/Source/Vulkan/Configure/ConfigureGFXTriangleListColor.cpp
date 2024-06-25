@@ -6,7 +6,7 @@ void BALEFIRE::ConfigureGFXTriangleListColor::on_configure()
 {
   topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 
-  add_vertex_description( new VertexDescription() );
+  add_vertex_description( new BalefireVertexDescription() );
 
   VulkanContext* context = context_as<VulkanContext*>();
   set_descriptors( &context->descriptors );

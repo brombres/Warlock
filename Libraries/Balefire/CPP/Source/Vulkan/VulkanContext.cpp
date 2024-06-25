@@ -99,19 +99,32 @@ struct ConfigureShaders : ContextOperation<VulkanContext>
 
 struct ConfigureMaterials : ContextOperation<VulkanContext>
 {
-  //bool on_activate() override
-  //{
-  //        Material* material = new Material( context );
-  //        context->materials[id] = material;
-  //        material->add_vertex_description( new VertexDescription() );
-  //        material->set_shader( context->texture_shader );
-  //        material->add_combined_image_sampler( 0, image );
-  //        material->create();
-  //}
+  bool on_activate() override
+  {
+    Ref<Material> material;
+
+    material = new Material( context );
+    material->set_topology( VK_PRIMITIVE_TOPOLOGY_LINE_LIST );
+    material->add_vertex_description( new BalefireVertexDescription() );
+    material->set_shader( context->color_shader );
+    if ( !material->create() ) return false;
+    context->color_line_list_material = material;
+
+    material = new Material( context );
+    material->set_topology( VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST );
+    material->add_vertex_description( new BalefireVertexDescription() );
+    material->set_shader( context->color_shader );
+    if ( !material->create() ) return false;
+    context->color_triangle_list_material = material;
+
+    return true;
+  }
 
   void on_deactivate() override
   {
     context->materials.clear();
+    context->color_line_list_material = nullptr;
+    context->color_triangle_list_material = nullptr;
   }
 };
 

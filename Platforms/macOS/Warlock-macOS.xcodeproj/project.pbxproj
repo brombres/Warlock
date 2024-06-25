@@ -248,7 +248,7 @@
 		300D4F762C0240A60068824B /* VulkanContext.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VulkanContext.cpp; sourceTree = "<group>"; };
 		300D4F7A2C02457C0068824B /* ConfigureGFXLineListColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigureGFXLineListColor.h; sourceTree = "<group>"; };
 		300D4F7B2C0245850068824B /* ConfigureGFXLineListColor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureGFXLineListColor.cpp; sourceTree = "<group>"; };
-		300D4F8A2C0377F90068824B /* VertexDescription.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VertexDescription.h; sourceTree = "<group>"; };
+		300D4F8A2C0377F90068824B /* BalefireVertexDescription.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BalefireVertexDescription.h; sourceTree = "<group>"; };
 		300D4F962C0377F90068824B /* Vertex.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Vertex.h; sourceTree = "<group>"; };
 		300D4FAC2C0383510068824B /* Assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Assets; path = ../../../Build/macOS/Assets; sourceTree = "<group>"; };
 		300D4FAE2C038DFB0068824B /* RogueProgram.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = RogueProgram.mm; path = ../../Build/macOS/Source/RogueProgram.mm; sourceTree = "<group>"; };
@@ -396,7 +396,7 @@
 		30CB68D22BF549D4008A95B7 /* RogueInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RogueInterface.h; path = ../../Libraries/Warlock/ObjC/RogueInterface.h; sourceTree = "<group>"; };
 		30E9EA732BCD84A600E45E9F /* GLSLangInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GLSLangInterface.h; sourceTree = "<group>"; };
 		30E9EA7F2BCD84B000E45E9F /* GLSLangInterface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLSLangInterface.cpp; sourceTree = "<group>"; };
-		30E9EA912BD16CF300E45E9F /* VertexDescription.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VertexDescription.h; sourceTree = "<group>"; };
+		30E9EA912BD16CF300E45E9F /* BalefireVertexDescription.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BalefireVertexDescription.h; sourceTree = "<group>"; };
 		30E9EAA92BD4139200E45E9F /* CustomVertexDescription.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomVertexDescription.h; sourceTree = "<group>"; };
 		30E9EAC82BD58DA900E45E9F /* ContextOperation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContextOperation.h; sourceTree = "<group>"; };
 		30E9EAD62BD5F00700E45E9F /* ShaderStage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShaderStage.h; sourceTree = "<group>"; };
@@ -696,7 +696,7 @@
 			isa = PBXGroup;
 			children = (
 				300D4F962C0377F90068824B /* Vertex.h */,
-				300D4F8A2C0377F90068824B /* VertexDescription.h */,
+				300D4F8A2C0377F90068824B /* BalefireVertexDescription.h */,
 				300D4F712C02408B0068824B /* Configure */,
 				300D4F6B2C023D490068824B /* VulkanContext.h */,
 				3049E6AC2B9518D9008554DD /* WindowRenderContextVulkan.h */,
@@ -896,7 +896,7 @@
 				30E9EAD62BD5F00700E45E9F /* ShaderStage.h */,
 				30E9EAC82BD58DA900E45E9F /* ContextOperation.h */,
 				30E9EAA92BD4139200E45E9F /* CustomVertexDescription.h */,
-				30E9EA912BD16CF300E45E9F /* VertexDescription.h */,
+				30E9EA912BD16CF300E45E9F /* BalefireVertexDescription.h */,
 				30E9EA732BCD84A600E45E9F /* GLSLangInterface.h */,
 				30C7A0142BC574C0004A98B7 /* Process.h */,
 				300C71CD2BC1868800FFBB85 /* Types.h */,

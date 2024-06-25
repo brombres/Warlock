@@ -18,6 +18,9 @@ namespace BALEFIRE
     VKZ::Ref<VKZ::Shader> color_shader;
     VKZ::Ref<VKZ::Shader> texture_shader;
 
+    VKZ::Ref<VKZ::Material> color_line_list_material;
+    VKZ::Ref<VKZ::Material> color_triangle_list_material;
+
     std::vector<VKZ::Ref<VKZ::Image>>    textures;
     std::vector<VKZ::Ref<VKZ::Material>> materials;
 

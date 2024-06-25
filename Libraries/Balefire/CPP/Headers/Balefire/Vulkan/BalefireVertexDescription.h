@@ -4,7 +4,7 @@
 
 namespace BALEFIRE
 {
-  struct VertexDescription : VKZ::CustomVertexDescription<Vertex>
+  struct BalefireVertexDescription : VKZ::CustomVertexDescription<Vertex>
   {
     virtual void collect_attribute_descriptions( std::vector<VkVertexInputAttributeDescription>& list )
     {
