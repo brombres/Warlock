@@ -239,9 +239,14 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
 
             if (material_id > 0 && material_id < context->materials.size())
             {
-              context->gfx_triangle_list_texture.cmd_bind( context->cmd );
-context->materials[material_id]->descriptors.cmd_bind( context->cmd, context->gfx_triangle_list_texture.layout );
-              context->gfx_triangle_list_texture.cmd_set_default_viewports_and_scissor_rects( context->cmd );
+              Material* material = context->materials[material_id];
+
+              material->cmd_bind( context->cmd );
+              material->cmd_set_default_viewports_and_scissor_rects( context->cmd );
+
+              //context->gfx_triangle_list_texture.cmd_bind( context->cmd );
+              //context->gfx_triangle_list_texture.cmd_set_default_viewports_and_scissor_rects( context->cmd );
+
               context->device_dispatch.cmdDraw( context->cmd, vertex_count, 1, vertex_i, 0 );
             }
 
