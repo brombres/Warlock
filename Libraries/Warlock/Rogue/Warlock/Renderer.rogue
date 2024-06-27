@@ -177,7 +177,7 @@ class Renderer [singleton]
       cmd_data.write_int32x( bitmap.width )
       cmd_data.write_int32x( bitmap.height )
       cmd_data.write_colors( bitmap.pixels )
-      flush_cmd( &aligned )
+      flush_cmd
 
     method find_texture( name:String )->Texture
       return null

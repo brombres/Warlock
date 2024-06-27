@@ -22,18 +22,28 @@ unsigned char* DataReader::read_bytes()
 
 int DataReader::read_int32s( int** data_pointer )
 {
-  int int32_count = read_int32x();
+  int int32_count = read_int32x(); // includes 1 extra for BOM
 
-  while (position & 3) ++position;  // alignment padding
+  auto alignment_flag_ptr = data + position++;
+  position += 4;  // next 4 bytes are the alignment padding buffer
 
-  int* int32s = (int*)(data + position);
+  int aligned_data_start = position;
+  while (aligned_data_start & 3) --aligned_data_start;
+  if (position != aligned_data_start && !*alignment_flag_ptr)
+  {
+    memmove( data+aligned_data_start, data+position, int32_count*4 );
+    *alignment_flag_ptr = (unsigned char)1;
+  }
+  position += int32_count * 4;
+
+  int* int32s = (int*)(data + aligned_data_start);
 
   int byte_order_marker = *int32s;
   if (byte_order_marker != 0x11223344)
   {
-    // Rewrite the data, flipping the byte order. BOM gets flipped as well.
+    // Rewrite the data, reversing the byte order. BOM gets reversed as well.
     int* cur = int32s - 1;
-    int n = int32_count + 1;
+    int n = int32_count;
     while (--n >= 0)
     {
       // aabbccdd ->   dd000000
@@ -45,9 +55,8 @@ int DataReader::read_int32s( int** data_pointer )
     }
   }
 
-  position += (int32_count + 1) * 4;
   if (data_pointer) *data_pointer = int32s + 1;
-  return int32_count;
+  return int32_count - 1;
 }
 
 int DataReader::read_int32()
@@ -69,10 +78,8 @@ int DataReader::read_int32()
 
 int DataReader::read_int32x()
 {
-  // Reads a variable-length encoded value that is stored in 1..5 bytes
-  // normally; sometimes 1..8 bytes when extra padding bytes are used to
-  // ensure internal 32-bit alignment with data that follows. Encoded
-  // values are treated as signed.
+  // Reads a variable-length encoded value that is stored in 1..5 bytes.
+  // Encoded values are treated as signed.
   //
   // - If the first two bits are not "10" then the first byte is cast to
   //   a signed integer value and returned. This allows for the range

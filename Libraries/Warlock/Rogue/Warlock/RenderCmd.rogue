@@ -7,7 +7,7 @@ enum RenderCmd
   DRAW_TRIANGLES  # triangle_count:IntX, triangle_count * 3 * [x,y,z,w:Real32, argb:Int32]
   DRAW_TEXTURED_TRIANGLES # texture_id:IntX, triangle_count:IntX,
                           # triangle_count * 3 * [x,y,z,w:Real32, argb:Int32, u,v:Real32]
-  DEFINE_TEXTURE      # [id, width, height:IntX], argb:Int32[]
+  DEFINE_TEXTURE      # [id, width, height:IntX], argb:Color[w*h]
   FREE_TEXTURE        # id:IntX
   DEFINE_SHADER_STAGE # id:IntX, stage:IntX, filename:String, main_fn_name:String,
                       # is_string:Logical, [source:String | spirv:Byte[]]
