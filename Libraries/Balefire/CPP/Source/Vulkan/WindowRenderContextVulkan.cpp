@@ -52,10 +52,11 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
 
     bool error = false;
 
-    // First pass: collect vertices
+    // First pass: collect vertices, define and free assets
     int pass_start_pos = reader.position;
     while ( !error )
     {
+      reader.read_int32x(); // skip count
       int cmd = reader.read_int32x();
       if (cmd == RenderCmd::END_DRAWING) break;
 
@@ -64,7 +65,6 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
         case RenderCmd::DRAW_LINES:
         {
           int vertex_count = reader.read_int32x() * 2;
-          reader.read_int32(); // discard data skip count
           for (int i=vertex_count; --i>=0; )
           {
             float x = reader.read_real32();
@@ -80,7 +80,6 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
         case RenderCmd::DRAW_TRIANGLES:
         {
           int vertex_count = reader.read_int32x() * 3;
-          reader.read_int32(); // discard data skip count
           for (int i=vertex_count; --i>=0; )
           {
             float x = reader.read_real32();
@@ -97,7 +96,6 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
         {
           reader.read_int32x(); // discard texture ID
           int vertex_count = reader.read_int32x() * 3;
-          reader.read_int32(); // discard data skip count
           for (int i=vertex_count; --i>=0; )
           {
             float x = reader.read_real32();
@@ -166,6 +164,36 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
           break;
         }
 
+        case DEFINE_SHADER_STAGE:
+        {
+          break;
+        }
+
+        case FREE_SHADER_STAGE:
+        {
+          break;
+        }
+
+        case DEFINE_SHADER:
+        {
+          break;
+        }
+
+        case FREE_SHADER:
+        {
+          break;
+        }
+
+        case DEFINE_MATERIAL:
+        {
+          break;
+        }
+
+        case FREE_MATERIAL:
+        {
+          break;
+        }
+
         default:
         {
           BALEFIRE_LOG_ERROR_WITH_INT(
@@ -202,6 +230,8 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
       int vertex_i = 0;
       while ( !error )
       {
+        int skip_count = reader.read_int32x();
+        int skip_pos   = reader.position + skip_count;
         int cmd = reader.read_int32x();
         if (cmd == RenderCmd::END_DRAWING) break;
 
@@ -210,7 +240,7 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
           case RenderCmd::DRAW_LINES:
           {
             int vertex_count = reader.read_int32x() * 2;
-            reader.skip( reader.read_int32() );
+            reader.seek( skip_pos );
 
             context->color_line_list_material->cmd_bind( context->cmd );
             context->color_line_list_material->cmd_set_default_viewports_and_scissor_rects( context->cmd );
@@ -222,7 +252,7 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
           case RenderCmd::DRAW_TRIANGLES:
           {
             int vertex_count = reader.read_int32x() * 3;
-            reader.skip( reader.read_int32() );
+            reader.seek( skip_pos );
 
             context->color_triangle_list_material->cmd_bind( context->cmd );
             context->color_triangle_list_material->cmd_set_default_viewports_and_scissor_rects( context->cmd );
@@ -235,7 +265,7 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
           {
             int material_id = reader.read_int32x();
             int vertex_count = reader.read_int32x() * 3;
-            reader.skip( reader.read_int32() );  // skip vertex data collected in first pass
+            reader.seek( skip_pos );
 
             if (material_id > 0 && material_id < context->materials.size())
             {
@@ -255,14 +285,14 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
           }
 
           case RenderCmd::DEFINE_TEXTURE:
-            reader.read_int32x();  // id
-            reader.read_int32x();  // width
-            reader.read_int32x();  // height
-            reader.read_int32s(nullptr);  // argb pixel data
-            break;
-
           case RenderCmd::FREE_TEXTURE:
-            reader.read_int32x();  // id
+          case RenderCmd::FREE_SHADER_STAGE:
+          case RenderCmd::FREE_SHADER:
+          case RenderCmd::FREE_MATERIAL:
+          case RenderCmd::DEFINE_SHADER_STAGE:
+          case RenderCmd::DEFINE_SHADER:
+          case RenderCmd::DEFINE_MATERIAL:
+            reader.seek( skip_pos );
             break;
 
           default:

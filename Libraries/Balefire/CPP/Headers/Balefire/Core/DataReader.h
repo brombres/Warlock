@@ -18,6 +18,7 @@ namespace BALEFIRE
     int            read_int32();
     int            read_int32x();
     float          read_real32();
+    void           seek( int pos );
     void           skip( int n );
   };
 };

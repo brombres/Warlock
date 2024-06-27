@@ -16,6 +16,7 @@ class Renderer [singleton]
 
   PROPERTIES
     render_data        = DataWriter()
+    cmd_data           = DataWriter()
 
     vertices           = Vertex[]
     primitive_type     : PrimitiveType
@@ -35,9 +36,9 @@ class Renderer [singleton]
       vertices.clear
       transformed_vertex_count = 0
       total_vertex_count = 0
-      render_data.reset
+      render_data.clear
       render_data.write_int32( VERSION )
-      render_data.write_int32( 0 )  # total vertex count
+      render_data.write_int32( 0 )  # total dynamic vertex count
 
     method add_vertex( position:XY, color:Color )
       vertices.add( Vertex(XYZW(position,0,1),color) )
@@ -87,9 +88,9 @@ class Renderer [singleton]
 
     method finalized_render_data->Byte[]
       flush
-      render_data.write_int32x( RenderCmd.END_DRAWING )
-      render_data.seek( 4 )
-      render_data.write_int32( total_vertex_count )
+      cmd_data.write_int32x( RenderCmd.END_DRAWING )
+      flush_cmd
+      render_data.patch_int32( 4, total_vertex_count )
       return render_data.output_bytes
 
     method flush
@@ -103,52 +104,45 @@ class Renderer [singleton]
       which (primitive_type)
 
         case TRIANGLES
-          render_data.write_int32x( RenderCmd.DRAW_TRIANGLES )
-          render_data.write_int32x( vertices.count / 3 )
-          local data_count_pos = render_data.position
-          render_data.write_int32( 0 )
+          cmd_data.write_int32x( RenderCmd.DRAW_TRIANGLES )
+          cmd_data.write_int32x( vertices.count / 3 )
           forEach (v in vertices)
-            render_data.write_real32( v.position.x )
-            render_data.write_real32( v.position.y )
-            render_data.write_real32( v.position.z )
-            render_data.write_real32( v.position.w )
-            render_data.write_int32( v.color.argb )
+            cmd_data.write_real32( v.position.x )
+            cmd_data.write_real32( v.position.y )
+            cmd_data.write_real32( v.position.z )
+            cmd_data.write_real32( v.position.w )
+            cmd_data.write_int32( v.color.argb )
           endForEach
-          render_data.patch_int32( data_count_pos, (render_data.position - data_count_pos) - 4 )
 
         case TEXTURED_TRIANGLES
-          render_data.write_int32x( RenderCmd.DRAW_TEXTURED_TRIANGLES )
-          if (texture) render_data.write_int32x( texture.id )
-          else         render_data.write_int32x( 0 )
-          render_data.write_int32x( vertices.count / 3 )
-          local data_count_pos = render_data.position
-          render_data.write_int32( 0 )
+          cmd_data.write_int32x( RenderCmd.DRAW_TEXTURED_TRIANGLES )
+          if (texture) cmd_data.write_int32x( texture.id )
+          else         cmd_data.write_int32x( 0 )
+          cmd_data.write_int32x( vertices.count / 3 )
           forEach (v in vertices)
-            render_data.write_real32( v.position.x )
-            render_data.write_real32( v.position.y )
-            render_data.write_real32( v.position.z )
-            render_data.write_real32( v.position.w )
-            render_data.write_int32( v.color.argb )
-            render_data.write_real32( v.uv.x )
-            render_data.write_real32( v.uv.y )
+            cmd_data.write_real32( v.position.x )
+            cmd_data.write_real32( v.position.y )
+            cmd_data.write_real32( v.position.z )
+            cmd_data.write_real32( v.position.w )
+            cmd_data.write_int32( v.color.argb )
+            cmd_data.write_real32( v.uv.x )
+            cmd_data.write_real32( v.uv.y )
           endForEach
-          render_data.patch_int32( data_count_pos, (render_data.position - data_count_pos) - 4 )
 
         case LINES
-          render_data.write_int32x( RenderCmd.DRAW_LINES )
-          render_data.write_int32x( vertices.count / 2 )
-          local data_count_pos = render_data.position
-          render_data.write_int32( 0 )
+          cmd_data.write_int32x( RenderCmd.DRAW_LINES )
+          cmd_data.write_int32x( vertices.count / 2 )
           forEach (v in vertices)
-            render_data.write_real32( v.position.x )
-            render_data.write_real32( v.position.y )
-            render_data.write_real32( v.position.z )
-            render_data.write_real32( v.position.w )
-            render_data.write_int32( v.color.argb )
+            cmd_data.write_real32( v.position.x )
+            cmd_data.write_real32( v.position.y )
+            cmd_data.write_real32( v.position.z )
+            cmd_data.write_real32( v.position.w )
+            cmd_data.write_int32( v.color.argb )
           endForEach
-          render_data.patch_int32( data_count_pos, (render_data.position - data_count_pos) - 4 )
 
       endWhich
+
+      flush_cmd
 
       total_vertex_count += vertices.count
       vertices.clear
@@ -156,17 +150,34 @@ class Renderer [singleton]
 
       flushing = false
 
+    method flush_cmd( &aligned )
+      if (aligned)
+        render_data.write_int32x( cmd_data.output_bytes.count, &align=4 )
+      else
+        render_data.write_int32x( cmd_data.output_bytes.count )
+      endIf
+
+      render_data.write( cmd_data.output_bytes )
+      cmd_data.clear
+
+    method _write_int32x_data_bytes( value:Int, byte_count:Int, &intermediate_byte )
+      if (byte_count > 1) _write_int32x_data_bytes( value:>>>:7, byte_count-1, &intermediate_byte )
+      if (intermediate_byte) render_data.write( 0b1_0000000 | (value & 0b0_1111111) )
+      else                   render_data.write( value & 0b0_1111111 )
+
     method free_texture( id:Int )
-      render_data.write_int32x( RenderCmd.FREE_TEXTURE )
-      render_data.write_int32x( id )
+      cmd_data.write_int32x( RenderCmd.FREE_TEXTURE )
+      cmd_data.write_int32x( id )
+      flush_cmd
 
     method define_texture( id:Int, bitmap:Bitmap )
       flush
-      render_data.write_int32x( RenderCmd.DEFINE_TEXTURE )
-      render_data.write_int32x( id )
-      render_data.write_int32x( bitmap.width )
-      render_data.write_int32x( bitmap.height )
-      render_data.write_colors( bitmap.pixels )
+      cmd_data.write_int32x( RenderCmd.DEFINE_TEXTURE )
+      cmd_data.write_int32x( id )
+      cmd_data.write_int32x( bitmap.width )
+      cmd_data.write_int32x( bitmap.height )
+      cmd_data.write_colors( bitmap.pixels )
+      flush_cmd( &aligned )
 
     method find_texture( name:String )->Texture
       return null

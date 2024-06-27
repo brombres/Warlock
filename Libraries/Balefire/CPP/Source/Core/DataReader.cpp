@@ -69,8 +69,10 @@ int DataReader::read_int32()
 
 int DataReader::read_int32x()
 {
-  // Reads a variable-length encoded value that is stored in 1..5 bytes.
-  // Encoded values are treated as signed.
+  // Reads a variable-length encoded value that is stored in 1..5 bytes
+  // normally; sometimes 1..8 bytes when extra padding bytes are used to
+  // ensure internal 32-bit alignment with data that follows. Encoded
+  // values are treated as signed.
   //
   // - If the first two bits are not "10" then the first byte is cast to
   //   a signed integer value and returned. This allows for the range
@@ -95,12 +97,12 @@ int DataReader::read_int32x()
     return (b - 256);
   }
 
-  int result = (b & 0x3f);   //   0..63 (unsigned)
-  if (result >= 32) result -= 64;   // -64..63 (signed)
+  int result = (b & 0x3f);        //   0..63 (unsigned)
+  if (result >= 32) result -= 64; // -64..-1 (signed)
 
-  for (int i=4; --i>=0; )
+  for (int i=7; --i>=0; )
   {
-    // Up to 4 more bytes
+    // Up to 7 more bytes
     int next = read_byte();
     result = (result << 7) | (next & 0x7f);
     if ( !(next & 0x80) ) break;
@@ -113,6 +115,11 @@ float DataReader::read_real32()
 {
   int data = read_int32();
   return *((float*)&data);
+}
+
+void DataReader::seek( int pos )
+{
+  position = pos;
 }
 
 void DataReader::skip( int n )
