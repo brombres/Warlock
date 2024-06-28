@@ -6,13 +6,18 @@ class Asset<<$ExtendedType>>
 
   PROPERTIES
     id = id_bank.get_id : Int
+    prepared            : Logical
     name                : String
 
   METHODS
     method init( name )
 
     method on_cleanup
+      destroy
       id_bank.free_id( id )
       id = 0
+
+    method destroy
+      noAction
 endClass
 

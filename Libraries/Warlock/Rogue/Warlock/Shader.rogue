@@ -1,0 +1,43 @@
+module Warlock
+
+enum ShaderStage [bitflags]
+  VERTEX
+  TESSELLATION_CONTROL
+  TESSELLATION_EVALUATION
+  GEOMETRY
+  FRAGMENT
+endEnum
+
+class Shader : Asset<<Shader>>
+  PROPERTIES
+    stage        : ShaderStage
+    filename     : String
+    source       : String
+    spirv        : Byte[]
+    main_fn_name : String
+
+  METHODS
+    method init( stage, filename, source, main_fn_name="main" )
+
+    method init( stage, filename, spirv, main_fn_name="main" )
+
+    method init( stage, file:File, main_fn_name="main" )
+      local bytes = Byte[]( file )
+      if (bytes.count >= 4 and
+          bytes[0] == 0x03 and bytes[1] == 0x02 and bytes[2] == 0x23 and bytes[4] == 0x07)
+        init( stage, file.filepath, bytes, main_fn_name )
+      else
+        init( stage, file.filepath, String(bytes), main_fn_name )
+      endIf
+
+    method destroy [override]
+      if (prepared)
+        Renderer.free_shader( this )
+        prepared = false
+      endIf
+
+    method prepare
+      if (prepared) return
+      Renderer.define_shader( this )
+      prepared = true
+endClass

@@ -57,6 +57,38 @@ class Renderer [singleton]
       endForEach
       transformed_vertex_count = vertices.count
 
+    method define_material( material:Material )
+      .begin_command( RenderCmd.DEFINE_MATERIAL )
+      cmd_data.write_int32x( material.id )
+      cmd_data.write_int32x( material.topology )
+      cmd_data.write_int32x( material.primitive_restart_enabled )
+      cmd_data.write_int32x( material.shaders.count )
+      cmd_data.write_int32x( (forEach in material.shaders).id )
+      .end_command
+
+    method define_shader( shader:Shader )
+      .begin_command( RenderCmd.DEFINE_SHADER )
+      cmd_data.write_int32x( shader.id )
+      cmd_data.write_int32x( shader.stage )
+      cmd_data.write_string( shader.filename )
+      cmd_data.write_string( shader.main_fn_name )
+      if (shader.source)
+        cmd_data.write_logical( true )
+        cmd_data.write_string( shader.source )
+      else
+        cmd_data.write_logical( false )
+        cmd_data.write_bytes( shader.spirv )
+      endIf
+      .end_command
+
+    method define_texture( texture:Texture )
+      .begin_command( RenderCmd.DEFINE_TEXTURE )
+      cmd_data.write_int32x( texture.id )
+      cmd_data.write_int32x( texture.bitmap.width )
+      cmd_data.write_int32x( texture.bitmap.height )
+      cmd_data.write_colors( texture.bitmap.pixels )
+      .end_command
+
     method draw( triangle:Triangle, color:Color )
       primitive_type = PrimitiveType.LINES
       add_vertex( triangle.a, color )
@@ -87,11 +119,13 @@ class Renderer [singleton]
       add_vertex( triangle.c, color, uv.c )
 
     method finalized_render_data->Byte[]
-      flush
-      cmd_data.write_int32x( RenderCmd.END_DRAWING )
-      flush_cmd
+      .begin_command( RenderCmd.END_DRAWING )
+      .end_command
       render_data.patch_int32( 4, total_vertex_count )
       return render_data.output_bytes
+
+    method find_texture( name:String )->Texture
+      return null
 
     method flush
       if (vertices.is_empty) return
@@ -104,7 +138,7 @@ class Renderer [singleton]
       which (primitive_type)
 
         case TRIANGLES
-          cmd_data.write_int32x( RenderCmd.DRAW_TRIANGLES )
+          .begin_command( RenderCmd.DRAW_TRIANGLES )
           cmd_data.write_int32x( vertices.count / 3 )
           forEach (v in vertices)
             cmd_data.write_real32( v.position.x )
@@ -115,7 +149,7 @@ class Renderer [singleton]
           endForEach
 
         case TEXTURED_TRIANGLES
-          cmd_data.write_int32x( RenderCmd.DRAW_TEXTURED_TRIANGLES )
+          .begin_command( RenderCmd.DRAW_TEXTURED_TRIANGLES )
           if (texture) cmd_data.write_int32x( texture.id )
           else         cmd_data.write_int32x( 0 )
           cmd_data.write_int32x( vertices.count / 3 )
@@ -130,7 +164,7 @@ class Renderer [singleton]
           endForEach
 
         case LINES
-          cmd_data.write_int32x( RenderCmd.DRAW_LINES )
+          .begin_command( RenderCmd.DRAW_LINES )
           cmd_data.write_int32x( vertices.count / 2 )
           forEach (v in vertices)
             cmd_data.write_real32( v.position.x )
@@ -142,7 +176,7 @@ class Renderer [singleton]
 
       endWhich
 
-      flush_cmd
+      .end_command
 
       total_vertex_count += vertices.count
       vertices.clear
@@ -150,37 +184,20 @@ class Renderer [singleton]
 
       flushing = false
 
-    method flush_cmd( &aligned )
-      if (aligned)
-        render_data.write_int32x( cmd_data.output_bytes.count, &align=4 )
-      else
-        render_data.write_int32x( cmd_data.output_bytes.count )
-      endIf
+    method free_material( material:Material )
+      .begin_command( RenderCmd.FREE_MATERIAL )
+      cmd_data.write_int32x( material.id )
+      .end_command
 
-      render_data.write( cmd_data.output_bytes )
-      cmd_data.clear
+    method free_shader( shader:Shader )
+      .begin_command( RenderCmd.FREE_SHADER )
+      cmd_data.write_int32x( shader.id )
+      .end_command
 
-    method _write_int32x_data_bytes( value:Int, byte_count:Int, &intermediate_byte )
-      if (byte_count > 1) _write_int32x_data_bytes( value:>>>:7, byte_count-1, &intermediate_byte )
-      if (intermediate_byte) render_data.write( 0b1_0000000 | (value & 0b0_1111111) )
-      else                   render_data.write( value & 0b0_1111111 )
-
-    method free_texture( id:Int )
-      cmd_data.write_int32x( RenderCmd.FREE_TEXTURE )
-      cmd_data.write_int32x( id )
-      flush_cmd
-
-    method define_texture( id:Int, bitmap:Bitmap )
-      flush
-      cmd_data.write_int32x( RenderCmd.DEFINE_TEXTURE )
-      cmd_data.write_int32x( id )
-      cmd_data.write_int32x( bitmap.width )
-      cmd_data.write_int32x( bitmap.height )
-      cmd_data.write_colors( bitmap.pixels )
-      flush_cmd
-
-    method find_texture( name:String )->Texture
-      return null
+    method free_texture( texture:Texture )
+      .begin_command( RenderCmd.FREE_TEXTURE )
+      cmd_data.write_int32x( texture.id )
+      .end_command
 
     method set_primitive_type( new_type:PrimitiveType )
       if (new_type == @primitive_type) return
@@ -191,6 +208,15 @@ class Renderer [singleton]
       if (texture is new_texture) return
       flush
       @texture = new_texture
-      if (new_texture) new_texture.load
+      if (new_texture) new_texture.prepare
+
+    method .begin_command( cmd:RenderCmd )
+      flush
+      cmd_data.write_int32x( cmd )
+
+    method .end_command
+      render_data.write_int32x( cmd_data.output_bytes.count )
+      render_data.write( cmd_data.output_bytes )
+      cmd_data.clear
 
 endClass

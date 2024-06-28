@@ -24,7 +24,7 @@ namespace BALEFIRE
 
     std::vector<VKZ::Ref<VKZ::Image>>       textures;
     std::vector<VKZ::Ref<VKZ::Material>>    materials;
-    std::vector<VKZ::Ref<VKZ::Shader>> ;
+    std::vector<VKZ::Ref<VKZ::Shader>>      shaders;
 
     // METHODS
     VulkanContext( Window* window, VkSurfaceKHR surface ) : VKZ::Context(surface), window(window) {}

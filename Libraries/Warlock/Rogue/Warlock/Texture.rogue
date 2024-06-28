@@ -5,8 +5,7 @@ class Texture : Asset<<Texture>>
     width  : Int
     height : Int
 
-    bitmap : Bitmap  # created in init(), nulled in load()
-    loaded = false
+    bitmap : Bitmap  # created in init(), nulled in prepare()
 
   METHODS
     method init( name:String )
@@ -23,14 +22,17 @@ class Texture : Asset<<Texture>>
         error.println "[Warlock] Error loading '$' - asset not found."(name)
       endIf
 
-    method load
-      if (loaded) return
-      loaded = true
-      if (bitmap) Renderer.define_texture( id, bitmap )
+    method destroy [override]
+      if (prepared)
+        Renderer.free_texture( this )
+        prepared = false
+      endIf
+
+    method prepare
+      if (prepared) return
+      prepared = true
+      if (bitmap) Renderer.define_texture( this )
       bitmap = null
 
-    method on_cleanup
-      Renderer.free_texture( id )
-      prior.on_cleanup
 endClass
 

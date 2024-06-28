@@ -1,5 +1,6 @@
 #include "Balefire/Balefire.h"
 using namespace BALEFIRE;
+using namespace std;
 
 int DataReader::read_byte()
 {
@@ -12,12 +13,12 @@ int DataReader::read_byte()
   return data[position++];
 }
 
-unsigned char* DataReader::read_bytes()
+int DataReader::read_bytes( unsigned char** data_pointer )
 {
   int byte_count = read_int32x();
-  unsigned char* result = data + position;
+  *data_pointer = data + position;
   position += byte_count;
-  return result;
+  return byte_count;
 }
 
 int DataReader::read_int32s( int** data_pointer )
@@ -118,10 +119,54 @@ int DataReader::read_int32x()
   return result;
 }
 
+bool DataReader::read_logical()
+{
+  return read_int32x() != 0;
+}
+
 float DataReader::read_real32()
 {
   int data = read_int32();
   return *((float*)&data);
+}
+
+string DataReader::read_string()
+{
+  int count = read_int32x();
+  string result = "";
+  result.reserve( count );
+  int i = 0;
+  while (--count >= 0)
+  {
+    int unicode = read_int32x();
+    if (unicode <= 0x7F)
+    {
+      // 1-byte sequence: 0xxxxxxx
+      result += (char)(unicode);
+    }
+    else if (unicode <= 0x7FF)
+    {
+      // 2-byte sequence: 110xxxxx 10xxxxxx
+      result += (char)((unicode >> 6) | 0xC0);
+      result += (char)((unicode & 0x3F) | 0x80);
+    }
+    else if (unicode <= 0xFFFF)
+    {
+      // 3-byte sequence: 1110xxxx 10xxxxxx 10xxxxxx
+      result += (char)((unicode >> 12) | 0xE0);
+      result += (char)(((unicode >> 6) & 0x3F) | 0x80);
+      result += (char)((unicode & 0x3F) | 0x80);
+    }
+    else if (unicode <= 0x10FFFF)
+    {
+      // 4-byte sequence: 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
+      result += (char)((unicode >> 18) | 0xF0);
+      result += (char)(((unicode >> 12) & 0x3F) | 0x80);
+      result += (char)(((unicode >> 6) & 0x3F) | 0x80);
+      result += (char)((unicode & 0x3F) | 0x80);
+    }
+  }
+  return result;
 }
 
 void DataReader::seek( int pos )

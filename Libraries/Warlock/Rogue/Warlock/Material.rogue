@@ -1,0 +1,45 @@
+module Warlock
+
+class Material : Asset<<Material>>
+  PROPERTIES
+    topology                  : Topology
+    primitive_restart_enabled : Logical
+    shaders                   = Shader[]
+
+  METHODS
+    method init( topology=Topology.TRIANGLE_LIST, primitive_restart_enabled=false )
+
+    method init( vertex_shader:Shader, fragment_shader:Shader,
+        topology=Topology.TRIANGLE_LIST, primitive_restart_enabled=false )
+      add_shader( vertex_shader )
+      add_shader( fragment_shader )
+
+    method add_shader( shader:Shader )
+      shaders.add( shader )
+      prepared = false
+
+    method destroy [override]
+      if (prepared)
+        Renderer.free_material( this )
+        prepared = false
+      endIf
+
+    method prepare
+      if (prepared) return
+
+      (forEach in shaders).prepare
+      Renderer.define_material( this )
+      prepared = true
+
+    method set_topology( @topology )
+      prepared = false
+
+    method set_primitive_restart_enabled( @primitive_restart_enabled )
+      prepared = false
+
+    method set_shader( index:Int, shader:Shader )
+      shaders.expand_to_include( index )
+      shaders[index] = shader
+      prepared = false
+
+endClass

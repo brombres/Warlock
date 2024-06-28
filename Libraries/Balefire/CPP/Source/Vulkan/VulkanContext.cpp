@@ -147,19 +147,20 @@ struct ConfigureMaterials : ContextOperation<VulkanContext>
     if ( !material->create() ) return false;
     context->color_line_list_material = material;
 
-    material = new Material( context );
-    material->set_topology( VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST );
-    material->add_vertex_description( new BalefireVertexDescription() );
-    material->add_shader( context->color_vertex_shader );
-    material->add_shader( context->color_fragment_shader );
-    if ( !material->create() ) return false;
-    context->color_triangle_list_material = material;
+    //material = new Material( context );
+    //material->set_topology( VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST );
+    //material->add_vertex_description( new BalefireVertexDescription() );
+    //material->add_shader( context->color_vertex_shader );
+    //material->add_shader( context->color_fragment_shader );
+    //if ( !material->create() ) return false;
+    //context->color_triangle_list_material = material;
 
     return true;
   }
 
   void on_deactivate() override
   {
+    context->shaders.clear();
     context->textures.clear();
     context->materials.clear();
     context->color_line_list_material = nullptr;

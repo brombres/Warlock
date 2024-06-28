@@ -1,6 +1,8 @@
 #include "Balefire/Vulkan/WindowRenderContextVulkan.h"
 using namespace BALEFIRE;
 
+using namespace std;
+
 #include "Vulkanize/Vulkanize.h"
 #include "Vulkanize/Context.h"
 using namespace VKZ;
@@ -142,7 +144,7 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
             BALEFIRE_LOG_ERROR_WITH_INT( "[Balefire] Error creating texture %d.", id );
           }
 
-          Material* material = new Material( context );
+          Ref<Material> material = new Material( context );
           context->materials[id] = material;
           material->add_vertex_description( new BalefireVertexDescription() );
           material->add_shader( context->texture_vertex_shader );
@@ -165,34 +167,85 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
           break;
         }
 
-        case DEFINE_SHADER_STAGE:
-        {
-          int id = reader.read_int32x();
-          break;
-        }
-
-        case FREE_SHADER_STAGE:
-        {
-          break;
-        }
-
         case DEFINE_SHADER:
         {
+          int id = reader.read_int32x();
+          if (id >= context->shaders.size()) context->shaders.resize( id + 1 );
+          auto stage = (VkShaderStageFlagBits)reader.read_int32x();
+          string filename = reader.read_string();
+          string main_fn_name = reader.read_string();
+          bool is_string = reader.read_logical();
+          if (is_string)
+          {
+            string source = reader.read_string();
+            context->shaders[id] = new Shader(
+              context,
+              stage,
+              filename,
+              source,
+              main_fn_name
+            );
+          }
+          else
+          {
+            unsigned char* spirv_bytes;
+            int byte_count = reader.read_bytes( &spirv_bytes );
+            context->shaders[id] = new Shader(
+              context,
+              stage,
+              filename,
+              (char*)spirv_bytes,
+              byte_count,
+              main_fn_name
+            );
+          }
           break;
         }
 
         case FREE_SHADER:
         {
+          int id = reader.read_int32x();
+          if (id > 0 && id < context->shaders.size())
+          {
+            context->shaders[id] = nullptr;
+          }
           break;
         }
 
         case DEFINE_MATERIAL:
         {
+          int id = reader.read_int32x();
+          auto topology = (VkPrimitiveTopology)reader.read_int32x();
+          bool primitive_restart_enabled = reader.read_int32x();
+          int shader_count = reader.read_int32x();
+
+          Ref<Material> material = new Material( context );
+          material->set_topology( topology );
+          material->add_vertex_description( new BalefireVertexDescription() );
+          //material->enable_primitive_restart( primitive_restart_enabled );
+
+          for (int i=0; i<shader_count; ++i)
+          {
+            material->add_shader( context->shaders[reader.read_int32x()] );
+            //reader.read_int32x();
+          }
+          //material->add_shader( context->color_vertex_shader );
+          //material->add_shader( context->color_fragment_shader );
+          material->create();
+
+          if (id >= context->materials.size()) context->materials.resize( id + 1 );
+          context->materials[id] = material;
+          context->color_triangle_list_material = material;
           break;
         }
 
         case FREE_MATERIAL:
         {
+          int id = reader.read_int32x();
+          if (id > 0 && id < context->materials.size())
+          {
+            context->materials[id] = nullptr;
+          }
           break;
         }
 
@@ -256,8 +309,10 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
             int vertex_count = reader.read_int32x() * 3;
             reader.seek( skip_pos );
 
-            context->color_triangle_list_material->cmd_bind( context->cmd );
-            context->color_triangle_list_material->cmd_set_default_viewports_and_scissor_rects( context->cmd );
+            Ref<Material> material = context->color_triangle_list_material;
+            //Ref<Material> material = context->materials[1];
+            material->cmd_bind( context->cmd );
+            material->cmd_set_default_viewports_and_scissor_rects( context->cmd );
             context->device_dispatch.cmdDraw( context->cmd, vertex_count, 1, vertex_i, 0 );
             vertex_i += vertex_count;
             break;
@@ -288,12 +343,10 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
 
           case RenderCmd::DEFINE_TEXTURE:
           case RenderCmd::FREE_TEXTURE:
-          case RenderCmd::FREE_SHADER_STAGE:
-          case RenderCmd::FREE_SHADER:
-          case RenderCmd::FREE_MATERIAL:
-          case RenderCmd::DEFINE_SHADER_STAGE:
           case RenderCmd::DEFINE_SHADER:
+          case RenderCmd::FREE_SHADER:
           case RenderCmd::DEFINE_MATERIAL:
+          case RenderCmd::FREE_MATERIAL:
             reader.seek( skip_pos );
             break;
 
