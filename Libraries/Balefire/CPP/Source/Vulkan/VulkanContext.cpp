@@ -46,7 +46,7 @@ struct ConfigureShaders : ContextOperation<VulkanContext>
 {
   bool on_activate() override
   {
-    context->color_vertex_shader = new ShaderStage(
+    context->color_vertex_shader = new Shader(
       context,
       VK_SHADER_STAGE_VERTEX_BIT,
       "color_shader.vert",
@@ -66,7 +66,7 @@ struct ConfigureShaders : ContextOperation<VulkanContext>
       "}\n"
     );
 
-    context->color_fragment_shader = new ShaderStage(
+    context->color_fragment_shader = new Shader(
       context,
       VK_SHADER_STAGE_FRAGMENT_BIT,
       "color_shader.frag",
@@ -81,7 +81,7 @@ struct ConfigureShaders : ContextOperation<VulkanContext>
       "void main () { output_color = color; }\n"
     );
 
-    context->texture_vertex_shader = new ShaderStage(
+    context->texture_vertex_shader = new Shader(
       context,
       VK_SHADER_STAGE_VERTEX_BIT,
       "texture_shader.vert",
@@ -107,7 +107,7 @@ struct ConfigureShaders : ContextOperation<VulkanContext>
       "}\n"
     );
 
-    context->texture_fragment_shader = new ShaderStage(
+    context->texture_fragment_shader = new Shader(
       context,
       VK_SHADER_STAGE_FRAGMENT_BIT,
       "shader.frag",

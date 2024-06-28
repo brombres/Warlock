@@ -50,7 +50,7 @@
 		30CB68D32BF549D4008A95B7 /* RogueInterface.mm in Sources */ = {isa = PBXBuildFile; fileRef = 30CB68D12BF549D4008A95B7 /* RogueInterface.mm */; };
 		30E9EA712BCB224100E45E9F /* libSPIRV-Tools-opt.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30C7A03C2BC6D3CE004A98B7 /* libSPIRV-Tools-opt.a */; };
 		30E9EA802BCD84B000E45E9F /* GLSLangInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E9EA7F2BCD84B000E45E9F /* GLSLangInterface.cpp */; };
-		30F2718E2BDD4346000AD163 /* ShaderStage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30F271822BDD4346000AD163 /* ShaderStage.cpp */; };
+		30F2718E2BDD4346000AD163 /* Shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30F271822BDD4346000AD163 /* Shader.cpp */; };
 		30F271D02BDD5941000AD163 /* ConfigureCommandBuffers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30F271BE2BDD5941000AD163 /* ConfigureCommandBuffers.cpp */; };
 		30F271D12BDD5941000AD163 /* ConfigureCommandPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30F271BF2BDD5941000AD163 /* ConfigureCommandPool.cpp */; };
 		30F271D22BDD5941000AD163 /* ConfigureDepthStencil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30F271C02BDD5941000AD163 /* ConfigureDepthStencil.cpp */; };
@@ -369,8 +369,8 @@
 		30E9EA7F2BCD84B000E45E9F /* GLSLangInterface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLSLangInterface.cpp; sourceTree = "<group>"; };
 		30E9EAA92BD4139200E45E9F /* CustomVertexDescription.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomVertexDescription.h; sourceTree = "<group>"; };
 		30E9EAC82BD58DA900E45E9F /* ContextOperation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContextOperation.h; sourceTree = "<group>"; };
-		30E9EAD62BD5F00700E45E9F /* ShaderStage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShaderStage.h; sourceTree = "<group>"; };
-		30F271822BDD4346000AD163 /* ShaderStage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ShaderStage.cpp; sourceTree = "<group>"; };
+		30E9EAD62BD5F00700E45E9F /* Shader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Shader.h; sourceTree = "<group>"; };
+		30F271822BDD4346000AD163 /* Shader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Shader.cpp; sourceTree = "<group>"; };
 		30F271902BDD590A000AD163 /* Event.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
 		30F271BE2BDD5941000AD163 /* ConfigureCommandBuffers.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureCommandBuffers.cpp; sourceTree = "<group>"; };
 		30F271BF2BDD5941000AD163 /* ConfigureCommandPool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigureCommandPool.cpp; sourceTree = "<group>"; };
@@ -832,7 +832,7 @@
 				30F271FA2BDD597D000AD163 /* Render */,
 				30F271F72BDD5976000AD163 /* Configure */,
 				30F271902BDD590A000AD163 /* Event.h */,
-				30E9EAD62BD5F00700E45E9F /* ShaderStage.h */,
+				30E9EAD62BD5F00700E45E9F /* Shader.h */,
 				30E9EAC82BD58DA900E45E9F /* ContextOperation.h */,
 				30E9EAA92BD4139200E45E9F /* CustomVertexDescription.h */,
 				30E9EA732BCD84A600E45E9F /* GLSLangInterface.h */,
@@ -869,7 +869,7 @@
 				3019597A2BDFDF1D00D9D51B /* RenderPass.cpp */,
 				30F271E32BDD594C000AD163 /* Render */,
 				30F271CF2BDD5941000AD163 /* Configure */,
-				30F271822BDD4346000AD163 /* ShaderStage.cpp */,
+				30F271822BDD4346000AD163 /* Shader.cpp */,
 				30E9EA7F2BCD84B000E45E9F /* GLSLangInterface.cpp */,
 				30C7A0072BC574B5004A98B7 /* Process.cpp */,
 				3004D1E82BBDA14000572087 /* Image.cpp */,
@@ -1166,7 +1166,7 @@
 				30F271D12BDD5941000AD163 /* ConfigureCommandPool.cpp in Sources */,
 				3019853B2B94DDBB00CBECCB /* Framework.cpp in Sources */,
 				30F271D22BDD5941000AD163 /* ConfigureDepthStencil.cpp in Sources */,
-				30F2718E2BDD4346000AD163 /* ShaderStage.cpp in Sources */,
+				30F2718E2BDD4346000AD163 /* Shader.cpp in Sources */,
 				30F271D72BDD5941000AD163 /* ConfigureGLSLang.cpp in Sources */,
 				30CB68D32BF549D4008A95B7 /* RogueInterface.mm in Sources */,
 				306033802C248335002E8229 /* Material.cpp in Sources */,
