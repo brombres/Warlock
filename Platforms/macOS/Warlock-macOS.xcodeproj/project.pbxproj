@@ -26,7 +26,6 @@
 		3060335E2C1A4B62002E8229 /* DataReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3060335D2C1A4B62002E8229 /* DataReader.cpp */; };
 		306033802C248335002E8229 /* Material.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3060337F2C248335002E8229 /* Material.cpp */; };
 		306033932C272BC0002E8229 /* Descriptor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 306033922C272BC0002E8229 /* Descriptor.cpp */; };
-		306033A42C28CA50002E8229 /* Shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 306033972C28CA50002E8229 /* Shader.cpp */; };
 		306033A52C28CA50002E8229 /* DescriptorSet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 306033A32C28CA50002E8229 /* DescriptorSet.cpp */; };
 		306912D12B5E7D7400B14F73 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 306912D02B5E7D7400B14F73 /* AppDelegate.m */; };
 		306912D32B5E7D7500B14F73 /* ProjectAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 306912D22B5E7D7500B14F73 /* ProjectAssets.xcassets */; };
@@ -272,10 +271,8 @@
 		306033852C272BB5002E8229 /* RefCounted.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RefCounted.h; sourceTree = "<group>"; };
 		306033912C272BB5002E8229 /* Descriptor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Descriptor.h; sourceTree = "<group>"; };
 		306033922C272BC0002E8229 /* Descriptor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Descriptor.cpp; sourceTree = "<group>"; };
-		306033972C28CA50002E8229 /* Shader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Shader.cpp; sourceTree = "<group>"; };
 		306033A32C28CA50002E8229 /* DescriptorSet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DescriptorSet.cpp; sourceTree = "<group>"; };
 		306033A62C28CA5F002E8229 /* DescriptorSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DescriptorSet.h; sourceTree = "<group>"; };
-		306033A72C28CA5F002E8229 /* Shader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Shader.h; sourceTree = "<group>"; };
 		306033AB2C2B2CDA002E8229 /* UniformBufferData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UniformBufferData.h; sourceTree = "<group>"; };
 		306033AC2C2B32C3002E8229 /* TextureLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextureLayer.h; sourceTree = "<group>"; };
 		306912CC2B5E7D7400B14F73 /* Warlock-macOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Warlock-macOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -827,7 +824,6 @@
 			children = (
 				306033AB2C2B2CDA002E8229 /* UniformBufferData.h */,
 				306033A62C28CA5F002E8229 /* DescriptorSet.h */,
-				306033A72C28CA5F002E8229 /* Shader.h */,
 				306033912C272BB5002E8229 /* Descriptor.h */,
 				306033852C272BB5002E8229 /* RefCounted.h */,
 				306033732C24831F002E8229 /* Material.h */,
@@ -866,7 +862,6 @@
 			isa = PBXGroup;
 			children = (
 				306033A32C28CA50002E8229 /* DescriptorSet.cpp */,
-				306033972C28CA50002E8229 /* Shader.cpp */,
 				306033922C272BC0002E8229 /* Descriptor.cpp */,
 				3060337F2C248335002E8229 /* Material.cpp */,
 				309D52E02C0F6D8E00CCA5B3 /* Sampler.cpp */,
@@ -1182,7 +1177,6 @@
 				30F271D92BDD5941000AD163 /* ConfigureQueues.cpp in Sources */,
 				30F271D42BDD5941000AD163 /* ConfigureFences.cpp in Sources */,
 				301985362B94DC6000CBECCB /* FrameworkSDL.cpp in Sources */,
-				306033A42C28CA50002E8229 /* Shader.cpp in Sources */,
 				306912D12B5E7D7400B14F73 /* AppDelegate.m in Sources */,
 				30B5A2AF2BFACFE90030183A /* WarlockInterface.mm in Sources */,
 				30F271DB2BDD5941000AD163 /* ConfigureSemaphores.cpp in Sources */,

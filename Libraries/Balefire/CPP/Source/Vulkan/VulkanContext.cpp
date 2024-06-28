@@ -46,9 +46,9 @@ struct ConfigureShaders : ContextOperation<VulkanContext>
 {
   bool on_activate() override
   {
-    context->color_shader = new Shader( context );
-
-    context->color_shader->add_vertex_shader(
+    context->color_vertex_shader = new ShaderStage(
+      context,
+      VK_SHADER_STAGE_VERTEX_BIT,
       "color_shader.vert",
 
       "#version 450\n"
@@ -66,7 +66,9 @@ struct ConfigureShaders : ContextOperation<VulkanContext>
       "}\n"
     );
 
-    context->color_shader->add_fragment_shader(
+    context->color_fragment_shader = new ShaderStage(
+      context,
+      VK_SHADER_STAGE_FRAGMENT_BIT,
       "color_shader.frag",
 
       "#version 450\n"
@@ -79,9 +81,9 @@ struct ConfigureShaders : ContextOperation<VulkanContext>
       "void main () { output_color = color; }\n"
     );
 
-    context->texture_shader = new Shader( context );
-
-    context->texture_shader->add_vertex_shader(
+    context->texture_vertex_shader = new ShaderStage(
+      context,
+      VK_SHADER_STAGE_VERTEX_BIT,
       "texture_shader.vert",
 
       "#version 450\n"
@@ -105,7 +107,9 @@ struct ConfigureShaders : ContextOperation<VulkanContext>
       "}\n"
     );
 
-    context->texture_shader->add_fragment_shader(
+    context->texture_fragment_shader = new ShaderStage(
+      context,
+      VK_SHADER_STAGE_FRAGMENT_BIT,
       "shader.frag",
 
       "#version 450\n"
@@ -138,14 +142,16 @@ struct ConfigureMaterials : ContextOperation<VulkanContext>
     material = new Material( context );
     material->set_topology( VK_PRIMITIVE_TOPOLOGY_LINE_LIST );
     material->add_vertex_description( new BalefireVertexDescription() );
-    material->set_shader( context->color_shader );
+    material->add_shader( context->color_vertex_shader );
+    material->add_shader( context->color_fragment_shader );
     if ( !material->create() ) return false;
     context->color_line_list_material = material;
 
     material = new Material( context );
     material->set_topology( VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST );
     material->add_vertex_description( new BalefireVertexDescription() );
-    material->set_shader( context->color_shader );
+    material->add_shader( context->color_vertex_shader );
+    material->add_shader( context->color_fragment_shader );
     if ( !material->create() ) return false;
     context->color_triangle_list_material = material;
 

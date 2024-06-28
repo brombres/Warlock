@@ -145,7 +145,8 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
           Material* material = new Material( context );
           context->materials[id] = material;
           material->add_vertex_description( new BalefireVertexDescription() );
-          material->set_shader( context->texture_shader );
+          material->add_shader( context->texture_vertex_shader );
+          material->add_shader( context->texture_fragment_shader );
           auto descriptor = material->add_combined_image_sampler( 0, TextureLayer::COUNT );
           descriptor->set( TextureLayer::ALBEDO, image );
           material->create();
@@ -166,6 +167,7 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
 
         case DEFINE_SHADER_STAGE:
         {
+          int id = reader.read_int32x();
           break;
         }
 
