@@ -5,8 +5,14 @@ class Material : Asset<<Material>>
     topology                  : Topology
     primitive_restart_enabled : Logical
     shaders                   = Shader[]
+    textures                  = [TextureLayer:Texture]
 
   METHODS
+    method init( texture:Texture )
+      local shaders = Renderer.standard_shaders
+      init( shaders//texture_vertex_shader, shaders//texture_fragment_shader )
+      set_texture( texture )
+
     method init( topology=Topology.TRIANGLE_LIST, primitive_restart_enabled=false )
 
     method init( vertex_shader:Shader, fragment_shader:Shader,
@@ -15,8 +21,19 @@ class Material : Asset<<Material>>
       add_shader( fragment_shader )
 
     method add_shader( shader:Shader )
-      shaders.add( shader )
       prepared = false
+
+      forEach (existing at i in shaders)
+        if (existing.stage == shader.stage)
+          shaders[i] = shader
+          return
+        endIf
+      endForEach
+
+      shaders.add( shader )
+
+    method clear_texture( layer=TextureLayer.ALBEDO:TextureLayer )
+      textures.remove( layer )
 
     method destroy [override]
       if (prepared)
@@ -27,6 +44,7 @@ class Material : Asset<<Material>>
     method prepare
       if (prepared) return
 
+      (forEach in textures).prepare
       (forEach in shaders).prepare
       Renderer.define_material( this )
       prepared = true
@@ -41,5 +59,8 @@ class Material : Asset<<Material>>
       shaders.expand_to_include( index )
       shaders[index] = shader
       prepared = false
+
+    method set_texture( texture:Texture, layer=TextureLayer.ALBEDO:TextureLayer )
+      textures[layer] = texture
 
 endClass

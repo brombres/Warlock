@@ -2,15 +2,16 @@ module Warlock
 
 class Image
   PROPERTIES
-    name    : String
-    width   : Int
-    height  : Int
-    texture : Texture
-    uv      : Box
+    name     : String
+    width    : Int
+    height   : Int
+    material : Material
+    uv       : Box
 
   METHODS
     method init( name )
-      texture = Texture( name )
+      local texture = Texture( name )
+      material = Material( texture )
       width  = texture.width
       height = texture.height
       uv = Box( 0, 0, 1, 1 )
@@ -25,12 +26,14 @@ class Image
       local uv2 = uv.bottom_right
       Renderer.fill(
         Triangle( tl, XY(br.x,tl.y), br ),
-        texture,
+        Color.WHITE,
+        material,
         Triangle( uv1, XY(uv2.x,uv1.y), uv2 )
       )
       Renderer.fill(
         Triangle( tl, br, XY(tl.x,br.y) ),
-        texture,
+        Color.WHITE,
+        material,
         Triangle( uv1, uv2, XY(uv1.x,uv2.y) )
       )
 

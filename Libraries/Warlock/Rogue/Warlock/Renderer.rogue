@@ -2,9 +2,8 @@ module Warlock
 
 enum PrimitiveType
   UNDEFINED,
-  TRIANGLES,
-  TEXTURED_TRIANGLES,
-  LINES
+  LINES,
+  TRIANGLES
 endEnum
 
 class Renderer [singleton]
@@ -20,19 +19,24 @@ class Renderer [singleton]
 
     vertices           = Vertex[]
     primitive_type     : PrimitiveType
-    texture            : Texture
+    current_material   : Material
 
     transformed_vertex_count : Int
     total_vertex_count       : Int
-    flushing           = false
+    flushing                 = false
+
+    standard_shaders   = [String:Shader]
+    standard_materials = [String:Material]
 
   METHODS
     method init
+      .configure_shaders_and_materials
+
       reset
 
     method reset
       primitive_type = PrimitiveType.UNDEFINED
-      texture = null
+      current_material = null
       vertices.clear
       transformed_vertex_count = 0
       total_vertex_count = 0
@@ -64,6 +68,11 @@ class Renderer [singleton]
       cmd_data.write_int32x( material.primitive_restart_enabled )
       cmd_data.write_int32x( material.shaders.count )
       cmd_data.write_int32x( (forEach in material.shaders).id )
+      cmd_data.write_int32x( material.textures.count )
+      forEach (texture at layer in material.textures)
+        cmd_data.write_int32x( layer )
+        cmd_data.write_int32x( texture.id )
+      endForEach
       .end_command
 
     method define_shader( shader:Shader )
@@ -89,7 +98,7 @@ class Renderer [singleton]
       cmd_data.write_colors( texture.bitmap.pixels )
       .end_command
 
-    method draw( triangle:Triangle, color:Color )
+    method draw( triangle:Triangle, color:Color, current_material=Renderer.standard_materials//color_line_material )
       primitive_type = PrimitiveType.LINES
       add_vertex( triangle.a, color )
       add_vertex( triangle.b, color )
@@ -98,22 +107,22 @@ class Renderer [singleton]
       add_vertex( triangle.c, color )
       add_vertex( triangle.a, color )
 
-    method fill( box:Box, color:Color )
+    method fill( box:Box, color:Color, current_material=Renderer.standard_materials//color_triangle_material )
       local tl = box.position
       local tr = box.top_right
       local br = box.bottom_right
       local bl = box.bottom_left
-      fill( Triangle(tl,tr,br), color )
-      fill( Triangle(br,bl,tl), color )
+      fill( Triangle(tl,tr,br), color, current_material )
+      fill( Triangle(br,bl,tl), color, current_material )
 
-    method fill( triangle:Triangle, color:Color )
+    method fill( triangle:Triangle, color:Color, current_material=Renderer.standard_materials//color_triangle_material )
       primitive_type = PrimitiveType.TRIANGLES
       add_vertex( triangle.a, color )
       add_vertex( triangle.b, color )
       add_vertex( triangle.c, color )
 
-    method fill( triangle:Triangle, texture, uv:Triangle, color=Color.WHITE:Color )
-      primitive_type = PrimitiveType.TEXTURED_TRIANGLES
+    method fill( triangle:Triangle, color:Color, current_material, uv:Triangle )
+      primitive_type = PrimitiveType.TRIANGLES
       add_vertex( triangle.a, color, uv.a )
       add_vertex( triangle.b, color, uv.b )
       add_vertex( triangle.c, color, uv.c )
@@ -139,19 +148,7 @@ class Renderer [singleton]
 
         case TRIANGLES
           .begin_command( RenderCmd.DRAW_TRIANGLES )
-          cmd_data.write_int32x( vertices.count / 3 )
-          forEach (v in vertices)
-            cmd_data.write_real32( v.position.x )
-            cmd_data.write_real32( v.position.y )
-            cmd_data.write_real32( v.position.z )
-            cmd_data.write_real32( v.position.w )
-            cmd_data.write_int32( v.color.argb )
-          endForEach
-
-        case TEXTURED_TRIANGLES
-          .begin_command( RenderCmd.DRAW_TEXTURED_TRIANGLES )
-          if (texture) cmd_data.write_int32x( texture.id )
-          else         cmd_data.write_int32x( 0 )
+          cmd_data.write_int32x( current_material.id )
           cmd_data.write_int32x( vertices.count / 3 )
           forEach (v in vertices)
             cmd_data.write_real32( v.position.x )
@@ -165,6 +162,7 @@ class Renderer [singleton]
 
         case LINES
           .begin_command( RenderCmd.DRAW_LINES )
+          cmd_data.write_int32x( current_material.id )
           cmd_data.write_int32x( vertices.count / 2 )
           forEach (v in vertices)
             cmd_data.write_real32( v.position.x )
@@ -199,16 +197,16 @@ class Renderer [singleton]
       cmd_data.write_int32x( texture.id )
       .end_command
 
+    method set_current_material( new_material:Material )
+      if (current_material is new_material) return
+      flush
+      @current_material = new_material
+      if (new_material) new_material.prepare
+
     method set_primitive_type( new_type:PrimitiveType )
       if (new_type == @primitive_type) return
       flush
       @primitive_type = new_type
-
-    method set_texture( new_texture:Texture )
-      if (texture is new_texture) return
-      flush
-      @texture = new_texture
-      if (new_texture) new_texture.prepare
 
     method .begin_command( cmd:RenderCmd )
       flush
@@ -218,5 +216,87 @@ class Renderer [singleton]
       render_data.write_int32x( cmd_data.output_bytes.count )
       render_data.write( cmd_data.output_bytes )
       cmd_data.clear
+
+    method .configure_shaders_and_materials
+      standard_shaders//color_vertex_shader = Shader(
+        ShaderStage.VERTEX,
+        "Color Vertex Shader",
+        @|#version 450
+         |#extension GL_ARB_separate_shader_objects : enable
+         |
+         |layout (location = 0) in vec4 position;
+         |layout (location = 1) in vec4 color;
+         |
+         |layout (location = 0) out vec4 frag_color;
+         |
+         |void main ()
+         |{
+         |  gl_Position = position;
+         |  frag_color = color;
+         |}
+      )
+
+      standard_shaders//color_fragment_shader = Shader(
+        ShaderStage.FRAGMENT,
+        "Color Fragment Shader",
+        @|#version 450
+         |#extension GL_ARB_separate_shader_objects : enable
+         |
+         |layout (location = 0) in  vec4 color;
+         |layout (location = 0) out vec4 output_color;
+         |
+         |void main () { output_color = color; }
+      )
+
+      standard_shaders//texture_vertex_shader = Shader(
+        ShaderStage.VERTEX,
+        "Texture Vertex Shader",
+        @|#version 450
+         |#extension GL_ARB_separate_shader_objects : enable
+         |
+         |//layout (binding = 1) uniform Global {vec4 color;} global;
+         |
+         |layout (location = 0) in vec4 position;
+         |layout (location = 1) in vec4 color;
+         |layout (location = 2) in vec2 uv;
+         |
+         |layout (location = 0) out vec4 frag_color;
+         |layout (location = 1) out vec2 frag_uv;
+         |
+         |void main ()
+         |{
+         |  gl_Position = position;
+         |  frag_color = color;
+         |  frag_uv = uv;
+         |}
+      )
+
+      standard_shaders//texture_fragment_shader = Shader(
+        ShaderStage.FRAGMENT,
+        "Texture Fragment Shader",
+        @|#version 450
+         |#extension GL_ARB_separate_shader_objects : enable
+         |
+         |layout (binding = 0) uniform sampler2D texture_sampler;
+         |
+         |layout (location = 0) in vec4 color;
+         |layout (location = 1) in vec2 uv;
+         |
+         |layout (location = 0) out vec4 output_color;
+         |
+         |void main () { output_color = texture( texture_sampler, uv ); }
+      )
+
+      standard_materials//color_line_material = Material(
+        standard_shaders//color_vertex_shader,
+        standard_shaders//color_fragment_shader,
+        Topology.LINE_LIST
+      )
+
+      standard_materials//color_triangle_material = Material(
+        standard_shaders//color_vertex_shader,
+        standard_shaders//color_fragment_shader,
+        Topology.TRIANGLE_LIST
+      )
 
 endClass

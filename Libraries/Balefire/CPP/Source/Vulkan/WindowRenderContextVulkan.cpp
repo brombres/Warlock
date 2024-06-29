@@ -66,6 +66,7 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
       {
         case RenderCmd::DRAW_LINES:
         {
+          reader.read_int32x(); // skip material ID
           int vertex_count = reader.read_int32x() * 2;
           for (int i=vertex_count; --i>=0; )
           {
@@ -81,22 +82,7 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
 
         case RenderCmd::DRAW_TRIANGLES:
         {
-          int vertex_count = reader.read_int32x() * 3;
-          for (int i=vertex_count; --i>=0; )
-          {
-            float x = reader.read_real32();
-            float y = reader.read_real32();
-            float z = reader.read_real32();
-            float w = reader.read_real32();
-            int   color = reader.read_int32();
-            vertices.push_back( Vertex(x,y,z,w,color) );
-          }
-          break;
-        }
-
-        case RenderCmd::DRAW_TEXTURED_TRIANGLES:
-        {
-          reader.read_int32x(); // discard texture ID
+          reader.read_int32x(); // skip material ID
           int vertex_count = reader.read_int32x() * 3;
           for (int i=vertex_count; --i>=0; )
           {
@@ -143,15 +129,6 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
           {
             BALEFIRE_LOG_ERROR_WITH_INT( "[Balefire] Error creating texture %d.", id );
           }
-
-          Ref<Material> material = new Material( context );
-          context->materials[id] = material;
-          material->add_vertex_description( new BalefireVertexDescription() );
-          material->add_shader( context->texture_vertex_shader );
-          material->add_shader( context->texture_fragment_shader );
-          auto descriptor = material->add_combined_image_sampler( 0, TextureLayer::COUNT );
-          descriptor->set( TextureLayer::ALBEDO, image );
-          material->create();
 
           break;
         };
@@ -222,20 +199,28 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
           Ref<Material> material = new Material( context );
           material->set_topology( topology );
           material->add_vertex_description( new BalefireVertexDescription() );
-          //material->enable_primitive_restart( primitive_restart_enabled );
+          material->enable_primitive_restart( primitive_restart_enabled );
 
           for (int i=0; i<shader_count; ++i)
           {
             material->add_shader( context->shaders[reader.read_int32x()] );
-            //reader.read_int32x();
           }
-          //material->add_shader( context->color_vertex_shader );
-          //material->add_shader( context->color_fragment_shader );
+
+          int texture_count = reader.read_int32x();
+          if (texture_count)
+          {
+            auto descriptor = material->add_combined_image_sampler( 0, TextureLayer::COUNT );
+            for (int i=0; i<texture_count; ++i)
+            {
+              TextureLayer layer = (TextureLayer) reader.read_int32x();
+              Image* texture = context->textures[reader.read_int32x()];
+              descriptor->set( layer, texture );
+            }
+          }
           material->create();
 
           if (id >= context->materials.size()) context->materials.resize( id + 1 );
           context->materials[id] = material;
-          context->color_triangle_list_material = material;
           break;
         }
 
@@ -294,23 +279,11 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
         {
           case RenderCmd::DRAW_LINES:
           {
+            int material_id = reader.read_int32x();
             int vertex_count = reader.read_int32x() * 2;
             reader.seek( skip_pos );
 
-            context->color_line_list_material->cmd_bind( context->cmd );
-            context->color_line_list_material->cmd_set_default_viewports_and_scissor_rects( context->cmd );
-            context->device_dispatch.cmdDraw( context->cmd, vertex_count, 1, vertex_i, 0 );
-            vertex_i += vertex_count;
-            break;
-          }
-
-          case RenderCmd::DRAW_TRIANGLES:
-          {
-            int vertex_count = reader.read_int32x() * 3;
-            reader.seek( skip_pos );
-
-            Ref<Material> material = context->color_triangle_list_material;
-            //Ref<Material> material = context->materials[1];
+            Material* material = context->materials[material_id];
             material->cmd_bind( context->cmd );
             material->cmd_set_default_viewports_and_scissor_rects( context->cmd );
             context->device_dispatch.cmdDraw( context->cmd, vertex_count, 1, vertex_i, 0 );
@@ -318,24 +291,16 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
             break;
           }
 
-          case RenderCmd::DRAW_TEXTURED_TRIANGLES:
+          case RenderCmd::DRAW_TRIANGLES:
           {
             int material_id = reader.read_int32x();
             int vertex_count = reader.read_int32x() * 3;
             reader.seek( skip_pos );
 
-            if (material_id > 0 && material_id < context->materials.size())
-            {
-              Material* material = context->materials[material_id];
-
-              material->cmd_bind( context->cmd );
-              material->cmd_set_default_viewports_and_scissor_rects( context->cmd );
-
-              //context->gfx_triangle_list_texture.cmd_bind( context->cmd );
-              //context->gfx_triangle_list_texture.cmd_set_default_viewports_and_scissor_rects( context->cmd );
-
-              context->device_dispatch.cmdDraw( context->cmd, vertex_count, 1, vertex_i, 0 );
-            }
+            Material* material = context->materials[material_id];
+            material->cmd_bind( context->cmd );
+            material->cmd_set_default_viewports_and_scissor_rects( context->cmd );
+            context->device_dispatch.cmdDraw( context->cmd, vertex_count, 1, vertex_i, 0 );
 
             vertex_i += vertex_count;
             break;

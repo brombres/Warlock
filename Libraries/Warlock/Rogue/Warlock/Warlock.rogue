@@ -17,6 +17,7 @@ $include Renderer
 $include ResourceBank
 $include Shader
 $include Texture
+$include TextureLayer
 $include Topology
 $include Vertex
 $include Window
@@ -29,35 +30,6 @@ class Warlock [essential singleton]
     windows = ResourceBank<<Window>>()
     image = Image( "Warlock" )
     alpha = Image( "Alpha" )
-    color_vertex_shader = Shader(
-      ShaderStage.VERTEX,
-      "Color Vertex Shader",
-      @|#version 450
-       |#extension GL_ARB_separate_shader_objects : enable
-       |
-       |layout (location = 0) in vec4 position;
-       |layout (location = 1) in vec4 color;
-       |
-       |layout (location = 0) out vec4 frag_color;
-       |
-       |void main ()
-       |{
-       |  gl_Position = position;
-       |  frag_color = color;
-       |}
-    )
-    color_fragment_shader = Shader(
-      ShaderStage.FRAGMENT,
-      "Color Fragment Shader",
-      @|#version 450
-       |#extension GL_ARB_separate_shader_objects : enable
-       |
-       |layout (location = 0) in  vec4 color;
-       |layout (location = 0) out vec4 output_color;
-       |
-       |void main () { output_color = color; }
-    )
-    material = Material( color_vertex_shader, color_fragment_shader )
 
     rendering = false # false during initial configuration; permanently set to true afterwards
 
@@ -65,7 +37,6 @@ class Warlock [essential singleton]
     method init
       println "Initializing Warlock"
       Window( "Warlock" )
-      material.prepare
 
     method find_asset( name:String )->File?
       local filepath = native("WarlockInterface_find_asset($name)")->String
