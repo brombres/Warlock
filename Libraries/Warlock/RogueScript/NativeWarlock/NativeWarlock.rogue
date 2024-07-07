@@ -1,0 +1,10 @@
+module RogueScript
+
+$include NativeWarlock/NativeRenderer
+
+class NativeWarlock [singleton]
+  METHODS
+    method register( vm:VM )
+      NativeRenderer.register( vm )
+
+endClass

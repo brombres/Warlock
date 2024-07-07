@@ -6,6 +6,10 @@ uses Geometry [export]
 uses Graphics [export]
 uses Math/Matrix
 
+uses RogueScript
+uses RogueScript/NativeLibraries
+uses NativeWarlock
+
 $include Asset
 $include Display
 $include IDBank
@@ -30,12 +34,25 @@ class Warlock [essential singleton]
     windows = ResourceBank<<Window>>()
     image = Image( "Warlock" )
     alpha = Image( "Alpha" )
+    cmd_draw : Function->Variant
 
     rendering = false # false during initial configuration; permanently set to true afterwards
 
   METHODS
     method init
       println "Initializing Warlock"
+      NativeLibraries.register( VM )
+      NativeWarlock.register( VM )
+      try
+        VM.resolve_filepath = (filepath) => which{ Warlock.find_asset("Assets"/filepath) || filepath }
+        VM.include( "RogueScript/Libraries" )
+        VM.launch
+        cmd_draw = VM.compile(
+          @|Warlock::Renderer.fill( Geometry::Triangle( Geometry::XY(0,0), Geometry::XY(200,0), Geometry::XY(0,200) ), Graphics::Color.BLUE )
+        )
+      catch (error:Exception)
+        println error
+      endTry
       Window( "Warlock" )
 
     method find_asset( name:String )->File?
@@ -102,6 +119,8 @@ class Warlock [essential singleton]
       Display.push_object_transform( Matrix.translate(-XY(Display.center)) )
       Renderer.fill( Box(w/4,h/4,w/2,h/2), Color.CYAN.with_alpha(0.25) )
       Display.pop_object_transform( 3 )
+
+      if (Warlock.cmd_draw) Warlock.cmd_draw()
 
       Display.end_draw
 

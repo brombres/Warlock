@@ -82,7 +82,11 @@ routine compile_rogue( platform:String, &debug, &rebuild )
     block cmd = "roguec Warlock"
       cmd .= appending( "Warlock/Platform/$.rogue"(platform) )
       if (debug) cmd .= appending( "--debug" )
-      cmd .= appending( "--libraries=Libraries/Warlock/Rogue" )
+      local libs = String[]
+      libs.add( "Libraries/Warlock/Rogue" )
+      libs.add( "Libraries/Warlock/RogueScript" )
+      libs.add( "Libraries/RogueScript/Source" )
+      cmd .= appending( "--libraries=$"(libs.join(',')) )
       cmd .= appending( "--target=C++,Warlock,SDL,Vulkan,$"(platform) )
       if (is_apple) cmd += ",ObjC"
       cmd .= appending( "--gc=manual" )
@@ -93,10 +97,17 @@ routine compile_rogue( platform:String, &debug, &rebuild )
 endRoutine
 
 routine compile_assets( platform:String )
-  local src  = Files( "Assets" )
-  src.add( "Images/**" )
-  local dest = File( "Build/macOS/Assets" )
-  src.sync_to( dest, &verbose )
+  block
+    local src  = Files( "Assets/Images/**" )
+    local dest = File( "Build/macOS/Assets/Images" )
+    src.sync_to( dest, &verbose )
+  endBlock
+
+  block
+    local src  = Files( "Libraries/RogueScript/Source/Libraries/**" )
+    local dest = File( "Build/macOS/Assets/RogueScript/Libraries" )
+    src.sync_to( dest, &verbose )
+  endBlock
 endRoutine
 
   #{

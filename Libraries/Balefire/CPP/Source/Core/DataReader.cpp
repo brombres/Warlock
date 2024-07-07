@@ -135,7 +135,6 @@ string DataReader::read_string()
   int count = read_int32x();
   string result = "";
   result.reserve( count );
-  int i = 0;
   while (--count >= 0)
   {
     int unicode = read_int32x();
