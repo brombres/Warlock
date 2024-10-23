@@ -4,11 +4,20 @@ uses Warlock
 class NativeRenderer [singleton]
   METHODS
     method register( vm:VM )
-      vm.register_type( "Warlock::Renderer", (v)=>v.object instanceOf Renderer, null,
-                        ()=>Renderer, (v)=>Renderer=v.object->(as Renderer)  )
+      #{
+      vm.register_type(
+        "Warlock::Renderer",
+        NativeTypeInfo(
+          &instance_of = (v)=>v.object instanceOf Renderer,
+          &get_singleton = ()=>Renderer,
+          &set_singleton = (v)=>Renderer=v.object->(as Renderer)
+        )
+      )
+
       vm.register_method(
         "Warlock::Renderer.fill(Geometry::Triangle,Graphics::Color)",
         ()=>Renderer.fill(VM.parameter(1)->Triangle,VM.parameter(2)->Color)
       )
+      }#
 
 endClass

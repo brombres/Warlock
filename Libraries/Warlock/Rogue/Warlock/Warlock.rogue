@@ -120,7 +120,11 @@ class Warlock [essential singleton]
       Renderer.fill( Box(w/4,h/4,w/2,h/2), Color.CYAN.with_alpha(0.25) )
       Display.pop_object_transform( 3 )
 
-      if (Warlock.cmd_draw) Warlock.cmd_draw()
+      try
+        Warlock.cmd_draw?.call()
+      catch (error:Exception)
+        println error
+      endTry
 
       Display.end_draw
 
