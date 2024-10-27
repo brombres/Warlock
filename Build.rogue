@@ -53,9 +53,9 @@ routine rogo_macos
   #local debug   = args.contains("debug") or not args.contains("release")
   local debug   = args.contains("debug")
   local rebuild = args.contains("rebuild")
-execute "cd ~/Projects/Rogue && rogo libs"
-rebuild = true
-  build( "macOS", &=debug, &=rebuild )
+  #execute "cd ~/Projects/Rogue && rogo libs"
+  #rebuild = true
+  build( "macOS", &=debug )
 endRoutine
 
 routine rogo_macos_open

@@ -1,4 +1,4 @@
-module Warlock
+library Warlock
 
 class ResourceBank<<$ResourceType>>
   PROPERTIES

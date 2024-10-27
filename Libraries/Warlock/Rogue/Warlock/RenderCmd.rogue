@@ -1,4 +1,4 @@
-module Warlock
+library Warlock
 
 enum RenderCmd
 # Every RenderCmd ID is preceded by skip_count:IntX.

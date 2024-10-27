@@ -14,21 +14,17 @@
 #include "Balefire/Core/Renderer.h"
 #include "Balefire/Core/WindowFrameworkContext.h"
 #include "Balefire/Core/WindowRenderContext.h"
+#include "Balefire/Core/EventHandler.h"
 
 namespace BALEFIRE
 {
-  typedef bool (*BeginRenderHandler)(Window* window, void* app_data, unsigned char** render_data, int* count);
-  typedef void (*EndRenderHandler)(Window* window, void* app_data);
-
   const int VERTEX_PROPERTY_COUNT = 7;
 
   struct Balefire
   {
     static Balefire* instance;
 
-    BeginRenderHandler begin_render_handler;
-    EndRenderHandler   end_render_handler;
-    void*              handler_app_data;
+    EventHandler* event_handler = nullptr;
 
     std::vector<Window*> windows;
 
@@ -42,8 +38,6 @@ namespace BALEFIRE
     virtual Window*  create_window( int index, std::string name );
     virtual bool     handle_events();
     virtual void     render();
-    virtual void     set_render_handlers( BeginRenderHandler begin_render, EndRenderHandler end_render,
-                                          void* app_data=nullptr );
   };
 };
 

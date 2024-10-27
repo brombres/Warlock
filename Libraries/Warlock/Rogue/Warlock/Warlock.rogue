@@ -1,4 +1,4 @@
-module Warlock
+library Warlock
 
 nativeHeader @|#include "WarlockInterface.h"
 
@@ -6,12 +6,13 @@ uses Geometry [export]
 uses Graphics [export]
 uses Math/Matrix
 
-uses RogueScript
-uses RogueScript/NativeLibraries
+#uses RogueScript
+#uses RogueScript/NativeLibraries
 uses NativeWarlock
 
 $include Asset
 $include Display
+$include EventType
 $include IDBank
 $include Image
 $include Material
@@ -41,6 +42,7 @@ class Warlock [essential singleton]
   METHODS
     method init
       println "Initializing Warlock"
+      #{
       NativeLibraries.register( VM )
       NativeWarlock.register( VM )
       try
@@ -53,6 +55,7 @@ class Warlock [essential singleton]
       catch (error:Exception)
         println error
       endTry
+      }#
       Window( "Warlock" )
 
     method find_asset( name:String )->File?

@@ -1,6 +1,6 @@
-module Warlock
+library Warlock
 
-class Asset<<$ExtendedType>>
+class Asset
   GLOBAL PROPERTIES
     id_bank = IDBank()
 

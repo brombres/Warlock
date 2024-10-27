@@ -1,6 +1,6 @@
-module Warlock
+library Warlock
 
-class Material : Asset<<Material>>
+class Material : Asset
   PROPERTIES
     topology                  : Topology
     primitive_restart_enabled : Logical

@@ -1,4 +1,4 @@
-module Warlock
+library Warlock
 
 enum ShaderStage [bitflags]
   VERTEX
@@ -8,7 +8,7 @@ enum ShaderStage [bitflags]
   FRAGMENT
 endEnum
 
-class Shader : Asset<<Shader>>
+class Shader : Asset
   PROPERTIES
     stage        : ShaderStage
     filename     : String

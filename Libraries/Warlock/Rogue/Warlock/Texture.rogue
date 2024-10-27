@@ -1,6 +1,6 @@
-module Warlock
+library Warlock
 
-class Texture : Asset<<Texture>>
+class Texture : Asset
   PROPERTIES
     width  : Int
     height : Int

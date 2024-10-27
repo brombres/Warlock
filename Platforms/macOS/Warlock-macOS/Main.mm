@@ -25,33 +25,36 @@ using namespace std;
 //#include <glm/vec4.hpp>
 //using namespace glm;
 
-bool begin_render_handler( Window* window, void* app_data, unsigned char** render_data, int* count )
+struct WarlockEventHandler : EventHandler
 {
-  RogueByteList* list = WarlockWarlock__begin_render__RogueInt_RogueInt_RogueInt(
-    window->index, window->width, window->height
-  );
-  if ( !list ) return false;
-  *render_data = list->as_bytes;
-  *count = (int)list->count;
-  return true;
-}
+  bool begin_render( Window* window, unsigned char** render_data, int* count )
+  {
+    RogueByteList* list = WarlockWarlock__begin_render__RogueInt_RogueInt_RogueInt(
+      window->index, window->width, window->height
+    );
+    if ( !list ) return false;
+    *render_data = list->as_bytes;
+    *count = (int)list->count;
+    return true;
+  }
 
-void end_render_handler( Window* window, void* app_data )
-{
-  WarlockWarlock__end_render__RogueInt( window->index );
-  Rogue_check_gc();
-}
+  void end_render( Window* window )
+  {
+    WarlockWarlock__end_render__RogueInt( window->index );
+    Rogue_check_gc();
+  }
+};
 
 int main(int argc, char *argv[])
 {
   Balefire balefire( new FrameworkSDLVulkan() );
-  balefire.set_render_handlers( begin_render_handler, end_render_handler );
+  WarlockEventHandler event_handler;
+  balefire.event_handler = &event_handler;
 
   RogueInterface_configure( argc, argv );
   RogueInterface_launch();
 
   while (balefire.handle_events()) balefire.render();
-
 
   SDL_Quit();
   return 0;

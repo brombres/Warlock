@@ -1,4 +1,4 @@
-module Warlock
+library Warlock
 
 class Vertex( position:XYZW, color:Color, uv:XY, data:Int32 ) [compound]
   GLOBAL METHODS

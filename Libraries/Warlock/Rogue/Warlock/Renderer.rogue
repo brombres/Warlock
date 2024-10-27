@@ -1,4 +1,4 @@
-module Warlock
+library Warlock
 
 enum PrimitiveType
   UNDEFINED,

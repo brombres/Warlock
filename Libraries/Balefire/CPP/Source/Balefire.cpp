@@ -67,15 +67,15 @@ void Balefire::render()
       if ( !window->rendering_paused )
       {
         all_paused = false;
-        if (begin_render_handler)
+        if (event_handler)
         {
           unsigned char* render_data;
           int count;
-          if (begin_render_handler(window, handler_app_data, &render_data, &count))
+          if (event_handler->begin_render(window, &render_data, &count))
           {
             any_rendered = true;
             framework->render( window, render_data, count );
-            if (end_render_handler) end_render_handler( window, handler_app_data );
+            event_handler->end_render( window );
           }
         }
       }
@@ -92,9 +92,3 @@ void Balefire::render()
   }
 }
 
-void Balefire::set_render_handlers( BeginRenderHandler begin_render, EndRenderHandler end_render, void* app_data )
-{
-  begin_render_handler = begin_render;
-  end_render_handler = end_render;
-  handler_app_data = app_data;
-}
