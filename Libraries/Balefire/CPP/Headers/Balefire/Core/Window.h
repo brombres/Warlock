@@ -6,7 +6,7 @@ namespace BALEFIRE
 {
   struct Framework;
   struct WindowFrameworkContext;
-  struct WindowRenderContext;
+  struct WindowRenderer;
 
   struct Window
   {
@@ -17,7 +17,7 @@ namespace BALEFIRE
     bool rendering_paused = false;
 
     WindowFrameworkContext* framework_context = nullptr;
-    WindowRenderContext*    render_context = nullptr;
+    WindowRenderer*    renderer = nullptr;
 
     Window( Framework* framework, int index, int width, int height ) : framework(framework),
         index(index), width(width), height(height), pixel_width(width), pixel_height(height) {}

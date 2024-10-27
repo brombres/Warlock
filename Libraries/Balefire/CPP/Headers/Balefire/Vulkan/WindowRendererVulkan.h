@@ -8,19 +8,19 @@
 
 namespace BALEFIRE
 {
-  struct WindowRenderContextVulkan : WindowRenderContext
+  struct WindowRendererVulkan : WindowRenderer
   {
     // PROPERTIES
-    RendererVulkan* renderer;
+    RendererVulkan* render_api;
     VulkanContext*  context = nullptr;
     VkSurfaceKHR    surface = nullptr;
 
     std::vector<Vertex> vertices;
 
     // CONSTRUCTORS
-    WindowRenderContextVulkan( Window* window, RendererVulkan* renderer )
-      : WindowRenderContext(window), renderer(renderer) {}
-    virtual ~WindowRenderContextVulkan();
+    WindowRendererVulkan( Window* window, RendererVulkan* render_api )
+      : WindowRenderer(window), render_api(render_api) {}
+    virtual ~WindowRendererVulkan();
 
     // METHODS
     virtual void configure();

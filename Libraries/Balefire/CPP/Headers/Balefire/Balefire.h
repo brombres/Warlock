@@ -11,9 +11,9 @@
 #include "Balefire/Core/RenderCmd.h"
 #include "Balefire/Core/Window.h"
 #include "Balefire/Core/Framework.h"
-#include "Balefire/Core/Renderer.h"
+#include "Balefire/Core/RenderAPI.h"
 #include "Balefire/Core/WindowFrameworkContext.h"
-#include "Balefire/Core/WindowRenderContext.h"
+#include "Balefire/Core/WindowRenderer.h"
 #include "Balefire/Core/EventHandler.h"
 
 namespace BALEFIRE

@@ -9,13 +9,13 @@ namespace BALEFIRE
 {
   struct Window;
 
-  struct WindowRenderContext
+  struct WindowRenderer
   {
     Window* window   = nullptr;
     bool initialized = false;
 
-    WindowRenderContext( Window* window ) : window(window) {}
-    virtual ~WindowRenderContext() {}
+    WindowRenderer( Window* window ) : window(window) {}
+    virtual ~WindowRenderer() {}
 
     virtual void configure() {}
     virtual void render( unsigned char* data, int count ) {}

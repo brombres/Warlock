@@ -32,12 +32,12 @@ class Shader : Asset
 
     method destroy [override]
       if (prepared)
-        Renderer.free_shader( this )
+        RenderAPI.free_shader( this )
         prepared = false
       endIf
 
     method prepare
       if (prepared) return
-      Renderer.define_shader( this )
+      RenderAPI.define_shader( this )
       prepared = true
 endClass

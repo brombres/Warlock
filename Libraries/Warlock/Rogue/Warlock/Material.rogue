@@ -9,7 +9,7 @@ class Material : Asset
 
   METHODS
     method init( texture:Texture )
-      local shaders = Renderer.standard_shaders
+      local shaders = RenderAPI.standard_shaders
       init( shaders//texture_vertex_shader, shaders//texture_fragment_shader )
       set_texture( texture )
 
@@ -37,7 +37,7 @@ class Material : Asset
 
     method destroy [override]
       if (prepared)
-        Renderer.free_material( this )
+        RenderAPI.free_material( this )
         prepared = false
       endIf
 
@@ -46,7 +46,7 @@ class Material : Asset
 
       (forEach in textures).prepare
       (forEach in shaders).prepare
-      Renderer.define_material( this )
+      RenderAPI.define_material( this )
       prepared = true
 
     method set_topology( @topology )

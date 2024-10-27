@@ -13,14 +13,14 @@
 		300D4FAF2C038DFB0068824B /* RogueProgram.mm in Sources */ = {isa = PBXBuildFile; fileRef = 300D4FAE2C038DFB0068824B /* RogueProgram.mm */; };
 		3019597B2BDFDF1D00D9D51B /* RenderPass.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3019597A2BDFDF1D00D9D51B /* RenderPass.cpp */; };
 		301985302B94DC6000CBECCB /* Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3019850D2B94DC6000CBECCB /* Window.cpp */; };
-		301985332B94DC6000CBECCB /* Renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 301985102B94DC6000CBECCB /* Renderer.cpp */; };
+		301985332B94DC6000CBECCB /* RenderAPI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 301985102B94DC6000CBECCB /* RenderAPI.cpp */; };
 		301985362B94DC6000CBECCB /* FrameworkSDL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 301985142B94DC6000CBECCB /* FrameworkSDL.cpp */; };
 		301985372B94DC6000CBECCB /* FrameworkSDLVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 301985152B94DC6000CBECCB /* FrameworkSDLVulkan.cpp */; };
 		301985382B94DC6000CBECCB /* VkBootstrap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 301985172B94DC6000CBECCB /* VkBootstrap.cpp */; };
 		301985392B94DC6000CBECCB /* RendererVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 301985182B94DC6000CBECCB /* RendererVulkan.cpp */; };
 		3019853B2B94DDBB00CBECCB /* Framework.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3019853A2B94DDBB00CBECCB /* Framework.cpp */; };
 		3049E6A72B94FBF4008554DD /* Balefire.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3049E6A62B94FBF4008554DD /* Balefire.cpp */; };
-		3049E6AE2B952FBE008554DD /* WindowRenderContextVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3049E6AD2B952FBE008554DD /* WindowRenderContextVulkan.cpp */; };
+		3049E6AE2B952FBE008554DD /* WindowRendererVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3049E6AD2B952FBE008554DD /* WindowRendererVulkan.cpp */; };
 		3049E6B02B953545008554DD /* WindowFrameworkContextSDL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3049E6AF2B953545008554DD /* WindowFrameworkContextSDL.cpp */; };
 		305AA2B12BAF4B5600BDAE68 /* Operation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 305AA2B02BAF4B5600BDAE68 /* Operation.cpp */; };
 		3060335E2C1A4B62002E8229 /* DataReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3060335D2C1A4B62002E8229 /* DataReader.cpp */; };
@@ -239,13 +239,13 @@
 		300D4FAE2C038DFB0068824B /* RogueProgram.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = RogueProgram.mm; path = ../../Build/macOS/Source/RogueProgram.mm; sourceTree = "<group>"; };
 		3019597A2BDFDF1D00D9D51B /* RenderPass.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RenderPass.cpp; sourceTree = "<group>"; };
 		3019850D2B94DC6000CBECCB /* Window.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Window.cpp; sourceTree = "<group>"; };
-		301985102B94DC6000CBECCB /* Renderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Renderer.cpp; sourceTree = "<group>"; };
+		301985102B94DC6000CBECCB /* RenderAPI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RenderAPI.cpp; sourceTree = "<group>"; };
 		301985142B94DC6000CBECCB /* FrameworkSDL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FrameworkSDL.cpp; sourceTree = "<group>"; };
 		301985152B94DC6000CBECCB /* FrameworkSDLVulkan.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FrameworkSDLVulkan.cpp; sourceTree = "<group>"; };
 		301985172B94DC6000CBECCB /* VkBootstrap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VkBootstrap.cpp; sourceTree = "<group>"; };
 		301985182B94DC6000CBECCB /* RendererVulkan.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RendererVulkan.cpp; sourceTree = "<group>"; };
 		3019851D2B94DC6000CBECCB /* Types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Types.h; sourceTree = "<group>"; };
-		3019851E2B94DC6000CBECCB /* Renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Renderer.h; sourceTree = "<group>"; };
+		3019851E2B94DC6000CBECCB /* RenderAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RenderAPI.h; sourceTree = "<group>"; };
 		3019851F2B94DC6000CBECCB /* Window.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Window.h; sourceTree = "<group>"; };
 		301985222B94DC6000CBECCB /* Framework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Framework.h; sourceTree = "<group>"; };
 		301985292B94DC6000CBECCB /* FrameworkSDL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FrameworkSDL.h; sourceTree = "<group>"; };
@@ -256,11 +256,11 @@
 		3019853A2B94DDBB00CBECCB /* Framework.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Framework.cpp; sourceTree = "<group>"; };
 		3049E6A62B94FBF4008554DD /* Balefire.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Balefire.cpp; sourceTree = "<group>"; };
 		3049E6A82B94FBFD008554DD /* Balefire.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Balefire.h; sourceTree = "<group>"; };
-		3049E6A92B9518C8008554DD /* WindowRenderContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WindowRenderContext.h; sourceTree = "<group>"; };
+		3049E6A92B9518C8008554DD /* WindowRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WindowRenderer.h; sourceTree = "<group>"; };
 		3049E6AA2B9518C8008554DD /* WindowFrameworkContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WindowFrameworkContext.h; sourceTree = "<group>"; };
 		3049E6AB2B9518D0008554DD /* WindowFrameworkContextSDL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WindowFrameworkContextSDL.h; sourceTree = "<group>"; };
-		3049E6AC2B9518D9008554DD /* WindowRenderContextVulkan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WindowRenderContextVulkan.h; sourceTree = "<group>"; };
-		3049E6AD2B952FBE008554DD /* WindowRenderContextVulkan.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WindowRenderContextVulkan.cpp; sourceTree = "<group>"; };
+		3049E6AC2B9518D9008554DD /* WindowRendererVulkan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WindowRendererVulkan.h; sourceTree = "<group>"; };
+		3049E6AD2B952FBE008554DD /* WindowRendererVulkan.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WindowRendererVulkan.cpp; sourceTree = "<group>"; };
 		3049E6AF2B953545008554DD /* WindowFrameworkContextSDL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WindowFrameworkContextSDL.cpp; sourceTree = "<group>"; };
 		305AA2B02BAF4B5600BDAE68 /* Operation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Operation.cpp; sourceTree = "<group>"; };
 		306033502C1A4B58002E8229 /* DataReader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DataReader.h; sourceTree = "<group>"; };
@@ -564,7 +564,7 @@
 				3060335D2C1A4B62002E8229 /* DataReader.cpp */,
 				3019853A2B94DDBB00CBECCB /* Framework.cpp */,
 				3019850D2B94DC6000CBECCB /* Window.cpp */,
-				301985102B94DC6000CBECCB /* Renderer.cpp */,
+				301985102B94DC6000CBECCB /* RenderAPI.cpp */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -583,7 +583,7 @@
 			isa = PBXGroup;
 			children = (
 				300D4F762C0240A60068824B /* VulkanContext.cpp */,
-				3049E6AD2B952FBE008554DD /* WindowRenderContextVulkan.cpp */,
+				3049E6AD2B952FBE008554DD /* WindowRendererVulkan.cpp */,
 				301985182B94DC6000CBECCB /* RendererVulkan.cpp */,
 			);
 			path = Vulkan;
@@ -616,9 +616,9 @@
 				306033502C1A4B58002E8229 /* DataReader.h */,
 				3060335C2C1A4B58002E8229 /* RenderCmd.h */,
 				3049E6AA2B9518C8008554DD /* WindowFrameworkContext.h */,
-				3049E6A92B9518C8008554DD /* WindowRenderContext.h */,
+				3049E6A92B9518C8008554DD /* WindowRenderer.h */,
 				3019851D2B94DC6000CBECCB /* Types.h */,
-				3019851E2B94DC6000CBECCB /* Renderer.h */,
+				3019851E2B94DC6000CBECCB /* RenderAPI.h */,
 				3019851F2B94DC6000CBECCB /* Window.h */,
 				301985222B94DC6000CBECCB /* Framework.h */,
 			);
@@ -641,7 +641,7 @@
 				300D4F962C0377F90068824B /* Vertex.h */,
 				300D4F8A2C0377F90068824B /* BalefireVertexDescription.h */,
 				300D4F6B2C023D490068824B /* VulkanContext.h */,
-				3049E6AC2B9518D9008554DD /* WindowRenderContextVulkan.h */,
+				3049E6AC2B9518D9008554DD /* WindowRendererVulkan.h */,
 				3019852F2B94DC6000CBECCB /* RendererVulkan.h */,
 			);
 			path = Vulkan;
@@ -1194,9 +1194,9 @@
 				3019597B2BDFDF1D00D9D51B /* RenderPass.cpp in Sources */,
 				30C7A0132BC574B5004A98B7 /* Process.cpp in Sources */,
 				30F271DF2BDD5941000AD163 /* ConfigureSurfaceSize.cpp in Sources */,
-				3049E6AE2B952FBE008554DD /* WindowRenderContextVulkan.cpp in Sources */,
+				3049E6AE2B952FBE008554DD /* WindowRendererVulkan.cpp in Sources */,
 				3049E6A72B94FBF4008554DD /* Balefire.cpp in Sources */,
-				301985332B94DC6000CBECCB /* Renderer.cpp in Sources */,
+				301985332B94DC6000CBECCB /* RenderAPI.cpp in Sources */,
 				30F271E02BDD5941000AD163 /* ConfigureSwapchain.cpp in Sources */,
 				301985392B94DC6000CBECCB /* RendererVulkan.cpp in Sources */,
 				30F271DA2BDD5941000AD163 /* ConfigureRenderPass.cpp in Sources */,

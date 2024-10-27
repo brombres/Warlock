@@ -4,7 +4,7 @@
 #include "Balefire/SDL/FrameworkSDLVulkan.h"
 #include "Balefire/SDL/WindowFrameworkContextSDL.h"
 #include "Balefire/Vulkan/RendererVulkan.h"
-#include "Balefire/Vulkan/WindowRenderContextVulkan.h"
+#include "Balefire/Vulkan/WindowRendererVulkan.h"
 using namespace BALEFIRE;
 
 #include "Vulkanize/Vulkanize.h"
@@ -13,8 +13,8 @@ using namespace VKZ;
 void FrameworkSDLVulkan::configure()
 {
   SDL_Init( SDL_INIT_VIDEO );
-  renderer = new RendererVulkan( this );
-  renderer->configure();
+  render_api = new RendererVulkan( this );
+  render_api->configure();
 }
 
 Window* FrameworkSDLVulkan::create_window( int index, std::string name )
@@ -48,15 +48,15 @@ Window* FrameworkSDLVulkan::create_window( int index, std::string name )
   //}
 
 
-  RendererVulkan* renderer = (RendererVulkan*)this->renderer;
+  RendererVulkan* render_api = (RendererVulkan*)this->render_api;
 
   Window* window = new Window( this, index, w, h );
   SDL_Vulkan_GetDrawableSize( sdl_window, &window->pixel_width, &window->pixel_height );
 
   WindowFrameworkContextSDL* framework_context = new WindowFrameworkContextSDL( window, sdl_window );
-  WindowRenderContextVulkan* render_context = new WindowRenderContextVulkan( window, renderer );
+  WindowRendererVulkan* renderer = new WindowRendererVulkan( window, render_api );
   window->framework_context = framework_context;
-  window->render_context = render_context;
+  window->renderer = renderer;
 
   if (balefire->windows.size() <= index) balefire->windows.resize( index+1 );
   balefire->windows[index] = window;
@@ -72,10 +72,10 @@ Window* FrameworkSDLVulkan::create_window( int index, std::string name )
     fprintf( stderr, "[ERROR] SDL_Vulkan_CreateSurface() failed.\n" );
   }
 
-  render_context->surface = surface;
-  render_context->configure( surface );
+  renderer->surface = surface;
+  renderer->configure( surface );
 
-  renderer->configure_window( window );
+  render_api->configure_window( window );
 
   return window;
 }

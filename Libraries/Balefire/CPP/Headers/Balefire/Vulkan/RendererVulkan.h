@@ -27,7 +27,7 @@ namespace BALEFIRE
 
 namespace BALEFIRE
 {
-  struct RendererVulkan : Renderer
+  struct RendererVulkan : RenderAPI
   {
     VKZ::Vulkanize             vulkanize;
     Framework*                 framework = nullptr;
@@ -55,6 +55,6 @@ namespace BALEFIRE
 
 #include "Balefire/Vulkan/Vertex.h"
 #include "Balefire/Vulkan/BalefireVertexDescription.h"
-#include "Balefire/Vulkan/WindowRenderContextVulkan.h"
+#include "Balefire/Vulkan/WindowRendererVulkan.h"
 
 #endif // BALEFIRE_RENDERER_VULKAN_H

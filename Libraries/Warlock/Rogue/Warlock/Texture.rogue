@@ -24,14 +24,14 @@ class Texture : Asset
 
     method destroy [override]
       if (prepared)
-        Renderer.free_texture( this )
+        RenderAPI.free_texture( this )
         prepared = false
       endIf
 
     method prepare
       if (prepared) return
       prepared = true
-      if (bitmap) Renderer.define_texture( this )
+      if (bitmap) RenderAPI.define_texture( this )
       bitmap = null
 
 endClass

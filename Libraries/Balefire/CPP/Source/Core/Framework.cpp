@@ -3,10 +3,10 @@ using namespace BALEFIRE;
 
 Framework::~Framework()
 {
-  if (renderer)
+  if (render_api)
   {
-    delete renderer;
-    renderer = nullptr;
+    delete render_api;
+    render_api = nullptr;
   }
 }
 

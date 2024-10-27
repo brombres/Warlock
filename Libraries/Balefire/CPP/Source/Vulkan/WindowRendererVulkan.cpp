@@ -1,4 +1,4 @@
-#include "Balefire/Vulkan/WindowRenderContextVulkan.h"
+#include "Balefire/Vulkan/WindowRendererVulkan.h"
 using namespace BALEFIRE;
 
 using namespace std;
@@ -7,7 +7,7 @@ using namespace std;
 #include "Vulkanize/Context.h"
 using namespace VKZ;
 
-WindowRenderContextVulkan::~WindowRenderContextVulkan()
+WindowRendererVulkan::~WindowRendererVulkan()
 {
   if (initialized)
   {
@@ -20,12 +20,12 @@ WindowRenderContextVulkan::~WindowRenderContextVulkan()
   }
 }
 
-void WindowRenderContextVulkan::configure()
+void WindowRendererVulkan::configure()
 {
   // noAction
 }
 
-void WindowRenderContextVulkan::configure( VkSurfaceKHR surface )
+void WindowRendererVulkan::configure( VkSurfaceKHR surface )
 {
   context = new VulkanContext( window, surface );
 
@@ -38,7 +38,7 @@ void WindowRenderContextVulkan::configure( VkSurfaceKHR surface )
 	initialized = true;
 }
 
-void WindowRenderContextVulkan::render( unsigned char* data, int count )
+void WindowRendererVulkan::render( unsigned char* data, int count )
 {
   if ( !initialized ) return;
 
@@ -237,7 +237,7 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
         default:
         {
           BALEFIRE_LOG_ERROR_WITH_INT(
-            "Internal error in WindowRenderContextVulkan::render() - command code %d is unsupported (pass 1).",
+            "Internal error in WindowRendererVulkan::render() - command code %d is unsupported (pass 1).",
             cmd
           );
           error = true;
@@ -318,7 +318,7 @@ void WindowRenderContextVulkan::render( unsigned char* data, int count )
           default:
           {
             BALEFIRE_LOG_ERROR_WITH_INT(
-              "Internal error in WindowRenderContextVulkan::render() - command code %d is unsupported (pass 2).",
+              "Internal error in WindowRendererVulkan::render() - command code %d is unsupported (pass 2).",
               cmd
             );
             error = true;
