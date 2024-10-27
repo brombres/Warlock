@@ -18,7 +18,7 @@ $include Image
 $include Material
 $include ProjectionMode
 $include RenderCmd
-$include RenderAPI
+$include Renderer
 $include ResourceBank
 $include Shader
 $include Texture
@@ -50,7 +50,7 @@ class Warlock [essential singleton]
         VM.include( "RogueScript/Libraries" )
         VM.launch
         cmd_draw = VM.compile(
-          @|Warlock::RenderAPI.fill( Geometry::Triangle( Geometry::XY(0,0), Geometry::XY(200,0), Geometry::XY(0,200) ), Graphics::Color.BLUE )
+          @|Warlock::Renderer.fill( Geometry::Triangle( Geometry::XY(0,0), Geometry::XY(200,0), Geometry::XY(0,200) ), Graphics::Color.BLUE )
         )
       catch (error:Exception)
         println error
@@ -113,14 +113,14 @@ class Warlock [essential singleton]
       local alpha = Warlock.alpha
       alpha.draw( Box(Display.center - alpha.size/2, alpha.size) )
 
-      RenderAPI.draw( triangle, Color.WHITE )
-      RenderAPI.fill( triangle, Color.YELLOW.with_alpha(0.25) )
-      RenderAPI.draw( triangle, Color.RED.with_alpha(0.5) );
+      Renderer.draw( triangle, Color.WHITE )
+      Renderer.fill( triangle, Color.YELLOW.with_alpha(0.25) )
+      Renderer.draw( triangle, Color.RED.with_alpha(0.5) );
 
       Display.push_object_transform( Matrix.translate(XY(Display.center)) )
       Display.push_object_transform( Matrix.rotate_y(Degrees(45)) )
       Display.push_object_transform( Matrix.translate(-XY(Display.center)) )
-      RenderAPI.fill( Box(w/4,h/4,w/2,h/2), Color.CYAN.with_alpha(0.25) )
+      Renderer.fill( Box(w/4,h/4,w/2,h/2), Color.CYAN.with_alpha(0.25) )
       Display.pop_object_transform( 3 )
 
       try
@@ -131,9 +131,9 @@ class Warlock [essential singleton]
 
       Display.end_draw
 
-      return RenderAPI.finalized_render_data
+      return Renderer.finalized_render_data
 
     method end_render( window_id:Int ) [api]
-      RenderAPI.reset
+      Renderer.reset
 
 endClass

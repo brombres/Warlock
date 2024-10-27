@@ -6,17 +6,17 @@ class NativeRenderer [singleton]
     method register( vm:VM )
       #{
       vm.register_type(
-        "Warlock::RenderAPI",
+        "Warlock::Renderer",
         NativeTypeInfo(
-          &instance_of = (v)=>v.object instanceOf RenderAPI,
-          &get_singleton = ()=>RenderAPI,
-          &set_singleton = (v)=>RenderAPI=v.object->(as RenderAPI)
+          &instance_of = (v)=>v.object instanceOf Renderer,
+          &get_singleton = ()=>Renderer,
+          &set_singleton = (v)=>Renderer=v.object->(as Renderer)
         )
       )
 
       vm.register_method(
-        "Warlock::RenderAPI.fill(Geometry::Triangle,Graphics::Color)",
-        ()=>RenderAPI.fill(VM.parameter(1)->Triangle,VM.parameter(2)->Color)
+        "Warlock::Renderer.fill(Geometry::Triangle,Graphics::Color)",
+        ()=>Renderer.fill(VM.parameter(1)->Triangle,VM.parameter(2)->Color)
       )
       }#
 

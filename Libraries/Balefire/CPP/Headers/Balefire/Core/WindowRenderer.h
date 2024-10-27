@@ -18,6 +18,9 @@ namespace BALEFIRE
     virtual ~WindowRenderer() {}
 
     virtual void configure() {}
+
+    virtual void draw_line( double x1, double y1, double x2, double y2, Color color ) = 0;
+
     virtual void render( unsigned char* data, int count ) {}
   };
 };

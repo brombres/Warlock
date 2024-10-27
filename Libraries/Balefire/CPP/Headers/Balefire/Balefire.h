@@ -6,6 +6,8 @@
 #include <vector>
 #include <string>
 
+#include "Balefire/Core/Types.h"
+#include "Balefire/Core/Color.h"
 #include "Balefire/Core/TextureLayer.h"
 #include "Balefire/Core/DataReader.h"
 #include "Balefire/Core/RenderCmd.h"

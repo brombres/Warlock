@@ -6,7 +6,7 @@ enum PrimitiveType
   TRIANGLES
 endEnum
 
-class RenderAPI [singleton]
+class Renderer [singleton]
   DEFINITIONS
     VERSION = 1
 
@@ -98,7 +98,7 @@ class RenderAPI [singleton]
       cmd_data.write_colors( texture.bitmap.pixels )
       .end_command
 
-    method draw( triangle:Triangle, color:Color, current_material=RenderAPI.standard_materials//color_line_material )
+    method draw( triangle:Triangle, color:Color, current_material=Renderer.standard_materials//color_line_material )
       primitive_type = PrimitiveType.LINES
       add_vertex( triangle.a, color )
       add_vertex( triangle.b, color )
@@ -107,7 +107,7 @@ class RenderAPI [singleton]
       add_vertex( triangle.c, color )
       add_vertex( triangle.a, color )
 
-    method fill( box:Box, color:Color, current_material=RenderAPI.standard_materials//color_triangle_material )
+    method fill( box:Box, color:Color, current_material=Renderer.standard_materials//color_triangle_material )
       local tl = box.position
       local tr = box.top_right
       local br = box.bottom_right
@@ -115,7 +115,7 @@ class RenderAPI [singleton]
       fill( Triangle(tl,tr,br), color, current_material )
       fill( Triangle(br,bl,tl), color, current_material )
 
-    method fill( triangle:Triangle, color:Color, current_material=RenderAPI.standard_materials//color_triangle_material )
+    method fill( triangle:Triangle, color:Color, current_material=Renderer.standard_materials//color_triangle_material )
       primitive_type = PrimitiveType.TRIANGLES
       add_vertex( triangle.a, color )
       add_vertex( triangle.b, color )

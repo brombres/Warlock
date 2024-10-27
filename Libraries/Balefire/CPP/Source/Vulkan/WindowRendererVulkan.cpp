@@ -38,6 +38,15 @@ void WindowRendererVulkan::configure( VkSurfaceKHR surface )
 	initialized = true;
 }
 
+void WindowRendererVulkan::draw_line( double x1, double y1, double x2, double y2, Color color )
+{
+  vertices.reserve( vertices.size() + 2 );
+}
+
+void WindowRendererVulkan::flush()
+{
+}
+
 void WindowRendererVulkan::render( unsigned char* data, int count )
 {
   if ( !initialized ) return;

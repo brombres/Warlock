@@ -24,13 +24,13 @@ class Image
       local br = bounds.bottom_right
       local uv1 = uv.position
       local uv2 = uv.bottom_right
-      RenderAPI.fill(
+      Renderer.fill(
         Triangle( tl, XY(br.x,tl.y), br ),
         Color.WHITE,
         material,
         Triangle( uv1, XY(uv2.x,uv1.y), uv2 )
       )
-      RenderAPI.fill(
+      Renderer.fill(
         Triangle( tl, br, XY(tl.x,br.y) ),
         Color.WHITE,
         material,

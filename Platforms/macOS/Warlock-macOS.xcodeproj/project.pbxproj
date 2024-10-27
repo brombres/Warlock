@@ -254,6 +254,29 @@
 		3019852E2B94DC6000CBECCB /* VkBootstrapDispatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VkBootstrapDispatch.h; sourceTree = "<group>"; };
 		3019852F2B94DC6000CBECCB /* RendererVulkan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RendererVulkan.h; sourceTree = "<group>"; };
 		3019853A2B94DDBB00CBECCB /* Framework.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Framework.cpp; sourceTree = "<group>"; };
+		30374CF92CCF01EE00B23B14 /* common.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = common.hpp; path = /Users/abe/Projects/Warlock/Libraries/glm/glm/common.hpp; sourceTree = "<absolute>"; };
+		30374CFA2CCF01EE00B23B14 /* exponential.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = exponential.hpp; path = /Users/abe/Projects/Warlock/Libraries/glm/glm/exponential.hpp; sourceTree = "<absolute>"; };
+		30374CFB2CCF01EE00B23B14 /* ext.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ext.hpp; path = /Users/abe/Projects/Warlock/Libraries/glm/glm/ext.hpp; sourceTree = "<absolute>"; };
+		30374CFC2CCF01EE00B23B14 /* fwd.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = fwd.hpp; path = /Users/abe/Projects/Warlock/Libraries/glm/glm/fwd.hpp; sourceTree = "<absolute>"; };
+		30374CFD2CCF01EE00B23B14 /* geometric.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = geometric.hpp; path = /Users/abe/Projects/Warlock/Libraries/glm/glm/geometric.hpp; sourceTree = "<absolute>"; };
+		30374CFE2CCF01EE00B23B14 /* glm.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = glm.hpp; path = /Users/abe/Projects/Warlock/Libraries/glm/glm/glm.hpp; sourceTree = "<absolute>"; };
+		30374CFF2CCF01EE00B23B14 /* integer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = integer.hpp; path = /Users/abe/Projects/Warlock/Libraries/glm/glm/integer.hpp; sourceTree = "<absolute>"; };
+		30374D002CCF01EE00B23B14 /* mat2x2.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = mat2x2.hpp; path = /Users/abe/Projects/Warlock/Libraries/glm/glm/mat2x2.hpp; sourceTree = "<absolute>"; };
+		30374D012CCF01EE00B23B14 /* mat2x3.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = mat2x3.hpp; path = /Users/abe/Projects/Warlock/Libraries/glm/glm/mat2x3.hpp; sourceTree = "<absolute>"; };
+		30374D022CCF01EE00B23B14 /* mat2x4.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = mat2x4.hpp; path = /Users/abe/Projects/Warlock/Libraries/glm/glm/mat2x4.hpp; sourceTree = "<absolute>"; };
+		30374D032CCF01EE00B23B14 /* mat3x2.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = mat3x2.hpp; path = /Users/abe/Projects/Warlock/Libraries/glm/glm/mat3x2.hpp; sourceTree = "<absolute>"; };
+		30374D042CCF01EE00B23B14 /* mat3x3.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = mat3x3.hpp; path = /Users/abe/Projects/Warlock/Libraries/glm/glm/mat3x3.hpp; sourceTree = "<absolute>"; };
+		30374D052CCF01EE00B23B14 /* mat3x4.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = mat3x4.hpp; path = /Users/abe/Projects/Warlock/Libraries/glm/glm/mat3x4.hpp; sourceTree = "<absolute>"; };
+		30374D062CCF01EE00B23B14 /* mat4x2.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = mat4x2.hpp; path = /Users/abe/Projects/Warlock/Libraries/glm/glm/mat4x2.hpp; sourceTree = "<absolute>"; };
+		30374D072CCF01EE00B23B14 /* mat4x3.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = mat4x3.hpp; path = /Users/abe/Projects/Warlock/Libraries/glm/glm/mat4x3.hpp; sourceTree = "<absolute>"; };
+		30374D082CCF01EE00B23B14 /* mat4x4.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = mat4x4.hpp; path = /Users/abe/Projects/Warlock/Libraries/glm/glm/mat4x4.hpp; sourceTree = "<absolute>"; };
+		30374D092CCF01EE00B23B14 /* matrix.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = matrix.hpp; path = /Users/abe/Projects/Warlock/Libraries/glm/glm/matrix.hpp; sourceTree = "<absolute>"; };
+		30374D0A2CCF01EE00B23B14 /* packing.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = packing.hpp; path = /Users/abe/Projects/Warlock/Libraries/glm/glm/packing.hpp; sourceTree = "<absolute>"; };
+		30374D0B2CCF01EE00B23B14 /* trigonometric.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = trigonometric.hpp; path = /Users/abe/Projects/Warlock/Libraries/glm/glm/trigonometric.hpp; sourceTree = "<absolute>"; };
+		30374D0C2CCF01EE00B23B14 /* vec2.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = vec2.hpp; path = /Users/abe/Projects/Warlock/Libraries/glm/glm/vec2.hpp; sourceTree = "<absolute>"; };
+		30374D0D2CCF01EE00B23B14 /* vec3.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = vec3.hpp; path = /Users/abe/Projects/Warlock/Libraries/glm/glm/vec3.hpp; sourceTree = "<absolute>"; };
+		30374D0E2CCF01EE00B23B14 /* vec4.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = vec4.hpp; path = /Users/abe/Projects/Warlock/Libraries/glm/glm/vec4.hpp; sourceTree = "<absolute>"; };
+		30374D0F2CCF01EE00B23B14 /* vector_relational.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = vector_relational.hpp; path = /Users/abe/Projects/Warlock/Libraries/glm/glm/vector_relational.hpp; sourceTree = "<absolute>"; };
 		3049E6A62B94FBF4008554DD /* Balefire.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Balefire.cpp; sourceTree = "<group>"; };
 		3049E6A82B94FBFD008554DD /* Balefire.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Balefire.h; sourceTree = "<group>"; };
 		3049E6A92B9518C8008554DD /* WindowRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WindowRenderer.h; sourceTree = "<group>"; };
@@ -647,11 +670,42 @@
 			path = Vulkan;
 			sourceTree = "<group>";
 		};
+		30374D102CCF01F300B23B14 /* glm */ = {
+			isa = PBXGroup;
+			children = (
+				30374CF92CCF01EE00B23B14 /* common.hpp */,
+				30374CFA2CCF01EE00B23B14 /* exponential.hpp */,
+				30374CFB2CCF01EE00B23B14 /* ext.hpp */,
+				30374CFC2CCF01EE00B23B14 /* fwd.hpp */,
+				30374CFD2CCF01EE00B23B14 /* geometric.hpp */,
+				30374CFE2CCF01EE00B23B14 /* glm.hpp */,
+				30374CFF2CCF01EE00B23B14 /* integer.hpp */,
+				30374D002CCF01EE00B23B14 /* mat2x2.hpp */,
+				30374D012CCF01EE00B23B14 /* mat2x3.hpp */,
+				30374D022CCF01EE00B23B14 /* mat2x4.hpp */,
+				30374D032CCF01EE00B23B14 /* mat3x2.hpp */,
+				30374D042CCF01EE00B23B14 /* mat3x3.hpp */,
+				30374D052CCF01EE00B23B14 /* mat3x4.hpp */,
+				30374D062CCF01EE00B23B14 /* mat4x2.hpp */,
+				30374D072CCF01EE00B23B14 /* mat4x3.hpp */,
+				30374D082CCF01EE00B23B14 /* mat4x4.hpp */,
+				30374D092CCF01EE00B23B14 /* matrix.hpp */,
+				30374D0A2CCF01EE00B23B14 /* packing.hpp */,
+				30374D0B2CCF01EE00B23B14 /* trigonometric.hpp */,
+				30374D0C2CCF01EE00B23B14 /* vec2.hpp */,
+				30374D0D2CCF01EE00B23B14 /* vec3.hpp */,
+				30374D0E2CCF01EE00B23B14 /* vec4.hpp */,
+				30374D0F2CCF01EE00B23B14 /* vector_relational.hpp */,
+			);
+			name = glm;
+			sourceTree = "<group>";
+		};
 		306912C32B5E7D7400B14F73 = {
 			isa = PBXGroup;
 			children = (
 				30CB68C22BF54994008A95B7 /* Rogue */,
 				300C888E2BC430B200FFBB85 /* glslang */,
+				30374D102CCF01F300B23B14 /* glm */,
 				3019850A2B94DC3700CBECCB /* Balefire */,
 				306913872B5EAF0F00B14F73 /* Vulkan */,
 				307706202BA8969500122E50 /* Vulkanize */,
