@@ -1,4 +1,4 @@
-#include "Balefire/Vulkan/RenderAPIVulkan.h"
+#include "Balefire/Vulkan/GraphicsAPIVulkan.h"
 using namespace BALEFIRE;
 using namespace VKZ;
 

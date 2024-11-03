@@ -8,13 +8,13 @@
 namespace BALEFIRE
 {
   struct Balefire;
-  struct RenderAPI;
+  struct GraphicsAPI;
   struct Window;
 
   struct Framework
   {
     Balefire* balefire = nullptr;
-    RenderAPI* render_api = nullptr;
+    GraphicsAPI* render_api = nullptr;
 
     virtual ~Framework();
     virtual void     configure();

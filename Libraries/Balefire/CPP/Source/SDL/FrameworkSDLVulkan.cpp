@@ -3,7 +3,7 @@
 #include "Balefire/Balefire.h"
 #include "Balefire/SDL/FrameworkSDLVulkan.h"
 #include "Balefire/SDL/WindowFrameworkContextSDL.h"
-#include "Balefire/Vulkan/RenderAPIVulkan.h"
+#include "Balefire/Vulkan/GraphicsAPIVulkan.h"
 #include "Balefire/Vulkan/WindowRendererVulkan.h"
 using namespace BALEFIRE;
 
@@ -13,7 +13,7 @@ using namespace VKZ;
 void FrameworkSDLVulkan::configure()
 {
   SDL_Init( SDL_INIT_VIDEO );
-  render_api = new RenderAPIVulkan( this );
+  render_api = new GraphicsAPIVulkan( this );
   render_api->configure();
 }
 
@@ -48,7 +48,7 @@ Window* FrameworkSDLVulkan::create_window( int index, std::string name )
   //}
 
 
-  RenderAPIVulkan* render_api = (RenderAPIVulkan*)this->render_api;
+  GraphicsAPIVulkan* render_api = (GraphicsAPIVulkan*)this->render_api;
 
   Window* window = new Window( this, index, w, h );
   SDL_Vulkan_GetDrawableSize( sdl_window, &window->pixel_width, &window->pixel_height );

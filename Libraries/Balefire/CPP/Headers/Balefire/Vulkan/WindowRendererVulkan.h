@@ -5,19 +5,19 @@
 
 #include <vector>
 
-#include "Balefire/Vulkan/RenderAPIVulkan.h"
+#include "Balefire/Vulkan/GraphicsAPIVulkan.h"
 
 namespace BALEFIRE
 {
   struct WindowRendererVulkan : WindowRenderer
   {
     // PROPERTIES
-    RenderAPIVulkan* render_api;
+    GraphicsAPIVulkan* render_api;
     VulkanContext*  context = nullptr;
     VkSurfaceKHR    surface = nullptr;
 
     // CONSTRUCTORS
-    WindowRendererVulkan( Window* window, RenderAPIVulkan* render_api )
+    WindowRendererVulkan( Window* window, GraphicsAPIVulkan* render_api )
       : WindowRenderer(window), render_api(render_api) {}
     virtual ~WindowRendererVulkan();
 

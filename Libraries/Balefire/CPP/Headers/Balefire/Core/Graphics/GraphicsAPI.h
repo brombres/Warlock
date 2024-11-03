@@ -9,9 +9,9 @@ namespace BALEFIRE
 {
   struct Window;
 
-  struct RenderAPI
+  struct GraphicsAPI
   {
-    virtual ~RenderAPI(){}
+    virtual ~GraphicsAPI(){}
     virtual void configure() {}
     virtual void configure_window( Window* window ) {}
   };
