@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Balefire/Vulkan/RendererVulkan.h"
+#include "Balefire/Vulkan/RenderAPIVulkan.h"
 
 namespace BALEFIRE
 {

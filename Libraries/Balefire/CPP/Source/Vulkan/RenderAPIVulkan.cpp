@@ -1,5 +1,5 @@
 #include "Balefire/Core/Window.h"
-#include "Balefire/Vulkan/RendererVulkan.h"
+#include "Balefire/Vulkan/RenderAPIVulkan.h"
 #include "Balefire/Vulkan/WindowRendererVulkan.h"
 using namespace BALEFIRE;
 
@@ -9,7 +9,7 @@ using namespace VKZ;
 #include <vector>
 using namespace std;
 
-RendererVulkan::~RendererVulkan()
+RenderAPIVulkan::~RenderAPIVulkan()
 {
   if (configured)
   {
@@ -17,7 +17,7 @@ RendererVulkan::~RendererVulkan()
   }
 }
 
-void RendererVulkan::configure()
+void RenderAPIVulkan::configure()
 {
   vulkanize
     .set_app_name( "Warlock" )
@@ -27,13 +27,13 @@ void RendererVulkan::configure()
   configured = true;
 }
 
-void RendererVulkan::configure_window( Window* window )
+void RenderAPIVulkan::configure_window( Window* window )
 {
   window->renderer->configure();
 }
 
 // https://www.reddit.com/r/vulkan/comments/zxgst4/comment/j29a1kl/?utm_source=share&utm_medium=web2x&context=3
-const char* RendererVulkan::vkResult_to_c_string( VkResult result )
+const char* RenderAPIVulkan::vkResult_to_c_string( VkResult result )
 {
 	switch (result)
   {

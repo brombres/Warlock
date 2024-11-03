@@ -78,8 +78,8 @@
   #define BALEFIRE_LOG(...)       __android_log_print( ANDROID_LOG_INFO,  "Rogue", __VA_ARGS__ )
   #define BALEFIRE_LOG_ERROR(...) __android_log_print( ANDROID_LOG_ERROR, "Rogue", __VA_ARGS__ )
 #else
-  #define BALEFIRE_LOG(...)       printf( __VA_ARGS__ )
-  #define BALEFIRE_LOG_ERROR(...) printf( __VA_ARGS__ )
+  #define BALEFIRE_LOG(...)       fprintf(stdout, __VA_ARGS__);
+  #define BALEFIRE_LOG_ERROR(...) { fprintf(stderr, "[Balefire] "); fprintf(stderr, __VA_ARGS__); fprintf(stderr,"\n"); }
 #endif
 
 //------------------------------------------------------------------------------

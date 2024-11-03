@@ -1,6 +1,7 @@
 #include "Balefire/Vulkan/WindowRendererVulkan.h"
 using namespace BALEFIRE;
 
+using namespace glm;
 using namespace std;
 
 #include "Vulkanize/Vulkanize.h"
@@ -53,6 +54,8 @@ void WindowRendererVulkan::render( unsigned char* data, int count )
 
   if (context->execute("render.begin"))
   {
+    on_begin_render();
+
     DataReader reader( data, count );
 
     reader.read_int32();  // version
@@ -136,7 +139,7 @@ void WindowRendererVulkan::render( unsigned char* data, int count )
 
           if ( !image->create(context, pixels, width, height) )
           {
-            BALEFIRE_LOG_ERROR_WITH_INT( "[Balefire] Error creating texture %d.", id );
+            BALEFIRE_LOG_ERROR( "[Balefire] Error creating texture %d.", id );
           }
 
           break;
@@ -245,7 +248,7 @@ void WindowRendererVulkan::render( unsigned char* data, int count )
 
         default:
         {
-          BALEFIRE_LOG_ERROR_WITH_INT(
+          BALEFIRE_LOG_ERROR(
             "Internal error in WindowRendererVulkan::render() - command code %d is unsupported (pass 1).",
             cmd
           );
@@ -326,7 +329,7 @@ void WindowRendererVulkan::render( unsigned char* data, int count )
 
           default:
           {
-            BALEFIRE_LOG_ERROR_WITH_INT(
+            BALEFIRE_LOG_ERROR(
               "Internal error in WindowRendererVulkan::render() - command code %d is unsupported (pass 2).",
               cmd
             );
@@ -336,6 +339,8 @@ void WindowRendererVulkan::render( unsigned char* data, int count )
         }
       }
     }
+
+    on_end_render();
 
     context->execute( "render.end" );
   }

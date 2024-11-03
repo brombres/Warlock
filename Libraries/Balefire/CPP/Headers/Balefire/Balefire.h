@@ -5,8 +5,14 @@
 
 #include <vector>
 #include <string>
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
 
 #include "Balefire/Core/Types.h"
+#include "Balefire/Core/RefCounted.h"
+#include "Balefire/Core/XYZ.h"
+#include "Balefire/Core/Matrix.h"
+#include "Balefire/Core/Vertex.h"
 #include "Balefire/Core/Color.h"
 #include "Balefire/Core/TextureLayer.h"
 #include "Balefire/Core/DataReader.h"
@@ -42,9 +48,6 @@ namespace BALEFIRE
     virtual void     render();
   };
 };
-
-#define BALEFIRE_LOG_ERROR( message ) \
-  fprintf( stderr, "[Balefire] %s\n", message );
 
 #define BALEFIRE_LOG_ERROR_WITH_INT( message, value ) \
   {                                                   \
