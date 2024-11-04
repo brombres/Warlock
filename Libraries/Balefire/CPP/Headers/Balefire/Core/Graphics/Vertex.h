@@ -8,7 +8,7 @@ namespace BALEFIRE
   {
     struct { float x, y, z, w; } position;
     UInt32 color;
-    struct { float u, v; }    uv;
+    struct { float u, v; } uv;
     UInt32 data;
 
     Vertex( float x, float y, float z, float w, UInt32 color ) : color(color)

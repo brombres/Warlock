@@ -25,7 +25,6 @@ namespace BALEFIRE
     virtual void configure();
     virtual void configure( VkSurfaceKHR surface );
 
-    virtual void draw_line( double x1, double y1, double x2, double y2, Color color );
     virtual void flush();
 
     virtual void render( unsigned char* data, int count );

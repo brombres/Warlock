@@ -17,7 +17,7 @@ $include IDBank
 $include Image
 $include Material
 $include ProjectionMode
-$include RenderCmd
+$include OldRenderCmd
 $include Renderer
 $include ResourceBank
 $include Shader

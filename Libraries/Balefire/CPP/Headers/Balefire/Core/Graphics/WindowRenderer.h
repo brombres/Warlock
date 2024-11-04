@@ -7,6 +7,11 @@
 
 namespace BALEFIRE
 {
+  enum class PrimitiveType {
+    NONE,
+    LINES
+  };
+
   struct Window;
 
   struct WindowRenderer
@@ -15,8 +20,12 @@ namespace BALEFIRE
     Window* window   = nullptr;
     bool initialized = false;
 
+    std::vector<Vertex>    old_vertices;
+
     std::vector<Vertex>    vertices;
     std::vector<RenderCmd> render_commands;
+    PrimitiveType          primitive_type = PrimitiveType::NONE;
+    int                    primitive_count = 0;
 
     glm::mat4x4              projection_transform;
     glm::mat4x4              transform;
@@ -37,14 +46,16 @@ namespace BALEFIRE
     // METHODS
     virtual void configure() {}
 
-    virtual void draw_line( double x1, double y1, double x2, double y2, Color color ) = 0;
+    virtual void draw_line( XY a, XY b, Color color );
 
-    virtual void flush() {}
+    virtual void flush();
 
     virtual void on_begin_render();
     virtual void on_end_render() {}
 
     virtual void render( unsigned char* data, int count ) {}
+
+    virtual void set_primitive_type( PrimitiveType new_primitive_type );
   };
 };
 

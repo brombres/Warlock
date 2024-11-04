@@ -39,11 +39,6 @@ void WindowRendererVulkan::configure( VkSurfaceKHR surface )
 	initialized = true;
 }
 
-void WindowRendererVulkan::draw_line( double x1, double y1, double x2, double y2, Color color )
-{
-  vertices.reserve( vertices.size() + 2 );
-}
-
 void WindowRendererVulkan::flush()
 {
 }
@@ -61,8 +56,8 @@ void WindowRendererVulkan::render( unsigned char* data, int count )
     reader.read_int32();  // version
 
     int total_vertex_count = reader.read_int32();
-    vertices.clear();
-    vertices.reserve( total_vertex_count );
+    old_vertices.clear();
+    old_vertices.reserve( total_vertex_count );
 
     bool error = false;
 
@@ -71,12 +66,12 @@ void WindowRendererVulkan::render( unsigned char* data, int count )
     while ( !error )
     {
       reader.read_int32x(); // skip count
-      int cmd = reader.read_int32x();
-      if (cmd == RenderCmd::END_DRAWING) break;
+      OldRenderCmd cmd = (OldRenderCmd)reader.read_int32x();
+      if (cmd == OldRenderCmd::END_DRAWING) break;
 
       switch (cmd)
       {
-        case RenderCmd::DRAW_LINES:
+        case OldRenderCmd::DRAW_LINES:
         {
           reader.read_int32x(); // skip material ID
           int vertex_count = reader.read_int32x() * 2;
@@ -87,12 +82,12 @@ void WindowRendererVulkan::render( unsigned char* data, int count )
             float z = reader.read_real32();
             float w = reader.read_real32();
             int   color = reader.read_int32();
-            vertices.push_back( Vertex(x,y,z,w,color) );
+            old_vertices.push_back( Vertex(x,y,z,w,color) );
           }
           break;
         }
 
-        case RenderCmd::DRAW_TRIANGLES:
+        case OldRenderCmd::DRAW_TRIANGLES:
         {
           reader.read_int32x(); // skip material ID
           int vertex_count = reader.read_int32x() * 3;
@@ -105,12 +100,12 @@ void WindowRendererVulkan::render( unsigned char* data, int count )
             int   color = reader.read_int32();
             float u = reader.read_real32();
             float v = reader.read_real32();
-            vertices.push_back( Vertex(x,y,z,w,color,u,v) );
+            old_vertices.push_back( Vertex(x,y,z,w,color,u,v) );
           }
           break;
         }
 
-        case RenderCmd::DEFINE_TEXTURE:
+        case OldRenderCmd::DEFINE_TEXTURE:
         {
           int  id = reader.read_int32x();
           int  width = reader.read_int32x();
@@ -145,7 +140,7 @@ void WindowRendererVulkan::render( unsigned char* data, int count )
           break;
         };
 
-        case RenderCmd::FREE_TEXTURE:
+        case OldRenderCmd::FREE_TEXTURE:
         {
           int id = reader.read_int32x();
           if (id > 0 && id < context->textures.size())
@@ -156,7 +151,7 @@ void WindowRendererVulkan::render( unsigned char* data, int count )
           break;
         }
 
-        case DEFINE_SHADER:
+        case OldRenderCmd::DEFINE_SHADER:
         {
           int id = reader.read_int32x();
           if (id >= context->shaders.size()) context->shaders.resize( id + 1 );
@@ -191,7 +186,7 @@ void WindowRendererVulkan::render( unsigned char* data, int count )
           break;
         }
 
-        case FREE_SHADER:
+        case OldRenderCmd::FREE_SHADER:
         {
           int id = reader.read_int32x();
           if (id > 0 && id < context->shaders.size())
@@ -201,7 +196,7 @@ void WindowRendererVulkan::render( unsigned char* data, int count )
           break;
         }
 
-        case DEFINE_MATERIAL:
+        case OldRenderCmd::DEFINE_MATERIAL:
         {
           int id = reader.read_int32x();
           auto topology = (VkPrimitiveTopology)reader.read_int32x();
@@ -236,7 +231,7 @@ void WindowRendererVulkan::render( unsigned char* data, int count )
           break;
         }
 
-        case FREE_MATERIAL:
+        case OldRenderCmd::FREE_MATERIAL:
         {
           int id = reader.read_int32x();
           if (id > 0 && id < context->materials.size())
@@ -262,7 +257,7 @@ void WindowRendererVulkan::render( unsigned char* data, int count )
     {
       // Convert color ARGB -> ABGR
       int remaining = total_vertex_count;
-      Vertex* vertex = vertices.data();
+      Vertex* vertex = old_vertices.data();
       while (--remaining >=0)
       {
         uint32_t argb = vertex->color;
@@ -272,7 +267,7 @@ void WindowRendererVulkan::render( unsigned char* data, int count )
 
       // Copy vertex data to staging buffer to vertex buffer
       context->staging_buffer->clear();
-      context->staging_buffer->copy_from( vertices.data(), (uint32_t)vertices.size() );
+      context->staging_buffer->copy_from( old_vertices.data(), (uint32_t)old_vertices.size() );
       context->vertex_buffer->clear();
       context->vertex_buffer->copy_from( *context->staging_buffer );
       context->vertex_buffer->cmd_bind( context->cmd );
@@ -284,12 +279,12 @@ void WindowRendererVulkan::render( unsigned char* data, int count )
       {
         int skip_count = reader.read_int32x();
         int skip_pos   = reader.position + skip_count;
-        int cmd = reader.read_int32x();
-        if (cmd == RenderCmd::END_DRAWING) break;
+        OldRenderCmd cmd = (OldRenderCmd)reader.read_int32x();
+        if (cmd == OldRenderCmd::END_DRAWING) break;
 
         switch (cmd)
         {
-          case RenderCmd::DRAW_LINES:
+          case OldRenderCmd::DRAW_LINES:
           {
             int material_id = reader.read_int32x();
             int vertex_count = reader.read_int32x() * 2;
@@ -303,7 +298,7 @@ void WindowRendererVulkan::render( unsigned char* data, int count )
             break;
           }
 
-          case RenderCmd::DRAW_TRIANGLES:
+          case OldRenderCmd::DRAW_TRIANGLES:
           {
             int material_id = reader.read_int32x();
             int vertex_count = reader.read_int32x() * 3;
@@ -318,12 +313,12 @@ void WindowRendererVulkan::render( unsigned char* data, int count )
             break;
           }
 
-          case RenderCmd::DEFINE_TEXTURE:
-          case RenderCmd::FREE_TEXTURE:
-          case RenderCmd::DEFINE_SHADER:
-          case RenderCmd::FREE_SHADER:
-          case RenderCmd::DEFINE_MATERIAL:
-          case RenderCmd::FREE_MATERIAL:
+          case OldRenderCmd::DEFINE_TEXTURE:
+          case OldRenderCmd::FREE_TEXTURE:
+          case OldRenderCmd::DEFINE_SHADER:
+          case OldRenderCmd::FREE_SHADER:
+          case OldRenderCmd::DEFINE_MATERIAL:
+          case OldRenderCmd::FREE_MATERIAL:
             reader.seek( skip_pos );
             break;
 

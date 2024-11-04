@@ -362,7 +362,7 @@
 		308847C12CD8075000A34A3E /* XYZ.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XYZ.h; sourceTree = "<group>"; };
 		308847C32CD8075000A34A3E /* Color.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Color.h; sourceTree = "<group>"; };
 		308847C42CD8075000A34A3E /* GraphicsAPI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GraphicsAPI.h; sourceTree = "<group>"; };
-		308847C52CD8075000A34A3E /* RenderCmd.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RenderCmd.h; sourceTree = "<group>"; };
+		308847C52CD8075000A34A3E /* OldRenderCmd.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OldRenderCmd.h; sourceTree = "<group>"; };
 		308847C62CD8075000A34A3E /* TextureLayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TextureLayer.h; sourceTree = "<group>"; };
 		308847C72CD8075000A34A3E /* Vertex.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Vertex.h; sourceTree = "<group>"; };
 		308847C82CD8075000A34A3E /* WindowRenderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WindowRenderer.h; sourceTree = "<group>"; };
@@ -967,7 +967,7 @@
 			children = (
 				308847C32CD8075000A34A3E /* Color.h */,
 				308847C42CD8075000A34A3E /* GraphicsAPI.h */,
-				308847C52CD8075000A34A3E /* RenderCmd.h */,
+				308847C52CD8075000A34A3E /* OldRenderCmd.h */,
 				308847C62CD8075000A34A3E /* TextureLayer.h */,
 				308847C72CD8075000A34A3E /* Vertex.h */,
 				308847C82CD8075000A34A3E /* WindowRenderer.h */,
