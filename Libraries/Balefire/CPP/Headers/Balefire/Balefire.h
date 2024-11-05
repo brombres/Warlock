@@ -51,11 +51,4 @@ namespace BALEFIRE
   };
 };
 
-#define BALEFIRE_LOG_ERROR_WITH_INT( message, value ) \
-  {                                                   \
-    char buffer[120];                                 \
-    snprintf( buffer, 120, message, value );          \
-    BALEFIRE_LOG_ERROR( buffer );                     \
-  }
-
 #endif // BALEFIRE_H

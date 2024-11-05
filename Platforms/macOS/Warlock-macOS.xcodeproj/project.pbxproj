@@ -39,7 +39,8 @@
 		308847D32CD8076E00A34A3E /* GraphicsAPI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 308847CE2CD8076E00A34A3E /* GraphicsAPI.cpp */; };
 		308847D42CD8076E00A34A3E /* Matrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 308847D12CD8076E00A34A3E /* Matrix.cpp */; };
 		308847D52CD8076E00A34A3E /* Framework.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 308847CC2CD8076E00A34A3E /* Framework.cpp */; };
-		308847D62CD8076E00A34A3E /* WindowRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 308847CF2CD8076E00A34A3E /* WindowRenderer.cpp */; };
+		308847E52CD84AC600A34A3E /* BufferedVertexWindowRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 308847E32CD84AC600A34A3E /* BufferedVertexWindowRenderer.cpp */; };
+		308847EA2CD84ADF00A34A3E /* .BufferedVertexWindowRenderer.h.swp in Resources */ = {isa = PBXBuildFile; fileRef = 308847E62CD84ADF00A34A3E /* .BufferedVertexWindowRenderer.h.swp */; };
 		309D52E12C0F6D8E00CCA5B3 /* Sampler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 309D52E02C0F6D8E00CCA5B3 /* Sampler.cpp */; };
 		30B5A2AF2BFACFE90030183A /* WarlockInterface.mm in Sources */ = {isa = PBXBuildFile; fileRef = 30B5A2AE2BFACFE90030183A /* WarlockInterface.mm */; };
 		30C7A0132BC574B5004A98B7 /* Process.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30C7A0072BC574B5004A98B7 /* Process.cpp */; };
@@ -369,8 +370,11 @@
 		308847CA2CD8075000A34A3E /* Matrix.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Matrix.h; sourceTree = "<group>"; };
 		308847CC2CD8076E00A34A3E /* Framework.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Framework.cpp; sourceTree = "<group>"; };
 		308847CE2CD8076E00A34A3E /* GraphicsAPI.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GraphicsAPI.cpp; sourceTree = "<group>"; };
-		308847CF2CD8076E00A34A3E /* WindowRenderer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = WindowRenderer.cpp; sourceTree = "<group>"; };
 		308847D12CD8076E00A34A3E /* Matrix.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Matrix.cpp; sourceTree = "<group>"; };
+		308847E32CD84AC600A34A3E /* BufferedVertexWindowRenderer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = BufferedVertexWindowRenderer.cpp; sourceTree = "<group>"; };
+		308847E62CD84ADF00A34A3E /* .BufferedVertexWindowRenderer.h.swp */ = {isa = PBXFileReference; lastKnownFileType = file; path = .BufferedVertexWindowRenderer.h.swp; sourceTree = "<group>"; };
+		308847E72CD84ADF00A34A3E /* BufferedVertexRenderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BufferedVertexRenderer.h; sourceTree = "<group>"; };
+		308847E82CD84ADF00A34A3E /* BufferedVertexWindowRenderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BufferedVertexWindowRenderer.h; sourceTree = "<group>"; };
 		309D52D42C0F6D8200CCA5B3 /* Sampler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sampler.h; sourceTree = "<group>"; };
 		309D52E02C0F6D8E00CCA5B3 /* Sampler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Sampler.cpp; sourceTree = "<group>"; };
 		30B5A2A22BFACB1E0030183A /* WarlockInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WarlockInterface.h; path = ../../Libraries/Warlock/ObjC/WarlockInterface.h; sourceTree = "<group>"; };
@@ -581,6 +585,7 @@
 		3019850B2B94DC6000CBECCB /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				308847E42CD84AC600A34A3E /* BufferedVertexRenderer */,
 				3049E6A62B94FBF4008554DD /* Balefire.cpp */,
 				3019850C2B94DC6000CBECCB /* Core */,
 				301985112B94DC6000CBECCB /* SDL */,
@@ -634,6 +639,7 @@
 		3019851A2B94DC6000CBECCB /* Balefire */ = {
 			isa = PBXGroup;
 			children = (
+				308847E92CD84ADF00A34A3E /* BufferedVertexRenderer */,
 				3049E6A82B94FBFD008554DD /* Balefire.h */,
 				3019851B2B94DC6000CBECCB /* Core */,
 				301985272B94DC6000CBECCB /* SDL */,
@@ -995,7 +1001,6 @@
 			isa = PBXGroup;
 			children = (
 				308847CE2CD8076E00A34A3E /* GraphicsAPI.cpp */,
-				308847CF2CD8076E00A34A3E /* WindowRenderer.cpp */,
 			);
 			path = Graphics;
 			sourceTree = "<group>";
@@ -1006,6 +1011,24 @@
 				308847D12CD8076E00A34A3E /* Matrix.cpp */,
 			);
 			path = Math;
+			sourceTree = "<group>";
+		};
+		308847E42CD84AC600A34A3E /* BufferedVertexRenderer */ = {
+			isa = PBXGroup;
+			children = (
+				308847E32CD84AC600A34A3E /* BufferedVertexWindowRenderer.cpp */,
+			);
+			path = BufferedVertexRenderer;
+			sourceTree = "<group>";
+		};
+		308847E92CD84ADF00A34A3E /* BufferedVertexRenderer */ = {
+			isa = PBXGroup;
+			children = (
+				308847E62CD84ADF00A34A3E /* .BufferedVertexWindowRenderer.h.swp */,
+				308847E72CD84ADF00A34A3E /* BufferedVertexRenderer.h */,
+				308847E82CD84ADF00A34A3E /* BufferedVertexWindowRenderer.h */,
+			);
+			path = BufferedVertexRenderer;
 			sourceTree = "<group>";
 		};
 		30C79F692BC448E3004A98B7 /* Unix */ = {
@@ -1257,6 +1280,7 @@
 				306913BC2B5EAFC900B14F73 /* vulkan.cppm in Resources */,
 				300D4FAD2C0383510068824B /* Assets in Resources */,
 				306912D32B5E7D7500B14F73 /* ProjectAssets.xcassets in Resources */,
+				308847EA2CD84ADF00A34A3E /* .BufferedVertexWindowRenderer.h.swp in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1306,13 +1330,13 @@
 				30B5A2AF2BFACFE90030183A /* WarlockInterface.mm in Sources */,
 				30F271DB2BDD5941000AD163 /* ConfigureSemaphores.cpp in Sources */,
 				3004D1EA2BBDA14000572087 /* Image.cpp in Sources */,
+				308847E52CD84AC600A34A3E /* BufferedVertexWindowRenderer.cpp in Sources */,
 				307706332BA896D500122E50 /* Vulkanize.cpp in Sources */,
 				30E9EA802BCD84B000E45E9F /* GLSLangInterface.cpp in Sources */,
 				306912E12B5E7E1D00B14F73 /* Warlock.swift in Sources */,
 				308847D32CD8076E00A34A3E /* GraphicsAPI.cpp in Sources */,
 				308847D42CD8076E00A34A3E /* Matrix.cpp in Sources */,
 				308847D52CD8076E00A34A3E /* Framework.cpp in Sources */,
-				308847D62CD8076E00A34A3E /* WindowRenderer.cpp in Sources */,
 				30F271D32BDD5941000AD163 /* ConfigureDevice.cpp in Sources */,
 				30F271D62BDD5941000AD163 /* ConfigureFramebuffers.cpp in Sources */,
 				309D52E12C0F6D8E00CCA5B3 /* Sampler.cpp in Sources */,

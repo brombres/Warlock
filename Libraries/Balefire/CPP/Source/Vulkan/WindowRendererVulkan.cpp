@@ -8,7 +8,13 @@ using namespace std;
 #include "Vulkanize/Context.h"
 using namespace VKZ;
 
+WindowRendererVulkan::WindowRendererVulkan( Window* window, GraphicsAPIVulkan* render_api )
+  : BufferedVertexWindowRenderer(window), render_api(render_api)
+{
+}
+
 WindowRendererVulkan::~WindowRendererVulkan()
+
 {
   if (initialized)
   {

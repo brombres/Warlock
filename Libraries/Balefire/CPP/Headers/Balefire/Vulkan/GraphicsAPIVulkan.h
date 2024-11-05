@@ -54,6 +54,7 @@ namespace BALEFIRE
 };
 
 #include "Balefire/Vulkan/BalefireVertexDescription.h"
+#include "Balefire/BufferedVertexRenderer/BufferedVertexRenderer.h"
 #include "Balefire/Vulkan/WindowRendererVulkan.h"
 
 #endif // BALEFIRE_RENDERER_VULKAN_H

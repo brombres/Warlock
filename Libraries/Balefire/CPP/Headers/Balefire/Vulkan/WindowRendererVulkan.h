@@ -9,7 +9,7 @@
 
 namespace BALEFIRE
 {
-  struct WindowRendererVulkan : WindowRenderer
+  struct WindowRendererVulkan : BufferedVertexWindowRenderer
   {
     // PROPERTIES
     GraphicsAPIVulkan* render_api;
@@ -17,8 +17,7 @@ namespace BALEFIRE
     VkSurfaceKHR    surface = nullptr;
 
     // CONSTRUCTORS
-    WindowRendererVulkan( Window* window, GraphicsAPIVulkan* render_api )
-      : WindowRenderer(window), render_api(render_api) {}
+    WindowRendererVulkan( Window* window, GraphicsAPIVulkan* render_api );
     virtual ~WindowRendererVulkan();
 
     // METHODS

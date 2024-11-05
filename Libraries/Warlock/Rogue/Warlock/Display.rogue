@@ -23,7 +23,6 @@ class Display [singleton]
     object_transforms     = Matrix[]
 
     transform_modified       : Logical
-    view_transform_modified  : Logical
     world_transform_modified : Logical
 
   METHODS
