@@ -12,6 +12,7 @@
 #include "Balefire/Core/RefCounted.h"
 #include "Balefire/Core/Geometry/XY.h"
 #include "Balefire/Core/Geometry/XYZ.h"
+#include "Balefire/Core/Geometry/XYZW.h"
 #include "Balefire/Core/Math/Matrix.h"
 #include "Balefire/Core/Graphics/Vertex.h"
 #include "Balefire/Core/Graphics/Color.h"

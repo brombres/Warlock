@@ -21,6 +21,4 @@ class ProjectionMode2DX : ProjectionMode [singleton]
           &=perspective_center
         ) *
         Matrix.translate( XYZ(0,0,nominal_z) )
-@trace  Display.size
-println Display.projection_transform
 endClass

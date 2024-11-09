@@ -51,7 +51,7 @@ Window* FrameworkSDLVulkan::create_window( int index, std::string name )
   GraphicsAPIVulkan* render_api = (GraphicsAPIVulkan*)this->render_api;
 
   Window* window = new Window( this, index, w, h );
-  SDL_Vulkan_GetDrawableSize( sdl_window, &window->pixel_width, &window->pixel_height );
+  SDL_Vulkan_GetDrawableSize( sdl_window, &window->width, &window->height );
 
   WindowFrameworkContextSDL* framework_context = new WindowFrameworkContextSDL( window, sdl_window );
   WindowRendererVulkan* renderer = new WindowRendererVulkan( window, render_api );
@@ -91,7 +91,7 @@ void FrameworkSDLVulkan::update_pixel_size( Window* window )
   WindowFrameworkContextSDL* context_sdl = (WindowFrameworkContextSDL*)context;
   SDL_Vulkan_GetDrawableSize(
     context_sdl->sdl_window,
-    &window->pixel_width, &window->pixel_height
+    &window->width, &window->height
   );
 }
 

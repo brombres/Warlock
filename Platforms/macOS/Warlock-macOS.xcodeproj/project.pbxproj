@@ -437,6 +437,8 @@
 		30F2DA052CD51AB7004FE105 /* EventHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EventHandler.h; sourceTree = "<group>"; };
 		30F2DA072CD51AB7004FE105 /* RefCounted.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RefCounted.h; sourceTree = "<group>"; };
 		30F9C5172CDFBB7C008E5B02 /* RenderCmd.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RenderCmd.h; sourceTree = "<group>"; };
+		30F9C5252CE0006F008E5B02 /* XY.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XY.h; sourceTree = "<group>"; };
+		30F9C5262CE0006F008E5B02 /* XYZW.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XYZW.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -962,6 +964,8 @@
 		308847C22CD8075000A34A3E /* Geometry */ = {
 			isa = PBXGroup;
 			children = (
+				30F9C5252CE0006F008E5B02 /* XY.h */,
+				30F9C5262CE0006F008E5B02 /* XYZW.h */,
 				308847C12CD8075000A34A3E /* XYZ.h */,
 			);
 			path = Geometry;

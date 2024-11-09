@@ -12,15 +12,15 @@ namespace BALEFIRE
   {
     Framework* framework;
     int  index = 0;
+    int  logical_width, logical_height;
     int  width, height;
-    int  pixel_width, pixel_height;
     bool rendering_paused = false;
 
     WindowFrameworkContext* framework_context = nullptr;
     WindowRenderer*    renderer = nullptr;
 
     Window( Framework* framework, int index, int width, int height ) : framework(framework),
-        index(index), width(width), height(height), pixel_width(width), pixel_height(height) {}
+        index(index), logical_width(width), logical_height(height), width(width), height(height) {}
 
     virtual ~Window();
 
