@@ -8,6 +8,8 @@ namespace BALEFIRE
   {
     // GLOBAL METHODS
     static Matrix frustum( Real64 left, Real64 right, Real64 bottom, Real64 top, Real64 z_near, Real64 z_far );
+    static Matrix mode_2dx( Real64 width, Real64 height, Real64 depth_scale=1.0,
+                            XY perspective_center=XY(0.5,0.5) );
     static Matrix translate( XYZ offset );
 
     // PROPERTIES
