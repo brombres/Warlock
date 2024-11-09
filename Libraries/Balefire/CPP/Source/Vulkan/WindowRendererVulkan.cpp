@@ -45,10 +45,6 @@ void WindowRendererVulkan::configure( VkSurfaceKHR surface )
 	initialized = true;
 }
 
-void WindowRendererVulkan::flush()
-{
-}
-
 void WindowRendererVulkan::render( unsigned char* data, int count )
 {
   if ( !initialized ) return;
@@ -261,6 +257,7 @@ void WindowRendererVulkan::render( unsigned char* data, int count )
 
     if ( !error )
     {
+      /*
       // Convert color ARGB -> ABGR
       int remaining = total_vertex_count;
       Vertex* vertex = old_vertices.data();
@@ -277,6 +274,7 @@ void WindowRendererVulkan::render( unsigned char* data, int count )
       context->vertex_buffer->clear();
       context->vertex_buffer->copy_from( *context->staging_buffer );
       context->vertex_buffer->cmd_bind( context->cmd );
+      */
 
       // Second pass: draw
       reader.position = pass_start_pos;
@@ -293,14 +291,15 @@ void WindowRendererVulkan::render( unsigned char* data, int count )
           case OldRenderCmd::DRAW_LINES:
           {
             int material_id = reader.read_int32x();
+//printf("material_id:%d\n",material_id);
             int vertex_count = reader.read_int32x() * 2;
             reader.seek( skip_pos );
 
-            Material* material = context->materials[material_id];
-            material->cmd_bind( context->cmd );
-            material->cmd_set_default_viewports_and_scissor_rects( context->cmd );
-            context->device_dispatch.cmdDraw( context->cmd, vertex_count, 1, vertex_i, 0 );
-            vertex_i += vertex_count;
+            //Material* material = context->materials[material_id];
+            //material->cmd_bind( context->cmd );
+            //material->cmd_set_default_viewports_and_scissor_rects( context->cmd );
+            //context->device_dispatch.cmdDraw( context->cmd, vertex_count, 1, vertex_i, 0 );
+            //vertex_i += vertex_count;
             break;
           }
 
@@ -310,12 +309,12 @@ void WindowRendererVulkan::render( unsigned char* data, int count )
             int vertex_count = reader.read_int32x() * 3;
             reader.seek( skip_pos );
 
-            Material* material = context->materials[material_id];
-            material->cmd_bind( context->cmd );
-            material->cmd_set_default_viewports_and_scissor_rects( context->cmd );
-            context->device_dispatch.cmdDraw( context->cmd, vertex_count, 1, vertex_i, 0 );
+            //Material* material = context->materials[material_id];
+            //material->cmd_bind( context->cmd );
+            //material->cmd_set_default_viewports_and_scissor_rects( context->cmd );
+            //context->device_dispatch.cmdDraw( context->cmd, vertex_count, 1, vertex_i, 0 );
 
-            vertex_i += vertex_count;
+            //vertex_i += vertex_count;
             break;
           }
 
@@ -340,6 +339,47 @@ void WindowRendererVulkan::render( unsigned char* data, int count )
         }
       }
     }
+
+    set_projection_transform( Matrix::mode_2dx(window->width,window->height) );
+    draw_line( XY(0,0), XY(window->width/2,window->height/2), Color(0xFFFFFFFF) );
+    flush();
+
+    // Convert color ARGB -> ABGR
+    int remaining = (int)vertices.size();
+    Vertex* vertex = vertices.data();
+    while (--remaining >=0)
+    {
+      uint32_t argb = vertex->color;
+      vertex->color = (argb & 0xFF00FF00) | ((argb<<16) & 0x00FF0000) | ((argb>>16) & 0x000000FF);
+      ++vertex;
+    }
+
+    // Copy vertex data to staging buffer to vertex buffer
+    context->staging_buffer->clear();
+    context->staging_buffer->copy_from( vertices.data(), (uint32_t)vertices.size() );
+    context->vertex_buffer->clear();
+    context->vertex_buffer->copy_from( *context->staging_buffer );
+    context->vertex_buffer->cmd_bind( context->cmd );
+
+    reader.position = pass_start_pos;
+    int vertex_i = 0;
+
+    for (RenderCmd cmd : render_commands)
+    {
+      switch (cmd.type)
+      {
+        case RenderCmdType::DRAW_LINES:
+        {
+          Material* material = context->materials[7];
+          material->cmd_bind( context->cmd );
+          material->cmd_set_default_viewports_and_scissor_rects( context->cmd );
+          context->device_dispatch.cmdDraw( context->cmd, cmd.vertex_count, 1, vertex_i, 0 );
+          vertex_i += cmd.vertex_count;
+          break;
+        }
+      }
+    }
+
 
     on_end_render();
 
