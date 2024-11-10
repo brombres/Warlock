@@ -13,18 +13,18 @@ namespace BALEFIRE
 
     Vertex( XYZW xyzw, UInt32 color ) : color(color)
     {
-      position.x = (float) xyzw.x;
-      position.y = (float) xyzw.y;
-      position.z = (float) xyzw.z;
-      position.w = (float) xyzw.w;
+      position.x = (float) xyzw.x / xyzw.w;
+      position.y = (float) xyzw.y / xyzw.w;
+      position.z = (float) xyzw.z / xyzw.w;
+      position.w = 1;
     }
 
     Vertex( XYZW xyzw, UInt32 color, XY _uv ) : color(color)
     {
-      position.x = (float) xyzw.x;
-      position.y = (float) xyzw.y;
-      position.z = (float) xyzw.z;
-      position.w = (float) xyzw.w;
+      position.x = (float) xyzw.x / xyzw.w;
+      position.y = (float) xyzw.y / xyzw.w;
+      position.z = (float) xyzw.z / xyzw.w;
+      position.w = 1;
       uv.u = (float) _uv.x;
       uv.v = (float) _uv.y;
     }

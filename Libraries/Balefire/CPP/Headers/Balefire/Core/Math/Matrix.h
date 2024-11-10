@@ -25,16 +25,16 @@ namespace BALEFIRE
 
     Matrix operator*( Matrix other ) { return Matrix( (glm::dmat4)(*this) * (glm::dmat4)other ); }
 
-    XY operator*( XY xy )
+    XYZW operator*( XY xy )
     {
       glm::dvec4 product = (glm::dmat4)(*this) * (glm::dvec4)XYZW(xy);
-      return XY( product.x, product.y );
+      return XYZW( product.x, product.y, product.z, product.w );
     }
 
-    XYZ operator*( XYZ xyz )
+    XYZW operator*( XYZ xyz )
     {
       glm::dvec4 product = (glm::dmat4)(*this) * (glm::dvec4)XYZW(xyz);
-      return XYZ( product.x, product.y, product.z );
+      return XYZW( product.x, product.y, product.z, product.w );
     }
 
     XYZW operator*( XYZW xyzw )

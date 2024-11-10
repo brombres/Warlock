@@ -19,6 +19,7 @@ void BufferedVertexWindowRenderer::draw_line( XY a, XY b, Color color )
   set_primitive_type( PrimitiveType::LINES );
   vertices.reserve( vertices.size() + 2 );
   Matrix m = transform();
+
   vertices.push_back( Vertex( m*a, color.argb ) );
   vertices.push_back( Vertex( m*b, color.argb ) );
   ++primitive_count;

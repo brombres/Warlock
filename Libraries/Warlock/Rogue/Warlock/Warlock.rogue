@@ -98,6 +98,9 @@ class Warlock [essential singleton]
 
       Warlock.rendering = true
 
+      Renderer.draw( Line(0, 0, w/2, h/2), Color.RED );
+
+      #{
       local pt = XY(0,w.or_smaller(h)*0.5).rotated( degrees )
       degrees += Degrees(1)
 
@@ -130,6 +133,7 @@ class Warlock [essential singleton]
       catch (error:Exception)
         println error
       endTry
+      }#
 
       Display.end_draw
 

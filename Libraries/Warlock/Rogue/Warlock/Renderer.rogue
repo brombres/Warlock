@@ -113,6 +113,11 @@ class Renderer [singleton]
       add_vertex( bl, color )
       add_vertex( box.position, color )
 
+    method draw( line:Line, color:Color, current_material=Renderer.standard_materials//color_line_material )
+      primitive_type = PrimitiveType.LINES
+      add_vertex( line.a, color )
+      add_vertex( line.b, color )
+
     method draw( triangle:Triangle, color:Color, current_material=Renderer.standard_materials//color_line_material )
       primitive_type = PrimitiveType.LINES
       add_vertex( triangle.a, color )

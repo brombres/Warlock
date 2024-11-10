@@ -17,8 +17,7 @@ class ProjectionMode2DX : ProjectionMode [singleton]
       Display.projection_transform =
         Matrix.mode_2dx(
           Display.width, Display.height,
-          &=nominal_z,
+          &=depth_scale,
           &=perspective_center
-        ) *
-        Matrix.translate( XYZ(0,0,nominal_z) )
+        )
 endClass

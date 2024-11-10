@@ -13,7 +13,6 @@ namespace BALEFIRE
     XY() : x(0), y(0) {}
     XY( Real64 value ) : x(value), y(value) {}
     XY( Real64 x, Real64 y ) : x(x), y(y) {}
-    XY( XY& other ) : x(other.x), y(other.y) {}
 
     // METHODS
     operator glm::dvec2() { return glm::dvec2( x, y ); }
