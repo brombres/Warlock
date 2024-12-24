@@ -14,7 +14,7 @@ namespace BALEFIRE
   struct Framework
   {
     Balefire* balefire = nullptr;
-    GraphicsAPI* render_api = nullptr;
+    GraphicsAPI* graphics_api = nullptr;
 
     virtual ~Framework();
     virtual void     configure();

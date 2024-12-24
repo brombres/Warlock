@@ -24,6 +24,7 @@ namespace BALEFIRE
 };
 
 #include "Balefire/Vulkan/VulkanContext.h"
+#include "Balefire/Vulkan/VulkanShader.h"
 
 namespace BALEFIRE
 {
@@ -40,17 +41,6 @@ namespace BALEFIRE
 
     static const char* vkResult_to_c_string( VkResult result );
   };
-
-  template <typename DataType>
-  DataType vkb_require( vkb::Result<DataType> result )
-  {
-    if ( !result )
-    {
-      fprintf( stderr, "[ERROR] %s\n", result.error().message().c_str() );
-      abort();
-    }
-    return result.value();
-  }
 };
 
 #include "Balefire/Vulkan/BalefireVertexDescription.h"

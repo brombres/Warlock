@@ -13,8 +13,8 @@ using namespace VKZ;
 void FrameworkSDLVulkan::configure()
 {
   SDL_Init( SDL_INIT_VIDEO );
-  render_api = new GraphicsAPIVulkan( this );
-  render_api->configure();
+  graphics_api = new GraphicsAPIVulkan( this );
+  graphics_api->configure();
 }
 
 Window* FrameworkSDLVulkan::create_window( int index, std::string name )
@@ -48,13 +48,13 @@ Window* FrameworkSDLVulkan::create_window( int index, std::string name )
   //}
 
 
-  GraphicsAPIVulkan* render_api = (GraphicsAPIVulkan*)this->render_api;
+  GraphicsAPIVulkan* graphics_api = (GraphicsAPIVulkan*)this->graphics_api;
 
   Window* window = new Window( this, index, w, h );
   SDL_Vulkan_GetDrawableSize( sdl_window, &window->width, &window->height );
 
   WindowFrameworkContextSDL* framework_context = new WindowFrameworkContextSDL( window, sdl_window );
-  WindowRendererVulkan* renderer = new WindowRendererVulkan( window, render_api );
+  WindowRendererVulkan* renderer = new WindowRendererVulkan( window, graphics_api );
   window->framework_context = framework_context;
   window->renderer = renderer;
 
@@ -75,7 +75,7 @@ Window* FrameworkSDLVulkan::create_window( int index, std::string name )
   renderer->surface = surface;
   renderer->configure( surface );
 
-  render_api->configure_window( window );
+  graphics_api->configure_window( window );
 
   return window;
 }

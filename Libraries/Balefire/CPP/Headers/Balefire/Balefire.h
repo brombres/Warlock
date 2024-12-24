@@ -22,6 +22,8 @@
 #include "Balefire/Core/Graphics/RenderCmd.h"
 #include "Balefire/Core/Window.h"
 #include "Balefire/Core/Framework/Framework.h"
+#include "Balefire/Core/Graphics/ShaderStage.h"
+#include "Balefire/Core/Graphics/Shader.h"
 #include "Balefire/Core/Graphics/GraphicsAPI.h"
 #include "Balefire/Core/Framework/WindowFrameworkContext.h"
 #include "Balefire/Core/Graphics/WindowRenderer.h"

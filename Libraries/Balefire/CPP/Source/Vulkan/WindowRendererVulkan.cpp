@@ -8,9 +8,10 @@ using namespace std;
 #include "Vulkanize/Context.h"
 using namespace VKZ;
 
-WindowRendererVulkan::WindowRendererVulkan( Window* window, GraphicsAPIVulkan* render_api )
-  : BufferedVertexWindowRenderer(window), render_api(render_api)
+WindowRendererVulkan::WindowRendererVulkan( Window* window, GraphicsAPIVulkan* api )
+  : BufferedVertexWindowRenderer(window)
 {
+  this->graphics_api = api;
 }
 
 WindowRendererVulkan::~WindowRendererVulkan()
@@ -43,6 +44,12 @@ void WindowRendererVulkan::configure( VkSurfaceKHR surface )
   }
 
 	initialized = true;
+}
+
+BALEFIRE::Ref<BALEFIRE::Shader> WindowRendererVulkan::create_shader(
+    ShaderStage stage, string filename, string source, string main_function_name )
+{
+  return new VulkanShader( context, stage, filename, source, main_function_name );
 }
 
 void WindowRendererVulkan::render( unsigned char* data, int count )
@@ -166,7 +173,7 @@ void WindowRendererVulkan::render( unsigned char* data, int count )
             if (is_string)
             {
               string source = reader.read_string();
-              context->shaders[id] = new Shader(
+              context->shaders[id] = new VKZ::Shader(
                 context,
                 stage,
                 filename,
@@ -178,7 +185,7 @@ void WindowRendererVulkan::render( unsigned char* data, int count )
             {
               unsigned char* spirv_bytes;
               int byte_count = reader.read_bytes( &spirv_bytes );
-              context->shaders[id] = new Shader(
+              context->shaders[id] = new VKZ::Shader(
                 context,
                 stage,
                 filename,
@@ -207,7 +214,7 @@ void WindowRendererVulkan::render( unsigned char* data, int count )
             bool primitive_restart_enabled = reader.read_int32x();
             int shader_count = reader.read_int32x();
 
-            Ref<Material> material = new Material( context );
+            Ref<VKZ::Material> material = new VKZ::Material( context );
             material->set_topology( topology );
             material->add_vertex_description( new BalefireVertexDescription() );
             material->enable_primitive_restart( primitive_restart_enabled );
@@ -294,7 +301,7 @@ void WindowRendererVulkan::render( unsigned char* data, int count )
               int vertex_count = reader.read_int32x() * 2;
               reader.seek( skip_pos );
 
-              Material* material = context->materials[material_id];
+              VKZ::Material* material = context->materials[material_id];
               material->cmd_bind( context->cmd );
               material->cmd_set_default_viewports_and_scissor_rects( context->cmd );
               context->device_dispatch.cmdDraw( context->cmd, vertex_count, 1, vertex_i, 0 );
@@ -308,7 +315,7 @@ void WindowRendererVulkan::render( unsigned char* data, int count )
               int vertex_count = reader.read_int32x() * 3;
               reader.seek( skip_pos );
 
-              Material* material = context->materials[material_id];
+              VKZ::Material* material = context->materials[material_id];
               material->cmd_bind( context->cmd );
               material->cmd_set_default_viewports_and_scissor_rects( context->cmd );
               context->device_dispatch.cmdDraw( context->cmd, vertex_count, 1, vertex_i, 0 );
@@ -370,7 +377,7 @@ void WindowRendererVulkan::render( unsigned char* data, int count )
         {
           case RenderCmdType::DRAW_LINES:
           {
-            Material* material = context->materials[7];
+          VKZ::Material* material = context->materials[7];
             material->cmd_bind( context->cmd );
             material->cmd_set_default_viewports_and_scissor_rects( context->cmd );
             context->device_dispatch.cmdDraw( context->cmd, cmd.vertex_count, 1, vertex_i, 0 );
@@ -484,7 +491,7 @@ void WindowRendererVulkan::render( unsigned char* data, int count )
             if (is_string)
             {
               string source = reader.read_string();
-              context->shaders[id] = new Shader(
+              context->shaders[id] = new VKZ::Shader(
                 context,
                 stage,
                 filename,
@@ -496,7 +503,7 @@ void WindowRendererVulkan::render( unsigned char* data, int count )
             {
               unsigned char* spirv_bytes;
               int byte_count = reader.read_bytes( &spirv_bytes );
-              context->shaders[id] = new Shader(
+              context->shaders[id] = new VKZ::Shader(
                 context,
                 stage,
                 filename,
@@ -525,7 +532,7 @@ void WindowRendererVulkan::render( unsigned char* data, int count )
             bool primitive_restart_enabled = reader.read_int32x();
             int shader_count = reader.read_int32x();
 
-            Ref<Material> material = new Material( context );
+            Ref<VKZ::Material> material = new VKZ::Material( context );
             material->set_topology( topology );
             material->add_vertex_description( new BalefireVertexDescription() );
             material->enable_primitive_restart( primitive_restart_enabled );
@@ -615,7 +622,7 @@ void WindowRendererVulkan::render( unsigned char* data, int count )
               int vertex_count = reader.read_int32x() * 2;
               reader.seek( skip_pos );
 
-              //Material* material = context->materials[material_id];
+              //VKZ::Material* material = context->materials[material_id];
               //material->cmd_bind( context->cmd );
               //material->cmd_set_default_viewports_and_scissor_rects( context->cmd );
               //context->device_dispatch.cmdDraw( context->cmd, vertex_count, 1, vertex_i, 0 );
@@ -629,7 +636,7 @@ void WindowRendererVulkan::render( unsigned char* data, int count )
               int vertex_count = reader.read_int32x() * 3;
               reader.seek( skip_pos );
 
-              //Material* material = context->materials[material_id];
+              //VKZ::Material* material = context->materials[material_id];
               //material->cmd_bind( context->cmd );
               //material->cmd_set_default_viewports_and_scissor_rects( context->cmd );
               //context->device_dispatch.cmdDraw( context->cmd, vertex_count, 1, vertex_i, 0 );
@@ -690,7 +697,7 @@ void WindowRendererVulkan::render( unsigned char* data, int count )
         {
           case RenderCmdType::DRAW_LINES:
           {
-            Material* material = context->materials[7];
+            VKZ::Material* material = context->materials[7];
             material->cmd_bind( context->cmd );
             material->cmd_set_default_viewports_and_scissor_rects( context->cmd );
             context->device_dispatch.cmdDraw( context->cmd, cmd.vertex_count, 1, vertex_i, 0 );

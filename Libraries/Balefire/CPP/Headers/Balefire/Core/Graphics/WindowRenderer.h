@@ -17,8 +17,9 @@ namespace BALEFIRE
   struct WindowRenderer
   {
     // PROPERTIES
-    Window* window   = nullptr;
-    bool initialized = false;
+    GraphicsAPI* graphics_api  = nullptr;
+    Window*      window      = nullptr;
+    bool         initialized = false;
 
     // CONSTRUCTORS
     WindowRenderer( Window* window ) : window(window) {}
@@ -28,6 +29,9 @@ namespace BALEFIRE
     virtual void configure() {}
 
     virtual void clear_transforms() = 0;
+
+    virtual Ref<Shader> create_shader( ShaderStage stage, std::string filename, std::string source,
+                                       std::string main_function_name="main" ) = 0;
 
     virtual void draw_line( XY a, XY b, Color color ) = 0;
 

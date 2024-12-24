@@ -68,6 +68,7 @@
 		30F271E02BDD5941000AD163 /* ConfigureSwapchain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30F271CE2BDD5941000AD163 /* ConfigureSwapchain.cpp */; };
 		30F271E42BDD594C000AD163 /* RenderBegin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30F271E12BDD594C000AD163 /* RenderBegin.cpp */; };
 		30F271E52BDD594C000AD163 /* RenderEnd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30F271E22BDD594C000AD163 /* RenderEnd.cpp */; };
+		30F9C5282CE17F17008E5B02 /* VulkanShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30F9C5272CE17F17008E5B02 /* VulkanShader.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -439,6 +440,10 @@
 		30F9C5172CDFBB7C008E5B02 /* RenderCmd.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RenderCmd.h; sourceTree = "<group>"; };
 		30F9C5252CE0006F008E5B02 /* XY.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XY.h; sourceTree = "<group>"; };
 		30F9C5262CE0006F008E5B02 /* XYZW.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XYZW.h; sourceTree = "<group>"; };
+		30F9C5272CE17F17008E5B02 /* VulkanShader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = VulkanShader.cpp; sourceTree = "<group>"; };
+		30F9C5292CE17F20008E5B02 /* VulkanShader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VulkanShader.h; sourceTree = "<group>"; };
+		30F9C52A2CE17F2D008E5B02 /* Shader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Shader.h; sourceTree = "<group>"; };
+		30F9C52B2CE17F2D008E5B02 /* ShaderStage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShaderStage.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -621,6 +626,7 @@
 		301985162B94DC6000CBECCB /* Vulkan */ = {
 			isa = PBXGroup;
 			children = (
+				30F9C5272CE17F17008E5B02 /* VulkanShader.cpp */,
 				300D4F762C0240A60068824B /* VulkanContext.cpp */,
 				3049E6AD2B952FBE008554DD /* WindowRendererVulkan.cpp */,
 				301985182B94DC6000CBECCB /* GraphicsAPIVulkan.cpp */,
@@ -678,6 +684,7 @@
 		3019852C2B94DC6000CBECCB /* Vulkan */ = {
 			isa = PBXGroup;
 			children = (
+				30F9C5292CE17F20008E5B02 /* VulkanShader.h */,
 				300D4F8A2C0377F90068824B /* BalefireVertexDescription.h */,
 				300D4F6B2C023D490068824B /* VulkanContext.h */,
 				3049E6AC2B9518D9008554DD /* WindowRendererVulkan.h */,
@@ -974,6 +981,8 @@
 		308847C92CD8075000A34A3E /* Graphics */ = {
 			isa = PBXGroup;
 			children = (
+				30F9C52A2CE17F2D008E5B02 /* Shader.h */,
+				30F9C52B2CE17F2D008E5B02 /* ShaderStage.h */,
 				30F9C5172CDFBB7C008E5B02 /* RenderCmd.h */,
 				308847C32CD8075000A34A3E /* Color.h */,
 				308847C42CD8075000A34A3E /* GraphicsAPI.h */,
@@ -1314,6 +1323,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				30F9C5282CE17F17008E5B02 /* VulkanShader.cpp in Sources */,
 				3049E6B02B953545008554DD /* WindowFrameworkContextSDL.cpp in Sources */,
 				30F271D12BDD5941000AD163 /* ConfigureCommandPool.cpp in Sources */,
 				30F271D22BDD5941000AD163 /* ConfigureDepthStencil.cpp in Sources */,
