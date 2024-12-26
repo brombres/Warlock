@@ -41,7 +41,7 @@ endAugment
 
 routine rogo_default
   rogo_deps
-  rogo_shaders
+  rogo_compile_assets
   rogo_help
 endRoutine
 
@@ -53,10 +53,12 @@ routine rogo_clean
   File("Build").delete
 endRoutine
 
-routine rogo_shaders( platform=null:String )
-  if (not platform) platform = System.os
+routine rogo_compile_assets
+  compile_assets( System.os )
+endRoutine
 
-  local dest = File( "Build/$/Shaders"(platform) )
+routine rogo_shaders( platform=null:String )
+  local dest = File( "Build/$/Assets/Shaders"(platform) )
   ensure_folder( dest )
 
   local shaderc : String
@@ -152,6 +154,7 @@ endRoutine
 routine deps( args:String[], &update, &rebuild )
   ensure_folder( File("Build/macOS/Assets") )
   ensure_folder( File("Build/macOS/Source") )
+  ensure_folder( File("Source") )
 
   local libs = @{}
   local select_all = false
@@ -182,6 +185,73 @@ routine deps( args:String[], &update, &rebuild )
     endIf
   endIf
 
+endRoutine
+
+routine rogo_debug
+  rogo_build_debug
+  #rogo_run
+endRoutine
+
+routine rogo_build( &rebuild )
+  #rogo_build_debug( &=rebuild )
+  build( System.os, &=rebuild )
+endRoutine
+
+routine rogo_rebuild
+  rogo_build( &rebuild )
+endRoutine
+
+routine rogo_macos
+  # SYNTAX: rogo macos [rebuild|release]
+  local args = System.command_line_arguments
+  #local debug   = args.contains("debug") or not args.contains("release")
+  local debug   = args.contains("debug")
+  local rebuild = args.contains("rebuild")
+  #execute "cd ~/Projects/Rogue && rogo libs"
+  #rebuild = true
+  build( "macOS", &=debug )
+endRoutine
+
+routine rogo_build_debug( &rebuild )
+  build( System.os, &debug, &=rebuild )
+endRoutine
+
+routine build( platform:String, &debug, &rebuild )
+  deps( System.command_line_arguments )
+  compile_rogue( platform, &=debug, &=rebuild )
+  compile_assets( platform )
+endRoutine
+
+routine compile_rogue( platform:String, &debug, &rebuild )
+  local files = Files( "Libraries/Warlock/Libraries/Rogue/**.rogue" )
+  local source_folder = File("Build/$/Source"(platform)).[create_folder]
+
+  local is_apple = (platform == "macOS" or platform == "iOS")
+  local source_filename = "RogueProgram.$"(which{ is_apple:"mm" || "cpp" })
+  if (rebuild or files.any_newer_than(source_folder/source_filename))
+    block cmd = "roguec Warlock"
+      cmd .= appending( "Warlock/Platform/$.rogue"(platform) )
+      if (debug) cmd .= appending( "--debug" )
+      local libs = String[]
+      libs.add( "Libraries/Warlock/Libraries/Rogue" )
+      cmd .= appending( "--libraries=$"(libs.join(',')) )
+      cmd .= appending( "--target=C++,Warlock,SDL,bgfx,$"(platform) )
+      if (is_apple) cmd += ",ObjC"
+      cmd .= appending( "--gc=manual" )
+      cmd .= appending( "--output=$/RogueProgram"(source_folder.esc) )
+      execute cmd
+    endBlock
+  endIf
+endRoutine
+
+routine compile_assets( platform:String )
+  block
+    local src  = Files( "Assets/Images/**" )
+    local dest = File( "Build/macOS/Assets/Images" )
+    src.sync_to( dest, &verbose )
+  endBlock
+
+  rogo_shaders( platform )
 endRoutine
 
 routine open_xcode( folder:String )

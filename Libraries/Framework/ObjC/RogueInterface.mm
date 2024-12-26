@@ -1,4 +1,3 @@
-#if false
 #import "RogueInterface.h"
 
 //#import <AVFoundation/AVAudioPlayer.h>
@@ -30,4 +29,3 @@ void RogueInterface_launch()
   Rogue_configure( RogueInterface_argc, RogueInterface_argv );
   Rogue_launch();
 }
-#endif

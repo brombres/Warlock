@@ -1,11 +1,9 @@
-#if false
 #include <cstdio>
 
 #import "RogueInterface.h"
 #import "WarlockInterface.h"
 
-#include "Balefire/Balefire.h"
-using namespace BALEFIRE;
+//using namespace BALEFIRE;
 
 NSString* rogue_string_to_ns_string( RogueString* st )
 {
@@ -20,10 +18,10 @@ RogueString* ns_string_to_rogue_string( NSString* st )
   return RogueString_create( [st UTF8String] );
 }
 
-extern "C" void WarlockInterface_create_window( int id, RogueString* title )
-{
-  Balefire::instance->create_window( 1, RogueString_to_c_string(title) );
-}
+//extern "C" void WarlockInterface_create_window( int id, RogueString* title )
+//{
+//  Balefire::instance->create_window( 1, RogueString_to_c_string(title) );
+//}
 
 extern "C" RogueString* WarlockInterface_find_asset( RogueString* filepath )
 {
@@ -32,4 +30,3 @@ extern "C" RogueString* WarlockInterface_find_asset( RogueString* filepath )
   if (ns_filepath == nil) return 0;
   return ns_string_to_rogue_string( ns_filepath );
 }
-#endif

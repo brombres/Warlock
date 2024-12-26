@@ -1,5 +1,3 @@
-#if false
-
 #ifndef ROGUE_INTERFACE_H
 #define ROGUE_INTERFACE_H
 
@@ -53,5 +51,3 @@ void RogueInterface_launch();
 #endif
 
 #endif // ROGUE_INTERFACE_H
-
-#endif

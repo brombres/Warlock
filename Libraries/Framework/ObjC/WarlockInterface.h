@@ -1,4 +1,3 @@
-#if false
 #pragma once
 
 #include "RogueProgram.h"
@@ -7,7 +6,7 @@
 extern "C" {
 #endif
 
-void WarlockInterface_create_window( int id, RogueString* title );
+//void WarlockInterface_create_window( int id, RogueString* title );
 
 RogueString* WarlockInterface_find_asset( RogueString* filepath );
 
@@ -47,5 +46,4 @@ RogueGraphics__Bitmap* Plasmacore_decode_image( RogueByte* bytes, RogueInt32 cou
 
 #ifdef __cplusplus
 } // extern "C"
-#endif
 #endif
