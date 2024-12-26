@@ -24,11 +24,121 @@ uses Utility/VersionNumber
 uses Graphics
 uses Graphics/BitmapIO
 
+augment Build
+  PROPERTIES
+    shader_name_pairs =
+    @[
+      ["-vs","-fs"],
+      ["vs-","fs-"],
+      ["_vs","_fs"],
+      ["vs_","fs_"],
+      ["-vert","-frag"],
+      ["vert-","frag-"],
+      ["_vert","_frag"],
+      ["vert_","frag_"]
+    ]
+endAugment
+
 routine rogo_default
-  ensure_folder( File("Build/macOS/Assets") )
-  ensure_folder( File("Build/macOS/Source") )
   rogo_deps
+  rogo_shaders
   rogo_help
+endRoutine
+
+routine rogo_macos_open
+  open_xcode( "Platforms/macOS" )
+endRoutine
+
+routine rogo_clean
+  File("Build").delete
+endRoutine
+
+routine rogo_shaders( platform=null:String )
+  if (not platform) platform = System.os
+
+  local dest = File( "Build/$/Shaders"(platform) )
+  ensure_folder( dest )
+
+  local shaderc : String
+  local platform_flags : String
+  which (platform)
+    case "macOS"
+      shaderc = "Libraries/bgfx/.build/osx-arm64/bin/shadercRelease"
+      platform_flags = "--platform osx --profile metal"
+    others
+      println "[SHADERS] No shader build process is defined for platform '$'."(platform)
+      return
+  endWhich
+
+  local vs_cmd = "$ --type vertex"(shaderc).appending( platform_flags )
+  local fs_cmd = "$ --type fragment"(shaderc).appending( platform_flags )
+
+  local files = Files( "Libraries/Warlock/Libraries/Shaders/*" )
+
+  local pairs = organize_shader_pairs( files->String[] )
+
+  local header_shown = false
+  forEach (pair in pairs)
+    local src_vs = File( pair//vs )
+    local src_fs = File( pair//fs )
+    local dest_vs = (dest / src_vs.filename).with_extension( ".bin" )
+    local dest_fs = (dest / src_fs.filename).with_extension( ".bin" )
+
+    if (src_vs.is_newer_than(dest_vs))
+      header_shown = banner( "Compiling shaders", &skip=header_shown )
+      execute vs_cmd.appending( "-f $ -o $"(src_vs.esc,dest_vs.esc) )
+    endIf
+
+    if (src_fs.is_newer_than(dest_fs))
+      header_shown = banner( "Compiling shaders", &skip=header_shown )
+      execute fs_cmd.appending( "-f $ -o $"(src_fs.esc,dest_fs.esc) )
+    endIf
+  endForEach
+endRoutine
+
+routine organize_shader_pairs( filepaths:String[] )->Variant
+  local result = @[]
+
+  while (filepaths.count)
+    local vs = find_shader( filepaths, 0 )
+    if (vs)
+      local fs : String
+      local vs_lc = vs.to_lowercase
+      forEach (pair in Build.shader_name_pairs)
+        fs = find_shader( filepaths, vs_lc, pair.first, pair.last )
+        if (fs)
+          result.add( @{vs,fs} )
+          escapeForEach
+        endIf
+      endForEach
+    else
+      local fs = find_shader( filepaths, 1 )
+      if (fs)
+        println "[WARNING] Fragment shader '$' has no corresponding vertex shader - skipping."(fs)
+      else
+        filepaths.clear
+      endIf
+    endIf
+  endWhile
+
+  return result
+endRoutine
+
+routine find_shader( filepaths:String[], pair_index:Int )->String
+  forEach (pair in Build.shader_name_pairs)
+    local result = filepaths.remove_first( $.contains(pair[pair_index],&ignore_case) )
+    if (result) return result
+  endForEach
+  return null
+endRoutine
+
+routine find_shader( filepaths:String[], filepath:String, replace_old:String, replace_new:String )->String
+  local look_for = filepath.replacing( replace_old, replace_new )
+  if local match = filepaths.remove_first( $.equals(look_for,&ignore_case) )
+    return match
+  else
+    return null
+  endIf
 endRoutine
 
 routine rogo_deps
@@ -40,6 +150,9 @@ routine rogo_deps
 endRoutine
 
 routine deps( args:String[], &update, &rebuild )
+  ensure_folder( File("Build/macOS/Assets") )
+  ensure_folder( File("Build/macOS/Source") )
+
   local libs = @{}
   local select_all = false
   loop 2
@@ -71,6 +184,16 @@ routine deps( args:String[], &update, &rebuild )
 
 endRoutine
 
+routine open_xcode( folder:String )
+  local listing = File( folder ).listing( "*.xcworkspace" )
+  if (listing.is_empty) listing = File( folder ).listing( "*.xcodeproj" )
+  if (listing.count)
+    execute ''open "$"'' (forEach in listing)
+  else
+    throw Error( "No .xcodeproj or .xcworkspace folders found." )
+  endIf
+endRoutine
+
 routine ensure_folder( folder:File )
   if (not folder.exists)
     print_cmd "Create $/"(folder)
@@ -78,7 +201,9 @@ routine ensure_folder( folder:File )
   endIf
 endRoutine
 
-routine banner( content:String, w=Console.width:Int )
+routine banner( content:String, w=Console.width:Int, &skip )->Logical
+  if (skip) return true
+
   if w == 0 then w = 80
 
   local n = w.or_smaller(100)
@@ -89,6 +214,8 @@ routine banner( content:String, w=Console.width:Int )
     println "│$$│"(line," "*(n-(line.count+2)))
   endForEach
   println "└$┘" ("─"*(n-2))
+
+  return true
 endRoutine
 
 routine print_cmd( cmd:String )
