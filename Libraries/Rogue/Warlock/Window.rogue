@@ -17,9 +17,8 @@ class Window
       @|$this->sdl_window =
        |  SDL_CreateWindow(
        |    "Warlock",
-       |    SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
        |    800, 600,
-       |    SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_METAL
+       |    SDL_WINDOW_RESIZABLE | SDL_WINDOW_METAL
        |  );
 
       if (not native("!!$this->sdl_window")->Logical)

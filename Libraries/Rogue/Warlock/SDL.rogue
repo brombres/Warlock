@@ -1,6 +1,6 @@
 library Warlock
 
-nativeHeader @|#include <SDL2/SDL.h>
+nativeHeader @|#include <SDL3/SDL.h>
 
 class SDL [singleton]
   PROPERTIES
