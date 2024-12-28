@@ -6,11 +6,11 @@ nativeHeader @|#include <bgfx/bgfx.h>
 $include Warlock/Macros
 $include Warlock/Display
 $include Warlock/DisplayState
+$include Warlock/Framework
 $include Warlock/IDGenerator
 $include Warlock/Renderer
 $include Warlock/Scene
 $include Warlock/SceneState
-$include Warlock/SDL
 $include Warlock/View
 $include Warlock/ViewState
 $include Warlock/Window
@@ -48,7 +48,6 @@ class Warlock [essential singleton]
 
     method add_window( window:Window )
       windows.add( window )
-      Renderer.configure_window( window )
 
     method find_asset( name:String )->File?
       local filepath = native("WarlockInterface_find_asset($name)")->String
@@ -82,7 +81,7 @@ class Warlock [essential singleton]
 
     method on_configure
       if (windows.is_empty)
-        Window()
+        Window( "Warlock", 1280, 720 )
       endIf
 
 endClass

@@ -1,0 +1,21 @@
+library Warlock
+
+class Framework [singleton]
+  PROPERTIES
+    is_configured : Logical
+
+  METHODS
+    method configure
+      print_error
+
+    method create_window( window:Window )->Logical
+      trace
+      print_error
+      return false
+
+    method error->String
+      return "No Framework selected. Include SDL to use the SDL framework."
+
+    method print_error
+      Global.error.println this.error
+endClass

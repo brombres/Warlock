@@ -3,8 +3,9 @@ library Warlock
 class Renderer [singleton]
   METHODS
     method init
-      SDL.configure
+      Framework.configure
 
     method configure_window( window:Window )
+      trace "TODO"
 
 endClass

@@ -231,13 +231,21 @@ routine compile_rogue( platform:String, &debug, &rebuild )
   local source_filename = "RogueProgram.$"(which{ is_apple:"mm" || "cpp" })
   if (rebuild or files.any_newer_than(source_folder/source_filename))
     block cmd = "roguec Warlock"
+      cmd .= appending( "Warlock/SDL" )
+      cmd .= appending( "Warlock/BGFX" )
       cmd .= appending( "Warlock/Platform/$.rogue"(platform) )
       if (debug) cmd .= appending( "--debug" )
+
       local libs = String[]
       libs.add( "Libraries/Warlock/Libraries/Rogue" )
       cmd .= appending( "--libraries=$"(libs.join(',')) )
-      cmd .= appending( "--target=C++,Warlock,SDL,bgfx,$"(platform) )
-      if (is_apple) cmd += ",ObjC"
+
+      local targets = String[]
+      targets.add( "C++,Warlock,$"(platform) )
+      if (is_apple) targets.add( "ObjC" )
+      targets.add( "SDL" )
+      targets.add( "bgfx" )
+      cmd .= appending( "--target=$"(targets.join(',')) )
       cmd .= appending( "--gc=manual" )
       cmd .= appending( "--output=$/RogueProgram"(source_folder.esc) )
       execute cmd

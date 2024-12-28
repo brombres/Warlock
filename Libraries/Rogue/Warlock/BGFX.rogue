@@ -1,0 +1,19 @@
+library Warlock
+
+augment Warlock::Renderer
+  METHODS
+    method init [insert]
+      if (Renderer not instanceOf BGFX)
+        BGFX  # create singleton
+        return
+      endIf
+
+endAugment
+
+class BGFX : Renderer [singleton]
+  PROPERTIES
+  METHODS
+    method init
+      Renderer = this
+      prior.init
+endClass

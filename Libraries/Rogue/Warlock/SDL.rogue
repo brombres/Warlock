@@ -2,11 +2,13 @@ library Warlock
 
 nativeHeader @|#include <SDL3/SDL.h>
 
-class SDL [singleton]
-  PROPERTIES
-    is_configured : Logical
+SDL  # instance SDL singleton on launch
 
+class SDL : Framework [singleton]
   METHODS
+    method init
+      Framework = this
+
     method configure
       if (is_configured) return
 
@@ -17,8 +19,32 @@ class SDL [singleton]
 
       is_configured = true
 
+    method create_window( window:Window )->Logical
+      native @|SDL_WindowFlags flags = 0;
+      native @|flags |= SDL_WINDOW_RESIZABLE;
+      if (System.is_macos) native @|flags |= SDL_WINDOW_METAL;
+
+      native
+      @|$window->sdl_window =
+       |  SDL_CreateWindow(
+       |    $window->title->data->as_utf8,
+       |    $window->width, $window->height,
+       |    flags
+       |  );
+
+      if (not native("!!$window->sdl_window")->Logical)
+        Global.error.println "Failed to create SDL window: $."(SDL.error)
+        return false
+      endIf
+
+      return true
+
     method error->String
       return native("RogueString_create(SDL_GetError())")->String
 
 endClass
 
+augment Warlock::Window
+  PROPERTIES
+    native "SDL_Window* sdl_window;"
+endAugment

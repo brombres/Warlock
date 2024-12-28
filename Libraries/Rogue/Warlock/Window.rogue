@@ -1,33 +1,19 @@
 library Warlock
 
-#nativeType<<"SDL_Window*">> WarlockSDLWindow
-
-class WindowConfig
-endClass
-
 class Window
   AUTO_ID
 
   PROPERTIES
-    native "SDL_Window* sdl_window;"
+    title  : String
+    width  : Int
+    height : Int
 
   METHODS
-    method init
-      native
-      @|$this->sdl_window =
-       |  SDL_CreateWindow(
-       |    "Warlock",
-       |    800, 600,
-       |    SDL_WINDOW_RESIZABLE | SDL_WINDOW_METAL
-       |  );
-
-      if (not native("!!$this->sdl_window")->Logical)
-        error.println "Failed to create SDL window: $."(SDL.error)
-        return
+    method init( title, width, height )
+      if (Framework.create_window(this))
+        Warlock.add_window( this )
+        Renderer.configure_window( this )
       endIf
 
-      Warlock.add_window( this )
-
-      #SDL_RaiseWindow( window );
 endClass
 
