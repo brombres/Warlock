@@ -1,0 +1,5 @@
+library Warlock
+
+class ViewState : State<<ViewState>>
+  METHODS
+endClass

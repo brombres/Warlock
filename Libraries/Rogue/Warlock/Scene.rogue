@@ -1,0 +1,10 @@
+library Warlock
+
+class Scene : State<<Scene>>
+  PROPERTIES
+    state = SceneState()
+
+  METHODS
+    method update
+      state = state.updated || SceneState()
+endClass

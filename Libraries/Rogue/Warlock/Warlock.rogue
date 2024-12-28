@@ -1,13 +1,31 @@
 library Warlock
 
 nativeHeader @|#include "WarlockInterface.h"
+nativeHeader @|#include <bgfx/bgfx.h>
 
+$include Warlock/Macros
+$include Warlock/Display
+$include Warlock/DisplayState
+$include Warlock/IDGenerator
+$include Warlock/Renderer
+$include Warlock/Scene
+$include Warlock/SceneState
+$include Warlock/SDL
+$include Warlock/View
+$include Warlock/ViewState
+$include Warlock/Window
+
+uses Control/State
 uses Geometry [export]
 uses Graphics [export]
 uses Math/Matrix
+uses UI
 
 class Warlock [essential singleton]
   GLOBAL METHODS
+    method configure [api]
+      Warlock.on_configure
+
     method get_vs->Byte[] [api]
       local filepath = Warlock.find_asset( "/Assets/Shaders/AlphaColor-VS.bin" )
       if (filepath) return Byte[]( File(filepath) )
@@ -18,7 +36,11 @@ class Warlock [essential singleton]
       if (filepath) return Byte[]( File(filepath) )
       else          return null
 
+    method render [api]
+
   PROPERTIES
+    configured            : Logical
+    windows               = Window[]
 
   METHODS
     method init
@@ -53,5 +75,12 @@ class Warlock [essential singleton]
 
       return null
       }#
+
+    method on_configure
+      Renderer.configure
+
+      if (windows.is_empty)
+        Window()
+      endIf
 
 endClass

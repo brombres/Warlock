@@ -1,0 +1,18 @@
+library Warlock
+
+class Display [singleton]
+  PROPERTIES
+    state = DisplayState()
+
+  METHODS
+    method on_draw
+
+    method on_end_draw
+
+    method on_end_update
+
+    method on_update
+
+    method update
+      state = state.updated || DisplayState()
+endClass

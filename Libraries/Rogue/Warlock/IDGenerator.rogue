@@ -1,0 +1,11 @@
+library Warlock
+
+class IDGenerator [compound]
+  PROPERTIES
+    .next_id = 0
+
+  METHODS
+    method create_id->Int [mutating]
+      ++.next_id
+      return .next_id
+endClass

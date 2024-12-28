@@ -1,0 +1,11 @@
+library Warlock
+
+nativeHeader @|#include <SDL2/SDL.h>
+
+class SDL [singleton]
+  METHODS
+    method error->String
+      return native("RogueString_create(SDL_GetError())")->String
+
+endClass
+

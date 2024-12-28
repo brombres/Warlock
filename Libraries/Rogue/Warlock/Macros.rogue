@@ -1,0 +1,7 @@
+$macro AUTO_ID
+  GLOBAL PROPERTIES
+    id_generator = IDGenerator()
+
+  PROPERTIES
+    id = id_generator.create_id : Int
+$endMacro
