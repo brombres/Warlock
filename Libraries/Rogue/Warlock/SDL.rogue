@@ -3,7 +3,20 @@ library Warlock
 nativeHeader @|#include <SDL2/SDL.h>
 
 class SDL [singleton]
+  PROPERTIES
+    is_configured : Logical
+
   METHODS
+    method configure
+      if (is_configured) return
+
+      if (native("SDL_Init(SDL_INIT_VIDEO)")->Int != 0)
+        error.println "[SDL Error] Failed to initialize SDL: $."(error)
+        return
+      endIf
+
+      is_configured = true
+
     method error->String
       return native("RogueString_create(SDL_GetError())")->String
 

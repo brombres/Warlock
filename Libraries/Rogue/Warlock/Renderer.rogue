@@ -1,17 +1,10 @@
 library Warlock
 
 class Renderer [singleton]
-  PROPERTIES
-    is_configured : Logical
-
   METHODS
-    method configure
-      if (native("SDL_Init(SDL_INIT_VIDEO)")->Int != 0)
-        error.println "[SDL Error] Failed to initialize SDL: $."...
-                      (native("RogueString_create(SDL_GetError())")->String)
-        return
-      endIf
+    method init
+      SDL.configure
 
-      is_configured = true
+    method configure_window( window:Window )
 
 endClass

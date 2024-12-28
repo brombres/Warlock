@@ -46,6 +46,10 @@ class Warlock [essential singleton]
     method init
       println "Initializing Warlock"
 
+    method add_window( window:Window )
+      windows.add( window )
+      Renderer.configure_window( window )
+
     method find_asset( name:String )->File?
       local filepath = native("WarlockInterface_find_asset($name)")->String
       if (filepath) return File( filepath )
@@ -77,8 +81,6 @@ class Warlock [essential singleton]
       }#
 
     method on_configure
-      Renderer.configure
-
       if (windows.is_empty)
         Window()
       endIf

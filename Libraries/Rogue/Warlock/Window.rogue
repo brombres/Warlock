@@ -27,6 +27,8 @@ class Window
         return
       endIf
 
+      Warlock.add_window( this )
+
       #SDL_RaiseWindow( window );
 endClass
 
