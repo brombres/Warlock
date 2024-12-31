@@ -2,6 +2,8 @@
 #define ROGUE_INTERFACE_H
 
 #if defined(__APPLE__)
+  #define WARLOCK_PLATFORM_APPLE 1
+
   #if defined(TARGET_IPHONE_SIMULATOR)
     #if TARGET_IPHONE_SIMULATOR
       #define WARLOCK_PLATFORM_IOS 1

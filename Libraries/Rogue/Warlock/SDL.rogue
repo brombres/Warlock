@@ -8,6 +8,7 @@ class SDL : Framework [singleton]
   METHODS
     method init
       Framework = this
+      Renderer  # initialize
 
     method configure
       if (is_configured) return
@@ -37,6 +38,8 @@ class SDL : Framework [singleton]
         return false
       endIf
 
+      native @|SDL_RaiseWindow( $window->sdl_window );
+
       return true
 
     method error->String
@@ -47,4 +50,5 @@ endClass
 augment Warlock::Window
   PROPERTIES
     native "SDL_Window* sdl_window;"
+    native "void* native_window_handle;"
 endAugment

@@ -1,7 +1,6 @@
 library Warlock
 
 nativeHeader @|#include "WarlockInterface.h"
-nativeHeader @|#include <bgfx/bgfx.h>
 
 $include Warlock/Macros
 $include Warlock/Display
@@ -27,16 +26,24 @@ class Warlock [essential singleton]
       Warlock.on_configure
 
     method get_vs->Byte[] [api]
-      local filepath = Warlock.find_asset( "/Assets/Shaders/AlphaColor-VS.bin" )
+      #local filepath = Warlock.find_asset( "/Assets/Shaders/AlphaColor-VS.bin" )
+      local filepath = Warlock.find_asset( "/Assets/Shaders/vs_cubes.bin" )
       if (filepath) return Byte[]( File(filepath) )
       else          return null
 
     method get_fs->Byte[] [api]
-      local filepath = Warlock.find_asset( "/Assets/Shaders/AlphaColor-FS.bin" )
+      #local filepath = Warlock.find_asset( "/Assets/Shaders/AlphaColor-FS.bin" )
+      local filepath = Warlock.find_asset( "/Assets/Shaders/fs_cubes.bin" )
       if (filepath) return Byte[]( File(filepath) )
       else          return null
 
+    method ortho->Matrix [api]
+      #return Matrix.orthographic( -2, 2, -2, 2, 0, 100, 0, Renderer.uses_normalized_depth )
+      #return Matrix.perspective( Radians(Degrees(90)), 1.78, 10, 100, not Renderer.uses_normalized_depth, &right_handed )
+      return Matrix.look_at( XYZ(1,2,3), XYZ(4,5,6), XYZ(0,-1,0) )
+
     method render [api]
+      Warlock.on_render
 
   PROPERTIES
     configured            : Logical
@@ -83,5 +90,8 @@ class Warlock [essential singleton]
       if (windows.is_empty)
         Window( "Warlock", 1280, 720 )
       endIf
+
+    method on_render
+      (forEach in windows).render
 
 endClass

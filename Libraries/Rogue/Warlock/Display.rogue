@@ -5,7 +5,12 @@ class Display [singleton]
     state = DisplayState()
 
   METHODS
+    method draw
+      on_draw
+      on_end_draw
+
     method on_draw
+      #trace Renderer.uses_normalized_depth
 
     method on_end_draw
 
@@ -13,6 +18,13 @@ class Display [singleton]
 
     method on_update
 
-    method update
+    method render
       state = state.updated || DisplayState()
+      state.update
+      state.draw
+
+    method update
+      on_update
+      on_end_update
+
 endClass

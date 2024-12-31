@@ -1,19 +1,65 @@
 library Warlock
 
-augment Warlock::Renderer
-  METHODS
-    method init [insert]
-      if (Renderer not instanceOf BGFX)
-        BGFX  # create singleton
-        return
-      endIf
+nativeHeader @|#include <bgfx/bgfx.h>
+nativeHeader @|#include <bgfx/platform.h>
 
-endAugment
+BGFX
 
 class BGFX : Renderer [singleton]
   PROPERTIES
+    is_initialized : Logical
+
   METHODS
     method init
       Renderer = this
       prior.init
+
+    method activate_graphics_context( window:Window )
+      native
+      @|bgfx::PlatformData pd;
+       |pd.nwh = $window->native_window_handle;
+       |bgfx::setPlatformData( pd );
+
+    method configure_bgfx( window:Window )
+      if (is_initialized) return
+
+      native
+      @|SDL_Window* window = $window->sdl_window;
+       |uint16_t w = static_cast<uint16_t>( $window->width );
+       |uint16_t h = static_cast<uint16_t>( $window->height );
+       |
+       |bgfx::Init init;
+       |init.type = bgfx::RendererType::Count; // Automatically choose renderer
+       |init.resolution.width = w;
+       |init.resolution.height = h;
+       |init.resolution.reset = BGFX_RESET_VSYNC;
+       |
+       |bgfx::PlatformData platform_data{};
+       |#if defined(ROGUE_PLATFORM_APPLE)
+       |  $window->native_window_handle = SDL_Metal_GetLayer( SDL_Metal_CreateView(window) );
+       |#else
+       |  #error Must implement Native Window Handle retrieval in BGFX.configure_bgfx() for current platform.
+       |#endif
+       |platform_data.nwh = $window->native_window_handle;
+       |init.platformData = platform_data;
+       |
+      if (not native("bgfx::init(init)")->Logical)
+        Global.error.println "[Warlock] Failed to initialize BGFX."
+        return
+      endIf
+
+      is_initialized = true
+
+    method configure_window( window:Window )
+      configure_bgfx( window )
+      activate_graphics_context( window )
+
+      native
+      @|uint16_t w = static_cast<uint16_t>( $window->width );
+       |uint16_t h = static_cast<uint16_t>( $window->height );
+       |bgfx::setViewRect( $window->id, 0, 0, w, h );
+       |bgfx::touch( $window->id );
+       |bgfx::setViewClear( $window->id, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x0000ffff );
+       |bgfx::setViewRect( $window->id, 0, 0, w, h );
+
 endClass

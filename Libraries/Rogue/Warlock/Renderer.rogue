@@ -6,6 +6,14 @@ class Renderer [singleton]
       Framework.configure
 
     method configure_window( window:Window )
-      trace "TODO"
+      print_error
+
+    method print_error
+      Global.error.println "No Renderer is configured. Include BGFX to use the BGFX renderer."
+
+    method uses_normalized_depth->Logical
+      # Returns 'true' if Z device coordinates are [0,1].
+      # Returns 'false' if Z device coordinates are [-1,1] (homogeneous).
+      return native( "!bgfx::getCaps()->homogeneousDepth" )->Logical
 
 endClass
