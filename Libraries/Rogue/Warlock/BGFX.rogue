@@ -6,9 +6,6 @@ nativeHeader @|#include <bgfx/platform.h>
 BGFX
 
 class BGFX : Renderer [singleton]
-  PROPERTIES
-    is_initialized : Logical
-
   METHODS
     method init
       Renderer = this
@@ -61,5 +58,27 @@ class BGFX : Renderer [singleton]
        |bgfx::touch( $window->id );
        |bgfx::setViewClear( $window->id, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x0000ffff );
        |bgfx::setViewRect( $window->id, 0, 0, w, h );
+
+    method on_window_resized( window:Window ) [override]
+      if (is_initialized)
+        local size = window.size
+        activate_graphics_context( window )
+
+        native
+        @|
+         |bgfx::reset( $size.x, $size.y, BGFX_RESET_VSYNC );
+         |
+         |const bgfx::Stats* stats = bgfx::getStats();
+         |for (int i=stats->numDraw; --i>=0; ) bgfx::frame();
+         |
+         |bgfx::setViewRect( $window->id, 0, 0, static_cast<uint16_t>($size.x), static_cast<uint16_t>($size.y) );
+         |
+         |bgfx::touch( $window->id );
+      endIf
+
+    method uses_normalized_depth->Logical [override]
+      # Returns 'true' if Z device coordinates are [0,1].
+      # Returns 'false' if Z device coordinates are [-1,1] (homogeneous).
+      return native( "!bgfx::getCaps()->homogeneousDepth" )->Logical
 
 endClass

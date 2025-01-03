@@ -5,6 +5,28 @@ nativeHeader @|#include <SDL3/SDL.h>
 SDL  # instance SDL singleton on launch
 
 class SDL : Framework [singleton]
+  NATIVE
+    nativeCode
+    @|bool WarlockSDL_event_filter( void* data, SDL_Event* event )
+     |{
+     |  if (event->type == SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED)
+     |  {
+     |    WarlockSDL__on_window_resized__RogueInt( event->window.windowID );
+     |  }
+     |
+     |  return true;
+     |}
+
+  GLOBAL METHODS
+    method on_window_resized( window_id:Int ) [api]
+      forEach (window in Warlock.windows)
+        if (native("SDL_GetWindowID($window->sdl_window) == $window_id")->Logical)
+          SDL.update_window_size( window )
+          Renderer.on_window_resized( window )
+          return
+        endIf
+      endForEach
+
   METHODS
     method init
       Framework = this
@@ -37,6 +59,8 @@ class SDL : Framework [singleton]
         Global.error.println "Failed to create SDL window: $."(SDL.error)
         return false
       endIf
+
+      native @|SDL_SetEventFilter( WarlockSDL_event_filter, $window->sdl_window );
 
       native @|SDL_RaiseWindow( $window->sdl_window );
 
