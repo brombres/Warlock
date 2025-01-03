@@ -59,6 +59,8 @@ routine rogo_compile_assets
 endRoutine
 
 routine rogo_shaders( platform=null:String )
+  if (not String.exists(platform)) platform = System.os
+
   local dest = File( "Build/$/Assets/Shaders"(platform) )
   ensure_folder( dest )
 
@@ -153,6 +155,11 @@ routine rogo_deps
 endRoutine
 
 routine deps( args:String[], &update, &rebuild )
+  if (Files(".","BuildWarlock.rogue").count == 1)
+    banner "ERROR: Rogo should not be run directly in the Warlock library folder."
+    System.exit 1
+  endIf
+
   ensure_folder( File("Build/macOS/Assets") )
   ensure_folder( File("Build/macOS/Source") )
   ensure_folder( File("Source") )

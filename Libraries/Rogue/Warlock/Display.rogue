@@ -4,10 +4,24 @@ class Display [singleton]
   PROPERTIES
     state = DisplayState()
 
+    size : XY
+
+    projection_mode = ProjectionMode2DX : ProjectionMode
+
+    perspective_center : XY
+    # The proportional "origin" for 3D perspective and the vanishing point for
+    # polygons parallel to the camera axis.  Automatically reset to (0.5,0.5)
+    # at the beginning of every draw.
+
+    projection_transform  : Matrix
+
   METHODS
     method draw
       on_draw
       on_end_draw
+
+    method height->Real
+      return size.y
 
     method on_draw
       #trace Renderer.uses_normalized_depth
@@ -19,12 +33,28 @@ class Display [singleton]
     method on_update
 
     method render
-      state = state.updated || DisplayState()
+      Display = this
+      render_begin
       state.update
       state.draw
+      render_end
+
+    method render_begin
+      reset
+      state = state.updated || DisplayState()
+      state.on_render
+
+    method render_end
+      state.on_end_render
+
+    method reset
+      projection_mode.reset
 
     method update
       on_update
       on_end_update
+
+    method width->Real
+      return size.x
 
 endClass

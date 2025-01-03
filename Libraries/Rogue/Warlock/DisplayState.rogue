@@ -11,7 +11,11 @@ class DisplayState : State<<DisplayState>>
 
     method on_end_draw
 
+    method on_end_render
+
     method on_end_update
+
+    method on_render
 
     method on_update
 

@@ -7,6 +7,7 @@ $include Warlock/Display
 $include Warlock/DisplayState
 $include Warlock/Framework
 $include Warlock/IDGenerator
+$include Warlock/ProjectionMode
 $include Warlock/Renderer
 $include Warlock/Scene
 $include Warlock/SceneState
@@ -27,13 +28,13 @@ class Warlock [essential singleton]
 
     method get_vs->Byte[] [api]
       #local filepath = Warlock.find_asset( "/Assets/Shaders/AlphaColor-VS.bin" )
-      local filepath = Warlock.find_asset( "/Assets/Shaders/vs_cubes.bin" )
+      local filepath = Warlock.find_asset( "/Assets/Shaders/Cubes-VS.bin" )
       if (filepath) return Byte[]( File(filepath) )
       else          return null
 
     method get_fs->Byte[] [api]
       #local filepath = Warlock.find_asset( "/Assets/Shaders/AlphaColor-FS.bin" )
-      local filepath = Warlock.find_asset( "/Assets/Shaders/fs_cubes.bin" )
+      local filepath = Warlock.find_asset( "/Assets/Shaders/Cubes-FS.bin" )
       if (filepath) return Byte[]( File(filepath) )
       else          return null
 

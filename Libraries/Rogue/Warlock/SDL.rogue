@@ -29,7 +29,7 @@ class SDL : Framework [singleton]
       @|$window->sdl_window =
        |  SDL_CreateWindow(
        |    $window->title->data->as_utf8,
-       |    $window->width, $window->height,
+       |    (int)$window->size.x, (int)$window->size.y,
        |    flags
        |  );
 
@@ -44,6 +44,13 @@ class SDL : Framework [singleton]
 
     method error->String
       return native("RogueString_create(SDL_GetError())")->String
+
+    method update_window_size( window:Window )
+      native
+      @|int w, h;
+       |SDL_GetWindowSize( $window->sdl_window, &w, &h );
+       |$window->size.x = w;
+       |$window->size.y = h;
 
 endClass
 

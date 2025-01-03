@@ -1,6 +1,6 @@
 library Warlock
 
-class Framework [singleton]
+class Framework [abstract singleton]
   PROPERTIES
     is_configured : Logical
 
@@ -18,4 +18,6 @@ class Framework [singleton]
 
     method print_error
       Global.error.println this.error
+
+    method update_window_size( window:Window ) [abstract]
 endClass

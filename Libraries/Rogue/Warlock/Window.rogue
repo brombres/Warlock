@@ -5,18 +5,24 @@ class Window : Display
 
   PROPERTIES
     title  : String
-    width  : Int
-    height : Int
 
   METHODS
-    method init( title, width, height )
+    method init( title, width:Int, height:Int )
+      size = XY(width,height)
       if (Framework.create_window(this))
         Warlock.add_window( this )
         Renderer.configure_window( this )
       endIf
 
     method render
-      Display = this
+      local old_size = size
+      Framework.update_window_size( this )
+      if (size != old_size)
+        println "updating size: " + size
+        native @|bgfx::reset( (int)$this->size.x,  (int)$this->size.y, BGFX_RESET_VSYNC );
+                |bgfx::setViewRect( 1, 0, 0, static_cast<uint16_t>($this->size.x), static_cast<uint16_t>($this->size.y) );
+        trace size
+      endIf
       prior.render
 
 endClass
