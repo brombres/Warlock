@@ -1,0 +1,4 @@
+library Warlock
+
+class Vertex( position:XYZ, color:Color, uv=XY(0,0):XY ) [compound]
+endClass

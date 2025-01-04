@@ -17,7 +17,7 @@ class Renderer [singleton]
     method print_error
       Global.error.println "No Renderer is configured. Include BGFX to use the BGFX renderer."
 
-    method uses_normalized_depth->Logical
+    method uses_homogeneous_depth->Logical
       return true
 
 endClass

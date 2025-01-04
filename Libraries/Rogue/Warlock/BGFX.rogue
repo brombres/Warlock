@@ -76,9 +76,9 @@ class BGFX : Renderer [singleton]
          |bgfx::touch( $window->id );
       endIf
 
-    method uses_normalized_depth->Logical [override]
-      # Returns 'true' if Z device coordinates are [0,1].
-      # Returns 'false' if Z device coordinates are [-1,1] (homogeneous).
-      return native( "!bgfx::getCaps()->homogeneousDepth" )->Logical
+    method uses_homogeneous_depth->Logical [override]
+      # Returns 'true' if Z device coordinates are [-1,1] (homogeneous).
+      # Returns 'false' if Z device coordinates are [0,1] (normalized).
+      return native( "bgfx::getCaps()->homogeneousDepth" )->Logical
 
 endClass

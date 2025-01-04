@@ -1,0 +1,46 @@
+library Warlock
+
+class MeshBuilder
+  PROPERTIES
+    vertices = Vertex[]
+    indices  = Int[]
+
+  METHODS
+    method add( index:Int )
+      indices.add( index )
+
+    method add( i1:Int, i2:Int )
+      indices.reserve( 2 )
+      indices.[ add(i1), add(i2) ]
+
+    method add( i1:Int, i2:Int, i3:Int )
+      indices.reserve( 3 )
+      indices.[ add(i1), add(i2) ]
+      indices.[ add(i1), add(i2), add(i3) ]
+
+    method add( indices:Int[] )
+      this.indices.add( indices )
+
+    method add( other:MeshBuilder )
+      vertices.reserve( other.vertices.count )
+      indices.reserve( other.indices.count )
+      vertices.add( other.vertices )
+      local n = this.indices.count
+      forEach (index in other.indices)
+        indices.add( n + index )
+      endForEach
+
+    method add( vertex:Vertex, &auto_index )
+      if (auto_index) indices.add( vertices.count )
+      vertices.add( vertex )
+
+    method add( vertices:Vertex[] )
+      this.vertices.add( vertices )
+
+    method reserve( vertex_count:Int, index_count=null:Int?  )
+      # Reserves capacity for an additional 'vertex_count' vertices and 'index_count'
+      # (default 'vertex_count*3') vertices.
+      if (not index_count) index_count = vertex_count * 3
+      vertices.reserve( vertex_count )
+      indices.reserve( vertex_count * index_count.value )
+endClass
