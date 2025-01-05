@@ -82,12 +82,24 @@ class BGFX : Renderer [singleton]
     method flush [override]
       if (draw_buffer.indices.is_empty) return
 
-      vertex_data.clear
+      local display_id = Display.id
+
+      local projection_transform = Warlock.m_proj
+      local view_transform = Warlock.m_view
+      local object_transform = Warlock.m_xform( frame )
+
+      native
+      @|bgfx::setViewTransform(
+       |  $display_id,
+       |  reinterpret_cast<float*>( &$view_transform ),
+       |  reinterpret_cast<float*>( &$projection_transform )
+       |);
+       |
+       |bgfx::setTransform( reinterpret_cast<float*>( &$object_transform ) );
+
       vertex_data.reserve( draw_buffer.vertices.count )
-      index_data.clear
       index_data.reserve( (draw_buffer.indices.count+1)/2 )
 
-      local display_id = Display.id
       local current_shader = Shader.ALPHA_COLOR
 
       native
@@ -140,6 +152,7 @@ class BGFX : Renderer [singleton]
       draw_buffer.add( Warlock.get_mesh )
 
     method on_end_draw( window:Window ) [override]
+      native @|bgfx::frame();
       prior.on_end_draw( window )
 
     method on_window_resized( window:Window ) [override]
