@@ -1,6 +1,8 @@
 library Warlock
 
 class Display [singleton]
+  AUTO_ID
+
   PROPERTIES
     state = DisplayState()
 

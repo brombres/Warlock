@@ -6,6 +6,9 @@ class MeshBuilder
     indices  = Int[]
 
   METHODS
+    method init( default_capacity=0:Int )
+      if (default_capacity) reserve( default_capacity )
+
     method add( index:Int )
       indices.add( index )
 
@@ -37,10 +40,14 @@ class MeshBuilder
     method add( vertices:Vertex[] )
       this.vertices.add( vertices )
 
+    method clear
+      vertices.clear
+      indices.clear
+
     method reserve( vertex_count:Int, index_count=null:Int?  )
       # Reserves capacity for an additional 'vertex_count' vertices and 'index_count'
-      # (default 'vertex_count*3') vertices.
-      if (not index_count) index_count = vertex_count * 3
+      # (default: same as 'vertex_count') vertices.
+      if (not index_count) index_count = vertex_count
       vertices.reserve( vertex_count )
       indices.reserve( vertex_count * index_count.value )
 endClass

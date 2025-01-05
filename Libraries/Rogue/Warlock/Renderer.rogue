@@ -3,6 +3,8 @@ library Warlock
 class Renderer [singleton]
   PROPERTIES
     is_initialized : Logical
+    frame          : Int
+    draw_buffer    = MeshBuilder( 6144 )
 
   METHODS
     method init
@@ -10,6 +12,18 @@ class Renderer [singleton]
 
     method configure_window( window:Window )
       print_error
+
+    method flush
+
+    method on_begin_draw( window:Window )
+      draw_buffer.clear
+
+    method on_draw #FIXME remove
+      noAction
+
+    method on_end_draw( window:Window )
+      flush
+      ++frame
 
     method on_window_resized( window:Window )
       noAction

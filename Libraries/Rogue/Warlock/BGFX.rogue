@@ -6,6 +6,13 @@ nativeHeader @|#include <bgfx/platform.h>
 BGFX
 
 class BGFX : Renderer [singleton]
+  PROPERTIES
+    vertex_data = BGFXVertex[]
+    index_data  = Int32[]
+
+    native @|bgfx::DynamicVertexBufferHandle bgfx_vertex_buffer;
+    native @|bgfx::DynamicIndexBufferHandle  bgfx_index_buffer;
+
   METHODS
     method init
       Renderer = this
@@ -26,7 +33,7 @@ class BGFX : Renderer [singleton]
        |uint16_t h = static_cast<uint16_t>( $window->size.y );
        |
        |bgfx::Init init;
-       |init.type = bgfx::RendererType::Count; // Automatically choose renderer
+       |init.type = bgfx::RendererType::Count;
        |init.resolution.width = w;
        |init.resolution.height = h;
        |init.resolution.reset = BGFX_RESET_VSYNC;
@@ -45,6 +52,19 @@ class BGFX : Renderer [singleton]
         return
       endIf
 
+      native
+      @|bgfx::VertexLayout vertex_layout;
+       |vertex_layout.begin()
+       |  .add(bgfx::Attrib::Position,  3, bgfx::AttribType::Float )
+       |  .add(bgfx::Attrib::Color0,    4, bgfx::AttribType::Uint8, true)
+       |  .add(bgfx::Attrib::TexCoord0, 2, bgfx::AttribType::Float )
+       |.end();
+       |
+       |$this->bgfx_vertex_buffer = bgfx::createDynamicVertexBuffer( 6144, vertex_layout, BGFX_BUFFER_ALLOW_RESIZE );
+       |$this->bgfx_index_buffer  = bgfx::createDynamicIndexBuffer( 6144, BGFX_BUFFER_ALLOW_RESIZE );
+
+      Shader.ALPHA_COLOR = Shader( Warlock.get_vs, Warlock.get_fs )
+
       is_initialized = true
 
     method configure_window( window:Window )
@@ -59,26 +79,116 @@ class BGFX : Renderer [singleton]
        |bgfx::setViewClear( $window->id, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x0000ffff );
        |bgfx::setViewRect( $window->id, 0, 0, w, h );
 
+    method flush [override]
+      if (draw_buffer.indices.is_empty) return
+
+      vertex_data.clear
+      vertex_data.reserve( draw_buffer.vertices.count )
+      index_data.clear
+      index_data.reserve( (draw_buffer.indices.count+1)/2 )
+
+      local display_id = Display.id
+      local current_shader = Shader.ALPHA_COLOR
+
+      native
+      @|{
+       |  WarlockVertex*      src_data = (WarlockVertex*)($draw_buffer->vertices->data);
+       |  WarlockBGFXVertex* dest_data = (WarlockBGFXVertex*)($vertex_data->data);
+       |  for (int i=(int)$draw_buffer->vertices->count; --i>=0; )
+       |  {
+       |    dest_data->x = (float) src_data->position.x;
+       |    dest_data->y = (float) src_data->position.y;
+       |    dest_data->z = (float) src_data->position.z;
+       |    RogueInt argb = src_data->color.argb;
+       |    dest_data->abgr = (uint32_t)((argb & 0xFF00FF00) | ((argb << 16) & 0xFF0000) | ((argb >> 16) & 0xFF));
+       |    ++src_data;
+       |    ++dest_data;
+       |  }
+       |}
+       |
+       |bgfx::update(
+       |  $this->bgfx_vertex_buffer, 0,
+       |  bgfx::copy( $vertex_data->data, $draw_buffer->vertices->count * sizeof(WarlockBGFXVertex) )
+       |);
+       |
+       |bgfx::setVertexBuffer( 0, $this->bgfx_vertex_buffer );
+       |
+       |{
+       |  RogueInt*  src_data = $draw_buffer->indices->as_ints;
+       |  uint16_t* dest_data = ((uint16_t*)($index_data->as_ints));
+       |  for (int i=(int)$draw_buffer->indices->count; --i>=0; )
+       |  {
+       |    *(dest_data++) = (uint16_t) *(src_data++);
+       |  }
+       |}
+       |
+       |bgfx::update(
+       |  $this->bgfx_index_buffer, 0,
+       |  bgfx::copy( $index_data->data, $draw_buffer->indices->count * sizeof(uint16_t) )
+       |);
+       |
+       |bgfx::setIndexBuffer( $this->bgfx_index_buffer );
+       |
+       |bgfx::submit( $display_id, $current_shader->program );
+
+      draw_buffer.clear
+
+    #method on_begin_draw( window:Window ) [override]
+    #  prior.on_begin_draw( window )
+
+    method on_draw [override] # FIXME remove
+      draw_buffer.add( Warlock.get_mesh )
+
+    method on_end_draw( window:Window ) [override]
+      prior.on_end_draw( window )
+
     method on_window_resized( window:Window ) [override]
       if (is_initialized)
         local size = window.size
         activate_graphics_context( window )
 
         native
-        @|
-         |bgfx::reset( $size.x, $size.y, BGFX_RESET_VSYNC );
-         |
-         |const bgfx::Stats* stats = bgfx::getStats();
-         |for (int i=stats->numDraw; --i>=0; ) bgfx::frame();
-         |
-         |bgfx::setViewRect( $window->id, 0, 0, static_cast<uint16_t>($size.x), static_cast<uint16_t>($size.y) );
+        @|bgfx::reset( $size.x, $size.y, BGFX_RESET_VSYNC );
+
+        render_pending_frames
+
+        native
+        @|bgfx::setViewRect( $window->id, 0, 0, static_cast<uint16_t>($size.x), static_cast<uint16_t>($size.y) );
          |
          |bgfx::touch( $window->id );
+      endIf
+
+    method render_pending_frames
+      if (is_initialized)
+        native
+        @|const bgfx::Stats* stats = bgfx::getStats();
+         |for (int i=stats->numDraw; --i>=0; ) bgfx::frame();
       endIf
 
     method uses_homogeneous_depth->Logical [override]
       # Returns 'true' if Z device coordinates are [-1,1] (homogeneous).
       # Returns 'false' if Z device coordinates are [0,1] (normalized).
       return native( "bgfx::getCaps()->homogeneousDepth" )->Logical
+
+endClass
+
+class BGFXVertex( x:Real32, y:Real32, z:Real32, abgr:Int32, u:Real32, v:Real32 ) [compound]
+endClass
+
+class Shader
+  GLOBAL PROPERTIES
+    ALPHA_COLOR : Shader
+
+  PROPERTIES
+    native @|bgfx::ProgramHandle program;
+
+  METHODS
+    method init( vertex_shader:Byte[], fragment_shader:Byte[] )
+      native
+      @|$this->program = bgfx::createProgram(
+       |  bgfx::createShader( bgfx::copy($vertex_shader->as_bytes, $vertex_shader->count) ),
+       |  bgfx::createShader( bgfx::copy($fragment_shader->as_bytes, $fragment_shader->count) ),
+       |  true  // have BGFX destroy shaders
+       |);
 
 endClass

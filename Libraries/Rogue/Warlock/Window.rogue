@@ -1,8 +1,6 @@
 library Warlock
 
 class Window : Display
-  AUTO_ID
-
   PROPERTIES
     title  : String
 
@@ -15,15 +13,11 @@ class Window : Display
       endIf
 
     method render
-      local old_size = size
       Framework.update_window_size( this )
-      if (size != old_size)
-        println "updating size: " + size
-        native @|bgfx::reset( (int)$this->size.x,  (int)$this->size.y, BGFX_RESET_VSYNC );
-                |bgfx::setViewRect( 1, 0, 0, static_cast<uint16_t>($this->size.x), static_cast<uint16_t>($this->size.y) );
-        trace size
-      endIf
+      Renderer.on_begin_draw( this )
+Renderer.on_draw  # FIXME remove
       prior.render
+      Renderer.on_end_draw( this )
 
 endClass
 
