@@ -1,0 +1,13 @@
+library Warlock
+
+class DrawCommand(
+  primitive_type:GlobalID,
+  first_vertex:Int,
+  vertex_count:Int,
+  first_index:Int,
+  index_count:Int,
+  projection_transform:Matrix,
+  view_transform:Matrix,
+  object_transform:Matrix
+) [compound]
+endClass

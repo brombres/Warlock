@@ -18,7 +18,6 @@ class MeshBuilder
 
     method add( i1:Int, i2:Int, i3:Int )
       indices.reserve( 3 )
-      indices.[ add(i1), add(i2) ]
       indices.[ add(i1), add(i2), add(i3) ]
 
     method add( indices:Int[] )
@@ -33,12 +32,16 @@ class MeshBuilder
         indices.add( n + index )
       endForEach
 
-    method add( vertex:Vertex, &auto_index )
+    method add( vertex:Vertex, &auto_index )->Int
+      local index = vertices.count
       if (auto_index) indices.add( vertices.count )
       vertices.add( vertex )
+      return index
 
-    method add( vertices:Vertex[] )
+    method add( vertices:Vertex[] )->Int
+      local index = vertices.count
       this.vertices.add( vertices )
+      return index
 
     method clear
       vertices.clear

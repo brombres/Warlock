@@ -27,6 +27,9 @@ class BGFX : Renderer [singleton]
     method configure_bgfx( window:Window )
       if (is_initialized) return
 
+      vertex_data.reserve( 6144 )
+      index_data.reserve( 6144/2 )
+
       native
       @|SDL_Window* window = $window->sdl_window;
        |uint16_t w = static_cast<uint16_t>( $window->size.x );
@@ -79,34 +82,20 @@ class BGFX : Renderer [singleton]
        |bgfx::setViewClear( $window->id, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x0000ffff );
        |bgfx::setViewRect( $window->id, 0, 0, w, h );
 
-    method flush [override]
-      if (draw_buffer.indices.is_empty) return
+    #method on_begin_draw( window:Window ) [override]
+    #  prior.on_begin_draw( window )
 
-      local display_id = Display.id
+    method on_end_draw( window:Window ) [override]
+      prior.on_end_draw( window )
 
-      local projection_transform = Warlock.m_proj
-      local view_transform = Warlock.m_view
-      local object_transform = Warlock.m_xform( frame )
-
-      native
-      @|bgfx::setViewTransform(
-       |  $display_id,
-       |  reinterpret_cast<float*>( &$view_transform ),
-       |  reinterpret_cast<float*>( &$projection_transform )
-       |);
-       |
-       |bgfx::setTransform( reinterpret_cast<float*>( &$object_transform ) );
-
-      vertex_data.reserve( draw_buffer.vertices.count )
-      index_data.reserve( (draw_buffer.indices.count+1)/2 )
-
-      local current_shader = Shader.ALPHA_COLOR
+      vertex_data.reserve( data.vertices.count )
+      index_data.reserve( (data.indices.count+1)/2 )
 
       native
       @|{
-       |  WarlockVertex*      src_data = (WarlockVertex*)($draw_buffer->vertices->data);
+       |  WarlockVertex*      src_data = (WarlockVertex*)($data->vertices->data);
        |  WarlockBGFXVertex* dest_data = (WarlockBGFXVertex*)($vertex_data->data);
-       |  for (int i=(int)$draw_buffer->vertices->count; --i>=0; )
+       |  for (int i=(int)$data->vertices->count; --i>=0; )
        |  {
        |    dest_data->x = (float) src_data->position.x;
        |    dest_data->y = (float) src_data->position.y;
@@ -120,15 +109,13 @@ class BGFX : Renderer [singleton]
        |
        |bgfx::update(
        |  $this->bgfx_vertex_buffer, 0,
-       |  bgfx::copy( $vertex_data->data, $draw_buffer->vertices->count * sizeof(WarlockBGFXVertex) )
+       |  bgfx::copy( $vertex_data->data, (uint32_t)($data->vertices->count * sizeof(WarlockBGFXVertex)) )
        |);
        |
-       |bgfx::setVertexBuffer( 0, $this->bgfx_vertex_buffer );
-       |
        |{
-       |  RogueInt*  src_data = $draw_buffer->indices->as_ints;
+       |  RogueInt*  src_data = $data->indices->as_ints;
        |  uint16_t* dest_data = ((uint16_t*)($index_data->as_ints));
-       |  for (int i=(int)$draw_buffer->indices->count; --i>=0; )
+       |  for (int i=(int)$data->indices->count; --i>=0; )
        |  {
        |    *(dest_data++) = (uint16_t) *(src_data++);
        |  }
@@ -136,24 +123,51 @@ class BGFX : Renderer [singleton]
        |
        |bgfx::update(
        |  $this->bgfx_index_buffer, 0,
-       |  bgfx::copy( $index_data->data, $draw_buffer->indices->count * sizeof(uint16_t) )
+       |  bgfx::copy( $index_data->data, (uint32_t)($data->indices->count * sizeof(uint16_t)) )
        |);
        |
-       |bgfx::setIndexBuffer( $this->bgfx_index_buffer );
-       |
-       |bgfx::submit( $display_id, $current_shader->program );
 
-      draw_buffer.clear
+      local display_id = Display.id
+      forEach (cmd in render_queue)
 
-    #method on_begin_draw( window:Window ) [override]
-    #  prior.on_begin_draw( window )
+        local projection_transform = cmd.projection_transform->Matrix32
+        local view_transform = cmd.view_transform->Matrix32
+        local object_transform = cmd.object_transform->Matrix32
 
-    method on_draw [override] # FIXME remove
-      draw_buffer.add( Warlock.get_mesh )
+        native
+        @|bgfx::setViewTransform(
+         |  $display_id,
+         |  reinterpret_cast<float*>( &$view_transform ),
+         |  reinterpret_cast<float*>( &$projection_transform )
+         |);
+         |
+         |bgfx::setTransform( reinterpret_cast<float*>( &$object_transform ) );
 
-    method on_end_draw( window:Window ) [override]
+
+        local current_shader = Shader.ALPHA_COLOR
+
+        local bgfx_state_flags = 0
+        native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_ALPHA);
+        native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_WRITE_Z);
+        native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_DEPTH_TEST_LEQUAL);
+        which (cmd.primitive_type)
+          case <lines>:  native @|$bgfx_state_flags |= (RogueInt)BGFX_STATE_PT_LINES;
+          case <points>: native @|$bgfx_state_flags |= (RogueInt)BGFX_STATE_PT_POINTS;
+        endWhich
+
+        native
+        @|bgfx::setVertexBuffer( 0, $this->bgfx_vertex_buffer, (uint32_t)$cmd.first_vertex, (uint32_t)$cmd.vertex_count );
+         |bgfx::setIndexBuffer( $this->bgfx_index_buffer, (uint32_t)$cmd.first_index, (uint32_t)$cmd.index_count );
+         |bgfx::setState( (uint64_t)$bgfx_state_flags );
+         |bgfx::submit( $display_id, $current_shader->program );
+      endForEach
+      render_queue.clear
+
       native @|bgfx::frame();
-      prior.on_end_draw( window )
+
+      data.clear
+      first_index = 0
+      first_vertex = 0
 
     method on_window_resized( window:Window ) [override]
       if (is_initialized)
@@ -199,8 +213,8 @@ class Shader
     method init( vertex_shader:Byte[], fragment_shader:Byte[] )
       native
       @|$this->program = bgfx::createProgram(
-       |  bgfx::createShader( bgfx::copy($vertex_shader->as_bytes, $vertex_shader->count) ),
-       |  bgfx::createShader( bgfx::copy($fragment_shader->as_bytes, $fragment_shader->count) ),
+       |  bgfx::createShader( bgfx::copy($vertex_shader->as_bytes, (uint32_t)$vertex_shader->count) ),
+       |  bgfx::createShader( bgfx::copy($fragment_shader->as_bytes, (uint32_t)$fragment_shader->count) ),
        |  true  // have BGFX destroy shaders
        |);
 

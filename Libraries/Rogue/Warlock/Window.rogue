@@ -6,6 +6,8 @@ class Window : Display
 
   METHODS
     method init( title, width:Int, height:Int )
+      if (not state) state = DisplayState()
+
       size = XY(width,height)
       if (Framework.create_window(this))
         Warlock.add_window( this )
@@ -15,8 +17,9 @@ class Window : Display
     method render
       Framework.update_window_size( this )
       Renderer.on_begin_draw( this )
-Renderer.on_draw  # FIXME remove
+      State.current.on_draw
       prior.render
+      State.current.on_end_draw
       Renderer.on_end_draw( this )
 
 endClass

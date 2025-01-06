@@ -4,7 +4,11 @@ class Renderer [singleton]
   PROPERTIES
     is_initialized : Logical
     frame          : Int
-    draw_buffer    = MeshBuilder( 6144 )
+    data           = MeshBuilder( 6144 )
+    primitive_type = <triangles>
+    first_vertex   : Int
+    first_index    : Int
+    render_queue   = DrawCommand[]
 
   METHODS
     method init
@@ -13,13 +17,38 @@ class Renderer [singleton]
     method configure_window( window:Window )
       print_error
 
+    method draw_lines
+      primitive_type = <lines>
+
+    method draw_points
+      primitive_type = <points>
+
+    method draw_triangles
+      primitive_type = <triangles>
+
     method flush
+      local index_count = data.indices.count
+      if (index_count == first_index) return
+      local vertex_count = data.vertices.count
+
+      render_queue.add(
+        DrawCommand(
+          primitive_type,
+          first_vertex,
+          vertex_count - first_vertex,
+          first_index,
+          index_count - first_index,
+          Warlock.m_proj,
+          Warlock.m_view,
+          Warlock.m_xform(frame)
+        )
+      )
+
+      first_vertex = vertex_count
+      first_index  = index_count
 
     method on_begin_draw( window:Window )
-      draw_buffer.clear
-
-    method on_draw #FIXME remove
-      noAction
+      reset
 
     method on_end_draw( window:Window )
       flush
@@ -30,6 +59,17 @@ class Renderer [singleton]
 
     method print_error
       Global.error.println "No Renderer is configured. Include BGFX to use the BGFX renderer."
+
+    method reset
+      data.clear
+      draw_triangles
+      first_vertex = 0
+      first_index = 0
+
+    method set_primitive_type( new_type:GlobalID )
+      if (primitive_type == new_type) return
+      flush
+      @primitive_type = new_type
 
     method uses_homogeneous_depth->Logical
       return true
