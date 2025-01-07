@@ -1,0 +1,9 @@
+uses Geometry
+uses Graphics/Color
+
+augment Geometry::Box
+  METHODS
+    method fill( color:Graphics::Color, shader=Shader.ALPHA_COLOR:Warlock::Shader )
+      Warlock::Renderer.fill( this, color, shader )
+endAugment
+

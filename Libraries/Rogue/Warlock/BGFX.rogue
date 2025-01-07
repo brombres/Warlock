@@ -82,10 +82,14 @@ class BGFX : Renderer [singleton]
        |bgfx::setViewRect( $window->id, 0, 0, w, h );
        |bgfx::touch( $window->id );
        |bgfx::setViewClear( $window->id, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x0000ffff );
-       |bgfx::setViewRect( $window->id, 0, 0, w, h );
 
     method on_end_render( window:Window ) [override]
       prior.on_end_render( window )
+
+      if (render_queue.is_empty)
+        native @|bgfx::frame();
+        return
+      endIf
 
       local vertex_data = this.vertex_data[swap_index]
       local index_data = this.index_data[swap_index]
@@ -187,7 +191,9 @@ class BGFX : Renderer [singleton]
       if (is_initialized)
         native
         @|const bgfx::Stats* stats = bgfx::getStats();
-         |for (int i=stats->numDraw; --i>=0; ) bgfx::frame();
+         |int n = stats->numDraw;
+         |if ( !n ) n = 1;
+         |for (int i=n; --i>=0; ) bgfx::frame();
       endIf
 
     method uses_homogeneous_depth->Logical [override]

@@ -21,7 +21,10 @@ class Renderer [singleton]
     method configure_window( window:Window )
       print_error
 
-    method draw( line:Line, color:Color, thickness=1.0:Real, shader=Shader.ALPHA_COLOR )
+    method draw( line:Line, color:Color, shader=Shader.ALPHA_COLOR, thickness=1.0:Real )
+      draw( Line<<XYZ>>(line.a,line.b), color, shader, thickness )
+
+    method draw( line:Line<<XYZ>>, color:Color, shader=Shader.ALPHA_COLOR, thickness=1.0:Real )
       if (thickness == 1.0)
         draw_lines
         local i1 = data.vertices.count - first_vertex
@@ -38,6 +41,20 @@ class Renderer [singleton]
 
     method draw_triangles
       primitive_type = <triangles>
+
+    method fill( box:Box, color:Color, shader=Shader.ALPHA_COLOR )
+      draw_triangles
+      local i1 = data.vertices.count - first_vertex
+      local a = box.position
+      local b = box.top_right
+      local c = box.bottom_right
+      local d = box.bottom_left
+      data.add Vertex( a, color )
+      data.add Vertex( b, color )
+      data.add Vertex( c, color )
+      data.add Vertex( d, color )
+      data.add( i1, i1+1, i1+2 )
+      data.add( i1, i1+2, i1+3 )
 
     method flush
       local index_count = data.indices.count

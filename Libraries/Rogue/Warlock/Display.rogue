@@ -22,6 +22,15 @@ class Display [singleton]
     object_transforms     = Matrix[]
 
   METHODS
+    method at( p:XY )->XY
+      return p * size
+
+    method bounds->Box
+      return Box( size )
+
+    method center->XY
+      return size/2
+
     method draw
       on_draw
       on_end_draw
@@ -84,6 +93,7 @@ class Display [singleton]
       state.on_end_render
 
     method reset
+      perspective_center = XY(0.5,0.5)
       projection_mode.reset
       view_transform   = Matrix.identity
       object_transform = Matrix.identity

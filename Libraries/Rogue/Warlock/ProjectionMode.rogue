@@ -23,6 +23,7 @@ class ProjectionMode2DX : ProjectionMode [singleton]
           Display.width, Display.height,
           &=depth_scale,
           &=perspective_center
+          &homogeneous_depth=Renderer.uses_homogeneous_depth
         )
 
 endClass
