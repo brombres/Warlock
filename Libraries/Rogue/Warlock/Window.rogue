@@ -16,11 +16,11 @@ class Window : Display
 
     method render
       Framework.update_window_size( this )
-      Renderer.on_begin_draw( this )
+      Renderer.on_begin_render( this )
       State.current.on_draw
       prior.render
       State.current.on_end_draw
-      Renderer.on_end_draw( this )
+      Renderer.on_end_render( this )
 
 endClass
 

@@ -1,0 +1,8 @@
+uses Geometry
+uses Graphics/Color
+
+augment Geometry::Line
+  METHODS
+    method draw( color:Graphics::Color, thickness=1.0:Real, shader=Shader.ALPHA_COLOR:Warlock::Shader )
+      Warlock::Renderer.draw( this, color, thickness, shader )
+endAugment

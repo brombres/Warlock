@@ -7,8 +7,8 @@ BGFX
 
 class BGFX : Renderer [singleton]
   PROPERTIES
-    vertex_data = BGFXVertex[]
-    index_data  = Int32[]
+    vertex_data = BGFXVertex[][]
+    index_data  = Int32[][]
 
     native @|bgfx::DynamicVertexBufferHandle bgfx_vertex_buffer;
     native @|bgfx::DynamicIndexBufferHandle  bgfx_index_buffer;
@@ -27,8 +27,10 @@ class BGFX : Renderer [singleton]
     method configure_bgfx( window:Window )
       if (is_initialized) return
 
-      vertex_data.reserve( 6144 )
-      index_data.reserve( 6144/2 )
+      loop (3)
+        vertex_data.add( BGFXVertex[](6144) )
+        index_data.add( Int32[](6144/2) )
+      endLoop
 
       native
       @|SDL_Window* window = $window->sdl_window;
@@ -66,7 +68,7 @@ class BGFX : Renderer [singleton]
        |$this->bgfx_vertex_buffer = bgfx::createDynamicVertexBuffer( 6144, vertex_layout, BGFX_BUFFER_ALLOW_RESIZE );
        |$this->bgfx_index_buffer  = bgfx::createDynamicIndexBuffer( 6144, BGFX_BUFFER_ALLOW_RESIZE );
 
-      Shader.ALPHA_COLOR = Shader( Warlock.get_vs, Warlock.get_fs )
+       Shader.ALPHA_COLOR = Shader( "AlphaColor" )
 
       is_initialized = true
 
@@ -82,12 +84,11 @@ class BGFX : Renderer [singleton]
        |bgfx::setViewClear( $window->id, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x0000ffff );
        |bgfx::setViewRect( $window->id, 0, 0, w, h );
 
-    #method on_begin_draw( window:Window ) [override]
-    #  prior.on_begin_draw( window )
+    method on_end_render( window:Window ) [override]
+      prior.on_end_render( window )
 
-    method on_end_draw( window:Window ) [override]
-      prior.on_end_draw( window )
-
+      local vertex_data = this.vertex_data[swap_index]
+      local index_data = this.index_data[swap_index]
       vertex_data.reserve( data.vertices.count )
       index_data.reserve( (data.indices.count+1)/2 )
 
@@ -109,7 +110,7 @@ class BGFX : Renderer [singleton]
        |
        |bgfx::update(
        |  $this->bgfx_vertex_buffer, 0,
-       |  bgfx::copy( $vertex_data->data, (uint32_t)($data->vertices->count * sizeof(WarlockBGFXVertex)) )
+       |  bgfx::makeRef( $vertex_data->data, (uint32_t)($data->vertices->count * sizeof(WarlockBGFXVertex)) )
        |);
        |
        |{
@@ -123,7 +124,7 @@ class BGFX : Renderer [singleton]
        |
        |bgfx::update(
        |  $this->bgfx_index_buffer, 0,
-       |  bgfx::copy( $index_data->data, (uint32_t)($data->indices->count * sizeof(uint16_t)) )
+       |  bgfx::makeRef( $index_data->data, (uint32_t)($data->indices->count * sizeof(uint16_t)) )
        |);
        |
 
@@ -143,9 +144,6 @@ class BGFX : Renderer [singleton]
          |
          |bgfx::setTransform( reinterpret_cast<float*>( &$object_transform ) );
 
-
-        local current_shader = Shader.ALPHA_COLOR
-
         local bgfx_state_flags = 0
         native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_ALPHA);
         native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_WRITE_Z);
@@ -159,7 +157,7 @@ class BGFX : Renderer [singleton]
         @|bgfx::setVertexBuffer( 0, $this->bgfx_vertex_buffer, (uint32_t)$cmd.first_vertex, (uint32_t)$cmd.vertex_count );
          |bgfx::setIndexBuffer( $this->bgfx_index_buffer, (uint32_t)$cmd.first_index, (uint32_t)$cmd.index_count );
          |bgfx::setState( (uint64_t)$bgfx_state_flags );
-         |bgfx::submit( $display_id, $current_shader->program );
+         |bgfx::submit( $display_id, $cmd.shader->program );
       endForEach
       render_queue.clear
 
@@ -202,14 +200,32 @@ endClass
 class BGFXVertex( x:Real32, y:Real32, z:Real32, abgr:Int32, u:Real32, v:Real32 ) [compound]
 endClass
 
-class Shader
-  GLOBAL PROPERTIES
-    ALPHA_COLOR : Shader
-
+augment Shader
   PROPERTIES
     native @|bgfx::ProgramHandle program;
 
   METHODS
+    method init( filename:String )
+      native @|$this->program = BGFX_INVALID_HANDLE;
+
+      if local shaders_path = Warlock.find_asset( "Assets/Shaders" )
+        local listing = File(shaders_path).listing( "*$*"(filename) )
+        if (listing.count > 2)
+          local min_count = 0
+          min_count .= or_larger( (forEach in listing).count )
+          listing.discard( $.count > min_count )
+        endIf
+        if (listing.count == 2)
+          local fs = listing.first
+          local vs = listing.last
+          if (fs.contains("vs",&ignore_case)) swapValues( fs, vs )
+          init( Warlock.load_asset_bytes(vs), Warlock.load_asset_bytes(fs) )
+          return
+        endIf
+      endIf
+
+      println "Shader not found: " + filename
+
     method init( vertex_shader:Byte[], fragment_shader:Byte[] )
       native
       @|$this->program = bgfx::createProgram(
@@ -218,4 +234,4 @@ class Shader
        |  true  // have BGFX destroy shaders
        |);
 
-endClass
+endAugment

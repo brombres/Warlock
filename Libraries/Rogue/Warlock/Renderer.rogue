@@ -4,11 +4,15 @@ class Renderer [singleton]
   PROPERTIES
     is_initialized : Logical
     frame          : Int
-    data           = MeshBuilder( 6144 )
+    data           = MeshBuilder(6144)
     primitive_type = <triangles>
     first_vertex   : Int
     first_index    : Int
+    shader         : Shader
+
     render_queue   = DrawCommand[]
+
+    swap_index     : Int
 
   METHODS
     method init
@@ -16,6 +20,15 @@ class Renderer [singleton]
 
     method configure_window( window:Window )
       print_error
+
+    method draw( line:Line, color:Color, thickness=1.0:Real, shader=Shader.ALPHA_COLOR )
+      if (thickness == 1.0)
+        draw_lines
+        local i1 = data.vertices.count - first_vertex
+        data.add Vertex( line.a, color )
+        data.add Vertex( line.b, color )
+        data.add( i1, i1+1 )
+      endIf
 
     method draw_lines
       primitive_type = <lines>
@@ -38,19 +51,22 @@ class Renderer [singleton]
           vertex_count - first_vertex,
           first_index,
           index_count - first_index,
-          Warlock.m_proj,
-          Warlock.m_view,
-          Warlock.m_xform(frame)
+          Display.projection_transform,
+          Display.view_transform,
+          Display.object_transform,
+          shader
         )
       )
 
       first_vertex = vertex_count
       first_index  = index_count
 
-    method on_begin_draw( window:Window )
+    method on_begin_render( window:Window )
+      ++swap_index
+      if (swap_index > 2) swap_index = 0
       reset
 
-    method on_end_draw( window:Window )
+    method on_end_render( window:Window )
       flush
       ++frame
 
@@ -65,11 +81,17 @@ class Renderer [singleton]
       draw_triangles
       first_vertex = 0
       first_index = 0
+      shader = Shader.ALPHA_COLOR
 
     method set_primitive_type( new_type:GlobalID )
       if (primitive_type == new_type) return
       flush
       @primitive_type = new_type
+
+    method set_shader( new_shader:Shader )
+      if (shader is new_shader) return
+      flush
+      @shader = new_shader
 
     method uses_homogeneous_depth->Logical
       return true

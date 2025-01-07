@@ -1,12 +1,13 @@
-// Uniform to define the solid fill color (RGBA)
-//uniform vec4 u_color;
-
 $input v_color0
+
+/*
+ * Copyright 2011-2024 Branimir Karadzic. All rights reserved.
+ * License: https://github.com/bkaradzic/bgfx/blob/master/LICENSE
+ */
 
 #include "bgfx_shader.sh"
 
-void main() {
-  // Multiply the uniform color by the vertex color
-  //gl_FragColor = u_color * v_color0;
-  gl_FragColor = v_color0;
+void main()
+{
+	gl_FragColor = v_color0;
 }

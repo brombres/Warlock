@@ -8,6 +8,7 @@ class DrawCommand(
   index_count:Int,
   projection_transform:Matrix,
   view_transform:Matrix,
-  object_transform:Matrix
+  object_transform:Matrix,
+  shader:Shader
 ) [compound]
 endClass

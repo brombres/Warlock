@@ -11,6 +11,10 @@ class ProjectionMode2DX : ProjectionMode [singleton]
     nominal_z   : Real
 
   METHODS
+    method init
+
+    method init( depth_scale )
+
     method reset
       nominal_z = (Display.width^2 + Display.height^2).sqrt * depth_scale
       local perspective_center = Display.perspective_center
@@ -20,4 +24,30 @@ class ProjectionMode2DX : ProjectionMode [singleton]
           &=depth_scale,
           &=perspective_center
         )
+
+endClass
+
+class ProjectionModePerspective : ProjectionMode [singleton]
+  PROPERTIES
+    fov    = Radians(Degrees(60))
+    z_near =   0.1
+    z_far  = 100.0
+
+  METHODS
+    method init
+      noAction
+
+    method init( fov, z_near=0.1, z_far=100 )
+
+    method reset
+      local aspect_ratio = Display.width->Real / Display.height
+      local perspective_center = Display.perspective_center
+      Display.projection_transform =
+        Matrix.perspective(
+          fov,
+          aspect_ratio,
+          z_near, z_far,
+          &homogeneous_depth=Renderer.uses_homogeneous_depth
+        )
+
 endClass

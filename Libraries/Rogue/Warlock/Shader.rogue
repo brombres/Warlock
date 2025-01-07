@@ -1,0 +1,6 @@
+library Warlock
+
+class Shader
+  GLOBAL PROPERTIES
+    ALPHA_COLOR : Shader
+endClass
