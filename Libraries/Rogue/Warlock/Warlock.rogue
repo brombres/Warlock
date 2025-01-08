@@ -2,11 +2,12 @@ library Warlock
 
 nativeHeader @|#include "WarlockInterface.h"
 
+$include Warlock/BitmapIO
 $include Warlock/Box
 $include Warlock/Macros
 $include Warlock/Display
 $include Warlock/DisplayState
-$include Warlock/DrawCommand
+$include Warlock/RenderBatch
 $include Warlock/Framework
 $include Warlock/IDGenerator
 $include Warlock/Line
@@ -17,6 +18,8 @@ $include Warlock/Scene
 $include Warlock/SceneState
 $include Warlock/Shader
 $include Warlock/State
+$include Warlock/Texture
+$include Warlock/Triangle
 $include Warlock/Vertex
 $include Warlock/View
 $include Warlock/ViewState
@@ -28,153 +31,36 @@ uses Graphics [export]
 uses Math/Matrix
 uses UI
 
-nativeCode
-@|
- |inline void mtxFrustum(float* _result, float _left, float _right, float _bottom, float _top, float _near, float _far)
- |{
- |    const float inv_width  = 1.0f / (_right - _left);
- |    const float inv_height = 1.0f / (_top - _bottom);
- |    const float inv_depth  = 1.0f / (_far - _near);
- |
- |    _result[ 0] = 2.0f * _near * inv_width;
- |    _result[ 1] = 0.0f;
- |    _result[ 2] = 0.0f;
- |    _result[ 3] = 0.0f;
- |
- |    _result[ 4] = 0.0f;
- |    _result[ 5] = 2.0f * _near * inv_height;
- |    _result[ 6] = 0.0f;
- |    _result[ 7] = 0.0f;
- |
- |    _result[ 8] = (_right + _left) * inv_width;
- |    _result[ 9] = (_top + _bottom) * inv_height;
- |    _result[10] = -_far * inv_depth;
- |    _result[11] = -1.0f;
- |
- |    _result[12] = 0.0f;
- |    _result[13] = 0.0f;
- |    _result[14] = -(_far * _near) * inv_depth;
- |    _result[15] = 0.0f;
- |}
- |
- |void createFrustumMatrix(
- |    float* result,
- |    float left,
- |    float right,
- |    float bottom,
- |    float top,
- |    float near,
- |    float far
- |) {
- |    result[0]  = 2.0f * near / (right - left);
- |    result[1]  = 0.0f;
- |    result[2]  = 0.0f;
- |    result[3]  = 0.0f;
- |
- |    result[4]  = 0.0f;
- |    result[5]  = 2.0f * near / (top - bottom);
- |    result[6]  = 0.0f;
- |    result[7]  = 0.0f;
- |
- |    result[8]  = (right + left) / (right - left);
- |    result[9]  = (top + bottom) / (top - bottom);
- |    result[10] = far / (near - far); // Adjusted for [0, 1] depth range
- |    result[11] = -1.0f;
- |
- |    result[12] = 0.0f;
- |    result[13] = 0.0f;
- |    result[14] = (far * near) / (near - far); // Adjusted for [0, 1] depth range
- |    result[15] = 0.0f;
- |}
- |/*
- |void createFrustumMatrix(
- |    float* result,
- |    float left,
- |    float right,
- |    float bottom,
- |    float top,
- |    float near,
- |    float far
- |) {
- |    result[0]  = 2.0f * near / (right - left);
- |    result[1]  = 0.0f;
- |    result[2]  = 0.0f;
- |    result[3]  = 0.0f;
- |
- |    result[4]  = 0.0f;
- |    result[5]  = 2.0f * near / (top - bottom);
- |    result[6]  = 0.0f;
- |    result[7]  = 0.0f;
- |
- |    result[8]  = (right + left) / (right - left);
- |    result[9]  = (top + bottom) / (top - bottom);
- |    result[10] = -(far + near) / (far - near);
- |    result[11] = -1.0f;
- |
- |    result[12] = 0.0f;
- |    result[13] = 0.0f;
- |    result[14] = -(2.0f * far * near) / (far - near);
- |    result[15] = 0.0f;
- |}
- |*/
-
 State = State() subclass
   PROPERTIES
-    swap_index : Int
+    angle   : Degrees
+    texture : Texture
 
   METHODS
+    method on_start
+      #if local file = Warlock.find_asset( "Assets/Images/Hannah-and-Burf.jpg" )
+      if local file = Warlock.find_asset( "Assets/Images/123.png" )
+        texture = Texture( file )
+        #local bmp = Bitmap( file )
+        #bmp.swap_red_and_blue
+      endIf
+
     method on_draw
       Display.projection_mode = ProjectionMode2DX
-      #Display.projection_transform = Matrix.frustum( 0, Display.width, Display.height, 0, 0.1, 100 ) * Matrix.translate( XYZ(0,0,-0.1) )
-      #Line<<XYZ>>( XYZ(0,0,-5), XYZ(Display.width,Display.height,5) ).draw( Color.WHITE )
 
-      #local w = Display.width->Int32
-      #local h = Display.height->Int32
-      #local m32 : Matrix32
-      #native @|bx::mtxOrtho( reinterpret_cast<float*>(&$m32), 0, $w-1, $h-1, 0, -1, 1, 0, false, bx::Handedness::Right );
-      #native @|createFrustumMatrix( reinterpret_cast<float*>(&$m32), -1, 1, -1, 1, 1, -1 );
-      #native @|createFrustumMatrix( reinterpret_cast<float*>(&$m32), -1, 1, -1, 1, 0.1f, 100.0f );
+      Display.bounds.fill( texture )
 
-               #Display.projection_transform = m32->Matrix
-               #println "FRUSTUM"
-               #println Display.projection_transform
-               #println
+      local len = Display.size.min * 0.45
+      local triangle = Triangle(
+        XY( len, Degrees(30) ),
+        XY( len, Degrees(150) ),
+        XY( len, Degrees(270) )
+      ).rotated( angle ) + Display.center
 
-      #Display.projection_transform = Matrix.identity
-      #local m = Display.projection_transform
-      #@trace m * -XYZ(-1,-1,-0.5)
-      #@trace m *  XYZ(1,1,-0.5)
+      #triangle.fill( Color.CYAN )
+      #triangle.draw( Color.WHITE )
+      #triangle.fill( texture )
 
-      #{
-      println "BX"
-      println Display.projection_transform
-      println
-      }#
-
-      #{
-      Display.projection_transform = Matrix.orthographic(
-        -1,
-         1, #Display.width-1,
-        -1,  #Display.height-1,
-         1,
-        -1,
-         1
-      )
-      println "ORTHO"
-      println Display.projection_transform
-      println
-      }#
-
-      Box( Display.bounds ).fill( Color.YELLOW )
-      Box( Display.bounds.cropped(1) ).fill( Color.RED )
-      #Line( Display.at(XY(0.5,0)).floor+XY(0,1), Display.at(XY(0.5,1)).floor-XY(0,2) ).draw( Color.WHITE )
-      #Line( Display.at(XY(0,0.5)).floor+XY(1,0), Display.at(XY(1,0.5)).floor-XY(2,0) ).draw( Color.WHITE )
-      #Line<<XYZ>>( XYZ(-Display.size,-0.1), XYZ(Display.size,-0.1) ).draw( Color.WHITE )
-      #Line( Display.at(XY(0,0.5)).floor+XY(1,0), Display.at(XY(1,0.5)).floor-XY(2,0) ).draw( Color.WHITE )
-
-      #Display.projection_mode = ProjectionModePerspective
-      #Display.push_view_transform( Matrix.look_at(XYZ(0,0,-5), XYZ.zero) )
-      #Display.push_object_transform( Matrix.rotate_xy(RadiansXY(Renderer.frame*0.01, Renderer.frame*0.01 )) )
 
       #{
       Renderer.draw_lines
@@ -217,6 +103,8 @@ State = State() subclass
       Renderer.data.add( 2, 3, 6 )
       Renderer.data.add( 6, 3, 7 )
       }#
+
+    method on_update
 
 
 endSubclass

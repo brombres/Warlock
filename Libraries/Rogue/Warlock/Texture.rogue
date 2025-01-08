@@ -1,0 +1,6 @@
+library Warlock
+
+class Texture
+  METHODS
+    method init( file:File )
+endClass

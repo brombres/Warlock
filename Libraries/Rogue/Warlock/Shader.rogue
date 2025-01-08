@@ -2,5 +2,6 @@ library Warlock
 
 class Shader
   GLOBAL PROPERTIES
-    ALPHA_COLOR : Shader
+    ALPHA_COLOR   : Shader
+    ALPHA_TEXTURE : Shader
 endClass

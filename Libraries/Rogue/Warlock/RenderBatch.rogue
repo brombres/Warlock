@@ -1,6 +1,6 @@
 library Warlock
 
-class DrawCommand(
+class RenderBatch(
   primitive_type:GlobalID,
   first_vertex:Int,
   vertex_count:Int,
@@ -9,6 +9,8 @@ class DrawCommand(
   projection_transform:Matrix,
   view_transform:Matrix,
   object_transform:Matrix,
-  shader:Shader
+  shader:Shader,
+  texture:Texture,   # stage 0 only
+  textures:Texture[] # multi-stage texture
 ) [compound]
 endClass

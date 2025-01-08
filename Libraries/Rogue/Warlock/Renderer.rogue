@@ -9,14 +9,20 @@ class Renderer [singleton]
     first_vertex   : Int
     first_index    : Int
     shader         : Shader
+    textures       = Texture[]
 
-    render_queue   = DrawCommand[]
+    render_queue   = RenderBatch[]
 
     swap_index     : Int
 
   METHODS
     method init
       Framework.configure
+
+    method clear_textures
+      if (textures.is_empty) return
+      flush
+      textures.clear
 
     method configure_window( window:Window )
       print_error
@@ -26,6 +32,7 @@ class Renderer [singleton]
 
     method draw( line:Line<<XYZ>>, color:Color, shader=Shader.ALPHA_COLOR, thickness=1.0:Real )
       if (thickness == 1.0)
+        clear_textures
         draw_lines
         local i1 = data.vertices.count - first_vertex
         data.add Vertex( line.a, color )
@@ -43,6 +50,7 @@ class Renderer [singleton]
       primitive_type = <triangles>
 
     method fill( box:Box, color:Color, shader=Shader.ALPHA_COLOR )
+      clear_textures
       draw_triangles
       local i1 = data.vertices.count - first_vertex
       local a = box.position
@@ -56,13 +64,55 @@ class Renderer [singleton]
       data.add( i1, i1+1, i1+2 )
       data.add( i1, i1+2, i1+3 )
 
+    method fill( box:Box, texture:Texture, color:Color, shader=Shader.ALPHA_TEXTURE )
+      set_texture( texture )
+      draw_triangles
+      local i1 = data.vertices.count - first_vertex
+      local a = box.position
+      local b = box.top_right
+      local c = box.bottom_right
+      local d = box.bottom_left
+      data.add Vertex( a, color, XY(0,0) )
+      data.add Vertex( b, color, XY(1,0) )
+      data.add Vertex( c, color, XY(1,1) )
+      data.add Vertex( d, color, XY(0,1) )
+      data.add( i1, i1+1, i1+2 )
+      data.add( i1, i1+2, i1+3 )
+
+    method fill( triangle:Triangle, color:Color, shader=Shader.ALPHA_COLOR )
+      clear_textures
+      draw_triangles
+      local i1 = data.vertices.count - first_vertex
+      data.add Vertex( triangle.a, color )
+      data.add Vertex( triangle.b, color )
+      data.add Vertex( triangle.c, color )
+      data.add( i1, i1+1, i1+2 )
+
+    method fill( triangle:Triangle, texture:Texture, color:Color, shader=Shader.ALPHA_TEXTURE )
+      set_texture( texture )
+      draw_triangles
+      local i1 = data.vertices.count - first_vertex
+      data.add Vertex( triangle.a, color, XY(0,0) )
+      data.add Vertex( triangle.b, color, XY(1,0) )
+      data.add Vertex( triangle.c, color, XY(1,1) )
+      data.add( i1, i1+1, i1+2 )
+
     method flush
       local index_count = data.indices.count
       if (index_count == first_index) return
       local vertex_count = data.vertices.count
 
+      local batch_texture  : Texture
+      local batch_textures : Texture[]
+
+      which (textures.count)
+        case 0: noAction
+        case 1: batch_texture = textures[0]
+        others: batch_textures = ObjectPool<<Texture[]>>.on_use.[ add(textures) ]
+      endWhich
+
       render_queue.add(
-        DrawCommand(
+        RenderBatch(
           primitive_type,
           first_vertex,
           vertex_count - first_vertex,
@@ -71,7 +121,9 @@ class Renderer [singleton]
           Display.projection_transform,
           Display.view_transform,
           Display.object_transform,
-          shader
+          shader,
+          batch_texture,
+          batch_textures
         )
       )
 
@@ -99,6 +151,7 @@ class Renderer [singleton]
       first_vertex = 0
       first_index = 0
       shader = Shader.ALPHA_COLOR
+      clear_textures
 
     method set_primitive_type( new_type:GlobalID )
       if (primitive_type == new_type) return
@@ -109,6 +162,18 @@ class Renderer [singleton]
       if (shader is new_shader) return
       flush
       @shader = new_shader
+
+    method set_texture( new_texture:Texture )
+      if (textures.count == 1 and textures[0] is new_texture) return
+      flush
+      textures.expand_to_include( 0 )
+      textures[0] = new_texture
+
+    method set_texture( stage:Int, new_texture:Texture )
+      if (textures.count > stage and textures[stage] is new_texture) return
+      flush
+      textures.expand_to_include( stage )
+      textures[stage] = new_texture
 
     method uses_homogeneous_depth->Logical
       return true

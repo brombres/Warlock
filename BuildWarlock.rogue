@@ -75,6 +75,8 @@ routine rogo_shaders( platform=null:String )
       return
   endWhich
 
+  platform_flags .= appending( "-i Libraries/bgfx/src" )
+
   local vs_cmd = "$ --type vertex"(shaderc).appending( platform_flags )
   local fs_cmd = "$ --type fragment"(shaderc).appending( platform_flags )
 
@@ -147,7 +149,7 @@ routine find_shader( filepaths:String[], filepath:String, replace_old:String, re
 endRoutine
 
 routine rogo_deps
-  # SYNTAX: rogo deps [update|rebuild] [sdl]
+  # SYNTAX: rogo deps [update|rebuild] [sdl|stb]*
   local args = System.command_line_arguments.cloned
   local rebuild = args.remove( "rebuild" )
   local update  = args.remove( "update" )
@@ -168,6 +170,7 @@ routine deps( args:String[], &update, &rebuild )
   local select_all = false
   loop 2
     if (select_all or args.contains("sdl")) libs//sdl = true
+    if (select_all or args.contains("stb")) libs//stb = true
     if (args.count) escapeLoop
     select_all = true
   endLoop
@@ -188,6 +191,23 @@ routine deps( args:String[], &update, &rebuild )
 
       if (repo.has_remote_changes)
         banner "Updating SDL repo"
+        repo.pull( &verbose )
+      endIf
+    endIf
+  endIf
+
+  -------- Libraries/stb --------
+  if (select_all or libs//stb)
+    local folder = File("Libraries/stb")
+    local repo = GitRepo( "https://github.com/nothings/stb.git", folder )
+
+    if (not repo.exists)
+      banner "Cloning stb repo"
+      repo.clone( &verbose )
+
+    elseIf (update)
+      if (repo.has_remote_changes)
+        banner "Updating stb repo"
         repo.pull( &verbose )
       endIf
     endIf

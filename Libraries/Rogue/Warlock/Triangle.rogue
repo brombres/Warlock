@@ -1,10 +1,15 @@
 library Geometry
 
-uses Graphics
 uses Warlock
+uses Graphics
 
-augment Box
+augment Triangle
   METHODS
+    method draw( color:Color, shader=Shader.ALPHA_COLOR:Shader, thickness=1.0:Real )
+      Line( a, b ).draw( color, shader, thickness )
+      Line( b, c ).draw( color, shader, thickness )
+      Line( c, a ).draw( color, shader, thickness )
+
     method fill( color:Color, shader=Shader.ALPHA_COLOR:Shader )
       Renderer.fill( this, color, shader )
 

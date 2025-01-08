@@ -12,6 +12,7 @@ class BGFX : Renderer [singleton]
 
     native @|bgfx::DynamicVertexBufferHandle bgfx_vertex_buffer;
     native @|bgfx::DynamicIndexBufferHandle  bgfx_index_buffer;
+    native @|bgfx::UniformHandle bgfx_uniform_texColor;
 
   METHODS
     method init
@@ -68,7 +69,10 @@ class BGFX : Renderer [singleton]
        |$this->bgfx_vertex_buffer = bgfx::createDynamicVertexBuffer( 6144, vertex_layout, BGFX_BUFFER_ALLOW_RESIZE );
        |$this->bgfx_index_buffer  = bgfx::createDynamicIndexBuffer( 6144, BGFX_BUFFER_ALLOW_RESIZE );
 
-       Shader.ALPHA_COLOR = Shader( "AlphaColor" )
+      native @|$this->bgfx_uniform_texColor = bgfx::createUniform( "s_texColor", bgfx::UniformType::Sampler );
+
+      Shader.ALPHA_COLOR   = Shader( "AlphaColor" )
+      Shader.ALPHA_TEXTURE = Shader( "AlphaTexture" )
 
       is_initialized = true
 
@@ -105,6 +109,8 @@ class BGFX : Renderer [singleton]
        |    dest_data->x = (float) src_data->position.x;
        |    dest_data->y = (float) src_data->position.y;
        |    dest_data->z = (float) src_data->position.z;
+       |    dest_data->u = (float) src_data->uv.x;
+       |    dest_data->v = (float) src_data->uv.y;
        |    RogueInt argb = src_data->color.argb;
        |    dest_data->abgr = (uint32_t)((argb & 0xFF00FF00) | ((argb << 16) & 0xFF0000) | ((argb >> 16) & 0xFF));
        |    ++src_data;
@@ -133,11 +139,11 @@ class BGFX : Renderer [singleton]
        |
 
       local display_id = Display.id
-      forEach (cmd in render_queue)
+      forEach (batch in render_queue)
 
-        local projection_transform = cmd.projection_transform->Matrix32
-        local view_transform = cmd.view_transform->Matrix32
-        local object_transform = cmd.object_transform->Matrix32
+        local projection_transform = batch.projection_transform->Matrix32
+        local view_transform = batch.view_transform->Matrix32
+        local object_transform = batch.object_transform->Matrix32
 
         native
         @|bgfx::setViewTransform(
@@ -151,17 +157,33 @@ class BGFX : Renderer [singleton]
         local bgfx_state_flags = 0
         native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_ALPHA);
         native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_WRITE_Z);
-        native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_DEPTH_TEST_LEQUAL);
-        which (cmd.primitive_type)
+        native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_CULL_CCW);
+        #native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_DEPTH_TEST_LEQUAL);
+        which (batch.primitive_type)
           case <lines>:  native @|$bgfx_state_flags |= (RogueInt)BGFX_STATE_PT_LINES;
           case <points>: native @|$bgfx_state_flags |= (RogueInt)BGFX_STATE_PT_POINTS;
         endWhich
 
         native
-        @|bgfx::setVertexBuffer( 0, $this->bgfx_vertex_buffer, (uint32_t)$cmd.first_vertex, (uint32_t)$cmd.vertex_count );
-         |bgfx::setIndexBuffer( $this->bgfx_index_buffer, (uint32_t)$cmd.first_index, (uint32_t)$cmd.index_count );
-         |bgfx::setState( (uint64_t)$bgfx_state_flags );
-         |bgfx::submit( $display_id, $cmd.shader->program );
+        @|bgfx::setVertexBuffer( 0, $this->bgfx_vertex_buffer, (uint32_t)$batch.first_vertex, (uint32_t)$batch.vertex_count );
+         |bgfx::setIndexBuffer( $this->bgfx_index_buffer, (uint32_t)$batch.first_index, (uint32_t)$batch.index_count );
+
+        if (batch.texture)
+          native @|bgfx::setTexture( 0, $this->bgfx_uniform_texColor, $batch.texture->bgfx_texture );
+        elseIf (batch.textures)
+          forEach (texture at i in batch.textures)
+            if (texture)
+              native @|bgfx::setTexture( $i, $this->bgfx_uniform_texColor, $texture->bgfx_texture );
+            endIf
+          endForEach
+        endIf
+
+        native
+        @|bgfx::setState( (uint64_t)$bgfx_state_flags );
+         |bgfx::submit( $display_id, $batch.shader->bgfx_program );
+
+        if (batch.textures) ObjectPool<<Texture[]>>.on_end_use( batch.textures.[clear] )
+
       endForEach
       render_queue.clear
 
@@ -208,11 +230,11 @@ endClass
 
 augment Shader
   PROPERTIES
-    native @|bgfx::ProgramHandle program;
+    native @|bgfx::ProgramHandle bgfx_program;
 
   METHODS
     method init( filename:String )
-      native @|$this->program = BGFX_INVALID_HANDLE;
+      native @|$this->bgfx_program = BGFX_INVALID_HANDLE;
 
       if local shaders_path = Warlock.find_asset( "Assets/Shaders" )
         local listing = File(shaders_path).listing( "*$*"(filename) )
@@ -226,6 +248,9 @@ augment Shader
           local vs = listing.last
           if (fs.contains("vs",&ignore_case)) swapValues( fs, vs )
           init( Warlock.load_asset_bytes(vs), Warlock.load_asset_bytes(fs) )
+          if (not exists)
+            Global.error.println "[Warlock] Error loading BGFX shader: $"(filename)
+          endIf
           return
         endIf
       endIf
@@ -234,10 +259,54 @@ augment Shader
 
     method init( vertex_shader:Byte[], fragment_shader:Byte[] )
       native
-      @|$this->program = bgfx::createProgram(
+      @|$this->bgfx_program = bgfx::createProgram(
        |  bgfx::createShader( bgfx::copy($vertex_shader->as_bytes, (uint32_t)$vertex_shader->count) ),
        |  bgfx::createShader( bgfx::copy($fragment_shader->as_bytes, (uint32_t)$fragment_shader->count) ),
        |  true  // have BGFX destroy shaders
        |);
+
+    method exists->Logical
+      return native("bgfx::isValid($this->bgfx_program)")->Logical
+
+endAugment
+
+augment Texture
+  PROPERTIES
+    native @|bgfx::TextureHandle bgfx_texture;
+
+  METHODS
+    method init( file:File )
+      local bytes = Byte[]( file )
+      local success : Logical
+
+      native
+      @|$this->bgfx_texture = BGFX_INVALID_HANDLE;
+       |
+       |int width, height, channels;
+       |const unsigned char* bytes = $bytes->as_bytes;
+       |int count = (int)$bytes->count;
+       |unsigned char* data = stbi_load_from_memory( bytes, count, &width, &height, &channels, STBI_rgb_alpha );
+       |$success = !!data;
+
+      if (success)
+        native
+        @|$this->bgfx_texture = bgfx::createTexture2D(
+         |  static_cast<uint16_t>(width),
+         |  static_cast<uint16_t>(height),
+         |  true,
+         |  1,
+         |  bgfx::TextureFormat::RGBA8,
+         |  BGFX_CAPS_FORMAT_TEXTURE_MIP_AUTOGEN | BGFX_SAMPLER_NONE,
+         |  bgfx::copy( data, width * height * 4 )
+         |);
+      endIf
+
+    method on_cleanup
+      native
+      @|bgfx::destroy( $this->bgfx_texture );
+       |$this->bgfx_texture = BGFX_INVALID_HANDLE;
+
+    method exists->Logical
+      return native( "bgfx::isValid($this->bgfx_texture)" )->Logical
 
 endAugment
