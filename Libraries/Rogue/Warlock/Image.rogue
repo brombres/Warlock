@@ -1,0 +1,19 @@
+library Warlock
+
+class Image
+  PROPERTIES
+    original_size : XY
+    size          : XY
+
+  METHODS
+    #method draw
+endClass
+
+class TextureImage : Image
+  PROPERTIES
+    texture : Texture
+    uv      : Corners
+
+  METHODS
+
+endClass

@@ -100,6 +100,8 @@ class BGFX : Renderer [singleton]
       vertex_data.reserve( data.vertices.count )
       index_data.reserve( (data.indices.count+1)/2 )
 
+      local display_id = Display.id
+
       native
       @|{
        |  WarlockVertex*      src_data = (WarlockVertex*)($data->vertices->data);
@@ -143,8 +145,8 @@ class BGFX : Renderer [singleton]
        |  bgfx::makeRef( $index_data->data, (uint32_t)($data->indices->count * sizeof(uint16_t)) )
        |);
        |
+       |bgfx::setViewMode( $display_id, bgfx::ViewMode::Sequential );
 
-      local display_id = Display.id
       forEach (batch in render_queue)
 
         local projection_transform = batch.projection_transform->Matrix32
@@ -162,8 +164,8 @@ class BGFX : Renderer [singleton]
 
         local bgfx_state_flags = 0
         native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A );
-        native @|$bgfx_state_flags |= (RogueInt) BGFX_STATE_BLEND_ALPHA;
-        #native @|$bgfx_state_flags |= (RogueInt) BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_ONE, BGFX_STATE_BLEND_INV_SRC_ALPHA);
+        #native @|$bgfx_state_flags |= (RogueInt) BGFX_STATE_BLEND_ALPHA;
+        native @|$bgfx_state_flags |= (RogueInt) BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_ONE, BGFX_STATE_BLEND_INV_SRC_ALPHA);
         native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_WRITE_Z);
         native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_CULL_CCW);
         #native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_DEPTH_TEST_LEQUAL);
@@ -291,15 +293,20 @@ augment Texture
       init( Bitmap(file) )
 
     method init( bitmap:Bitmap )
-      local bitmap_w = bitmap.width
-      local bitmap_h = bitmap.height
+      image_size = bitmap.size  # may be < power of 2
 
       local is_cloned = false
-      if (not bitmap.is_premultiplied_alpha)
+      if (not bitmap.is_power_of_2 or not bitmap.is_premultiplied_alpha)
         is_cloned = true
         bitmap = bitmap.cloned
+        bitmap.expand_to_power_of_2
         bitmap.premultiply_alpha
       endIf
+
+      texture_size = bitmap.size  # will be power of 2
+      uv_tl = XY.zero
+      uv_br = image_size / texture_size
+
       bitmap.swap_red_and_blue
 
       local mip_w = bitmap.width
@@ -332,12 +339,12 @@ augment Texture
 
       native
       @|$this->bgfx_texture = bgfx::createTexture2D(
-       |  static_cast<uint16_t>($bitmap_w), static_cast<uint16_t>($bitmap_h),
+       |  static_cast<uint16_t>($texture_size.x), static_cast<uint16_t>($texture_size.y),
        |  true,
        |  1,
        |  bgfx::TextureFormat::RGBA8,
        |  BGFX_SAMPLER_UVW_CLAMP | BGFX_SAMPLER_MIN_ANISOTROPIC | BGFX_SAMPLER_MAG_ANISOTROPIC,
-       |  bgfx::copy( $mipmap_pixels->as_bytes, $mipmap_pixel_count*4 )
+       |  bgfx::copy( $mipmap_pixels->as_bytes, (uint32_t) ($mipmap_pixel_count*4) )
        |);
 
       if (not is_cloned) bitmap.swap_red_and_blue

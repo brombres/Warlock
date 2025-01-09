@@ -5,15 +5,19 @@ uses Warlock
 
 augment Box
   METHODS
-    method draw( color:Color, shader=Shader.ALPHA_COLOR:Shader )
-      local a = position
-      local b = top_right
-      local c = bottom_right
-      local d = bottom_left
-      Line( a, b ).draw( color, shader )
-      Line( b, c ).draw( color, shader )
-      Line( c, d ).draw( color, shader )
-      Line( d, a ).draw( color, shader )
+    method draw( color:Color, shader=Shader.ALPHA_COLOR:Shader, thickness=1.0:Int )
+      if (size.x <= 1 or size.y <= 1)
+        fill( color, shader )
+
+      else
+        Box( position, thickness, size.y ).fill( color, shader )
+        Box( position+XY(size.x-thickness,0), thickness, size.y ).fill( color, shader )
+        if (size.x > thickness*2)
+          Box( position+XY(thickness,0), size.x-thickness*2, thickness ).fill( color, shader )
+          Box( position+XY(thickness,size.y-thickness), size.x-thickness*2, thickness ).fill( color, shader )
+        endIf
+
+      endIf
 
     method fill( color:Color, shader=Shader.ALPHA_COLOR:Shader )
       Renderer.fill( this, color, shader )

@@ -1,6 +1,11 @@
 library Warlock
 
 class Texture
+  PROPERTIES
+    image_size   : XY  # <= image_size
+    texture_size : XY  # power of 2
+    uv_tl        = XY(0,0)
+    uv_br        = XY(1,1)
+
   METHODS
-    method init( file:File )
 endClass

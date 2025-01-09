@@ -72,10 +72,12 @@ class Renderer [singleton]
       local b = box.top_right
       local c = box.bottom_right
       local d = box.bottom_left
-      data.add Vertex( a, color, XY(0,0) )
-      data.add Vertex( b, color, XY(1,0) )
-      data.add Vertex( c, color, XY(1,1) )
-      data.add Vertex( d, color, XY(0,1) )
+      local uv_tl = texture.uv_tl
+      local uv_br = texture.uv_br
+      data.add Vertex( a, color, XY(uv_tl.x,uv_tl.y) )
+      data.add Vertex( b, color, XY(uv_br.x,uv_tl.y) )
+      data.add Vertex( c, color, XY(uv_br.x,uv_br.y) )
+      data.add Vertex( d, color, XY(uv_tl.x,uv_br.y) )
       data.add( i1, i1+1, i1+2 )
       data.add( i1, i1+2, i1+3 )
 

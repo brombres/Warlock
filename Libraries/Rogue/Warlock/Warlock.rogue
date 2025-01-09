@@ -10,6 +10,7 @@ $include Warlock/DisplayState
 $include Warlock/RenderBatch
 $include Warlock/Framework
 $include Warlock/IDGenerator
+$include Warlock/Image
 $include Warlock/Line
 $include Warlock/MeshBuilder
 $include Warlock/ProjectionMode
@@ -38,7 +39,7 @@ State = State() subclass
 
   METHODS
     method on_start
-      if local file = Warlock.find_asset( "Assets/Images/Hannah256.png" )
+      if local file = Warlock.find_asset( "Assets/Images/Hannah-and-Burf.jpg" )
         #if local file = Warlock.find_asset( "Assets/Images/123.png" )
         texture = Texture( file )
         #local bmp = Bitmap( file )
@@ -48,17 +49,22 @@ State = State() subclass
     method on_draw
       Display.projection_mode = ProjectionMode2DX
 
-      Box(0,0,128,128).fill( texture )
-      Box(128,128,192,192).fill( texture )
-      Box(320,320,512,512).fill( texture )
-      Box(320,320,512,512).draw( Color.WHITE )
+      Box(  0,  0,128,128).fill( Color.ORANGE )
+      Box( 32, 32,128,128).fill( texture )
+      Box( 64, 64,128,128).fill( Color.GREEN )
+      Box( 96, 96,128,128).fill( Color.YELLOW )
+      Line( 0,  0,192,192).draw( Color.WHITE )
+      #Box(321,321,512,512).fill( texture, Color(0xeeeeeeee) )
+      #Box(320,320,512,512).fill( Color.WHITE )
 
+      #{
       local len = Display.size.min * 0.45
       local triangle = Triangle(
         XY( len, Degrees(30) ),
         XY( len, Degrees(150) ),
         XY( len, Degrees(270) )
       ).rotated( angle ) + Display.center
+      }#
 
       #triangle.fill( Color.CYAN )
       #triangle.draw( Color.WHITE )
