@@ -81,6 +81,7 @@ routine rogo_shaders( platform=null:String )
   local fs_cmd = "$ --type fragment"(shaderc).appending( platform_flags )
 
   local files = Files( "Libraries/Warlock/Libraries/Shaders/*" )
+  local varying_defs = File( "Libraries/Warlock/Libraries/Shaders/varying.def.sc" )
 
   local pairs = organize_shader_pairs( files->String[] )
 
@@ -91,12 +92,12 @@ routine rogo_shaders( platform=null:String )
     local dest_vs = (dest / src_vs.filename).with_extension( ".bin" )
     local dest_fs = (dest / src_fs.filename).with_extension( ".bin" )
 
-    if (src_vs.is_newer_than(dest_vs))
+    if (src_vs.is_newer_than(dest_vs) or varying_defs.is_newer_than(dest_vs))
       header_shown = banner( "Compiling shaders", &skip=header_shown )
       execute vs_cmd.appending( "-f $ -o $"(src_vs.esc,dest_vs.esc) )
     endIf
 
-    if (src_fs.is_newer_than(dest_fs))
+    if (src_fs.is_newer_than(dest_fs) or varying_defs.is_newer_than(dest_fs))
       header_shown = banner( "Compiling shaders", &skip=header_shown )
       execute fs_cmd.appending( "-f $ -o $"(src_fs.esc,dest_fs.esc) )
     endIf

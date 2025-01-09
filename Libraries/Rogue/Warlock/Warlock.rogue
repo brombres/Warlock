@@ -48,7 +48,9 @@ State = State() subclass
     method on_draw
       Display.projection_mode = ProjectionMode2DX
 
-      Display.bounds.fill( texture )
+      Box(0,0,128,128).fill( texture )
+      Box(128,128,192,192).fill( texture )
+      Box(320,320,256,256).fill( texture )
 
       local len = Display.size.min * 0.45
       local triangle = Triangle(

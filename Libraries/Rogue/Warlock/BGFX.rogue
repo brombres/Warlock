@@ -159,6 +159,7 @@ class BGFX : Renderer [singleton]
         native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_WRITE_Z);
         native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_CULL_CCW);
         #native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_DEPTH_TEST_LEQUAL);
+        native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_DEPTH_TEST_ALWAYS);
         which (batch.primitive_type)
           case <lines>:  native @|$bgfx_state_flags |= (RogueInt)BGFX_STATE_PT_LINES;
           case <points>: native @|$bgfx_state_flags |= (RogueInt)BGFX_STATE_PT_POINTS;
@@ -276,30 +277,51 @@ augment Texture
 
   METHODS
     method init( file:File )
-      local bytes = Byte[]( file )
-      local success : Logical
+      native @|$this->bgfx_texture = BGFX_INVALID_HANDLE;
+      if (not file.exists) return
+
+      init( Bitmap(file) )
+
+    method init( bitmap:Bitmap )
+      bitmap.swap_red_and_blue
+
+      local w = bitmap.width
+      local h = bitmap.height
+      local mipmap_pixel_count = 1   # counts the final 1x1
+      while (w > 1 or h > 1)
+        mipmap_pixel_count += w * h
+        w = (w/2).or_larger(1)
+        h = (h/2).or_larger(1)
+      endWhile
+
+      local mipmap_pixels = Color[]( mipmap_pixel_count )
+      mipmap_pixels.add( bitmap.pixels )
+      w = bitmap.width
+      h = bitmap.height
+      if (w > 1 or h > 1)
+        w = (w / 2).or_larger( 1 )
+        h = (h / 2).or_larger( 1 )
+        local mipmap = bitmap.resized( w, h )
+        while (w > 1 or h > 1)
+          mipmap_pixels.add( mipmap.pixels )
+          w = (w / 2).or_larger( 1 )
+          h = (h / 2).or_larger( 1 )
+          mipmap.resize( w, h )
+        endWhile
+        mipmap_pixels.add( mipmap.pixels )
+      endIf
 
       native
-      @|$this->bgfx_texture = BGFX_INVALID_HANDLE;
-       |
-       |int width, height, channels;
-       |const unsigned char* bytes = $bytes->as_bytes;
-       |int count = (int)$bytes->count;
-       |unsigned char* data = stbi_load_from_memory( bytes, count, &width, &height, &channels, STBI_rgb_alpha );
-       |$success = !!data;
+      @|$this->bgfx_texture = bgfx::createTexture2D(
+       |  static_cast<uint16_t>($bitmap->width), static_cast<uint16_t>($bitmap->height),
+       |  true,
+       |  1,
+       |  bgfx::TextureFormat::RGBA8,
+       |  BGFX_SAMPLER_UVW_CLAMP | BGFX_SAMPLER_MIN_ANISOTROPIC | BGFX_SAMPLER_MAG_ANISOTROPIC,
+       |  bgfx::copy( $mipmap_pixels->as_bytes, $mipmap_pixel_count*4 )
+       |);
 
-      if (success)
-        native
-        @|$this->bgfx_texture = bgfx::createTexture2D(
-         |  static_cast<uint16_t>(width),
-         |  static_cast<uint16_t>(height),
-         |  true,
-         |  1,
-         |  bgfx::TextureFormat::RGBA8,
-         |  BGFX_CAPS_FORMAT_TEXTURE_MIP_AUTOGEN | BGFX_SAMPLER_NONE,
-         |  bgfx::copy( data, width * height * 4 )
-         |);
-      endIf
+      bitmap.swap_red_and_blue
 
     method on_cleanup
       native
