@@ -38,8 +38,8 @@ State = State() subclass
 
   METHODS
     method on_start
-      #if local file = Warlock.find_asset( "Assets/Images/Hannah-and-Burf.jpg" )
-      if local file = Warlock.find_asset( "Assets/Images/123.png" )
+      if local file = Warlock.find_asset( "Assets/Images/Hannah256.png" )
+        #if local file = Warlock.find_asset( "Assets/Images/123.png" )
         texture = Texture( file )
         #local bmp = Bitmap( file )
         #bmp.swap_red_and_blue
@@ -50,7 +50,8 @@ State = State() subclass
 
       Box(0,0,128,128).fill( texture )
       Box(128,128,192,192).fill( texture )
-      Box(320,320,256,256).fill( texture )
+      Box(320,320,512,512).fill( texture )
+      Box(320,320,512,512).draw( Color.WHITE )
 
       local len = Display.size.min * 0.45
       local triangle = Triangle(

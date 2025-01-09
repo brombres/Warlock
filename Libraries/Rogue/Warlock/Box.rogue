@@ -5,6 +5,16 @@ uses Warlock
 
 augment Box
   METHODS
+    method draw( color:Color, shader=Shader.ALPHA_COLOR:Shader )
+      local a = position
+      local b = top_right
+      local c = bottom_right
+      local d = bottom_left
+      Line( a, b ).draw( color, shader )
+      Line( b, c ).draw( color, shader )
+      Line( c, d ).draw( color, shader )
+      Line( d, a ).draw( color, shader )
+
     method fill( color:Color, shader=Shader.ALPHA_COLOR:Shader )
       Renderer.fill( this, color, shader )
 

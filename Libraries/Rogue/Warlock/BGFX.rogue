@@ -111,8 +111,14 @@ class BGFX : Renderer [singleton]
        |    dest_data->z = (float) src_data->position.z;
        |    dest_data->u = (float) src_data->uv.x;
        |    dest_data->v = (float) src_data->uv.y;
-       |    RogueInt argb = src_data->color.argb;
-       |    dest_data->abgr = (uint32_t)((argb & 0xFF00FF00) | ((argb << 16) & 0xFF0000) | ((argb >> 16) & 0xFF));
+       |
+       |    // Swap red and blue while premultiplying R,G,B by A.
+       |    int argb = (int)src_data->color.argb;
+       |    int a = (argb >> 24) & 255;
+       |    int r = (((argb >> 16) & 255) * a) / 255;
+       |    int g = (((argb >> 8) & 255) * a) / 255;
+       |    int b = ((argb & 255) * a) / 255;
+       |    dest_data->abgr = (uint32_t)((a << 24) | (b << 16) | (g << 8) | r);
        |    ++src_data;
        |    ++dest_data;
        |  }
@@ -155,7 +161,9 @@ class BGFX : Renderer [singleton]
          |bgfx::setTransform( reinterpret_cast<float*>( &$object_transform ) );
 
         local bgfx_state_flags = 0
-        native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_ALPHA);
+        native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A );
+        native @|$bgfx_state_flags |= (RogueInt) BGFX_STATE_BLEND_ALPHA;
+        #native @|$bgfx_state_flags |= (RogueInt) BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_ONE, BGFX_STATE_BLEND_INV_SRC_ALPHA);
         native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_WRITE_Z);
         native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_CULL_CCW);
         #native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_DEPTH_TEST_LEQUAL);
@@ -283,37 +291,48 @@ augment Texture
       init( Bitmap(file) )
 
     method init( bitmap:Bitmap )
+      local bitmap_w = bitmap.width
+      local bitmap_h = bitmap.height
+
+      local is_cloned = false
+      if (not bitmap.is_premultiplied_alpha)
+        is_cloned = true
+        bitmap = bitmap.cloned
+        bitmap.premultiply_alpha
+      endIf
       bitmap.swap_red_and_blue
 
-      local w = bitmap.width
-      local h = bitmap.height
-      local mipmap_pixel_count = 1   # counts the final 1x1
-      while (w > 1 or h > 1)
-        mipmap_pixel_count += w * h
-        w = (w/2).or_larger(1)
-        h = (h/2).or_larger(1)
+      local mip_w = bitmap.width
+      local mip_h = bitmap.height
+      local mipmap_pixel_count = 1   # final 1x1
+      while (mip_w > 1 or mip_h > 1)
+        mipmap_pixel_count += mip_w * mip_h
+        mip_w = (mip_w/2).or_larger(1)
+        mip_h = (mip_h/2).or_larger(1)
       endWhile
 
       local mipmap_pixels = Color[]( mipmap_pixel_count )
       mipmap_pixels.add( bitmap.pixels )
-      w = bitmap.width
-      h = bitmap.height
-      if (w > 1 or h > 1)
-        w = (w / 2).or_larger( 1 )
-        h = (h / 2).or_larger( 1 )
-        local mipmap = bitmap.resized( w, h )
-        while (w > 1 or h > 1)
+      mip_w = bitmap.width
+      mip_h = bitmap.height
+      if (mip_w > 1 or mip_h > 1)
+        mip_w = (mip_w / 2).or_larger( 1 )
+        mip_h = (mip_h / 2).or_larger( 1 )
+        local mipmap : Bitmap
+        if (is_cloned) mipmap = bitmap.[ resize(mip_w,mip_h) ]
+        else           mipmap = bitmap.resized( mip_w, mip_h )
+        while (mip_w > 1 or mip_h > 1)
           mipmap_pixels.add( mipmap.pixels )
-          w = (w / 2).or_larger( 1 )
-          h = (h / 2).or_larger( 1 )
-          mipmap.resize( w, h )
+          mip_w = (mip_w / 2).or_larger( 1 )
+          mip_h = (mip_h / 2).or_larger( 1 )
+          mipmap.resize( mip_w, mip_h )
         endWhile
         mipmap_pixels.add( mipmap.pixels )
       endIf
 
       native
       @|$this->bgfx_texture = bgfx::createTexture2D(
-       |  static_cast<uint16_t>($bitmap->width), static_cast<uint16_t>($bitmap->height),
+       |  static_cast<uint16_t>($bitmap_w), static_cast<uint16_t>($bitmap_h),
        |  true,
        |  1,
        |  bgfx::TextureFormat::RGBA8,
@@ -321,7 +340,7 @@ augment Texture
        |  bgfx::copy( $mipmap_pixels->as_bytes, $mipmap_pixel_count*4 )
        |);
 
-      bitmap.swap_red_and_blue
+      if (not is_cloned) bitmap.swap_red_and_blue
 
     method on_cleanup
       native
