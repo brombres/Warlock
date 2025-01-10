@@ -11,7 +11,7 @@ class Renderer [singleton]
     shader         : Shader
     textures       = Texture[]
 
-    render_queue   = RenderBatch[]
+    render_queue   = RendererBatch[]
 
     swap_index     : Int
 
@@ -72,12 +72,10 @@ class Renderer [singleton]
       local b = box.top_right
       local c = box.bottom_right
       local d = box.bottom_left
-      local uv_tl = texture.uv_tl
-      local uv_br = texture.uv_br
-      data.add Vertex( a, color, XY(uv_tl.x,uv_tl.y) )
-      data.add Vertex( b, color, XY(uv_br.x,uv_tl.y) )
-      data.add Vertex( c, color, XY(uv_br.x,uv_br.y) )
-      data.add Vertex( d, color, XY(uv_tl.x,uv_br.y) )
+      data.add Vertex( a, color, texture.uv.a )
+      data.add Vertex( b, color, texture.uv.b )
+      data.add Vertex( c, color, texture.uv.c )
+      data.add Vertex( d, color, texture.uv.d )
       data.add( i1, i1+1, i1+2 )
       data.add( i1, i1+2, i1+3 )
 
@@ -114,15 +112,13 @@ class Renderer [singleton]
       endWhich
 
       render_queue.add(
-        RenderBatch(
+        RendererBatch(
           primitive_type,
           first_vertex,
           vertex_count - first_vertex,
           first_index,
           index_count - first_index,
-          Display.projection_transform,
-          Display.view_transform,
-          Display.object_transform,
+          Display.transform,
           shader,
           batch_texture,
           batch_textures
@@ -166,6 +162,7 @@ class Renderer [singleton]
       @shader = new_shader
 
     method set_texture( new_texture:Texture )
+      if (new_texture.source) new_texture .= source
       if (textures.count == 1 and textures[0] is new_texture) return
       flush
       textures.expand_to_include( 0 )

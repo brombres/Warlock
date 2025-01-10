@@ -2,7 +2,7 @@ library Warlock
 
 class ProjectionMode [abstract]
   METHODS
-    method reset  [abstract]
+    method update  [abstract]
 endClass
 
 class ProjectionMode2DX : ProjectionMode [singleton]
@@ -15,7 +15,7 @@ class ProjectionMode2DX : ProjectionMode [singleton]
 
     method init( depth_scale )
 
-    method reset
+    method update
       nominal_z = (Display.width^2 + Display.height^2).sqrt * depth_scale
       local perspective_center = Display.perspective_center
       Display.projection_transform =
@@ -40,7 +40,7 @@ class ProjectionModePerspective : ProjectionMode [singleton]
 
     method init( fov, z_near=0.1, z_far=100 )
 
-    method reset
+    method update
       local aspect_ratio = Display.width->Real / Display.height
       local perspective_center = Display.perspective_center
       Display.projection_transform =

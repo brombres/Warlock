@@ -18,8 +18,9 @@ class Display [singleton]
     projection_transform  : Matrix
     view_transform        : Matrix
     object_transform      : Matrix
-    view_transforms       = Matrix[]
+    transform             : Matrix   # projection * view * object
     object_transforms     = Matrix[]
+    transform_modified    = true
 
   METHODS
     method at( p:XY )->XY
@@ -55,27 +56,12 @@ class Display [singleton]
       endIf
       set_object_transform( object_transforms.last, &pushed )
 
-    method push_view_transform( m:Matrix )
-      if (view_transforms.count)
-        view_transforms.add( view_transforms.last * m )
-      else
-        view_transforms.add( m )
-      endIf
-      set_view_transform( view_transforms.last, &pushed )
-
     method pop_object_transform( n=1:Int32 )
       forEach (1..n.or_smaller(object_transforms.count))
         object_transforms.remove_last
       endForEach
       if (object_transforms.count) object_transform = object_transforms.last
       else                         object_transform = Matrix.identity
-
-    method pop_view_transform( n=1:Int32 )
-      forEach (1..n.or_smaller(view_transforms.count))
-        view_transforms.remove_last
-      endForEach
-      if (view_transforms.count) view_transform = view_transforms.last
-      else                       view_transform = Matrix.identity
 
     method render
       Display = this
@@ -94,16 +80,21 @@ class Display [singleton]
 
     method reset
       perspective_center = XY(0.5,0.5)
-      projection_mode.reset
+      projection_mode.update
       view_transform   = Matrix.identity
       object_transform = Matrix.identity
-      view_transforms.clear
       object_transforms.clear
+
+    method set_perspective_center( new_center:XY )
+      if (perspective_center != new_center)
+        @perspective_center = new_center
+        projection_mode.update
+      endIf
 
     method set_projection_mode( new_mode:ProjectionMode )
       if (projection_mode != new_mode)
         @projection_mode = new_mode
-        projection_mode.reset
+        projection_mode.update
       endIf
 
     method set_object_transform( new_transform:Matrix, &pushed )
@@ -111,20 +102,30 @@ class Display [singleton]
       if (object_transform != new_transform)
         <Display.transform_modified>.signal
         @object_transform = new_transform
+        transform_modified = true
       endIf
 
     method set_projection_transform( new_transform:Matrix )
       if (projection_transform != new_transform)
         <Display.transform_modified>.signal
         @projection_transform = new_transform
+        transform_modified = true
       endIf
 
-    method set_view_transform( new_transform:Matrix, &pushed )
-      if (not pushed) view_transforms.clear
+    method set_view_transform( new_transform:Matrix )
       if (view_transform != new_transform)
         <Display.transform_modified>.signal
         @view_transform = new_transform
+        transform_modified = true
       endIf
+
+    method transform->Matrix
+      # projection * world * object
+      if (transform_modified)
+        transform = projection_transform * view_transform * object_transform
+        transform_modified = false
+      endIf
+      return @transform
 
     method update
       on_update

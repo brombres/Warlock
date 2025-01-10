@@ -2,10 +2,84 @@ library Warlock
 
 class Texture
   PROPERTIES
-    image_size   : XY  # <= image_size
-    texture_size : XY  # power of 2
-    uv_tl        = XY(0,0)
-    uv_br        = XY(1,1)
+    size   : XY
+    uv     : Quad     # .a/b/c/d = tl/tr/br/bl; corners orthogonal, maybe rotated 90º/180º/270º.
+    source : Texture  # if non-null, the original texture this is a subset of.
+
+  GLOBAL METHODS
+    method create( bitmap:Bitmap )->Texture
+      local texture = Texture().[ set(bitmap) ]
+      if (texture.size != bitmap.size)
+        # Texture size was expanded to power of 2; return a subset texture.
+        return Texture( texture, Box(bitmap.size) )
+      else
+        return texture
+      endIf
+
+    method create( file:File )->Texture
+      if (not file.exists)
+        Global.error.println "File not found: " + file
+        return Texture()
+      endIf
+      return Texture( Bitmap(file) )
+
 
   METHODS
+    method init
+      # Internal use.
+
+    method init( existing:Texture, subset=null:Box?, rotate_cw=0:Int, &hflip, &vflip )
+      # rotate_cw: number of 90º clockwise rotations of new Texture subset relative to original orientation
+      if local bounds = subset
+        if (bounds.position.x < 1 and bounds.position.y < 1 and bounds.size.x <= 1 and bounds.size.y <= 1)
+          # Convert proportional bounds into pixel bounds
+          subset = bounds * existing.size
+        endIf
+      else
+        subset = Box( existing.size )
+      endIf
+
+      source = existing.source || existing
+      size = subset.value.size
+
+      local source_size = source.size
+      local existing_position = existing.uv.a * source_size
+      local existing_size = (existing.uv.c - existing.uv.a) * source_size
+      local existing_w    = (existing.uv.b - existing.uv.a) * source_size
+      local existing_h    = (existing.uv.d - existing.uv.a) * source_size
+
+      local x = subset.value.position.x * existing_w.sign
+      local y = subset.value.position.y * existing_h.sign
+      local w = subset.value.size.x * existing_w.sign
+      local h = subset.value.size.y * existing_h.sign
+
+      use corners = WorkList<<XY>>
+        corners.reserve( 4 )
+        local a = existing_position + x + y
+        corners.add( a / source_size )
+        corners.add( (a + w) / source_size )
+        corners.add( (a + w + h) / source_size )
+        corners.add( (a + h) / source_size )
+
+        which (rotate_cw)
+          case 1  # rotate clockwise 90º
+            corners.insert( corners.remove_last )
+            size = size.yx
+          case 2  # rotate 180º
+            corners.insert( corners.remove_last )
+            corners.insert( corners.remove_last )
+          case 3  # rotate clockwise 270º (counter-clockwise 90º)
+            corners.add( corners.remove_first )
+            size = size.yx
+        endWhich
+
+        if (hflip) corners.swap( 0, 1); corners.swap( 2, 3 )
+        if (vflip) corners.swap( 0, 3); corners.swap( 1, 2 )
+
+        uv.a = corners[0]
+        uv.b = corners[1]
+        uv.c = corners[2]
+        uv.d = corners[3]
+      endUse
+
 endClass

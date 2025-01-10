@@ -7,7 +7,7 @@ $include Warlock/Box
 $include Warlock/Macros
 $include Warlock/Display
 $include Warlock/DisplayState
-$include Warlock/RenderBatch
+$include Warlock/RendererBatch
 $include Warlock/Framework
 $include Warlock/IDGenerator
 $include Warlock/Image
@@ -41,21 +41,20 @@ State = State() subclass
     method on_start
       if local file = Warlock.find_asset( "Assets/Images/Hannah-and-Burf.jpg" )
         #if local file = Warlock.find_asset( "Assets/Images/123.png" )
-        texture = Texture( file )
+        texture = Texture( Texture(file), Box(0.5,0.0,0.5,0.5), &rotate_cw=1 )
         #local bmp = Bitmap( file )
         #bmp.swap_red_and_blue
       endIf
 
     method on_draw
       Display.projection_mode = ProjectionMode2DX
+      Display.perspective_center = XY(0.5,0.25)
 
-      Box(  0,  0,128,128).fill( Color.ORANGE )
-      Box( 32, 32,128,128).fill( texture )
-      Box( 64, 64,128,128).fill( Color.GREEN )
-      Box( 96, 96,128,128).fill( Color.YELLOW )
-      Line( 0,  0,192,192).draw( Color.WHITE )
-      #Box(321,321,512,512).fill( texture, Color(0xeeeeeeee) )
-      #Box(320,320,512,512).fill( Color.WHITE )
+      Display.push_object_transform( Matrix.translate(Display.size*XY(0.5,0.25)) * Matrix.rotate_y(Degrees(45)) )
+      #Display.push_object_transform( Matrix.rotate_y(Degrees(45)) * Matrix.translate(Display.size/2) )
+      Box(-128,-128,256,256).fill( texture )
+      #Display.push_object_transform( Matrix.translate(XY(-128,-128)) )
+      #Box(0,0,256,256).fill( Color(0x55FFFFFF) )
 
       #{
       local len = Display.size.min * 0.45

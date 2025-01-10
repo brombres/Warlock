@@ -6,7 +6,7 @@ class Image
     size          : XY
 
   METHODS
-    #method draw
+    method draw( position:XY, anchor=Anchor.CENTER:Anchor )
 endClass
 
 class TextureImage : Image
