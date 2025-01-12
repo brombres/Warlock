@@ -1,19 +1,34 @@
 library Warlock
 
-class Image
-  PROPERTIES
-    original_size : XY
-    size          : XY
-
-  METHODS
-    method draw( position:XY, anchor=Anchor.CENTER:Anchor )
-endClass
-
-class TextureImage : Image
+class Image : Drawable2D
   PROPERTIES
     texture : Texture
-    uv      : Corners
 
   METHODS
+    method init( internal_size )
+      size = internal_size
 
+    method init( texture )
+      internal_size = texture.size
+      size = internal_size
+
+    method draw( position:XY )
+      use Display.transform_stack
+        Display.push_transform( Matrix.transform(XYZ(position,z),size,anchor,rotation,internal_size) )
+
+        if (texture)
+          Renderer.fill( Box(internal_size), texture, color )
+        endIf
+      endUse
+
+    method draw( bounds:Box )
+      use Display.transform_stack
+
+        Display.push_transform( Matrix.transform(XYZ(bounds.position,z),bounds.size/internal_size) )
+
+        if (texture)
+          Renderer.fill( Box(internal_size), texture, color )
+        endIf
+
+      endUse
 endClass

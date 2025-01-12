@@ -82,4 +82,18 @@ class Texture
         uv.d = corners[3]
       endUse
 
+    method split( columns:Int, rows:Int )->Texture[]
+      local result = Texture[]( columns * rows )
+      local sz = size / XY(columns,rows)
+      forEach (j in 0..<rows)
+        forEach (i in 0..<columns)
+          result.add( subset( Box( XY(i,j)*sz, sz ) ) )
+        endForEach
+      endForEach
+      return result
+
+    method subset( bounds:Box )->Texture
+      # Bounds should be in texel (pixel) coordinates
+      return Texture( this, bounds )
+
 endClass

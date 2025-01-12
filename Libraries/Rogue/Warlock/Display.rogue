@@ -11,16 +11,17 @@ class Display [singleton]
     projection_mode = ProjectionMode2DX : ProjectionMode
 
     perspective_center : XY
-    # The proportional "origin" for 3D perspective and the vanishing point for
+    # The proportional "origin" for 2D+ perspective and the vanishing point for
     # polygons parallel to the camera axis.  Automatically reset to (0.5,0.5)
     # at the beginning of every draw.
 
+    transform_stack       : TransformStackState
     projection_transform  : Matrix
     view_transform        : Matrix
     object_transform      : Matrix
     transform             : Matrix   # projection * view * object
     object_transforms     = Matrix[]
-    transform_modified    = true
+    combined_transform_modified    = true
 
   METHODS
     method at( p:XY )->XY
@@ -31,6 +32,14 @@ class Display [singleton]
 
     method center->XY
       return size/2
+
+    method combined_transform->Matrix
+      # projection * world * object
+      if (combined_transform_modified)
+        transform = projection_transform * view_transform * object_transform
+        combined_transform_modified = false
+      endIf
+      return @transform
 
     method draw
       on_draw
@@ -48,7 +57,7 @@ class Display [singleton]
 
     method on_update
 
-    method push_object_transform( m:Matrix )
+    method push_transform( m:Matrix )
       if (object_transforms.count)
         object_transforms.add( object_transforms.last * m )
       else
@@ -56,7 +65,7 @@ class Display [singleton]
       endIf
       set_object_transform( object_transforms.last, &pushed )
 
-    method pop_object_transform( n=1:Int32 )
+    method pop_transform( n=1:Int32 )
       forEach (1..n.or_smaller(object_transforms.count))
         object_transforms.remove_last
       endForEach
@@ -102,30 +111,22 @@ class Display [singleton]
       if (object_transform != new_transform)
         <Display.transform_modified>.signal
         @object_transform = new_transform
-        transform_modified = true
+        combined_transform_modified = true
       endIf
 
     method set_projection_transform( new_transform:Matrix )
       if (projection_transform != new_transform)
         <Display.transform_modified>.signal
         @projection_transform = new_transform
-        transform_modified = true
+        combined_transform_modified = true
       endIf
 
     method set_view_transform( new_transform:Matrix )
       if (view_transform != new_transform)
         <Display.transform_modified>.signal
         @view_transform = new_transform
-        transform_modified = true
+        combined_transform_modified = true
       endIf
-
-    method transform->Matrix
-      # projection * world * object
-      if (transform_modified)
-        transform = projection_transform * view_transform * object_transform
-        transform_modified = false
-      endIf
-      return @transform
 
     method update
       on_update
@@ -134,4 +135,15 @@ class Display [singleton]
     method width->Real
       return size.x
 
+endClass
+
+class TransformStackState( original_stack_count:Int ) [compound]
+  METHODS
+    method on_use->this [mutating]
+      original_stack_count = Display.object_transforms.count
+      return this
+
+    method on_end_use( state:TransformStackState )
+      local n = Display.object_transforms.count - state.original_stack_count
+      if (n) Display.pop_transform( n )
 endClass

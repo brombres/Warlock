@@ -118,7 +118,7 @@ class Renderer [singleton]
           vertex_count - first_vertex,
           first_index,
           index_count - first_index,
-          Display.transform,
+          Display.combined_transform,
           shader,
           batch_texture,
           batch_textures
