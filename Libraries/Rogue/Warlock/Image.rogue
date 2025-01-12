@@ -5,30 +5,43 @@ class Image : Drawable2D
     texture : Texture
 
   METHODS
-    method init( internal_size )
+    method init( internal_size, color=Color.WHITE )
       size = internal_size
 
     method init( texture )
       internal_size = texture.size
       size = internal_size
 
-    method draw( position:XY )
+    method draw( position:XY ) [override]
       use Display.transform_stack
         Display.push_transform( Matrix.transform(XYZ(position,z),size,anchor,rotation,internal_size) )
-
-        if (texture)
-          Renderer.fill( Box(internal_size), texture, color )
-        endIf
+        .inner_draw
       endUse
 
-    method draw( bounds:Box )
+    method draw( bounds:Box ) [override]
       use Display.transform_stack
-
         Display.push_transform( Matrix.transform(XYZ(bounds.position,z),bounds.size/internal_size) )
-
-        if (texture)
-          Renderer.fill( Box(internal_size), texture, color )
-        endIf
-
+        .inner_draw
       endUse
+
+    method .inner_draw
+      local is_fg = attributes.fg
+
+      if (not is_fg)
+        if (texture)        Renderer.fill( Box(internal_size), texture, color )
+        elseIf (color.argb) Renderer.fill( Box(internal_size), color )
+      endIf
+
+      on_draw
+
+      if (count)
+        (forEach as Drawable2D in children).draw
+      endIf
+
+      if (is_fg)
+        if (texture)        Renderer.fill( Box(internal_size), texture, color )
+        elseIf (color.argb) Renderer.fill( Box(internal_size), color )
+      endIf
+
+      on_end_draw
 endClass

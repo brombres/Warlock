@@ -5,9 +5,16 @@ class Drawable2D : Entity2D
     color = Color.WHITE : Color
 
   METHODS
+    method draw
+      draw( position )
+
     method draw( position:XY )
       draw( Box(position,size).relative_to( anchor ) )
 
     method draw( bounds:Box )
       println "TODO: $.draw(Box)"(type_name)
+
+    method on_draw
+
+    method on_end_draw
 endClass

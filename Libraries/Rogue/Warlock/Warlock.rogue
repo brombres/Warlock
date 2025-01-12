@@ -38,6 +38,7 @@ State = State() subclass
   PROPERTIES
     angle   : Degrees
     image   : Image
+    child   : Image
 
   METHODS
     method on_start
@@ -45,6 +46,9 @@ State = State() subclass
         #if local file = Warlock.find_asset( "Assets/Images/123.png" )
         local texture = Texture( Texture(file) )
         image = Image( texture )
+        child = Image(XY(256,256),Color.YELLOW).[position=XY(128,128)]
+        child.add( Image(texture).[size=XY(120,120), position=XY(128,128)] )
+        image.add( child )
       endIf
 
     method on_draw
@@ -63,6 +67,7 @@ State = State() subclass
       image.rotation = angle
       image.draw( Display.center )
       angle += 1
+      child.rotation += Degrees(1.5)
 
       #Display.push_object_transform( Matrix.translate(Display.size*XY(0.5,0.25)) * Matrix.rotate_y(Degrees(45)) )
       #Display.push_object_transform( Matrix.rotate_y(Degrees(45)) * Matrix.translate(Display.size/2) )
