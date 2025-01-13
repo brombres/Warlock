@@ -15,7 +15,10 @@ class Display [singleton]
     # polygons parallel to the camera axis.  Automatically reset to (0.5,0.5)
     # at the beginning of every draw.
 
-    transform_stack       : TransformStackState
+    clear_color   = Color.BLUE : Color
+    clear_colors  : Logical
+
+    transform_stack       : TransformStackState  # 'use Display.transform_stack / ... / endUse'
     projection_transform  : Matrix
     view_transform        : Matrix
     object_transform      : Matrix
@@ -32,6 +35,12 @@ class Display [singleton]
 
     method center->XY
       return size/2
+
+    method clear
+      clear_colors = true
+
+    method clear( clear_color )
+      clear_colors = true
 
     method combined_transform->Matrix
       # projection * world * object
@@ -93,6 +102,7 @@ class Display [singleton]
       view_transform   = Matrix.identity
       object_transform = Matrix.identity
       object_transforms.clear
+      clear_colors = false
 
     method set_perspective_center( new_center:XY )
       if (perspective_center != new_center)

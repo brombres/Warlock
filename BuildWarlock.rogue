@@ -2,7 +2,7 @@
 # to this folder and type "rogo" at the command line, or "rogo help" for a list
 # of supported commands.
 
-$define SDL_BRANCH "preview-3.1.6"
+$define SDL_BRANCH "preview-3.1.8"
 #$define SDL_BRANCH "release-2.30.x"
 
 $requireRogue "2.34.3"

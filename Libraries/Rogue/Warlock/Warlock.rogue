@@ -59,9 +59,9 @@ State = State() subclass
       image.internal_size = XY(512)
       image.scale_to_fill(Display.bounds)
       image.rotation = 0
-      image.draw( Display.center )
+      #image.draw( Display.center )
 
-      Display.bounds.fill( Color.BLACK.with_opacity(0.5) )
+      #Display.bounds.fill( Color.BLACK.with_opacity(0.5) )
       #image.scale_to_fit(Display.bounds)
       image.size = XY(256)
       image.rotation = angle
@@ -144,25 +144,10 @@ class Warlock [essential singleton]
     method configure [api]
       Warlock.on_configure
 
-    method m_proj->Matrix [api]
-      return Matrix.perspective(
-        Degrees(60),
-        1280.0/720.0,
-        0.1, 100,
-        &homogeneous_depth=Renderer.uses_homogeneous_depth
-      )
-
-    method m_view->Matrix [api]
-      return Matrix.look_at( XYZ(0,0,-5), XYZ.zero )
-
-    method m_xform( n:Int )->Matrix [api]
-      return Matrix.rotate_xy( RadiansXY( n*0.01, n*0.01 ) )
-
-    method get_mesh->MeshBuilder [api]
-      return mesh
-
-    method render [api]
-      Warlock.on_render
+    method update->Logical [api]
+      local keep_running = Framework.update_events
+      Warlock.render
+      return keep_running
 
   PROPERTIES
     configured            : Logical
@@ -231,6 +216,21 @@ class Warlock [essential singleton]
       return null
       }#
 
+    method find_window( id=null:Int?, native_id=null:Int? )->Window
+      if local native_id = native_id
+        forEach (window in windows)
+          if (window.native_id == native_id) return window
+        endForEach
+      endIf
+
+      if local id = id
+        forEach (window in windows)
+          if (window.id == id) return window
+        endForEach
+      endIf
+
+      return null
+
     method load_asset_bytes( filepath:String )->Byte[]
       if (filepath) return Byte[]( File(filepath) )
       else          return null
@@ -240,7 +240,7 @@ class Warlock [essential singleton]
         Window( "Warlock", 1280, 720 )
       endIf
 
-    method on_render
+    method render
       State = State.updated || State()
       State.current = State  # ensure consistent state throughout render process, even after state change
       State.current.on_render

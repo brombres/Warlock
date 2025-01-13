@@ -19,5 +19,9 @@ class Framework [abstract singleton]
     method print_error
       Global.error.println this.error
 
+    method update_events->Logical
+      # Returns false if the app should exit.
+      return false
+
     method update_window_size( window:Window ) [abstract]
 endClass

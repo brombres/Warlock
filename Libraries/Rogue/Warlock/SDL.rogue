@@ -69,6 +69,30 @@ class SDL : Framework [singleton]
     method error->String
       return native("RogueString_create(SDL_GetError())")->String
 
+    method update_events->Logical [override]
+      local keep_running = true
+      local window : Window
+
+      native
+      @|SDL_Event event;
+       |while (SDL_PollEvent(&event))
+       |{
+       |  switch (event.type)
+       |  {
+       |    case SDL_EVENT_QUIT:
+       |      $keep_running = false;
+       |      break;
+       |    case SDL_EVENT_MOUSE_BUTTON_DOWN:
+              window = Warlock.find_window( &native_id=native("event.button.windowID")->Int )
+              Display.clear( Random.color )
+              println "button " + native("event.button.button")->Int
+      native
+      @|      break;
+       |  }
+       |}
+
+      return keep_running
+
     method update_window_size( window:Window )
       native
       @|int w, h;
@@ -82,4 +106,8 @@ augment Warlock::Window
   PROPERTIES
     native "SDL_Window* sdl_window;"
     native "void* native_window_handle;"
+
+  METHODS
+    method native_id->Int
+      return native("SDL_GetWindowID($this->sdl_window)")->Int
 endAugment
