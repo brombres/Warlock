@@ -22,6 +22,7 @@ $include Warlock/Shader
 $include Warlock/State
 $include Warlock/Texture
 $include Warlock/Triangle
+$include Warlock/UpdateRegulator
 $include Warlock/Vertex
 $include Warlock/View
 $include Warlock/ViewState
@@ -33,12 +34,14 @@ uses Geometry [export]
 uses Graphics [export]
 uses Math/Matrix
 uses UI
+uses Utility/Timer
 
 State = State() subclass
   PROPERTIES
     angle   : Degrees
     image   : Image
     child   : Image
+    timer   = Timer()
 
   METHODS
     method on_start
@@ -50,10 +53,12 @@ State = State() subclass
         child.add( Image(texture).[size=XY(120,120), position=XY(128,128)] )
         image.add( child )
       endIf
+      Display.clear( Color.BLUE )
 
     method on_draw
       Display.projection_mode = ProjectionMode2DX
       Display.perspective_center = XY(0.5,0.25)
+      Display.clear
 
       image.anchor = Anchor.CENTER
       image.internal_size = XY(512)
@@ -69,77 +74,11 @@ State = State() subclass
       angle += 1
       child.rotation += Degrees(1.5)
 
-      #Display.push_object_transform( Matrix.translate(Display.size*XY(0.5,0.25)) * Matrix.rotate_y(Degrees(45)) )
-      #Display.push_object_transform( Matrix.rotate_y(Degrees(45)) * Matrix.translate(Display.size/2) )
-      #Box(-128,-128,256,256).fill( texture )
-      #Display.push_object_transform( Matrix.translate(XY(-128,-128)) )
-      #Box(0,0,256,256).fill( Color(0x55FFFFFF) )
-
-      #{
-      local len = Display.size.min * 0.45
-      local triangle = Triangle(
-        XY( len, Degrees(30) ),
-        XY( len, Degrees(150) ),
-        XY( len, Degrees(270) )
-      ).rotated( angle ) + Display.center
-      }#
-
-      #triangle.fill( Color.CYAN )
-      #triangle.draw( Color.WHITE )
-      #triangle.fill( texture )
-
-
-      #{
-      Renderer.draw_lines
-      Renderer.data.add Vertex( XYZ(-1, 1,-1), Color(0xFFFFFFFF) )
-      Renderer.data.add Vertex( XYZ( 1, 1,-1), Color(0xFFFFFFFF) )
-      Renderer.data.add Vertex( XYZ(-1,-1,-1), Color(0xFFFFFFFF) )
-      Renderer.data.add Vertex( XYZ( 1,-1,-1), Color(0xFFFFFFFF) )
-      Renderer.data.add Vertex( XYZ(-1, 1, 1), Color(0xFFFFFFFF) )
-      Renderer.data.add Vertex( XYZ( 1, 1, 1), Color(0xFFFFFFFF) )
-      Renderer.data.add Vertex( XYZ(-1,-1, 1), Color(0xFFFFFFFF) )
-      Renderer.data.add Vertex( XYZ( 1,-1, 1), Color(0xFFFFFFFF) )
-      Renderer.data.add( 0, 1 )
-      Renderer.data.add( 1, 3 )
-      Renderer.data.add( 3, 2 )
-      Renderer.data.add( 2, 0 )
-
-      Renderer.data.add( 4, 5 )
-      Renderer.data.add( 5, 7 )
-      Renderer.data.add( 7, 6 )
-      Renderer.data.add( 6, 4 )
-
-      Renderer.data.add( 0, 4 )
-      Renderer.data.add( 1, 5 )
-      Renderer.data.add( 2, 6 )
-      Renderer.data.add( 3, 7 )
-      }#
-
-      #{
-      Renderer.draw_triangles
-      Renderer.data.add( 0, 1, 2 )
-      Renderer.data.add( 1, 3, 2 )
-      Renderer.data.add( 4, 6, 5 )
-      Renderer.data.add( 5, 6, 7 )
-      Renderer.data.add( 0, 2, 4 )
-      Renderer.data.add( 4, 2, 6 )
-      Renderer.data.add( 1, 5, 3 )
-      Renderer.data.add( 5, 7, 3 )
-      Renderer.data.add( 0, 4, 1 )
-      Renderer.data.add( 4, 5, 1 )
-      Renderer.data.add( 2, 3, 6 )
-      Renderer.data.add( 6, 3, 7 )
-      }#
-
-    method on_update
-
+    method on_update( dt:Real )
 
 endSubclass
 
 class Warlock [essential singleton]
-  GLOBAL PROPERTIES
-    mesh = MeshBuilder()
-
   GLOBAL METHODS
     method configure [api]
       Warlock.on_configure
@@ -150,38 +89,20 @@ class Warlock [essential singleton]
       return keep_running
 
   PROPERTIES
-    configured            : Logical
-    windows               = Window[]
+    configured     : Logical
+    windows        = Window[]
+
+    update_regulator = UpdateRegulator()
+    dt               : Real     # Delta Time - seconds since previous frame (may be 0.0)
+    delta_ticks      : Int      # Ticks applied this frame (may be 0)
+    ticks            : Int      # Lifetime tick count
+    frames           : Int      # Lifetime frame count
+    fps              = 60       # Current fps
 
   METHODS
     method init
       println "Initializing Warlock"
       <Display.transform_modified>.on_signal( () => Renderer.flush )
-
-      mesh.add( Vertex(XYZ(-1, 1,-1), Color.BLACK) )
-      mesh.add( Vertex(XYZ( 1, 1,-1), Color.RED ) )
-      mesh.add( Vertex(XYZ(-1,-1,-1), Color.GREEN) )
-      mesh.add( Vertex(XYZ( 1,-1,-1), Color.YELLOW) )
-      mesh.add( Vertex(XYZ(-1, 1, 1), Color.BLUE) )
-      mesh.add( Vertex(XYZ( 1, 1, 1), Color.MAGENTA) )
-      mesh.add( Vertex(XYZ(-1,-1, 1), Color.CYAN) )
-      mesh.add( Vertex(XYZ( 1,-1, 1), Color.WHITE) )
-      mesh.add(
-        [
-          0, 1, 2,
-          1, 3, 2,
-          4, 6, 5,
-          5, 6, 7,
-          0, 2, 4,
-          4, 2, 6,
-          1, 5, 3,
-          5, 7, 3,
-          0, 4, 1,
-          4, 5, 1,
-          2, 3, 6,
-          6, 3, 7
-        ]
-      )
 
     method add_window( window:Window )
       windows.add( window )
@@ -241,10 +162,21 @@ class Warlock [essential singleton]
       endIf
 
     method render
-      State = State.updated || State()
+      ++frames
+      update_regulator.update
+
+      (forEach in windows).begin_render
+
+      loop (delta_ticks)
+        State = State.updated || State()
+      endLoop
       State.current = State  # ensure consistent state throughout render process, even after state change
+      State.current.on_update( dt )
+
       State.current.on_render
       (forEach in windows).render
+
       State.current.on_end_render
+      (forEach in windows).end_render
 
 endClass

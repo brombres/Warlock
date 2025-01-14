@@ -1,0 +1,60 @@
+library Warlock
+
+class UpdateRegulator
+  PROPERTIES
+    frame_timer = Timer()
+    fps_timer   = Timer()
+    max_fps     = 60
+    next_fps    : Int      # Accumulated frame count over current 1s interval.
+    time_debt   : Real
+
+  METHODS
+    method update
+      local elapsed_s = frame_timer.elapsed
+      frame_timer.restart
+
+      ++next_fps
+      if (fps_timer.elapsed >= 1.0)
+        fps_timer.restart
+        Warlock.fps = next_fps
+        max_fps .= or_larger( Warlock.fps )
+        next_fps = 0
+      endIf
+
+      if (elapsed_s >= 1.0)
+        Warlock.dt = 1.0 / 60.0
+        Warlock.delta_ticks = 1
+        time_debt = 0
+        Warlock.fps = max_fps
+      elseIf (elapsed_s <= 0)
+        Warlock.dt = 0
+        Warlock.delta_ticks = 0
+      else
+        Warlock.dt = elapsed_s
+        local interval_ticks = (elapsed_s * 60 + 0.5)->Int
+        if (interval_ticks)
+          local ratio = elapsed_s / (interval_ticks / 60.0)   # actual / expected
+          local error = (1.0 - ratio).abs   # E.g. 0.02 = 2%
+          if (error <= 0.05)
+            # Count this time interval as a whole number of frames
+            Warlock.delta_ticks = interval_ticks
+            time_debt = 0
+          else
+            # Wait for our time debt to accumlate to 1/60.
+            time_debt += elapsed_s
+            Warlock.delta_ticks = 0
+          endIf
+        else
+          time_debt += elapsed_s
+          if (time_debt >= 1.0/60.0)
+            Warlock.delta_ticks = (time_debt * 60)->Int
+            time_debt -= Warlock.delta_ticks / 60.0
+          else
+            Warlock.delta_ticks = 0
+          endIf
+        endIf
+
+      endIf
+      Warlock.ticks += Warlock.delta_ticks
+
+endClass

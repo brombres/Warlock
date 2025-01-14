@@ -14,11 +14,14 @@ class Window : Display
         Renderer.configure_window( this )
       endIf
 
+    method begin_render
+      Framework.update_window_size( this )
+      prior.begin_render
+
     method native_id->Int
       noAction
 
     method render
-      Framework.update_window_size( this )
       Renderer.on_begin_render( this )
       State.current.on_draw
       prior.render

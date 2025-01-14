@@ -80,20 +80,30 @@ class BGFX : Renderer [singleton]
       configure_bgfx( window )
       activate_graphics_context( window )
 
-      local clear_color = Display.clear_color.rgba
-
       native
       @|uint16_t w = static_cast<uint16_t>( $window->size.x );
        |uint16_t h = static_cast<uint16_t>( $window->size.y );
        |bgfx::setViewRect( $window->id, 0, 0, w, h );
        |bgfx::touch( $window->id );
-       |bgfx::setViewClear( $window->id, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, (uint32_t)$clear_color );
+
+      local clear_flags = 0
+      native @|$clear_flags |= BGFX_CLEAR_DEPTH;
+      native @|$clear_flags |= BGFX_CLEAR_COLOR;
+
+      local clear_color = window.clear_color.rgba
+      native @|bgfx::setViewClear( $window->id, (uint16_t)$clear_flags, (uint32_t)$clear_color );
 
     method on_end_render( window:Window ) [override]
       prior.on_end_render( window )
 
-      local clear_color = Display.clear_color.rgba
-      native @|bgfx::setViewClear( $window->id, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, (uint32_t)$clear_color );
+      block
+        local clear_flags = 0
+        native @|$clear_flags |= BGFX_CLEAR_DEPTH;
+        if (Display.should_clear_color) native @|$clear_flags |= BGFX_CLEAR_COLOR;
+
+        local clear_color = Display.clear_color.rgba
+        native @|bgfx::setViewClear( $window->id, (uint16_t)$clear_flags, (uint32_t)$clear_color );
+      endBlock
 
       local display_id = Display.id
 

@@ -13,15 +13,10 @@ class State : Rogue::State<<Warlock::State>> [singleton]
 
     method on_end_render
 
-    method on_end_update
-
     method on_render
 
     method on_update
 
-    method update
-      on_update
-      Display.update
-      on_end_update
+    method on_update( dt:Real )
 
 endClass

@@ -13,15 +13,17 @@ class DisplayState : State<<DisplayState>>
 
     method on_end_render
 
-    method on_end_update
-
     method on_render
 
     method on_update
 
+    method on_update( dt:Real )
+
     method update
-      on_update
       Display.update
-      on_end_update
+
+    method update( dt:Real )
+      on_update( dt )
+      Display.update( dt )
 
 endClass
