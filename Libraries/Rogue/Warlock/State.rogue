@@ -7,7 +7,37 @@ class State : Rogue::State<<Warlock::State>> [singleton]
   METHODS
     method draw
 
+    method handle( e:PointerEvent )
+      contingent
+        on( e )
+        necessary (not e.is_consumed)
+
+        e.window.current_state.handle( e )
+        necessary (not e.is_consumed)
+
+        on_end( e )
+      endContingent
+
+    method handle( e:ScrollEvent )
+      contingent
+        on( e )
+        necessary (not e.is_consumed)
+
+        e.window.current_state.handle( e )
+        necessary (not e.is_consumed)
+
+        on_end( e )
+      endContingent
+
+    method on( e:PointerEvent )
+
+    method on( e:ScrollEvent )
+
     method on_draw
+
+    method on_end( e:PointerEvent )
+
+    method on_end( e:ScrollEvent )
 
     method on_end_draw
 

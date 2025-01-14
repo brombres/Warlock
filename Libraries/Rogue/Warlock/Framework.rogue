@@ -4,6 +4,12 @@ class Framework [abstract singleton]
   PROPERTIES
     is_configured : Logical
 
+    # Event object cache. These are reused for each event by default. To
+    # prevent a particular event from being later reused in event-handling
+    # code, call .retain() on it and later .release() when finished.
+    pointer_event = PointerEvent()
+    scroll_event  = ScrollEvent()
+
   METHODS
     method configure
       print_error

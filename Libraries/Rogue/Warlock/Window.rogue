@@ -5,8 +5,8 @@ class Window : Display
     title  : String
 
   METHODS
-    method init( title, width:Int, height:Int )
-      if (not state) state = DisplayState()
+    method init( title, width:Int, height:Int, state=DisplayState() )
+      ensure<<state>>
 
       size = XY(width,height)
       if (Framework.create_window(this))
@@ -30,3 +30,7 @@ class Window : Display
 
 endClass
 
+augment UI::Event
+  PROPERTIES
+    window : Warlock::Window
+endAugment

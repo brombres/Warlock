@@ -74,7 +74,17 @@ State = State() subclass
       angle += 1
       child.rotation += Degrees(1.5)
 
-    method on_update( dt:Real )
+      Line(  1, 0, 1, Display.height ).draw( Color(0xFF88FF88) )
+      Line(  3, 0, 3, Display.height ).draw( Color(0xFF88FF88) )
+      Line(  5, 0, 5, Display.height ).draw( Color(0xFF88FF88) )
+      Line(  7, 0, 7, Display.height ).draw( Color(0xFF88FF88) )
+      Line(  9, 0, 9, Display.height ).draw( Color(0xFF88FF88) )
+      Line( 11, 0,11, Display.height ).draw( Color(0xFF88FF88) )
+      Line( 13, 0,13, Display.height ).draw( Color(0xFF88FF88) )
+      Line( 15, 0,15, Display.height ).draw( Color(0xFF88FF88) )
+
+    method on( e:KeyEvent )
+      trace e
 
 endSubclass
 
@@ -84,7 +94,14 @@ class Warlock [essential singleton]
       Warlock.on_configure
 
     method update->Logical [api]
+      # Ensure consistent state references are set before updating events
+      State.current = State
+      forEach (window in Warlock.windows)
+        window.current_state = window.state
+      endForEach
+
       local keep_running = Framework.update_events
+
       Warlock.render
       return keep_running
 
@@ -158,7 +175,7 @@ class Warlock [essential singleton]
 
     method on_configure
       if (windows.is_empty)
-        Window( "Warlock", 1280, 720 )
+        Window( "Warlock", 640, 360 )
       endIf
 
     method render

@@ -35,6 +35,8 @@ class SDL : Framework [singleton]
     method configure
       if (is_configured) return
 
+      native @|SDL_SetHint( SDL_HINT_MAC_SCROLL_MOMENTUM, "1" );
+
       if (native("SDL_Init(SDL_INIT_VIDEO)")->Int != 0)
         error.println "[SDL Error] Failed to initialize SDL: $."(error)
         return
@@ -44,7 +46,7 @@ class SDL : Framework [singleton]
 
     method create_window( window:Window )->Logical
       native @|SDL_WindowFlags flags = 0;
-      native @|flags |= SDL_WINDOW_RESIZABLE;
+      native @|flags |= SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY;
       if (System.is_macos) native @|flags |= SDL_WINDOW_METAL;
 
       native
@@ -54,6 +56,8 @@ class SDL : Framework [singleton]
        |    (int)$window->size.x, (int)$window->size.y,
        |    flags
        |  );
+
+      update_window_size( window )
 
       if (not native("!!$window->sdl_window")->Logical)
         Global.error.println "Failed to create SDL window: $."(SDL.error)
@@ -71,7 +75,6 @@ class SDL : Framework [singleton]
 
     method update_events->Logical [override]
       local keep_running = true
-      local window : Window
 
       native
       @|SDL_Event event;
@@ -82,13 +85,63 @@ class SDL : Framework [singleton]
        |    case SDL_EVENT_QUIT:
        |      $keep_running = false;
        |      break;
-       |    case SDL_EVENT_MOUSE_BUTTON_DOWN:
-              window = Warlock.find_window( &native_id=native("event.button.windowID")->Int )
-              Display.clear( Random.color )
-              println "button " + native("event.button.button")->Int
+       |    case SDL_EVENT_MOUSE_MOTION:
+              block
+                if local window = Warlock.find_window( &native_id=native("event.button.windowID")->Int )
+                  local x = native("event.motion.x")->Int * window.density
+                  local y = native("event.motion.y")->Int * window.density
+                  if (pointer_event.refcount) pointer_event = PointerEvent()
+                  local delta : XY
+                  if local previous_position = Pointer.position
+                    delta = XY(x,y) - previous_position
+                  endIf
+                  pointer_event.init( <MOVE>, XY(x,y), delta, 0 )
+                  pointer_event.window = window
+                  pointer_event.timestamp = native("event.button.timestamp")->Int
+                  Pointer.on( pointer_event )
+                  State.current.handle( pointer_event )
+                endIf
+              endBlock
       native
       @|      break;
-       |  }
+       |    case SDL_EVENT_MOUSE_BUTTON_DOWN:
+       |    case SDL_EVENT_MOUSE_BUTTON_UP:
+              block
+                if local window = Warlock.find_window( &native_id=native("event.button.windowID")->Int )
+                  local x = native("event.button.x")->Int * window.density
+                  local y = native("event.button.y")->Int * window.density
+                  if (pointer_event.refcount) pointer_event = PointerEvent()
+                  local delta : XY
+                  if local previous_position = Pointer.position
+                    delta = XY(x,y) - previous_position
+                  endIf
+                  local index = native("event.button.button")->Int
+                  index = which{ index==1:0 || index==3:1 || index==2:2 || index-1 }
+                  local type = which{ native("event.type == SDL_EVENT_MOUSE_BUTTON_DOWN")->Logical:<PRESS> || <RELEASE> }
+                  pointer_event.init( type, XY(x,y), delta, index )
+                  pointer_event.window = window
+                  pointer_event.timestamp = native("event.button.timestamp")->Int
+                  Pointer.on( pointer_event )
+                  State.current.handle( pointer_event )
+                endIf
+              endBlock
+      native
+      @|      break;
+       |
+       |    case SDL_EVENT_MOUSE_WHEEL:
+              block
+                if local window = Warlock.find_window( &native_id=native("event.wheel.windowID")->Int )
+                  local x = native("event.wheel.x")->Int * window.density
+                  local y = -native("event.wheel.y")->Int * window.density
+                  if (scroll_event.refcount) scroll_event = ScrollEvent()
+                  scroll_event.init( XY(x,y) )
+                  scroll_event.window = window
+                  scroll_event.timestamp = native("event.button.timestamp")->Int
+                  State.current.handle( scroll_event )
+                endIf
+              endBlock
+      native
+      @|  }
        |}
 
       return keep_running
@@ -96,9 +149,10 @@ class SDL : Framework [singleton]
     method update_window_size( window:Window )
       native
       @|int w, h;
-       |SDL_GetWindowSize( $window->sdl_window, &w, &h );
+       |SDL_GetWindowSizeInPixels( $window->sdl_window, &w, &h );
        |$window->size.x = w;
        |$window->size.y = h;
+       |$window->density = SDL_GetWindowPixelDensity( $window->sdl_window );
 
 endClass
 
