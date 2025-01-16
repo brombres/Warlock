@@ -40,11 +40,24 @@ class State : Rogue::State<<Warlock::State>> [singleton]
         on_end( e )
       endContingent
 
+    method handle( e:TextEvent )
+      contingent
+        on( e )
+        necessary (not e.is_consumed)
+
+        e.window.current_state.handle( e )
+        necessary (not e.is_consumed)
+
+        on_end( e )
+      endContingent
+
     method on( e:KeyEvent )
 
     method on( e:PointerEvent )
 
     method on( e:ScrollEvent )
+
+    method on( e:TextEvent )
 
     method on_draw
 
@@ -53,6 +66,8 @@ class State : Rogue::State<<Warlock::State>> [singleton]
     method on_end( e:PointerEvent )
 
     method on_end( e:ScrollEvent )
+
+    method on_end( e:TextEvent )
 
     method on_end_draw
 

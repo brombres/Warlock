@@ -170,6 +170,15 @@ class SDL : Framework [singleton]
                   key_event.timestamp = native("event.button.timestamp")->Int
                   Keyboard.on( key_event )
                   State.current.handle( key_event )
+
+                  if (key_event.is_printable)
+                    if (text_event.refcount) text_event = TextEvent()
+                    text_event.init( key_event.unicode )
+                    text_event.window = window
+                    text_event.timestamp = native("event.button.timestamp")->Int
+                    State.current.handle( text_event )
+                  endIf
+
                 endIf
               endBlock
       native

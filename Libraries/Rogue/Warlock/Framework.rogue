@@ -10,6 +10,7 @@ class Framework [abstract singleton]
     pointer_event = PointerEvent()
     scroll_event  = ScrollEvent()
     key_event     = KeyEvent()
+    text_event    = TextEvent()
 
   METHODS
     method configure

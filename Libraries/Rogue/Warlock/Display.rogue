@@ -94,6 +94,14 @@ class Display [singleton]
         on_end( e )
       endContingent
 
+    method handle( e:TextEvent )
+      contingent
+        on( e )
+        necessary (not e.is_consumed)
+
+        on_end( e )
+      endContingent
+
     method height->Real
       return size.y
 
@@ -103,11 +111,15 @@ class Display [singleton]
 
     method on( e:ScrollEvent )
 
+    method on( e:TextEvent )
+
     method on_end( e:KeyEvent )
 
     method on_end( e:PointerEvent )
 
     method on_end( e:ScrollEvent )
+
+    method on_end( e:TextEvent )
 
     method on_draw
       #trace Renderer.uses_normalized_depth
