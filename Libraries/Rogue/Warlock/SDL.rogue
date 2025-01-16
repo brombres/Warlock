@@ -90,11 +90,11 @@ class SDL : Framework [singleton]
                 if local window = Warlock.find_window( &native_id=native("event.button.windowID")->Int )
                   local x = native("event.motion.x")->Int * window.density
                   local y = native("event.motion.y")->Int * window.density
-                  if (pointer_event.refcount) pointer_event = PointerEvent()
                   local delta : XY
                   if local previous_position = Pointer.position
                     delta = XY(x,y) - previous_position
                   endIf
+                  if (pointer_event.refcount) pointer_event = PointerEvent()
                   pointer_event.init( <MOVE>, XY(x,y), delta, 0 )
                   pointer_event.window = window
                   pointer_event.timestamp = native("event.button.timestamp")->Int
@@ -110,7 +110,6 @@ class SDL : Framework [singleton]
                 if local window = Warlock.find_window( &native_id=native("event.button.windowID")->Int )
                   local x = native("event.button.x")->Int * window.density
                   local y = native("event.button.y")->Int * window.density
-                  if (pointer_event.refcount) pointer_event = PointerEvent()
                   local delta : XY
                   if local previous_position = Pointer.position
                     delta = XY(x,y) - previous_position
@@ -118,6 +117,7 @@ class SDL : Framework [singleton]
                   local index = native("event.button.button")->Int
                   index = which{ index==1:0 || index==3:1 || index==2:2 || index-1 }
                   local type = which{ native("event.type == SDL_EVENT_MOUSE_BUTTON_DOWN")->Logical:<PRESS> || <RELEASE> }
+                  if (pointer_event.refcount) pointer_event = PointerEvent()
                   pointer_event.init( type, XY(x,y), delta, index )
                   pointer_event.window = window
                   pointer_event.timestamp = native("event.button.timestamp")->Int
@@ -141,7 +141,41 @@ class SDL : Framework [singleton]
                 endIf
               endBlock
       native
-      @|  }
+      @|    case SDL_EVENT_KEY_DOWN:
+       |    case SDL_EVENT_KEY_UP:
+              block
+                if local window = Warlock.find_window( &native_id=native("event.key.windowID")->Int )
+                  local scancode  = native("event.key.scancode")->Int
+                  local mods      = native("event.key.mod")->Int
+                  local is_repeat = native("event.key.repeat")->Logical
+                  local is_press  = native("event.type == SDL_EVENT_KEY_DOWN")->Logical
+                  local keycode = .sdl_scancode_to_keycode( scancode )
+
+                  local modifiers : KeyModifier
+                  if (native("$mods & SDL_KMOD_LSHIFT")->LiteralInt32)  modifiers |= KeyModifier.LEFT_SHIFT
+                  if (native("$mods & SDL_KMOD_RSHIFT")->LiteralInt32)  modifiers |= KeyModifier.RIGHT_SHIFT
+                  if (native("$mods & SDL_KMOD_LCTRL")->LiteralInt32)   modifiers |= KeyModifier.LEFT_CONTROL
+                  if (native("$mods & SDL_KMOD_RCTRL")->LiteralInt32)   modifiers |= KeyModifier.RIGHT_CONTROL
+                  if (native("$mods & SDL_KMOD_LALT")->LiteralInt32)    modifiers |= KeyModifier.LEFT_ALT
+                  if (native("$mods & SDL_KMOD_RALT")->LiteralInt32)    modifiers |= KeyModifier.RIGHT_ALT
+                  if (native("$mods & SDL_KMOD_LGUI")->LiteralInt32)    modifiers |= KeyModifier.LEFT_OS
+                  if (native("$mods & SDL_KMOD_RGUI")->LiteralInt32)    modifiers |= KeyModifier.RIGHT_OS
+                  if (native("$mods & SDL_KMOD_NUM")->LiteralInt32)     modifiers |= KeyModifier.NUM_LOCK
+                  if (native("$mods & SDL_KMOD_CAPS")->LiteralInt32)    modifiers |= KeyModifier.CAPS_LOCK
+                  if (native("$mods & SDL_KMOD_SCROLL")->LiteralInt32)  modifiers |= KeyModifier.SCROLL_LOCK
+
+                  if (key_event.refcount) key_event = KeyEvent()
+                  key_event.init( keycode, scancode, &=is_press, &=is_repeat, modifiers )
+                  key_event.window = window
+                  key_event.timestamp = native("event.button.timestamp")->Int
+                  Keyboard.on( key_event )
+                  State.current.handle( key_event )
+                endIf
+              endBlock
+      native
+      @|      break;
+       |
+       |  }
        |}
 
       return keep_running
@@ -153,6 +187,140 @@ class SDL : Framework [singleton]
        |$window->size.x = w;
        |$window->size.y = h;
        |$window->density = SDL_GetWindowPixelDensity( $window->sdl_window );
+
+  GLOBAL METHODS
+    method .sdl_scancode_to_keycode( scancode:Int )->Keycode
+      which (scancode)
+        case native("SDL_SCANCODE_A")->LiteralInt32: return Keycode.A
+        case native("SDL_SCANCODE_B")->LiteralInt32: return Keycode.B
+        case native("SDL_SCANCODE_C")->LiteralInt32: return Keycode.C
+        case native("SDL_SCANCODE_D")->LiteralInt32: return Keycode.D
+        case native("SDL_SCANCODE_E")->LiteralInt32: return Keycode.E
+        case native("SDL_SCANCODE_F")->LiteralInt32: return Keycode.F
+        case native("SDL_SCANCODE_G")->LiteralInt32: return Keycode.G
+        case native("SDL_SCANCODE_H")->LiteralInt32: return Keycode.H
+        case native("SDL_SCANCODE_I")->LiteralInt32: return Keycode.I
+        case native("SDL_SCANCODE_J")->LiteralInt32: return Keycode.J
+        case native("SDL_SCANCODE_K")->LiteralInt32: return Keycode.K
+        case native("SDL_SCANCODE_L")->LiteralInt32: return Keycode.L
+        case native("SDL_SCANCODE_M")->LiteralInt32: return Keycode.M
+        case native("SDL_SCANCODE_N")->LiteralInt32: return Keycode.N
+        case native("SDL_SCANCODE_O")->LiteralInt32: return Keycode.O
+        case native("SDL_SCANCODE_P")->LiteralInt32: return Keycode.P
+        case native("SDL_SCANCODE_Q")->LiteralInt32: return Keycode.Q
+        case native("SDL_SCANCODE_R")->LiteralInt32: return Keycode.R
+        case native("SDL_SCANCODE_S")->LiteralInt32: return Keycode.S
+        case native("SDL_SCANCODE_T")->LiteralInt32: return Keycode.T
+        case native("SDL_SCANCODE_U")->LiteralInt32: return Keycode.U
+        case native("SDL_SCANCODE_V")->LiteralInt32: return Keycode.V
+        case native("SDL_SCANCODE_W")->LiteralInt32: return Keycode.W
+        case native("SDL_SCANCODE_X")->LiteralInt32: return Keycode.X
+        case native("SDL_SCANCODE_Y")->LiteralInt32: return Keycode.Y
+        case native("SDL_SCANCODE_Z")->LiteralInt32: return Keycode.Z
+
+        case native("SDL_SCANCODE_1")->LiteralInt32: return Keycode.NUMBER_1
+        case native("SDL_SCANCODE_2")->LiteralInt32: return Keycode.NUMBER_2
+        case native("SDL_SCANCODE_3")->LiteralInt32: return Keycode.NUMBER_3
+        case native("SDL_SCANCODE_4")->LiteralInt32: return Keycode.NUMBER_4
+        case native("SDL_SCANCODE_5")->LiteralInt32: return Keycode.NUMBER_5
+        case native("SDL_SCANCODE_6")->LiteralInt32: return Keycode.NUMBER_6
+        case native("SDL_SCANCODE_7")->LiteralInt32: return Keycode.NUMBER_7
+        case native("SDL_SCANCODE_8")->LiteralInt32: return Keycode.NUMBER_8
+        case native("SDL_SCANCODE_9")->LiteralInt32: return Keycode.NUMBER_9
+        case native("SDL_SCANCODE_0")->LiteralInt32: return Keycode.NUMBER_0
+
+        case native("SDL_SCANCODE_RETURN")->LiteralInt32: return Keycode.ENTER
+        case native("SDL_SCANCODE_ESCAPE")->LiteralInt32: return Keycode.ESCAPE
+        case native("SDL_SCANCODE_BACKSPACE")->LiteralInt32: return Keycode.BACKSPACE
+        case native("SDL_SCANCODE_TAB")->LiteralInt32: return Keycode.TAB
+        case native("SDL_SCANCODE_SPACE")->LiteralInt32: return Keycode.SPACE
+
+        case native("SDL_SCANCODE_MINUS")->LiteralInt32: return Keycode.MINUS
+        case native("SDL_SCANCODE_EQUALS")->LiteralInt32: return Keycode.EQUALS
+        case native("SDL_SCANCODE_LEFTBRACKET")->LiteralInt32: return Keycode.OPEN_BRACKET
+        case native("SDL_SCANCODE_RIGHTBRACKET")->LiteralInt32: return Keycode.CLOSE_BRACKET
+        case native("SDL_SCANCODE_BACKSLASH")->LiteralInt32: return Keycode.BACKSLASH
+        case native("SDL_SCANCODE_SEMICOLON")->LiteralInt32: return Keycode.SEMICOLON
+        case native("SDL_SCANCODE_APOSTROPHE")->LiteralInt32: return Keycode.QUOTE # APOSTROPHE
+        case native("SDL_SCANCODE_GRAVE")->LiteralInt32: return Keycode.BACKQUOTE  # GRAVE
+        case native("SDL_SCANCODE_COMMA")->LiteralInt32: return Keycode.COMMA
+        case native("SDL_SCANCODE_PERIOD")->LiteralInt32: return Keycode.PERIOD
+        case native("SDL_SCANCODE_SLASH")->LiteralInt32: return Keycode.SLASH
+
+        case native("SDL_SCANCODE_CAPSLOCK")->LiteralInt32: return Keycode.CAPS_LOCK
+
+        case native("SDL_SCANCODE_F1")->LiteralInt32: return Keycode.F1
+        case native("SDL_SCANCODE_F2")->LiteralInt32: return Keycode.F2
+        case native("SDL_SCANCODE_F3")->LiteralInt32: return Keycode.F3
+        case native("SDL_SCANCODE_F4")->LiteralInt32: return Keycode.F4
+        case native("SDL_SCANCODE_F5")->LiteralInt32: return Keycode.F5
+        case native("SDL_SCANCODE_F6")->LiteralInt32: return Keycode.F6
+        case native("SDL_SCANCODE_F7")->LiteralInt32: return Keycode.F7
+        case native("SDL_SCANCODE_F8")->LiteralInt32: return Keycode.F8
+        case native("SDL_SCANCODE_F9")->LiteralInt32: return Keycode.F9
+        case native("SDL_SCANCODE_F10")->LiteralInt32: return Keycode.F10
+        case native("SDL_SCANCODE_F11")->LiteralInt32: return Keycode.F11
+        case native("SDL_SCANCODE_F12")->LiteralInt32: return Keycode.F12
+
+        case native("SDL_SCANCODE_PRINTSCREEN")->LiteralInt32: return Keycode.PRINT_SCREEN
+        case native("SDL_SCANCODE_SCROLLLOCK")->LiteralInt32: return Keycode.SCROLL_LOCK
+        case native("SDL_SCANCODE_PAUSE")->LiteralInt32: return Keycode.PAUSE
+        case native("SDL_SCANCODE_INSERT")->LiteralInt32: return Keycode.INSERT
+        case native("SDL_SCANCODE_HOME")->LiteralInt32: return Keycode.HOME
+        case native("SDL_SCANCODE_PAGEUP")->LiteralInt32: return Keycode.PAGE_UP
+        case native("SDL_SCANCODE_DELETE")->LiteralInt32: return Keycode.DELETE
+        case native("SDL_SCANCODE_END")->LiteralInt32: return Keycode.END
+        case native("SDL_SCANCODE_PAGEDOWN")->LiteralInt32: return Keycode.PAGE_DOWN
+        case native("SDL_SCANCODE_RIGHT")->LiteralInt32: return Keycode.RIGHT_ARROW
+        case native("SDL_SCANCODE_LEFT")->LiteralInt32: return Keycode.LEFT_ARROW
+        case native("SDL_SCANCODE_DOWN")->LiteralInt32: return Keycode.DOWN_ARROW
+        case native("SDL_SCANCODE_UP")->LiteralInt32: return Keycode.UP_ARROW
+
+        case native("SDL_SCANCODE_KP_DIVIDE")->LiteralInt32: return Keycode.NUMPAD_DIVIDE
+        case native("SDL_SCANCODE_KP_MULTIPLY")->LiteralInt32: return Keycode.NUMPAD_TIMES
+        case native("SDL_SCANCODE_KP_MINUS")->LiteralInt32: return Keycode.NUMPAD_MINUS
+        case native("SDL_SCANCODE_KP_PLUS")->LiteralInt32: return Keycode.NUMPAD_PLUS
+        case native("SDL_SCANCODE_KP_ENTER")->LiteralInt32: return Keycode.NUMPAD_ENTER
+        case native("SDL_SCANCODE_KP_1")->LiteralInt32: return Keycode.NUMPAD_1
+        case native("SDL_SCANCODE_KP_2")->LiteralInt32: return Keycode.NUMPAD_2
+        case native("SDL_SCANCODE_KP_3")->LiteralInt32: return Keycode.NUMPAD_3
+        case native("SDL_SCANCODE_KP_4")->LiteralInt32: return Keycode.NUMPAD_4
+        case native("SDL_SCANCODE_KP_5")->LiteralInt32: return Keycode.NUMPAD_5
+        case native("SDL_SCANCODE_KP_6")->LiteralInt32: return Keycode.NUMPAD_6
+        case native("SDL_SCANCODE_KP_7")->LiteralInt32: return Keycode.NUMPAD_7
+        case native("SDL_SCANCODE_KP_8")->LiteralInt32: return Keycode.NUMPAD_8
+        case native("SDL_SCANCODE_KP_9")->LiteralInt32: return Keycode.NUMPAD_9
+        case native("SDL_SCANCODE_KP_0")->LiteralInt32: return Keycode.NUMPAD_0
+        case native("SDL_SCANCODE_KP_PERIOD")->LiteralInt32: return Keycode.NUMPAD_PERIOD
+        case native("SDL_SCANCODE_KP_EQUALS")->LiteralInt32: return Keycode.NUMPAD_EQUALS
+        case native("SDL_SCANCODE_F13")->LiteralInt32: return Keycode.F13
+        case native("SDL_SCANCODE_F14")->LiteralInt32: return Keycode.F14
+        case native("SDL_SCANCODE_F15")->LiteralInt32: return Keycode.F15
+        case native("SDL_SCANCODE_F16")->LiteralInt32: return Keycode.F16
+        case native("SDL_SCANCODE_F17")->LiteralInt32: return Keycode.F17
+        case native("SDL_SCANCODE_F18")->LiteralInt32: return Keycode.F18
+        case native("SDL_SCANCODE_F19")->LiteralInt32: return Keycode.F19
+        case native("SDL_SCANCODE_F20")->LiteralInt32: return Keycode.F20
+        case native("SDL_SCANCODE_F21")->LiteralInt32: return Keycode.F21
+        case native("SDL_SCANCODE_F22")->LiteralInt32: return Keycode.F22
+        case native("SDL_SCANCODE_F23")->LiteralInt32: return Keycode.F23
+        case native("SDL_SCANCODE_F24")->LiteralInt32: return Keycode.F24
+
+        case native("SDL_SCANCODE_KP_COMMA")->LiteralInt32: return Keycode.NUMPAD_COMMA
+        case native("SDL_SCANCODE_KP_TAB")->LiteralInt32: return Keycode.NUMPAD_TAB
+        case native("SDL_SCANCODE_KP_BACKSPACE")->LiteralInt32: return Keycode.NUMPAD_BACKSPACE
+
+        case native("SDL_SCANCODE_LCTRL")->LiteralInt32: return Keycode.LEFT_CONTROL
+        case native("SDL_SCANCODE_LSHIFT")->LiteralInt32: return Keycode.LEFT_SHIFT
+        case native("SDL_SCANCODE_LALT")->LiteralInt32: return Keycode.LEFT_ALT
+        case native("SDL_SCANCODE_LGUI")->LiteralInt32: return Keycode.LEFT_OS
+        case native("SDL_SCANCODE_RCTRL")->LiteralInt32: return Keycode.RIGHT_CONTROL
+        case native("SDL_SCANCODE_RSHIFT")->LiteralInt32: return Keycode.RIGHT_SHIFT
+        case native("SDL_SCANCODE_RALT")->LiteralInt32: return Keycode.RIGHT_ALT
+        case native("SDL_SCANCODE_RGUI")->LiteralInt32: return Keycode.RIGHT_OS
+      endWhich
+
+      return Keycode.UNDEFINED
 
 endClass
 

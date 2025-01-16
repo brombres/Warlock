@@ -70,6 +70,14 @@ class Display [singleton]
       Display = this
       current_state.on_end_render
 
+    method handle( e:KeyEvent )
+      contingent
+        on( e )
+        necessary (not e.is_consumed)
+
+        on_end( e )
+      endContingent
+
     method handle( e:PointerEvent )
       contingent
         on( e )
@@ -89,9 +97,13 @@ class Display [singleton]
     method height->Real
       return size.y
 
+    method on( e:KeyEvent )
+
     method on( e:PointerEvent )
 
     method on( e:ScrollEvent )
+
+    method on_end( e:KeyEvent )
 
     method on_end( e:PointerEvent )
 

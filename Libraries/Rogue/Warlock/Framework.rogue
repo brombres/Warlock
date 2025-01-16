@@ -9,6 +9,7 @@ class Framework [abstract singleton]
     # code, call .retain() on it and later .release() when finished.
     pointer_event = PointerEvent()
     scroll_event  = ScrollEvent()
+    key_event     = KeyEvent()
 
   METHODS
     method configure

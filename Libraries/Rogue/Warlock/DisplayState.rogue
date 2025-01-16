@@ -7,6 +7,17 @@ class DisplayState : State<<DisplayState>>
       Display.draw
       on_end_draw
 
+    method handle( e:KeyEvent )
+      contingent
+        on( e )
+        necessary (not e.is_consumed)
+
+        e.window.handle( e )
+        necessary (not e.is_consumed)
+
+        on_end( e )
+      endContingent
+
     method handle( e:PointerEvent )
       contingent
         on( e )
@@ -29,9 +40,13 @@ class DisplayState : State<<DisplayState>>
         on_end( e )
       endContingent
 
+    method on( e:KeyEvent )
+
     method on( e:PointerEvent )
 
     method on( e:ScrollEvent )
+
+    method on_end( e:KeyEvent )
 
     method on_end( e:PointerEvent )
 
