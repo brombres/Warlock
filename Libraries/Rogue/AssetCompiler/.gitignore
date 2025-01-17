@@ -1,0 +1,19 @@
+.rogo
+Local.settings
+BuildLocal.rogue
+/Build
+.*.swo
+.*.swp
+*.o
+.DS_Store
+*~
+Source/ParserCore.rogue
+Source/ScannerCore.rogue
+Source/TokenType.rogue
+
+# Rogo
+Local.rogo
+
+# Vim
+*.swo
+*.swp

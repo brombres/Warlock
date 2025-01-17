@@ -1,0 +1,64 @@
+library AssetCompiler
+
+$include "Scanner.rogue"
+$include "Parser.rogue" [optional]
+uses AssetCompiler
+uses Console/CommandLineParser
+
+#try
+#  AssetCompiler( System.command_line_arguments )
+#catch (error:CompileError)
+#  Console.error.println error
+#  System.exit 1
+#catch (error:Error)
+#  Console.error.println error
+#  Console.error.println error.stack_trace
+#  System.exit 1
+#endTry
+
+class AssetCompiler
+  PROPERTIES
+    platform : String
+    audio    : Files
+    data     : Files
+    fonts    : Files
+    graphics : Files
+
+  METHODS
+      #command = parse_args( args )
+
+      ## trace command
+      ## has //options and possibly //args
+
+      #if (command//options//help or command//args.count == 0)
+      #  print_usage
+      #  System.exit 0
+      #endIf
+
+      #if ($isDefined(PARSER_EXISTS)) parse_files
+      #else                           scan_files
+
+    method init( platform )
+      local font_system_17 = File( "Libraries/Warlock/Libraries/Framework/Assets/Font-System-17.png" )
+      if (font_system_17.exists)
+        font_system_17.copy_to( File("Assets/Graphics/Fonts"), &if_different )
+      endIf
+
+      audio    = Files( "Assets/Audio/**" )
+      data     = Files( "Assets/Data/**" )
+      fonts    = Files( "Assets/Fonts/**" )
+      graphics = Files( "Assets/Graphics/**" )
+
+      local was = File( "Assets/AssetConfig.was" )
+      if (was.exists)
+        #forEach (t in Scanner( was ).tokenize)
+        #  println "$ $"(t.type,t)
+        #endForEach
+
+        local statements = Parser( was ).parse
+        forEach (statement in statements)
+          println statement
+        endForEach
+      endIf
+
+endClass

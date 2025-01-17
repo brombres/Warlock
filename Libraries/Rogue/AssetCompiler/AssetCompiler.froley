@@ -1,0 +1,257 @@
+================================================================================
+# AssetCompiler.froley
+================================================================================
+
+--------------------------------------------------------------------------------
+tokens
+--------------------------------------------------------------------------------
+EOL(end of line)
+TERM       term       [content]
+IDENTIFIER identifier [content]
+STRING     string     [content]
+COMMENT    comment    [content]
+NUMBER     number     [content]
+
+--------------------------------------------------------------------------------
+tokens Symbols
+--------------------------------------------------------------------------------
+SYMBOL_ASTERISK      *
+SYMBOL_AT            @
+SYMBOL_CLOSE_PAREN   )  [structural]
+SYMBOL_CLOSE_BRACKET ]  [structural]
+SYMBOL_COLON         :
+SYMBOL_EQUALS        =
+SYMBOL_MINUS         -
+SYMBOL_OPEN_PAREN    (
+SYMBOL_OPEN_BRACKET  [
+SYMBOL_PLUS          +
+SYMBOL_SLASH         /
+
+--------------------------------------------------------------------------------
+tokens Keywords
+--------------------------------------------------------------------------------
+KEYWORD_END_GROUP      endGroup       [structural]
+KEYWORD_END_STANDALONE endStandalone  [structural]
+KEYWORD_FOLDER         folder
+KEYWORD_GROUP          group
+KEYWORD_STANDALONE     standalone
+
+--------------------------------------------------------------------------------
+scanner
+--------------------------------------------------------------------------------
+- main
+  consume_ws
+  if (not hasAnother) halt
+
+  markPosition
+  if (consume('\n')) produce EOL
+
+  if (consume("#"))
+    scan [^\n]*
+    produce COMMENT
+  endIf
+
+  if (consume('['))
+    create SYMBOL_OPEN_BRACKET
+    consume_ws
+    if (scan([^ \t\n\]]*))
+      produce TERM
+    endIf
+    syntaxError "Target name expected (Global, Default, iOS, ...)."
+  endIf
+
+  #match
+  #  produceAny Symbols
+  #endMatch
+  if (consume('@')) produce SYMBOL_AT
+  if (consume('+')) produce SYMBOL_PLUS
+  if (consume('-')) produce SYMBOL_MINUS
+  if (consume(']')) produce SYMBOL_CLOSE_BRACKET
+
+  scan_string
+  scan_id_term_or_keyword
+
+  syntaxError
+
+- tokenize_value
+  consume_ws
+  if (not hasAnother) halt
+
+  markPosition
+
+  match
+    produceAny Symbols
+  endMatch
+
+  scan_number
+  scan_string
+  scan_id_term_or_keyword
+
+  syntaxError
+
+- consume_ws
+  consume [ \r\t]*   # whitespace
+
+- create_identifier
+  if (scan([_a-zA-Z][_a-zA-Z0-9]*)) create IDENTIFIER
+  syntaxError "Identifier expected."
+
+- scan_id_term_or_keyword
+  if (scan([_a-zA-Z][_a-zA-Z0-9]*))
+    if (nextIs(':'))
+      create_id_or_keyword
+      consume ':'
+      create SYMBOL_COLON
+      scan_string  # will restart if string
+    elseIf (not scan([^ \t\n]*))
+      create_id_or_keyword
+      restart
+    endIf
+  endIf
+
+  scan [^ \t\n]*
+  produce TERM
+
+- create_id_or_keyword
+  match buffer
+    createAny Keywords
+    others
+      create IDENTIFIER
+  endMatch
+
+- scan_number
+  if (not hasAnother) return
+
+  if (scan [0-9])
+    scan_integer  # First character is now in 'buffer'
+    if (scan '.') scan_integer
+    produce NUMBER
+  elseIf (scan '.')
+    scan_integer
+    produce NUMBER
+  else
+    return
+  endIf
+
+- scan_integer
+  scan [0-9]*  # Fills 'buffer' with remaining digits
+
+- scan_string
+  if (not consume('"')) return
+  while (hasAnother and not nextIs('\n'))
+    ch = read
+    if (ch == '"') produce STRING
+    elseIf (ch == '\\' and hasAnother) ch = read  # VisitContent backslash escapes
+    collect ch
+  endWhile
+  syntaxError "Unterminated string."
+
+--------------------------------------------------------------------------------
+parser
+--------------------------------------------------------------------------------
+- statements
+
+  beginList
+
+  while (hasAnother and not nextHasAttribute(structural))
+    on EOL
+      create EmptyLine
+    elseOnOthers
+      statement
+      require_eol
+    endOn
+  endWhile
+
+  produceList Statements
+
+- statement
+  on '[' target_term ']'          -> Target(name:String)
+  on 'folder' filepath_term_or_id -> Folder(path:String)
+  on '@' file_attributes -> FileAttributes( filepath:String, asset_type:String, attributes:AttributeList )
+  on COMMENT -> Comment( content=content )
+
+  syntaxError
+
+- file_attributes
+  filepath_term_or_id
+  asset_type_identifier
+  attribute_list
+
+- attribute_list
+  beginList
+    while (nextIs(IDENTIFIER))
+      attribute_name_identifier
+      if (consume(':'))
+        attribute_value_term
+      else
+        createNull
+      endIf
+      create Attribute( name:String, value )
+    endWhile
+  produceList AttributeList
+
+- target_term
+  on TERM -> Target(name=content)
+  syntaxError "Target name expected (Global, Default, iOS, ...)."
+
+- filepath_term_or_id
+  on TERM -> LiteralString(value=content)
+  on IDENTIFIER -> LiteralString(value=content)
+  syntaxError "Filepath expected."
+
+- attribute_value_term
+  on TERM -> AttributeValue(value=content)
+  syntaxError "Value expected."
+
+- identifier
+  on IDENTIFIER -> Identifier(name=content)
+  syntaxError "Identifier expected."
+
+- asset_type_identifier
+  on IDENTIFIER -> Identifier(name=content)
+  syntaxError "Asset type expected (image, font, sound, music, data)."
+
+- attribute_name_identifier
+  on IDENTIFIER -> Identifier(name=content)
+  syntaxError "Attribute name expected."
+
+#- literal_filepath
+#  if (nextIs('/')) create LiteralString(value=content)
+#  else
+
+- require_eol
+  if (not consume(EOL)) syntaxError "Expected end of line."
+
+- arg_list
+  beginList
+    while (hasAnother and not nextIs(EOL) and not nextHasAttribute(structural))
+      expression
+    endWhile
+  produceList Args
+
+- expression
+  assign
+
+- assign [rightBinary]
+  on "=" -> Assign
+
+- add_subtract [binary]
+  on "+" -> Add
+  on "-" -> Subtract
+
+- multiply_divide [binary]
+  on "*" -> Multiply
+  on "/" -> Divide
+
+- negate [preUnary]
+  on "-" -> Negate
+
+- term
+  on '(' expression ')': return
+  on IDENTIFIER -> Text(value=content)
+  on NUMBER     -> Number(value=content:Real)
+  on STRING     -> LiteralString(value=content)
+  syntaxError
+
+- attribute_value
+  expression
