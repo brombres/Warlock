@@ -337,19 +337,19 @@ class Identifier : Cmd
 
 endClass
 
-class Target : Cmd
+class SetTarget : Cmd
   PROPERTIES
     name : String
 
   METHODS
     method init( t, name )
 
-    method init( existing:Target )
+    method init( existing:SetTarget )
       prior.init( existing )
       name = existing.name
 
     method description->String
-      return "Target($)" (%name)
+      return "SetTarget($)" (%name)
 
     method to->Character
       return Cmd.to_character(name)
@@ -360,19 +360,19 @@ class Target : Cmd
 
 endClass
 
-class Folder : Cmd
+class SetFolder : Cmd
   PROPERTIES
     path : String
 
   METHODS
     method init( t, path )
 
-    method init( existing:Folder )
+    method init( existing:SetFolder )
       prior.init( existing )
       path = existing.path
 
     method description->String
-      return "Folder($)" (%path)
+      return "SetFolder($)" (%path)
 
     method to->Character
       return Cmd.to_character(path)
@@ -405,26 +405,6 @@ class AttributeList : CmdList
   METHODS
     method description->String
       return "AttributeList" + list_description
-endClass
-
-class FileAttributes : Cmd
-  PROPERTIES
-    filepath   : String
-    asset_type : String
-    attributes : AttributeList
-
-  METHODS
-    method init( t, filepath, asset_type, attributes )
-
-    method init( existing:FileAttributes )
-      prior.init( existing )
-      filepath = existing.filepath
-      asset_type = existing.asset_type
-      if (existing.attributes) attributes = existing.attributes.cloned
-
-    method description->String
-      return "FileAttributes($,$,$)" (%filepath,%asset_type,%attributes)
-
 endClass
 
 class AttributeValue : Cmd
@@ -511,5 +491,35 @@ class Text : Cmd
     method to->Int:     return value
     method to->Logical: return value?
     method to->String: return value
+
+endClass
+
+class Asset : Cmd
+  PROPERTIES
+    folder     : String
+    filepath   : String
+    asset_type : String
+    attributes : AttributeList
+
+  METHODS
+    method init( t, filepath, asset_type, attributes )
+      # folder is set in Organizer
+
+    method init( existing:Asset )
+      prior.init( existing )
+      folder   = existing.folder
+      filepath = existing.filepath
+      asset_type = existing.asset_type
+      if (existing.attributes) attributes = existing.attributes.cloned
+
+    method description->String
+      return "Asset($,$,$,$)" (%folder,%filepath,%asset_type,%attributes)
+
+endClass
+
+class ExistingAsset : Asset
+  METHODS
+    method description->String
+      return "ExistingAsset($,$,$)" (%filepath,%asset_type,%attributes)
 
 endClass

@@ -1,0 +1,21 @@
+library AssetCompiler
+
+class Organizer : Visitor
+  METHODS
+    method on_visit_node( cmd:Asset )
+      if (not AssetCompiler.target)
+        throw cmd.t.error( "A platform target ([Global], [Default], [iOS], ...) must be specified before asset specifications are given." )
+      endIf
+      cmd.folder = AssetCompiler.folder
+      AssetCompiler.target.assets.add( cmd )
+
+    method on_visit_node( cmd:SetFolder )
+      local path = "Assets" / cmd.path
+      if (not File(path).exists)
+        throw cmd.t.error( "Folder '$' does not exist."(path) )
+      endIf
+      AssetCompiler.folder = File( path )
+
+    method on_visit_node( cmd:SetTarget )
+      AssetCompiler.target = cmd.name
+endClass

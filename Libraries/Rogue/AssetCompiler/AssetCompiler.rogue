@@ -2,6 +2,8 @@ library AssetCompiler
 
 $include "Scanner.rogue"
 $include "Parser.rogue" [optional]
+$include Organizer
+$include TargetCommands
 uses AssetCompiler
 uses Console/CommandLineParser
 
@@ -16,13 +18,17 @@ uses Console/CommandLineParser
 #  System.exit 1
 #endTry
 
-class AssetCompiler
+class AssetCompiler [singleton]
   PROPERTIES
-    platform : String
-    audio    : Files
-    data     : Files
-    fonts    : Files
-    graphics : Files
+    platform       : String
+    audio_files    : Files
+    data_files     : Files
+    font_files     : Files
+    graphics_files : Files
+
+    targets        = [String:TargetCommands]
+    target         : TargetCommands
+    folder         = File("Assets")
 
   METHODS
       #command = parse_args( args )
@@ -44,21 +50,24 @@ class AssetCompiler
         font_system_17.copy_to( File("Assets/Graphics/Fonts"), &if_different )
       endIf
 
-      audio    = Files( "Assets/Audio/**" )
-      data     = Files( "Assets/Data/**" )
-      fonts    = Files( "Assets/Fonts/**" )
-      graphics = Files( "Assets/Graphics/**" )
+      audio_files    = Files( "Assets/Audio/**" )
+      data_files     = Files( "Assets/Data/**" )
+      font_files     = Files( "Assets/Fonts/**" )
+      graphics_files = Files( "Assets/Graphics/**" )
 
       local was = File( "Assets/AssetConfig.was" )
       if (was.exists)
-        #forEach (t in Scanner( was ).tokenize)
-        #  println "$ $"(t.type,t)
-        #endForEach
+        #forEach (t in Scanner( was ).tokenize) println "$ $"(t.type,t)
 
         local statements = Parser( was ).parse
-        forEach (statement in statements)
-          println statement
-        endForEach
+        Organizer().visit( statements )
+      endIf
+
+    method set_target( name:String )
+      @target = targets[name]
+      if (not target)
+        @target = TargetCommands( name )
+        targets[name] = target
       endIf
 
 endClass

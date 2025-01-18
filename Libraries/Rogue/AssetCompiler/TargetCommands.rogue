@@ -1,0 +1,13 @@
+library AssetCompiler
+
+class TargetCommands
+  PROPERTIES
+    name   : String
+    assets = Asset[]
+
+  METHODS
+    method init( name )
+
+    method to->String
+      return name
+endClass

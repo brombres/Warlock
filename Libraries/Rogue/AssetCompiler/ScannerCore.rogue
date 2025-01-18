@@ -258,7 +258,7 @@ class ScannerCore [abstract]
           _add( TokenType.TERM )
           return false
         endIf
-        _throw_syntax_error("Target name expected (Global, Default, iOS, ...).")
+        _throw_syntax_error("SetTarget name expected (Global, Default, iOS, ...).")
         return false
       endIf
       if (_scanner.consume('@'))

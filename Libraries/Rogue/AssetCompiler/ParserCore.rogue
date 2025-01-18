@@ -30,6 +30,7 @@ class ParserCore [abstract]
     ip_negate = 18
     ip_term = 19
     ip_attribute_value = 20
+    ip_additional_commands = 21
 
   PROPERTIES
     _scanner         : Scanner
@@ -327,6 +328,7 @@ class ParserCore [abstract]
         case ip_negate: r_negate
         case ip_term: r_term
         case ip_attribute_value: r_attribute_value
+        case ip_additional_commands: r_additional_commands
         others
           return
       endWhich
@@ -355,7 +357,7 @@ class ParserCore [abstract]
         temporarily _cur_t = _on_t
           r_target_term
           if (not _consume(TokenType.SYMBOL_CLOSE_BRACKET)) _throw_syntax_error( &expected=TokenType.SYMBOL_CLOSE_BRACKET )
-          if (not disable_output) _push( Target(_cur_t,_string_arg(-1)), 1 )
+          if (not disable_output) _push( SetTarget(_cur_t,_string_arg(-1)), 1 )
           _cur_t = _previous_cur_t
           return 0
         endTemporarily
@@ -363,7 +365,7 @@ class ParserCore [abstract]
       if (_next_t.type == TokenType.KEYWORD_FOLDER)
         temporarily _cur_t = _on_t
           r_filepath_term_or_id
-          if (not disable_output) _push( Folder(_cur_t,_string_arg(-1)), 1 )
+          if (not disable_output) _push( SetFolder(_cur_t,_string_arg(-1)), 1 )
           _cur_t = _previous_cur_t
           return 0
         endTemporarily
@@ -371,7 +373,7 @@ class ParserCore [abstract]
       if (_next_t.type == TokenType.SYMBOL_AT)
         temporarily _cur_t = _on_t
           r_file_attributes
-          if (not disable_output) _push( FileAttributes(_cur_t,_string_arg(-3),_string_arg(-2),_node_arg(-1)->(as AttributeList)), 3 )
+          if (not disable_output) _push( ExistingAsset(_cur_t,_string_arg(-3),_string_arg(-2),_node_arg(-1)->(as AttributeList)), 3 )
           _cur_t = _previous_cur_t
           return 0
         endTemporarily
@@ -416,7 +418,7 @@ class ParserCore [abstract]
       local _previous_cur_t = _cur_t
       if (_next_t.type == TokenType.TERM)
         temporarily _cur_t = _on_t
-          if (not disable_output) _push( Target(_cur_t,_cur_t.content), 0 )
+          if (not disable_output) _push( SetTarget(_cur_t,_cur_t.content), 0 )
           _cur_t = _previous_cur_t
           return 0
         endTemporarily
@@ -656,6 +658,12 @@ class ParserCore [abstract]
     method r_attribute_value->Int
       local _previous_cur_t = _cur_t
       r_expression
+      _cur_t = _previous_cur_t
+      return 0
+
+    method r_additional_commands->Int
+      local _previous_cur_t = _cur_t
+      if (not disable_output) _push( Asset(_cur_t,_string_arg(-3),_string_arg(-2),_node_arg(-1)->(as AttributeList)), 3 )
       _cur_t = _previous_cur_t
       return 0
 
