@@ -7,13 +7,8 @@ $define SDL_BRANCH "preview-3.1.8"
 
 $requireRogue "2.34.3"
 
-$include Libraries/Warlock/Libraries/Rogue/AssetCompiler
-uses AssetCompiler
-
 uses Utility/GitRepo
 uses Utility/VersionNumber
-
-#$ DEPENDENCIES       = Libraries/Warlock/Libraries/Rogue/AssetCompiler/**
 
 #$ LINK_LIBS            = true
    # Link the following in when compiling this Build.rogue
@@ -293,27 +288,8 @@ routine compile_rogue( platform:String, &debug, &rebuild )
 endRoutine
 
 routine compile_assets( platform:String )
-  local was_def = File( "Libraries/Warlock/Libraries/Rogue/AssetCompiler/AssetCompiler.froley" )
-  local parser_core  = File( "Libraries/Warlock/Libraries/Rogue/AssetCompiler/ParserCore.rogue" )
-  local scanner_core = File( "Libraries/Warlock/Libraries/Rogue/AssetCompiler/ScannerCore.rogue" )
-  if (was_def.is_newer_than(parser_core) or was_def.is_newer_than(scanner_core))
-    if local froley = System.find_executable( "froley" )
-      print_cmd( "Updating AssetCompiler parser" )
-      parser_core.delete
-      local cmd = "$ $ $"(froley.esc, was_def.esc, was_def.parent.esc)
-      execute( cmd )
-      if (was_def.is_newer_than(parser_core)) parser_core.touch
-      if (was_def.is_newer_than(scanner_core)) scanner_core.touch
-      execute( "rogo assets $"(platform) )
-      return
-    endIf
-  endIf
-
-  try
-    AssetCompiler( platform )
-  catch (error:Error)
-    Global.error.println error
-  endTry
+  System.run @|(cd Libraries/Warlock/Libraries/Rogue/AssetCompiler && rogo build)
+  System.run "Libraries/Warlock/Libraries/Rogue/AssetCompiler/Build/AssetCompiler-$"(System.os)
 
   block
     local src  = Files( "Assets/Images/**" )

@@ -6,16 +6,379 @@ $requireRogue "2.34.3"
 
 uses Utility/VersionNumber
 
+augment Build
+  # You can create a Local.settings file with overrides for these values, e.g.:
+  # BUILD_MODE = release
+  PROPERTIES
+    PROJECT          = "AssetCompiler"
+    LAUNCHER_NAME    = "asc" : String
+    SOURCE_EXTENSION = LAUNCHER_NAME : String
+
+    BUILD_MODE       = "debug"  # set to "debug" or "release"
+    LAUNCHER_FOLDER  = "/usr/local/bin"
+    ROGUEC_FLAGS     = ""
+    CC_ARGS_MACOS    = ""
+    CC_LINK_MACOS    = ""
+    CC_ARGS_UNIX     = ""
+    CC_LINK_UNIX     = ""
+    CC_ARGS_WINDOWS  = ""
+    CC_LINK_WINDOWS  = ""
+endAugment
+
 routine rogo_default
-  execute @|froley AssetCompiler.froley .
+  # Builds and runs this project - equivalent to 'rogo build && rogo run'.
+  rogo_build
+  #rogo_install  # Uncomment to automatically install a /usr/local/bin/assetcompiler launcher
+  rogo_run
+endRoutine
+
+routine rogo_run
+  # Runs this project.
+  execute "$ Test.$" (exe_file.esc,Build.SOURCE_EXTENSION)
+endRoutine
+
+routine rogo_debug
+  # Compiles in debug mode and runs.
+  rogo_build_debug
+  rogo_run
+endRoutine
+
+routine rogo_release
+  # Compiles in release mode and runs.
+  rogo_build_release
+  rogo_run
+endRoutine
+
+routine rogo_clean
+  # Deletes the Build/ and .rogo/ folders.
+  File( "Build" ).delete
+  File( ".rogo" ).delete
+endRoutine
+
+routine rogo_build
+  # Recompiles Rogue -> C -> Exe if needed. 'rogo rebuild' forces a build.
+  localize exe_file
+
+  if (File("Source/$.froley"(Build.PROJECT)).is_newer_than(exe_file))
+    rogo_froley
+  endIf
+
+  local source_files = Files( "Source", "**/*.rogue" )
+  if (source_files.any_newer_than(exe_file))
+    local c_filepath = "Build/$-$.c" (Build.PROJECT,System.os)
+    if (source_files.any_newer_than(c_filepath))
+      compile_rogue
+    endIf
+    compile_c
+  endIf
+endRoutine
+
+routine rogo_froley
+  local froley_src = File( "Source/$.froley"(Build.PROJECT) )
+  execute "froley --main $ Source"(froley_src.esc)
+endRoutine
+
+routine rogo_build_debug
+  # Force-rebuilds in debug mode.
+  rogo_rebuild_debug
+endRoutine
+
+routine rogo_build_release
+  # Force-rebuilds in release mode.
+  rogo_rebuild_release
+endRoutine
+
+routine rogo_rebuild
+  # Force-rebuilds project.
+  rogo_froley
+  compile_rogue
+  compile_c
+endRoutine
+
+routine rogo_rebuild_debug
+  # Force-rebuilds in debug mode.
+  Build.BUILD_MODE = "debug"
+  rogo_rebuild
+endRoutine
+
+routine rogo_rebuild_release
+  # Force-rebuilds in release mode.
+  Build.BUILD_MODE = "release"
+  rogo_rebuild
+endRoutine
+
+routine rogo_install
+  # Builds and installs the Exe to a system-appropriate location (see also 'rogo link').
+  rogo_build
+  local exe_filepath = exe_file.abs.filepath
+  if (System.is_windows)
+    local exe_folder = File(exe_filepath).parent.conventional_filepath
+    local path = System.env//PATH
+    if (not path.to_lowercase.contains(exe_folder.to_lowercase))
+      println
+      println ''Add the following to your system PATH then reopen this command prompt to be able''
+      println ''to launch $ by typing "$":'' (Build.PROJECT,Build.LAUNCHER_NAME)
+      println
+      println "  ADD THIS TO YOUR PATH"
+      println "  " + exe_folder
+    endIf
+  else
+    contingent
+      local result = Process.run( "which " + Build.LAUNCHER_NAME, &env )
+      necessary (result.success)
+      local launcher_filepath = result->String.trimmed
+      necessary launcher_filepath
+      necessary String( File(launcher_filepath) ).contains( exe_filepath )
+
+    unsatisfied
+      local launcher_filepath = "$/$" (launcher_folder,Build.LAUNCHER_NAME)
+      println "Creating launcher " + launcher_filepath
+      local sudo = ""
+      loop
+        try
+          if (not File(launcher_folder).exists) execute( "$mkdir $"(sudo,launcher_folder) )
+          File( "$.launcher"(Build.LAUNCHER_NAME) ).save( ''#!/bin/sh\nexec "$" "$@"\n''(exe_filepath,'$') )
+          execute( "$mv $.launcher $"(sudo,Build.LAUNCHER_NAME,launcher_filepath) )
+          execute( "$chmod a+x $"(sudo,launcher_filepath) )
+          escapeLoop
+        catch (err:Error)
+          if (sudo != "") throw err
+          sudo = "sudo "
+        endTry
+      endLoop
+    endContingent
+  endIf
+endRoutine
+
+routine rogo_link
+  # Builds and invokes 'morlock link ...' to add a launcher to Morlock's binpath.
+  rogo_build
+  execute "morlock link $ $"(Build.LAUNCHER_NAME,exe_file.esc)
+endRoutine
+
+routine rogo_uninstall
+  # Cleans the project and uninstalls the launcher from 'rogo install'.
+  rogo_clean
+  if (not System.is_windows) verbose_delete( "$/$"(launcher_folder,Build.LAUNCHER_NAME) )
+endRoutine
+
+routine current_version->String
+  contingent
+    local file = File("Source/$.rogue"(Build.PROJECT))
+    necessary (file.exists)
+
+    local v = String(file).extract_string( ''*define VERSION "$"*'' )
+    necessary (v and v.count)
+    return v
+  endContingent
+
+  contingent
+    local file = File("README.md")
+    necessary (file.exists)
+
+    if local line = String(file).split('\n').find( $.contains_pattern("Version|$(I)") )
+      local v = line.after_first('|').trimmed
+      necessary (v.count)
+      return v
+    endIf
+  endContingent
+
+  return "(none)"
+endRoutine
+
+routine rogo_update_version( version:String )
+  # Updates the version number and date in the project source and README.md.
+  version .= after_any("v")
+  localize current_version
+  if (version.count == 0) throw Error( "New version number expected, e.g. '1.0.2'. Current version: $"(current_version) )
+  if (current_version != "(none)" and VersionNumber(version) <= current_version)
+    error.println( "[WARNING] The new version number ($) is not higher than the current version number ($)."(version,current_version) )
+  endIf
+
+  block file = File( "Source/PROJECT_NAME.rogue" )
+    if (file.exists)
+      local og_content = String(file)
+      local content = og_content
+
+      content = content.replacing_pattern(
+      ''define VERSION "$"'',
+      ''define VERSION "$"''(version)
+      )
+
+      content = content.replacing_pattern(
+        ''define DATE "$"'',
+        ''define DATE    "$"''(Date.today->String(&verbose))
+      )
+
+      if (content != og_content)
+        println "Updating version and date in $"(file)
+        file.save( content )
+      endIf
+    endIf
+  endBlock
+
+  block file = File( "README.md" )
+    if (file.exists)
+      local og_content = String(file)
+      local content = String( og_content.count+20 )
+      forEach (line in LineReader(og_content))
+        if (line.contains_pattern("Version|$(I)"))
+          content.println( "$| $" (line.before_last('|'),version) )
+        elseIf (line.contains_pattern("Date|"))
+          local today = Date.today->String(&verbose)
+          content.println( "$| $" (line.before_last('|'),today) )
+        else
+          content.println( line )
+        endIf
+      endForEach
+      if (content != og_content)
+        println "Updating version and date in $"(file)
+        file.save( content )
+      endIf
+    endIf
+  endBlock
+endRoutine
+
+routine rogo_commit( new_version:String )
+  # Updates source and README version number and git-commits with a version number message.
+  new_version .= after_any("v")
+  if (not String.exists(new_version)) throw Error( "Expected version number after 'rogo commit'. Current version: $"(current_version) )
+  rogo_update_version( new_version )
+
+  if (not System.find_executable("git")) throw Error( "Git must be installed." )
+  if (project_has_uncommitted_changes)
+    execute ''git commit -am "[v$]"'' (new_version)
+  else
+    println "No changes to commit."
+  endIf
+endRoutine
+
+routine project_has_uncommitted_changes->Logical
+  local result = Process.run( "git status --porcelain", &env )
+  if (not result.success)
+    Console.error.println result->String
+    System.exit 1
+  endIf
+
+  local lines = result->String.trimmed.split('\n').[discard($.begins_with("??"))]
+  lines.discard( $ == "" )
+  return not lines.is_empty
+endRoutine
+
+routine rogo_publish( new_version:String )
+  # Updates source and README version number, commits, and publishes a release to GitHub.
+  new_version .= after_any("v")
+  if (not String.exists(new_version)) throw Error( "Expected version number after 'rogo publish'. Current version: $"(current_version) )
+  if (not System.find_executable("gh")) throw Error( "The GitHub command line tool 'gh' must be installed." )
+  rogo_commit( new_version )
+
+  # These can be hard-coded to suit your project
+  local cur_branch : String
+  local main_branch : String
+
+  if (not cur_branch)
+    local result = Process.run("git branch --show-current",&env)
+    if (result.success) cur_branch = result->String.trimmed
+    else                throw Error( "Unable to detect current git branch." )
+  endIf
+
+  if (not main_branch)
+    local result = Process.run("git branch --list",&env)
+    if (result.success)
+      local branches = result->String.replacing('*',' ').split('\n').[modify($.trimmed)]
+      forEach (branch in ["main","master"])
+        if (branches.contains(branch)) main_branch=branch; escapeForEach
+      endForEach
+    endIf
+    if (not main_branch) throw Error( "Unable to detect name of main (release) branch." )
+  endIf
+
+  execute "git push origin $"(cur_branch)
+  if (cur_branch != main_branch)
+    if (not Console.input("$ will be merged into $. Continue? "(cur_branch,main_branch)).to_lowercase.begins_with('y')) return
+    execute "git checkout $"(main_branch)
+    execute "git pull"
+    execute "git merge $"(cur_branch)
+    execute "git push origin $"(main_branch)
+    execute "git checkout $"(cur_branch)
+  endIf
+
+  if (not Console.input("Continue publishing release to GitHub? ").to_lowercase.begins_with('y')) return
+
+  execute ''gh release create v$ --title "v$" --notes ""''(new_version,new_version)
+  execute "git pull"  # pull new tag
+endRoutine
+
+routine compile_rogue
+  local src_filepath = "Source/$.rogue" (Build.PROJECT)
+  local c_filepath = "Build/$-$" (Build.PROJECT,System.os)
+  local flags = Build.ROGUEC_FLAGS
+  if (Build.BUILD_MODE == "debug") flags = flags.with_suffix(' ') + "--debug"
+  local targets = "--target=Console,C,$"(System.os)
+  if (System.is_macos) targets += ",ObjC"
+  local cmd = "roguec $ $ --main --output=$ $"...
+              (File(src_filepath).esc,flags,File(c_filepath).esc,targets)
+  execute cmd
+endRoutine
+
+routine compile_c
+  local c_filepath = File( "Build/$-$" (Build.PROJECT,System.os) ).esc
+  local exe_filepath = exe_file.esc
+  if (System.is_windows)
+    local flags = Build.CC_ARGS_WINDOWS
+    if (flags != "") flags += " "
+    flags += which{ Build.BUILD_MODE=="release":"/O2" || "/Od" }
+    local obj_filepath = File( "Build/$-Windows.obj"(Build.PROJECT) ).esc
+    local cc = "cl $ /nologo $.c /Fo$ /Fe$" (flags,c_filepath,obj_filepath,exe_filepath)
+    cc .= appending( "$LIBRARY_FLAGS" )
+    cc .= appending( Build.CC_LINK_WINDOWS )
+    execute cc
+  elseIf (System.is_macos)
+    local flags = Build.CC_ARGS_MACOS
+    if (flags != "") flags += " "
+    flags += which{ Build.BUILD_MODE=="release":"-O3" || "-O0" }
+    local cc = "cc $ -Wall -fno-strict-aliasing $.m -o $ -lm" (flags,File(c_filepath).esc,exe_file.esc)
+    cc .= appending( "$LIBRARY_FLAGS" )
+    cc .= appending( Build.CC_LINK_MACOS )
+    execute cc
+  else
+    local flags = Build.CC_ARGS_UNIX
+    if (flags != "") flags += " "
+    flags += which{ Build.BUILD_MODE=="release":"-O3" || "-O0" }
+    local cc = "cc $ -Wall -fno-strict-aliasing $.c -o $ -lm" (flags,File(c_filepath).esc,exe_file.esc)
+    cc .= appending( "$LIBRARY_FLAGS" )
+    cc .= appending( Build.CC_LINK_UNIX )
+    execute cc
+  endIf
+endRoutine
+
+routine exe_file->File
+  if (System.is_windows) return File( "Build/$.exe"(Build.LAUNCHER_NAME) )
+  return File( "Build/$-$"(Build.PROJECT,System.os) )
+endRoutine
+
+routine launcher_folder->String
+  local result = Build.LAUNCHER_FOLDER
+  result = File(result).resolved.filepath
+  if (result.count > 1) result .= without_suffix('/')
+  return result
+endRoutine
+
+routine verbose_delete( filepath:String )
+  if (File(filepath).exists)
+    println "> Delete " + filepath
+    if (not File(filepath).delete)
+      println "*** Failed to delete - retrying with sudo"
+      local cmd = ''sudo rm -rf $'' (File(filepath).esc)
+      execute cmd
+    endIf
+  endIf
 endRoutine
 
 routine execute( commands:String, error_message=null:String, &suppress_error )->Logical
   forEach (cmd in LineReader(commands))
-    ConsoleStyle.set<<FG_LIGHT_GREEN>>
     print( "> " )
     println( cmd )
-    ConsoleStyle.set<<FG_DEFAULT>>
     if (0 != System.run(cmd))
       if (suppress_error)
         return false
@@ -38,7 +401,7 @@ endRoutine
 # routine calls.
 
 # Example: to handle the command "rogo abc xyz 5", define
-# "routine rogo_abc_xyz( n:Int32 )".
+# "routine rogo_abc_xyz( n:Int )".
 
 # "rogo_default" will run in the absence of any other command line argument.
 
@@ -68,18 +431,8 @@ endRoutine
 #   DEPENDENCIES = Library/Rogue/**/*.rogue
 #
 #   LIBRARIES    = name(package)
-#   LIBRARIES    = name(
-#                    exe:<which-name>
-#                    exists-cmd:<exists-cmd>
-#                    flags:<library-flags>
-#                    ignore-exe-only:<setting>
-#                    info:<info-name>
-#                    info-cmd:<get-info-cmd>
-#                    install:<install-name>
-#                    install-cmd:<install-cmd>
-#                    link:<setting>
-#                    package:<package-name>
-#                  )
+#   LIBRARIES    = name(package:<package> install:<install-cmd>
+#                  link:<link-flags> which:<which-name>)
 #
 # The following macro is replaced within this file (Build.rogue) - the libraries
 # should normally also be declared in #$ LIBRARIES:
@@ -117,7 +470,7 @@ class Build [singleton]
     rogo_args           = @[]
     rogo_error          : Error
 
-    LOCAL_SETTINGS_FILE = "Local.rogo"
+    LOCAL_SETTINGS_FILE = "Local.settings"
 
   METHODS
     method launch
@@ -148,7 +501,7 @@ class Build [singleton]
     method on_error
       local w = Console.width.or_smaller( 80 )
       Console.error.println "=" * w
-      Console.error.println rogo_error->String.word_wrapped(w)
+      Console.error.println rogo_error
       Console.error.println "=" * w
       on_exit
       System.exit 1
@@ -200,20 +553,15 @@ class Build [singleton]
       read_defs( LOCAL_SETTINGS_FILE )
 
     method read_defs( defs_filepath:String )
-      # Attempt to read defs from Local.rogo
+      # Attempt to read defs from Local.settings
       local overrides = String[]
       if (File(defs_filepath).exists)
         forEach (line in LineReader(File(defs_filepath)))
           if (line.contains("="))
             local name  = line.before_first('=').trimmed
-            local rhs   = line.after_first('=').trimmed
-            local value : Variant
-            if (rhs.begins_with('"') or rhs.begins_with('\''))
-              value = rhs.leftmost(-1).rightmost(-1)
-            elseIf (rhs.begins_with('{') or rhs.begins_with('['))
-              value = JSON.parse( rhs )
-            else
-              value = rhs
+            local value = line.after_first('=').trimmed
+            if (value.begins_with('"') or value.begins_with('\''))
+              value = value.leftmost(-1).rightmost(-1)
             endIf
             local p = <<Build>>.find_property( name )
             if (p)
@@ -246,7 +594,6 @@ routine rogo_help( command="":String )
     endIf
     local description = get_description( command )
     if (description)
-      description .= replacing("<br>","\n")
       local max_w = Console.width - 2
       println "DESCRIPTION"
       forEach (line in LineReader(description.word_wrapped(max_w)))
@@ -280,14 +627,14 @@ routine rogo_help( command="":String )
   endForEach
 
   entries.sort( $1.name < $2.name )
-  max_len += 4
+  max_len += 2
 
   local max_w = Console.width
   forEach (entry in entries)
     print "  " + entry.syntax
     if (entry.@description)
-      local description = entry.@description.before_first( '\n' )
-      loop ((max_len - entry.syntax.count) - 2) print ' '
+      local description = entry.@description
+      loop (max_len - entry.syntax.count) print ' '
       contingent
         sufficient (max_len + description.count <= max_w)
         if (description.contains(". "))
@@ -295,7 +642,7 @@ routine rogo_help( command="":String )
           sufficient (max_len + description.count <= max_w)
         endIf
         necessary (max_len + 10 <= max_w)
-        description = description.unright( (description.count - (max_w - max_len))+5 ) + "..."
+        description = description.unright( (description.count - (max_w - max_len))+3 ) + "..."
       satisfied
         print description
       endContingent

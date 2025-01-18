@@ -7,16 +7,16 @@ $include TargetCommands
 uses AssetCompiler
 uses Console/CommandLineParser
 
-#try
-#  AssetCompiler( System.command_line_arguments )
-#catch (error:CompileError)
-#  Console.error.println error
-#  System.exit 1
-#catch (error:Error)
-#  Console.error.println error
-#  Console.error.println error.stack_trace
-#  System.exit 1
-#endTry
+try
+  AssetCompiler( System.command_line_arguments )
+catch (error:CompileError)
+  Console.error.println error
+  System.exit 1
+catch (error:Error)
+  Console.error.println error
+  Console.error.println error.stack_trace
+  System.exit 1
+endTry
 
 class AssetCompiler [singleton]
   PROPERTIES
@@ -55,11 +55,11 @@ class AssetCompiler [singleton]
       font_files     = Files( "Assets/Fonts/**" )
       graphics_files = Files( "Assets/Graphics/**" )
 
-      local was = File( "Assets/AssetConfig.was" )
-      if (was.exists)
-        #forEach (t in Scanner( was ).tokenize) println "$ $"(t.type,t)
+      local asc = File( "Assets/AssetConfig.asc" )
+      if (asc.exists)
+        #forEach (t in Scanner( asc ).tokenize) println "$ $"(t.type,t)
 
-        local statements = Parser( was ).parse
+        local statements = Parser( asc ).parse
         Organizer().visit( statements )
       endIf
 
