@@ -3,7 +3,7 @@ library AssetCompiler
 $include "Scanner.rogue"
 $include "Parser.rogue" [optional]
 $include AssetGroup
-$include AssetInfo
+$include Asset
 $include CollectAssetInfo
 $include GenerateAssetConfig
 uses AssetCompiler
@@ -27,8 +27,8 @@ class AssetCompiler [singleton]
     file_lookup = [String:Logical]  # true=referenced, false=unreferenced
 
     targets  = Set<<String>>()
-    assets   = [String:AssetInfo]
-    groups   = Set<<Group>>()
+    assets   = [String:Asset]
+    groups   = Set<<AssetGroup>>()
 
   METHODS
     method init( args:String[] )

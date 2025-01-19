@@ -496,7 +496,7 @@ class Text : Cmd
 
 endClass
 
-class AssetAttributes : Cmd
+class AssetRule : Cmd
   PROPERTIES
     folder        : String
     filepath      : String
@@ -506,20 +506,20 @@ class AssetAttributes : Cmd
     method init( t, filepath, attributes )
       # folder is set in CollectAssetInfo
 
-    method init( existing:AssetAttributes )
+    method init( existing:AssetRule )
       prior.init( existing )
       folder   = existing.folder
       filepath = existing.filepath
       if (existing.attributes) attributes = existing.attributes.cloned
 
     method description->String
-      return "AssetAttributes($,$,$)" (%folder,%filepath,%attributes)
+      return "AssetRule($,$,$)" (%folder,%filepath,%attributes)
 
 endClass
 
-class ExistingAssetAttributes : AssetAttributes
+class ExistingAssetRule : AssetRule
   METHODS
     method description->String
-      return "ExistingAssetAttributes($,$,$)" (%folder,%filepath,%attributes)
+      return "ExistingAssetRule($,$,$)" (%folder,%filepath,%attributes)
 
 endClass

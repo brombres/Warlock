@@ -5,9 +5,9 @@ class CollectAssetInfo( target:String ) : Visitor
     target_active : Logical
 
   METHODS
-    method on_visit_node( cmd:AssetAttributes )
+    method on_visit_node( cmd:AssetRule )
       if (not current_target)
-        throw cmd.t.error( "A platform target ([Global], [Default], [iOS], ...) must be specified before asset attributes are specified." )
+        throw cmd.t.error( "A platform target ([Global], [Default], [iOS], ...) must be specified before asset rules are specified." )
       endIf
       cmd.folder = current_folder
 
@@ -25,18 +25,18 @@ class CollectAssetInfo( target:String ) : Visitor
       #println (forEach in AssetCompiler.files)
       #local entry = AssetCompiler.find(
 
-    method store_asset_info( filepath:String, attributes:AssetAttributes )
+    method store_asset_info( filepath:String, rule:AssetRule )
       if (AssetCompiler.file_lookup.contains(filepath))
         AssetCompiler.file_lookup[filepath] = true  # file is used
         local entry = AssetCompiler.assets.find( filepath )
         if (entry)
-          # Later attribute definitions override early definitions.
-          entry.value.attributes = attributes
+          # Later asset rule definitions override early definitions.
+          entry.value.rule = rule
         else
-          AssetCompiler.assets[filepath] = AssetInfo( filepath, attributes )
+          AssetCompiler.assets[filepath] = Asset( filepath, rule )
         endIf
-      elseIf (attributes instanceOf ExistingAssetAttributes)
-        println "[WARNING] Line $ - Specified file does not exist: $"(attributes.t.line,filepath)
+      elseIf (rule instanceOf ExistingAssetRule)
+        println "[WARNING] Line $ - Specified file does not exist: $"(rule.t.line,filepath)
       endIf
 
     method on_visit_node( cmd:SetTarget )

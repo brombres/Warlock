@@ -2,9 +2,9 @@ library AssetCompiler
 
 class AssetGroup
   PROPERTIES
-    assets = AssetInfo[]
+    assets = Asset[]
 
   METHODS
-    method add( asset:AssetInfo )
+    method add( asset:Asset )
       assets.add( asset )
 endClass

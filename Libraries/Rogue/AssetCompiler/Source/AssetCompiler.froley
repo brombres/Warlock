@@ -167,7 +167,7 @@ parser
 - statement
   on '[' target_term ']'          -> SetTarget(name:String)
   on 'folder' filepath_term_or_id -> SetFolder(path:String)
-  on '@' file_attributes -> ExistingAssetAttributes( filepath:String, attributes:AttributeList ):AssetAttributes
+  on '@' file_attributes -> ExistingAssetRule( filepath:String, attributes:AttributeList ):AssetRule
   on COMMENT -> Comment( content=content )
 
   syntaxError
@@ -252,5 +252,5 @@ parser
   expression
 
 - additional_commands
-  create AssetAttributes( filepath:String, attributes:AttributeList )
+  create AssetRule( filepath:String, attributes:AttributeList )
 

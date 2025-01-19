@@ -60,7 +60,7 @@ class GenerateAssetConfig : Visitor
     method on_visit_node( cmd:Cmd )
       throw cmd.t.error( "TODO: GenerateAssetConfig.on_visit_node($)"(cmd.type_name) )
 
-    method on_visit_node( cmd:AssetAttributes )
+    method on_visit_node( cmd:AssetRule )
       writer.print cmd.filepath
       forEach (attribute as Attribute in cmd.attributes)
         writer.print ' '
@@ -78,9 +78,9 @@ class GenerateAssetConfig : Visitor
     method on_visit_node( cmd:EmptyLine )
       writer.println
 
-    method on_visit_node( cmd:ExistingAssetAttributes )
+    method on_visit_node( cmd:ExistingAssetRule )
       writer.print "@ "
-      on_visit_node( cmd->(as AssetAttributes) )
+      on_visit_node( cmd->(as AssetRule) )
 
     method on_visit_node( cmd:SetFolder )
       if (current_target == "Global")
