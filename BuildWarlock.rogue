@@ -288,8 +288,13 @@ routine compile_rogue( platform:String, &debug, &rebuild )
 endRoutine
 
 routine compile_assets( platform:String )
-  System.run @|(cd Libraries/Warlock/Libraries/Rogue/AssetCompiler && rogo build)
-  System.run "Libraries/Warlock/Libraries/Rogue/AssetCompiler/Build/AssetCompiler-$"(System.os)
+  contingent
+    local path = "Libraries/Warlock/Libraries/Rogue/AssetCompiler"
+    necessary (0 == System.run("(cd $ && rogo build)"(path)))
+    necessary (0 == System.run("$/Build/AssetCompiler-$ $" (path,System.os,System.os)))
+  unsatisfied
+    System.exit 1
+  endContingent
 
   block
     local src  = Files( "Assets/Images/**" )
@@ -341,9 +346,9 @@ routine print_cmd( cmd:String )
   ConsoleStyle.set<<FG_DEFAULT>>
 endRoutine
 
-routine execute( commands:String, error_message=null:String, &suppress_error )->Logical
+routine execute( commands:String, error_message=null:String, &suppress_error, &quiet )->Logical
   forEach (cmd in LineReader(commands))
-    print_cmd( cmd )
+    if (not quiet) print_cmd( cmd )
     if (0 != System.run(cmd))
       if (suppress_error)
         return false

@@ -413,29 +413,31 @@ class AttributeValue : Cmd
     value_parser  = Parser()
 
   PROPERTIES
-    value : Cmd
+    value : String
+    cmd   : Cmd
 
   METHODS
-    method init( t, value:String )
+    method init( t, value )
       value_scanner.reset( t, value, t.line, t.column )
       value_scanner.start_ip = Scanner.ip_tokenize_value
       value_parser.reset
       value_parser.init( value_scanner )
-      this.value = value_parser.parse( Parser.ip_attribute_value )
+      cmd = value_parser.parse( Parser.ip_attribute_value )
 
     method init( existing:AttributeValue )
       prior.init( existing )
       value = existing.value
+      cmd   = existing.cmd
 
     method description->String
-      return "AttributeValue($)" (%value)
+      return "AttributeValue($,$)" (%value,%cmd)
 
     method to->Character
       return Cmd.to_character(value)
 
-    method to->Int:     return which{ value:value->Int || 0 }
-    method to->Logical: return which{ value:value->Logical || false }
-    method to->String:  return which{ value:value->String || null }
+    method to->Int:     return which{ cmd:cmd->Int || 0 }
+    method to->Logical: return which{ cmd:cmd->Logical || false }
+    method to->String:  return value
 
 endClass
 
@@ -494,32 +496,30 @@ class Text : Cmd
 
 endClass
 
-class Asset : Cmd
+class AssetAttributes : Cmd
   PROPERTIES
-    folder     : String
-    filepath   : String
-    asset_type : String
-    attributes : AttributeList
+    folder        : String
+    filepath      : String
+    attributes    : AttributeList
 
   METHODS
-    method init( t, filepath, asset_type, attributes )
-      # folder is set in Organizer
+    method init( t, filepath, attributes )
+      # folder is set in CollectAssetInfo
 
-    method init( existing:Asset )
+    method init( existing:AssetAttributes )
       prior.init( existing )
       folder   = existing.folder
       filepath = existing.filepath
-      asset_type = existing.asset_type
       if (existing.attributes) attributes = existing.attributes.cloned
 
     method description->String
-      return "Asset($,$,$,$)" (%folder,%filepath,%asset_type,%attributes)
+      return "AssetAttributes($,$,$)" (%folder,%filepath,%attributes)
 
 endClass
 
-class ExistingAsset : Asset
+class ExistingAssetAttributes : AssetAttributes
   METHODS
     method description->String
-      return "ExistingAsset($,$,$)" (%filepath,%asset_type,%attributes)
+      return "ExistingAssetAttributes($,$,$)" (%folder,%filepath,%attributes)
 
 endClass

@@ -1,0 +1,46 @@
+library AssetCompiler
+
+class CollectAssetInfo( target:String ) : Visitor
+  PROPERTIES
+    target_active : Logical
+
+  METHODS
+    method on_visit_node( cmd:AssetAttributes )
+      if (not current_target)
+        throw cmd.t.error( "A platform target ([Global], [Default], [iOS], ...) must be specified before asset attributes are specified." )
+      endIf
+      cmd.folder = current_folder
+
+      local filepath = (cmd.folder / cmd.filepath)
+      if (File(filepath).contains_wildcards)
+        local pattern = FilePattern( filepath )
+        forEach (existing_asset in AssetCompiler.files)
+          if (File(existing_asset).matches(pattern))
+            store_asset_info( existing_asset, cmd )
+          endIf
+        endForEach
+      else
+        store_asset_info( filepath, cmd )
+      endIf
+      #println (forEach in AssetCompiler.files)
+      #local entry = AssetCompiler.find(
+
+    method store_asset_info( filepath:String, attributes:AssetAttributes )
+      if (AssetCompiler.file_lookup.contains(filepath))
+        AssetCompiler.file_lookup[filepath] = true  # file is used
+        local entry = AssetCompiler.assets.find( filepath )
+        if (entry)
+          # Later attribute definitions override early definitions.
+          entry.value.attributes = attributes
+        else
+          AssetCompiler.assets[filepath] = AssetInfo( filepath, attributes )
+        endIf
+      elseIf (attributes instanceOf ExistingAssetAttributes)
+        println "[WARNING] Line $ - Specified file does not exist: $"(attributes.t.line,filepath)
+      endIf
+
+    method on_visit_node( cmd:SetTarget )
+      current_target = cmd.name
+      target_active = (current_target == target)
+      AssetCompiler.targets.add( current_target )
+endClass

@@ -1,0 +1,10 @@
+library AssetCompiler
+
+class AssetGroup
+  PROPERTIES
+    assets = AssetInfo[]
+
+  METHODS
+    method add( asset:AssetInfo )
+      assets.add( asset )
+endClass

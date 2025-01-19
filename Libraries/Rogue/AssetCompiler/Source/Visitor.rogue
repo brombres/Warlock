@@ -2,6 +2,10 @@
 library AssetCompiler
 
 class Visitor
+  PROPERTIES
+    current_target : String
+    current_folder = File("Assets")
+
   METHODS
     method visit( cmd:Cmd )->Cmd [propagated]
       # Call to invoke the appropriate on_visit/on_visit_node() for the given Cmd type.
@@ -75,7 +79,17 @@ class Visitor
     method on_visit_children( cmd:Attribute )
       cmd.value = visit(cmd.value)
 
-    method on_visit_children( cmd:Asset )
+    method on_visit_children( cmd:AssetAttributes )
       cmd.attributes = visit(cmd.attributes)->(as AttributeList)
+
+    method on_visit_node( cmd:SetFolder )
+      local path = "Assets" / cmd.path
+      if (not File(path).exists)
+        throw cmd.t.error( "Folder '$' does not exist."(path) )
+      endIf
+      current_folder = File( path )
+
+    method on_visit_node( cmd:SetTarget )
+      current_target = cmd.name
 
 endClass

@@ -1,0 +1,11 @@
+library AssetCompiler
+
+class AssetInfo( filepath:String, attributes:AssetAttributes )
+  PROPERTIES
+    is_standalone : Logical
+    group         : AssetGroup
+
+  METHODS
+    method to->String
+      return filepath
+endClass

@@ -2,13 +2,15 @@ library AssetCompiler
 
 $include "Scanner.rogue"
 $include "Parser.rogue" [optional]
-$include Organizer
-$include TargetCommands
+$include AssetGroup
+$include AssetInfo
+$include CollectAssetInfo
+$include GenerateAssetConfig
 uses AssetCompiler
 uses Console/CommandLineParser
 
 try
-  AssetCompiler( System.command_line_arguments )
+  AssetCompiler.init( System.command_line_arguments )
 catch (error:CompileError)
   Console.error.println error
   System.exit 1
@@ -20,17 +22,18 @@ endTry
 
 class AssetCompiler [singleton]
   PROPERTIES
-    platform       : String
-    audio_files    : Files
-    data_files     : Files
-    font_files     : Files
-    graphics_files : Files
+    platform    : String
+    files       : Files
+    file_lookup = [String:Logical]  # true=referenced, false=unreferenced
 
-    targets        = [String:TargetCommands]
-    target         : TargetCommands
-    folder         = File("Assets")
+    targets  = Set<<String>>()
+    assets   = [String:AssetInfo]
+    groups   = Set<<Group>>()
 
   METHODS
+    method init( args:String[] )
+      local platform = which{ args.count:args.first || System.os }
+      init( platform )
       #command = parse_args( args )
 
       ## trace command
@@ -50,24 +53,93 @@ class AssetCompiler [singleton]
         font_system_17.copy_to( File("Assets/Graphics/Fonts"), &if_different )
       endIf
 
-      audio_files    = Files( "Assets/Audio/**" )
-      data_files     = Files( "Assets/Data/**" )
-      font_files     = Files( "Assets/Fonts/**" )
-      graphics_files = Files( "Assets/Graphics/**" )
+      files = Files( "Assets" )
+      files.add( "Graphics/**" )
+      files.add( "Audio/**" )
+      files.add( "Data/**" )
+
+      forEach (filepath in files)
+        file_lookup[filepath] = false  # mark unreferenced to start with
+      endForEach
+
+      local statements : Cmd
 
       local asc = File( "Assets/AssetConfig.asc" )
       if (asc.exists)
         #forEach (t in Scanner( asc ).tokenize) println "$ $"(t.type,t)
 
-        local statements = Parser( asc ).parse
-        Organizer().visit( statements )
+        statements = Parser( asc ).parse
+        if (statements)
+          CollectAssetInfo("Global").visit( statements )
+          if (targets.contains(platform))
+            CollectAssetInfo(platform).visit( statements )
+          else
+            CollectAssetInfo("Default").visit( statements )
+          endIf
+        endIf
       endIf
 
-    method set_target( name:String )
-      @target = targets[name]
-      if (not target)
-        @target = TargetCommands( name )
-        targets[name] = target
+      if (statements is null)
+        statements = Statements( Token(TokenType.EOL,"Assets/AssetConfig.asc") )
       endIf
+
+      local unreferenced = String[]
+      forEach (entry in file_lookup.entries)
+        if (not entry.value) unreferenced.add( entry.key )
+      endForEach
+
+      if (unreferenced.count)
+        local new_graphics = collect_unreferenced( unreferenced, "Graphics" )
+        local new_audio    = collect_unreferenced( unreferenced, "Audio" )
+        local new_data     = collect_unreferenced( unreferenced, "Data" )
+
+        print_cmd( "Update Assets/AssetConfig.asc with new asset paths" )
+
+        local new_asc = String()
+        local gen = GenerateAssetConfig( new_asc, new_graphics, new_audio, new_data )
+        gen.visit( forEach in statements )
+        gen.append_remaining_unreferenced
+
+        asc.save( new_asc )
+      endIf
+
+      # Ungrouped, non-standalone assets are assigned to a common group
+      local group : AssetGroup
+      forEach (asset in assets)
+        if (not asset.group and not asset.is_standalone)
+          ensure<<group>>
+          asset.group = group
+        endIf
+      endForEach
+
+      # Collect groups
+      # Assets can be reassigned to a group multiple times, so after that's
+      # all over we figure out the final group membership.
+      forEach (asset in assets)
+        if (asset.group)
+          groups.add( group )
+          group.add( asset )
+        endIf
+      endForEach
+
+    method collect_unreferenced( unreferenced:String[], folder:String )->String[]
+      local list = String[]
+
+      local assets_folder = "Assets" / folder + "/"
+      forEach (filepath in writer=unreferenced.rewriter)
+        if (filepath.begins_with(assets_folder))
+          list.add( filepath.after_first(assets_folder) )
+        else
+          writer.write( filepath )
+        endIf
+      endForEach
+
+      return list
+
+    method print_cmd( cmd:String )
+      ConsoleStyle.set<<FG_LIGHT_GREEN>>
+      print( "> " )
+      println( cmd )
+      ConsoleStyle.set<<FG_DEFAULT>>
 
 endClass

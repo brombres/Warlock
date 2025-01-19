@@ -1,0 +1,117 @@
+library AssetCompiler
+
+class GenerateAssetConfig : Visitor
+  PROPERTIES
+    platform              : String
+    writer                : PrintWriter
+    unreferenced_graphics : String[]
+    unreferenced_audio    : String[]
+    unreferenced_data     : String[]
+
+  METHODS
+    method init( writer, unreferenced_graphics, unreferenced_audio, unreferenced_data )
+
+    method append_remaining_unreferenced->Logical
+      if (unreferenced_count == 0) return false
+
+      if (current_target != "Global")
+        writer.println
+        writer.println "[Global]"
+        current_target = "Global"
+      endIf
+
+      append_remaining( "Graphics", unreferenced_graphics )
+      append_remaining( "Audio",    unreferenced_audio )
+      append_remaining( "Data",     unreferenced_data )
+
+      return true
+
+    method append_remaining( folder:String, unreferenced:String[], &if_current_folder )->Logical
+      if (unreferenced.is_empty) return false
+      if (if_current_folder and current_folder != "Assets/$"(folder)) return false
+
+      if (current_folder.filename != folder)
+        writer.println
+        println_verbose "folder $"(folder)
+        current_folder = File( "Assets" / folder )
+        println_verbose
+      endIf
+
+      forEach (filepath in unreferenced)
+        print_verbose "@ $"(filepath)
+        if (filepath.contains("font",&ignore_case))
+          println_verbose " font"
+        else
+          which (File(filepath).extension.to_lowercase)
+            case "png", "jpg", "jpeg": println_verbose " image"
+            case "wav", "ima4":        println_verbose " sound"
+            case "mp3", "ogg":         println_verbose " music"
+            others:                    println_verbose " binary"
+          endWhich
+        endIf
+      endForEach
+
+      if (if_current_folder) writer.println
+
+      unreferenced.clear
+
+      return true
+
+    method on_visit_node( cmd:Cmd )
+      throw cmd.t.error( "TODO: GenerateAssetConfig.on_visit_node($)"(cmd.type_name) )
+
+    method on_visit_node( cmd:AssetAttributes )
+      writer.print cmd.filepath
+      forEach (attribute as Attribute in cmd.attributes)
+        writer.print ' '
+        writer.print attribute.name
+        if (attribute.value)
+          writer.print ':'
+          writer.print attribute.value
+        endIf
+      endForEach
+      writer.println
+
+    method on_visit_node( cmd:Comment )
+      writer.println "#$"(cmd.content)
+
+    method on_visit_node( cmd:EmptyLine )
+      writer.println
+
+    method on_visit_node( cmd:ExistingAssetAttributes )
+      writer.print "@ "
+      on_visit_node( cmd->(as AssetAttributes) )
+
+    method on_visit_node( cmd:SetFolder )
+      if (current_target == "Global")
+        append_remaining( "Graphics", unreferenced_graphics, &if_current_folder )
+        append_remaining( "Audio",    unreferenced_audio,    &if_current_folder )
+        append_remaining( "Data",     unreferenced_data,     &if_current_folder )
+      endIf
+
+      prior.on_visit_node( cmd )
+      writer.println "folder $"(cmd.path)
+
+    method on_visit_node( cmd:SetTarget )
+      if (current_target == "Global" and cmd.name != "Global")
+        if (append_remaining_unreferenced) writer.println
+      endIf
+
+      prior.on_visit_node( cmd )
+      writer.println "[$]"(cmd.name)
+
+    method unreferenced_count->Int
+      return unreferenced_graphics.count + unreferenced_audio.count + unreferenced_data.count
+
+    method print_verbose( value:String )
+      print value
+      writer.print value
+
+    method println_verbose
+      println
+      writer.println
+
+    method println_verbose( value:String )
+      println value
+      writer.println value
+endClass
