@@ -6,6 +6,21 @@ $requireRogue "2.34.3"
 
 uses Utility/VersionNumber
 
+#$ LINK_LIBS            = true
+   # Link the following in when compiling this Build.rogue
+
+#$ LIBRARIES(macOS)   = libjpeg
+#$ LIBRARIES(macOS)   = libpng
+#$ LIBRARIES(macOS)   = zlib(flags:-lz)
+#$ LIBRARIES(Linux)   = libjpeg(install:libjpeg-dev)
+#$ LIBRARIES(Linux)   = libpng(install:libpng-dev)
+#$ LIBRARIES(Windows) = brombres/windowsmedialibs
+#$ CC_LINK(macOS)     = -I /System/Libraries/Frameworks -framework Foundation -framework AppKit
+#$ CC_LINK(Windows)   = /link /LTCG
+
+uses Graphics
+uses Graphics/BitmapIO
+
 augment Build
   # You can create a Local.settings file with overrides for these values, e.g.:
   # BUILD_MODE = release
@@ -18,11 +33,11 @@ augment Build
     LAUNCHER_FOLDER  = "/usr/local/bin"
     ROGUEC_FLAGS     = ""
     CC_ARGS_MACOS    = ""
-    CC_LINK_MACOS    = ""
+    CC_LINK_MACOS    = "-I /System/Libraries/Frameworks -framework Foundation -framework AppKit"
     CC_ARGS_UNIX     = ""
     CC_LINK_UNIX     = ""
     CC_ARGS_WINDOWS  = ""
-    CC_LINK_WINDOWS  = ""
+    CC_LINK_WINDOWS  = "/link /LTCG"
 endAugment
 
 routine rogo_default

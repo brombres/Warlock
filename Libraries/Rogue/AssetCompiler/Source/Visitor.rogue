@@ -77,7 +77,7 @@ class Visitor
       cmd.operand = visit(cmd.operand)
 
     method on_visit_children( cmd:Attribute )
-      cmd.value = visit(cmd.value)
+      cmd.value = visit(cmd.value)->(as AttributeValue)
 
     method on_visit_children( cmd:AssetRule )
       cmd.attributes = visit(cmd.attributes)->(as AttributeList)

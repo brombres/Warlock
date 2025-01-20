@@ -4,10 +4,13 @@ $include "Scanner.rogue"
 $include "Parser.rogue" [optional]
 $include AssetGroup
 $include Asset
-$include CollectAssetInfo
+$include CollectAssets
 $include GenerateAssetConfig
+
 uses AssetCompiler
 uses Console/CommandLineParser
+uses Geometry
+uses Graphics
 
 try
   AssetCompiler.init( System.command_line_arguments )
@@ -30,6 +33,10 @@ class AssetCompiler [singleton]
     assets   = [String:Asset]
     groups   = Set<<AssetGroup>>()
 
+    asset_info      : Variant
+    asset_info_json = ""
+    asset_info_file : File
+
   METHODS
     method init( args:String[] )
       local platform = which{ args.count:args.first || System.os }
@@ -48,6 +55,52 @@ class AssetCompiler [singleton]
       #else                           scan_files
 
     method init( platform )
+      load_asc( &suppress_errors )
+      # Once to add new files to AssetConfig.asc.
+
+      load_asc
+      # Second time to process those new files while loading.
+
+      # Ungrouped, non-standalone assets are assigned to a common group
+      local group : AssetGroup
+      forEach (asset in assets)
+        if (not asset.group and not asset.is_standalone)
+          ensure<<group>>
+          asset.group = group
+        endIf
+      endForEach
+
+      # Collect groups
+      # Assets can be reassigned to a group multiple times, so after that's
+      # all over we figure out the final group membership.
+      forEach (asset in assets)
+        if (asset.group)
+          groups.add( group )
+          group.add( asset )
+        endIf
+      endForEach
+
+      collect_asset_info
+
+      # Save asset info
+      block
+        local json = asset_info.to_json( &formatted )
+        if (json != asset_info_json)
+          asset_info_file.save( json )
+        endIf
+      endBlock
+
+
+    method load_asc( &suppress_errors )->GlobalID
+      asset_info_file = File( "Build/$/Cache/AssetInfo.json"(platform) )
+      if (asset_info_file.exists)
+        asset_info_json = String( asset_info_file )
+        asset_info = JSON.parse( asset_info_json )
+      else
+        asset_info_file.parent.create_folder
+      endIf
+      if (not asset_info) asset_info = @{}
+
       local font_system_17 = File( "Libraries/Warlock/Libraries/Framework/Assets/Font-System-17.png" )
       if (font_system_17.exists)
         font_system_17.copy_to( File("Assets/Graphics/Fonts"), &if_different )
@@ -70,11 +123,11 @@ class AssetCompiler [singleton]
 
         statements = Parser( asc ).parse
         if (statements)
-          CollectAssetInfo("Global").visit( statements )
+          CollectAssets("Global",&=suppress_errors).visit( statements )
           if (targets.contains(platform))
-            CollectAssetInfo(platform).visit( statements )
+            CollectAssets(platform,&=suppress_errors).visit( statements )
           else
-            CollectAssetInfo("Default").visit( statements )
+            CollectAssets("Default",&=suppress_errors).visit( statements )
           endIf
         endIf
       endIf
@@ -101,26 +154,44 @@ class AssetCompiler [singleton]
         gen.append_remaining_unreferenced
 
         asc.save( new_asc )
+
+        return <repeat>
       endIf
 
-      # Ungrouped, non-standalone assets are assigned to a common group
-      local group : AssetGroup
+      return <success>
+
+    method collect_asset_info
+      local lookup = asset_info.ensure_table( "assets" )
+
+      # Remove cached assets that no longer exist.
+      #forEach (info at filepath in lookup)
+      #endForEach
+
       forEach (asset in assets)
-        if (not asset.group and not asset.is_standalone)
-          ensure<<group>>
-          asset.group = group
+        local info = lookup[asset.filepath]
+        if (not info)
+          info = @{ filepath:asset.filepath }
+          lookup[asset.filepath] = info
         endIf
+
+        local rule = asset.rule->String
+        local file = File( asset.filepath )
+        local timestamp = file.timestamp.value
+
+        contingent
+          necessary (info//rule == rule)
+          necessary (info//timestamp == timestamp)
+        unsatisfied
+          asset.is_modified = true
+          info//rule = rule
+          info//timestamp = timestamp
+          info//crc32 = file.crc32
+        endContingent
+
+        asset.collect_properties( info )
       endForEach
 
-      # Collect groups
-      # Assets can be reassigned to a group multiple times, so after that's
-      # all over we figure out the final group membership.
-      forEach (asset in assets)
-        if (asset.group)
-          groups.add( group )
-          group.add( asset )
-        endIf
-      endForEach
+      assets.remove( $.is_invalid )
 
     method collect_unreferenced( unreferenced:String[], folder:String )->String[]
       local list = String[]

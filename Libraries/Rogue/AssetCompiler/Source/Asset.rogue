@@ -1,11 +1,138 @@
 library AssetCompiler
 
 class Asset( filepath:String, rule:AssetRule )
+  DEFINITIONS
+    ASCII_CHARACTERS = @| !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+
+    # "
+
   PROPERTIES
-    is_standalone : Logical
-    group         : AssetGroup
+    is_modified     : Logical
+    is_invalid      : Logical
+    is_standalone   : Logical
+
+    group           : AssetGroup
+    info            : Variant
+
+    type            = <Unknown>
+    bitmap          : Bitmap
+    image_size      : XY
+    font_characters : String
+    font_height     : Int
+    font_width      : Int  # -1 for variable, > 0 = fixed
 
   METHODS
+    method collect_properties( info )
+      local file = File(filepath)
+      if (not file.exists)
+        throw rule.t.error( "File not found: " + filepath )
+      elseIf (file.is_folder)
+        throw rule.t.error( "Asset must be a file, not a folder." )
+      endIf
+
+      if (rule.contains_attribute("image"))
+        type = <Image>
+        if (info//size)
+          image_size = XY( info//size )
+        else
+          is_modified = true
+          .load_bitmap
+          info//size = bitmap.size
+          image_size = bitmap.size
+        endIf
+
+      elseIf (rule.contains_attribute("font"))
+        type = <Font>
+        contingent
+          necessary (info.contains("font_characters"))
+          necessary (info.contains("font_height"))
+          necessary (info.contains("font_width"))
+          font_characters = info//font_characters
+          font_height = info//font_height
+          font_width  = info//font_width
+
+        unsatisfied
+          is_modified = true
+
+          if local characters_attribute = rule.find_attribute( "characters" )
+            .require_value(
+              characters_attribute,
+              "Expected 'characters:ascii' or e.g. 'characters:[32,'0'..'9',65..90]'."
+            )
+            if (characters_attribute.value.value == "ascii")
+              font_characters = ASCII_CHARACTERS
+            else
+              font_characters = characters_attribute.value.cmd.to_characters
+            endIf
+          else
+            font_characters = ASCII_CHARACTERS
+          endIf
+
+          if local width_attribute = rule.find_attribute( "width" )
+            .require_value(
+              width_attribute,
+              "Expected 'width:fixed', 'width:variable', or 'width:<pixels>', e.g. 'width:9'."
+            )
+
+            if (width_attribute.value.value == "variable")
+              font_width = -1
+            elseIf (width_attribute.value.value == "fixed")
+              .infer_font_width
+            else
+              font_width = width_attribute.value.cmd->Int
+            endIf
+          else
+            .infer_font_width
+          endIf
+
+          if local height_attribute = rule.find_attribute( "height" )
+            .require_value(
+              height_attribute,
+              "Pixel height expected, e.g. 'height:17'."
+            )
+            font_height = height_attribute.value.cmd->Int
+          else
+            is_modified = true
+            .load_bitmap
+            font_height = bitmap.height
+            if (font_width == -1) --font_height
+          endIf
+
+          info//font_characters = font_characters
+          info//font_width  = font_width
+          info//font_height = font_height
+
+        endContingent
+
+      elseIf (rule.contains_attribute("sound"))
+        type = <Sound>
+      elseIf (rule.contains_attribute("music"))
+        type = <Music>
+      elseIf (rule.contains_attribute("binary"))
+        type = <Binary>
+      else
+        throw rule.t.error( "No type specified in rule. Append one of [image, font, sound, music, binary] or prefix with '-' instead of '$' to exclude."(info//rule[0]) )
+      endIf
+
+    method .infer_font_width
+      .load_bitmap
+      if (bitmap.width % font_characters.count)
+        throw rule.t.error( "Total size of fixed-width bitmap font ($px) is not evenly divisible by $ characters."(bitmap.width,font_characters.count) )
+      endIf
+      font_width = bitmap.width / font_characters.count
+
+    method .load_bitmap
+      if (bitmap) return  # already loaded?
+      bitmap = Bitmap( File(filepath) )
+      if (bitmap.error)
+        is_invalid = true
+        throw rule.t.error( "Error loading bitmap '$'. File is corrupt or invalid."(filepath) )
+      endIf
+
+    method .require_value( attribute:Attribute, error_message:String )
+      if (not attribute.value) throw attribute.t.error( error_message )
+
     method to->String
       return filepath
+
 endClass

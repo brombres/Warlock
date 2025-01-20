@@ -185,7 +185,7 @@ parser
       else
         createNull
       endIf
-      create Attribute( name:String, value )
+      create Attribute( name:String, value:AttributeValue )
     endWhile
   produceList AttributeList
 

@@ -76,6 +76,9 @@ class Cmd( t:Token )
 
     method to->Token[]
       throw UnsupportedOperationError()
+
+    method to_characters->String
+      throw t.error( "TODO: Cmd.to_characters()" )
 endClass
 
 class CmdList : Cmd
@@ -386,7 +389,7 @@ endClass
 class Attribute : Cmd
   PROPERTIES
     name  : String
-    value : Cmd
+    value : AttributeValue
 
   METHODS
     method init( t, name, value )
@@ -405,6 +408,9 @@ class AttributeList : CmdList
   METHODS
     method description->String
       return "AttributeList" + list_description
+
+    method get( index:Int )->Attribute
+      return prior.get( index )->(as Attribute)
 endClass
 
 class AttributeValue : Cmd
@@ -504,7 +510,7 @@ class AssetRule : Cmd
 
   METHODS
     method init( t, filepath, attributes )
-      # folder is set in CollectAssetInfo
+      # folder is set in CollectAssets
 
     method init( existing:AssetRule )
       prior.init( existing )
@@ -512,8 +518,30 @@ class AssetRule : Cmd
       filepath = existing.filepath
       if (existing.attributes) attributes = existing.attributes.cloned
 
+    method contains_attribute( name:String )->Logical
+      return find_attribute( name )?
+
     method description->String
       return "AssetRule($,$,$)" (%folder,%filepath,%attributes)
+
+    method find_attribute( name:String )->Attribute
+      forEach (attribute in attributes)
+        if (attribute.name == name) return attribute
+      endForEach
+      return null
+
+    method to->String
+      local result = String()
+      result.print filepath
+      forEach (attribute in attributes)
+        result.print( ' ' )
+        result.print( attribute.name )
+        if (attribute.value)
+          result.print( ':' )
+          result.print( attribute.value.value )
+        endIf
+      endForEach
+      return result
 
 endClass
 
@@ -521,5 +549,8 @@ class ExistingAssetRule : AssetRule
   METHODS
     method description->String
       return "ExistingAssetRule($,$,$)" (%folder,%filepath,%attributes)
+
+    method to->String
+      return "@ " + prior.to<<String>>
 
 endClass
