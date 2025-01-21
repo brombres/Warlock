@@ -1,0 +1,24 @@
+library AssetCompiler
+
+class Placement
+  PROPERTIES
+    position   : XY
+    size       : XY
+    is_rotated : Logical
+
+    bitmap        : Bitmap
+    source_asset  : Asset
+    source_bounds : Box
+
+  METHODS
+    method init( source_asset, source_bounds )
+      size = source_bounds.size
+      if (size.x > size.y)
+        size = size.yx
+        is_rotated = true
+      endIf
+
+    method to->String
+      return source_bounds
+      #return Box( position, size )
+endClass

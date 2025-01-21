@@ -6,6 +6,7 @@ $include AssetGroup
 $include Asset
 $include CollectAssets
 $include GenerateAssetConfig
+$include Placement
 
 uses AssetCompiler
 uses Console/CommandLineParser
@@ -75,9 +76,15 @@ class AssetCompiler [singleton]
       # all over we figure out the final group membership.
       forEach (asset in assets)
         if (asset.group)
-          groups.add( group )
+          if (not groups.contains(group)) groups.add( group )
           group.add( asset )
         endIf
+      endForEach
+
+      # Save groups in asset_info
+      asset_info//groups = @[]
+      forEach (group in groups)
+        asset_info//groups.add( group->Variant )
       endForEach
 
       collect_asset_info
@@ -90,8 +97,11 @@ class AssetCompiler [singleton]
         endIf
       endBlock
 
+      groups.remove( not $.has_modified_assets )
 
-    method load_asc( &suppress_errors )->GlobalID
+      (forEach in groups).build_texture_atlas
+
+    method load_asc( &suppress_errors )
       asset_info_file = File( "Build/$/Cache/AssetInfo.json"(platform) )
       if (asset_info_file.exists)
         asset_info_json = String( asset_info_file )
@@ -154,11 +164,7 @@ class AssetCompiler [singleton]
         gen.append_remaining_unreferenced
 
         asc.save( new_asc )
-
-        return <repeat>
       endIf
-
-      return <success>
 
     method collect_asset_info
       local lookup = asset_info.ensure_table( "assets" )

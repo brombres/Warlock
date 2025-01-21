@@ -16,6 +16,7 @@ class Asset( filepath:String, rule:AssetRule )
 
     type            = <Unknown>
     bitmap          : Bitmap
+    placements      = Placement[]
     image_size      : XY
     font_characters : String
     font_height     : Int
@@ -32,27 +33,37 @@ class Asset( filepath:String, rule:AssetRule )
 
       if (rule.contains_attribute("image"))
         type = <Image>
-        if (info//size)
-          image_size = XY( info//size )
-        else
+
+        contingent
+          necessary (not is_modified)
+          necessary (info.contains("image_size"))
+          image_size = XY( info//image_size )
+        unsatisfied
           is_modified = true
           .load_bitmap
-          info//size = bitmap.size
+          info//image_size = bitmap.size
           image_size = bitmap.size
-        endIf
+        endContingent
 
       elseIf (rule.contains_attribute("font"))
         type = <Font>
         contingent
+          necessary (not is_modified)
+          necessary (info.contains("image_size"))
           necessary (info.contains("font_characters"))
           necessary (info.contains("font_height"))
           necessary (info.contains("font_width"))
+          image_size = XY( info//image_size )
           font_characters = info//font_characters
           font_height = info//font_height
           font_width  = info//font_width
 
         unsatisfied
           is_modified = true
+
+          .load_bitmap
+          info//image_size = bitmap.size
+          image_size = bitmap.size
 
           if local characters_attribute = rule.find_attribute( "characters" )
             .require_value(
@@ -114,6 +125,53 @@ class Asset( filepath:String, rule:AssetRule )
         throw rule.t.error( "No type specified in rule. Append one of [image, font, sound, music, binary] or prefix with '-' instead of '$' to exclude."(info//rule[0]) )
       endIf
 
+    method create_placements
+      which (type)
+        case <Image>
+          placements.add( Placement(this, Box(image_size)) )
+        case <Font>
+          if (font_width == -1) .create_variable_width_font_placements
+          else                  .create_fixed_width_font_placements
+      endWhich
+
+    method .create_fixed_width_font_placements
+      local w = (image_size.x / font_characters.count)->Int
+      local h = image_size.y->Int
+      local x = 0
+      loop (font_characters.count)
+        placements.add( Placement(this, Box(x,0,w,h)) )
+        x += w
+      endLoop
+
+    method .create_variable_width_font_placements
+      if (image_size.x == 0) return
+
+      .load_bitmap
+      local h = image_size.y->Int - 1
+      local x1 = 0
+      local x2 = 1
+      local cur_color = bitmap.pixels[0]
+      local n = 0
+      while (x2 <= image_size.x)
+        local is_finished = (x2 == image_size.x)
+        if (is_finished or bitmap.pixels[x2] != cur_color)
+          local w = (x2 - x1) + 1
+          placements.add( Placement(this, Box(x1,1,w,h)) )
+          if (is_finished) escapeWhile
+          x1 += w
+          cur_color = bitmap.pixels[x1]
+        else
+          ++x2
+        endIf
+      endWhile
+
+      if (placements.count != font_characters.count)
+        throw rule.t.error( "The variable-width font strip defines $ characters but the font rule specifies $ characters."(placements.count,font_characters.count) )
+      endIf
+
+    method to->String
+      return filepath
+
     method .infer_font_width
       .load_bitmap
       if (bitmap.width % font_characters.count)
@@ -131,8 +189,5 @@ class Asset( filepath:String, rule:AssetRule )
 
     method .require_value( attribute:Attribute, error_message:String )
       if (not attribute.value) throw attribute.t.error( error_message )
-
-    method to->String
-      return filepath
 
 endClass

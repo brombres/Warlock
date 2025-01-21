@@ -1,10 +1,61 @@
 library AssetCompiler
 
 class AssetGroup
+  GLOBAL PROPERTIES
+    next_id : Int
+
+  GLOBAL METHODS
+    method .next_id->Int
+      ++next_id
+      return next_id
+
   PROPERTIES
-    assets = Asset[]
+    id       : Int
+    assets   = Asset[]
+    filename : String
+    atlases  = String[]
 
   METHODS
+    method init
+      id = .next_id
+
+      use file_letter = StringPool
+        base26( id-1, file_letter )
+        filename = "TextureAtlas-$"(file_letter)
+      endUse
+
+    method init( info:Variant, asset_lookup:[String:Asset] )
+      id = info//id
+      next_id .= or_larger( id )
+      filename = info//filename
+      assets.clear
+
     method add( asset:Asset )
       assets.add( asset )
+
+    method base26( n:Int, builder:String )
+      if (n >= 26) base26( n/26, builder )
+      builder.print( ('A' + (n % 26))->Character )
+
+    method build_texture_atlas
+      (forEach in assets).create_placements
+
+    method has_modified_assets->Logical
+      if (assets.is_empty) return false
+      if ((forEach in assets).is_modified) return true
+
+      if (atlases.is_empty) return true
+
+      return false
+
+    method hash->Int
+      local result = assets.count
+      result ~= ((forEach in assets).filepath.hashcode)
+      return result
+
+    method to->Variant
+      local result = @{ id, hash, filename, assets:[] }
+      local filepaths = result//assets
+      forEach (asset in assets) filepaths.add( asset.filepath )
+      return result
 endClass
