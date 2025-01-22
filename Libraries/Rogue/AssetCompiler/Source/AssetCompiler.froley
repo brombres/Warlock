@@ -20,11 +20,13 @@ SYMBOL_AT            @
 SYMBOL_CLOSE_PAREN   )  [structural]
 SYMBOL_CLOSE_BRACKET ]  [structural]
 SYMBOL_COLON         :
+SYMBOL_COMMA         ,  [structural]
 SYMBOL_EQUALS        =
 SYMBOL_MINUS         -
 SYMBOL_OPEN_PAREN    (
 SYMBOL_OPEN_BRACKET  [
 SYMBOL_PLUS          +
+SYMBOL_RANGE_UP_TO   ..
 SYMBOL_SLASH         /
 
 --------------------------------------------------------------------------------
@@ -75,7 +77,7 @@ scanner
 
 - tokenize_value
   consume_ws
-  if (not hasAnother) halt
+  if (not hasAnother or nextIs('\n')) halt
 
   markPosition
 
@@ -85,7 +87,7 @@ scanner
 
   scan_number
   scan_string
-  scan_id_term_or_keyword
+  scan_id
 
   syntaxError
 
@@ -96,12 +98,20 @@ scanner
   if (scan([_a-zA-Z][_a-zA-Z0-9]*)) create IDENTIFIER
   syntaxError "Identifier expected."
 
+- scan_id
+  if (scan([_a-zA-Z][_a-zA-Z0-9]*))
+    create_id_or_keyword
+    restart
+  endIf
+
 - scan_id_term_or_keyword
   if (scan([_a-zA-Z][_a-zA-Z0-9]*))
     if (nextIs(':'))
       create_id_or_keyword
       consume ':'
+      markPosition
       create SYMBOL_COLON
+
       scan_string  # will restart if string
     elseIf (not scan([^ \t\n]*))
       create_id_or_keyword
@@ -124,6 +134,7 @@ scanner
 
   if (scan [0-9])
     scan_integer  # First character is now in 'buffer'
+    if (nextIs('..')) produce NUMBER
     if (scan '.') scan_integer
     produce NUMBER
   elseIf (scan '.')
@@ -225,28 +236,37 @@ parser
   produceList Args
 
 - expression
-  assign
+  range
 
-- assign [rightBinary]
-  on "=" -> Assign
+- range [binary]
+  on '..' -> RangeUpTo
 
 - add_subtract [binary]
-  on "+" -> Add
-  on "-" -> Subtract
+  on '+' -> Add
+  on '-' -> Subtract
 
 - multiply_divide [binary]
-  on "*" -> Multiply
-  on "/" -> Divide
+  on '*' -> Multiply
+  on '/' -> Divide
 
 - negate [preUnary]
-  on "-" -> Negate
+  on '-' -> Negate
 
 - term
   on '(' expression ')': return
-  on IDENTIFIER -> Text(value=content)
+  on '[' literal_list ']': return
+  on IDENTIFIER -> Identifier(name=content)
   on NUMBER     -> Number(value=content:Real)
   on STRING     -> LiteralString(value=content)
   syntaxError
+
+- literal_list
+  beginList
+    while (not nextIs(']'))
+      expression
+      consume ','
+    endWhile
+  produceList LiteralList
 
 - attribute_value
   expression

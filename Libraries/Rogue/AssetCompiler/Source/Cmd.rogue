@@ -78,7 +78,7 @@ class Cmd( t:Token )
       throw UnsupportedOperationError()
 
     method to_characters->String
-      throw t.error( "TODO: Cmd.to_characters()" )
+      throw t.error( "TODO: $.to_characters()"(type_name) )
 endClass
 
 class CmdList : Cmd
@@ -279,6 +279,12 @@ class Number : Cmd
     method to->Real:   return value
     method to->String: return value
 
+    method to->Character
+      return value->Int->Character
+
+    method to_characters->String
+      return value->Int->Character->String
+
 endClass
 
 class Print : Cmd
@@ -334,9 +340,23 @@ class Identifier : Cmd
     method to->Character
       return Cmd.to_character(name)
 
+
     method to->Int:     return name
     method to->Logical: return name?
     method to->String: return name
+
+    method to_characters->String
+      which (name)
+        case "ascii"
+          return @| !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+        # "
+        case "numbers"
+          return @|0123456789
+        others
+          throw t.error(
+            "Invalid character range specifier '$'. Valid range specifiers are 'ascii' and 'numbers'."(name)
+          )
+      endWhich
 
 endClass
 
@@ -415,7 +435,6 @@ endClass
 
 class AttributeValue : Cmd
   GLOBAL PROPERTIES
-    value_scanner = Scanner()
     value_parser  = Parser()
 
   PROPERTIES
@@ -424,10 +443,7 @@ class AttributeValue : Cmd
 
   METHODS
     method init( t, value )
-      value_scanner.reset( t, value, t.line, t.column )
-      value_scanner.start_ip = Scanner.ip_tokenize_value
-      value_parser.reset
-      value_parser.init( value_scanner )
+      value_parser.reset( t, Scanner.ip_tokenize_value, &scan_limit=value.count )
       cmd = value_parser.parse( Parser.ip_attribute_value )
 
     method init( existing:AttributeValue )
@@ -477,30 +493,6 @@ class EmptyLine : Cmd
       return "EmptyLine"
 endClass
 
-
-
-class Text : Cmd
-  PROPERTIES
-    value : String
-
-  METHODS
-    method init( t, value )
-
-    method init( existing:Text )
-      prior.init( existing )
-      value = existing.value
-
-    method description->String
-      return "Text($)" (%value)
-
-    method to->Character
-      return Cmd.to_character(value)
-
-    method to->Int:     return value
-    method to->Logical: return value?
-    method to->String: return value
-
-endClass
 
 class AssetRule : Cmd
   PROPERTIES
@@ -553,4 +545,28 @@ class ExistingAssetRule : AssetRule
     method to->String
       return "@ " + prior.to<<String>>
 
+endClass
+
+class LiteralList : CmdList
+  METHODS
+    method description->String
+      return "LiteralList" + list_description
+
+    method to_characters->String
+      local result = String()
+      forEach (cmd in this)
+        result.print( cmd.to_characters )
+      endForEach
+      return result
+endClass
+
+class RangeUpTo : Binary
+  METHODS
+    method description->String
+      return "RangeUpTo($,$)" (%left,%right)
+
+    method to_characters->String
+      local result = String()
+      result.print( forEach in left->Character..right->Character )
+      return result
 endClass

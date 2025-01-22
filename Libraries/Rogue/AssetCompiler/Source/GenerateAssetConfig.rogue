@@ -32,21 +32,31 @@ class GenerateAssetConfig : Visitor
 
       if (current_folder.filename != folder)
         writer.println
-        println_verbose "folder $"(folder)
+        writeln_echo "folder $"(folder)
         current_folder = File( "Assets" / folder )
-        println_verbose
+        writeln_echo
       endIf
 
       forEach (filepath in unreferenced)
-        print_verbose "@ $"(filepath)
         if (filepath.contains("font",&ignore_case))
-          println_verbose " font"
+          local file = File( "Assets/$/$"(folder,filepath) )
+          local bitmap = Bitmap( file )
+          if (bitmap.error)
+            throw Error( "Error loading image '$'. File is corrupt or invalid."(file) )
+          endIf
+          contingent
+            necessary (bitmap.pixels[forEach in 0..<bitmap.width].alpha_byte == 255)
+            writeln_echo "@ $ font height:$ width:variable"(filepath,bitmap.height-1)
+          unsatisfied
+            writeln_echo "@ $ font height:$ width:fixed"(filepath,bitmap.height)
+          endContingent
         else
+          write_echo "@ $"(filepath)
           which (File(filepath).extension.to_lowercase)
-            case "png", "jpg", "jpeg": println_verbose " image"
-            case "wav", "ima4":        println_verbose " sound"
-            case "mp3", "ogg":         println_verbose " music"
-            others:                    println_verbose " binary"
+            case "png", "jpg", "jpeg": writeln_echo " image"
+            case "wav", "ima4":        writeln_echo " sound"
+            case "mp3", "ogg":         writeln_echo " music"
+            others:                    writeln_echo " binary"
           endWhich
         endIf
       endForEach
@@ -103,15 +113,15 @@ class GenerateAssetConfig : Visitor
     method unreferenced_count->Int
       return unreferenced_graphics.count + unreferenced_audio.count + unreferenced_data.count
 
-    method print_verbose( value:String )
+    method write_echo( value:String )
       print value
       writer.print value
 
-    method println_verbose
+    method writeln_echo
       println
       writer.println
 
-    method println_verbose( value:String )
+    method writeln_echo( value:String )
       println value
       writer.println value
 endClass

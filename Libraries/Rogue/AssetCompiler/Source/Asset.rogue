@@ -70,11 +70,28 @@ class Asset( filepath:String, rule:AssetRule )
               characters_attribute,
               "Expected 'characters:ascii' or e.g. 'characters:[32,'0'..'9',65..90]'."
             )
-            if (characters_attribute.value.value == "ascii")
-              font_characters = ASCII_CHARACTERS
-            else
-              font_characters = characters_attribute.value.cmd.to_characters
-            endIf
+            font_characters = characters_attribute.value.cmd.to_characters
+
+            # Ensure characters are unique
+            use characters_used = WorkList<<Logical>>
+              characters_used.reserve( (font_characters.last+1).or_larger(font_characters.count+1) )
+              forEach (ch in font_characters)
+                characters_used.expand_to_include( ch )
+                if (characters_used[ch])
+                  local ascii : String
+                  if (ch >= 32 and ch != 126)
+                    if (ch == '\'' or ch == '"') ascii = ch
+                    else                         ascii = "'$'"(ch)
+                  else
+                    ascii = ch.to_escaped_ascii
+                  endIf
+                  throw rule.t.error( "Character $ (unicode $) is defined multiple times."(ascii,ch->Int) )
+                else
+                  characters_used[ch] = true
+                endIf
+              endForEach
+            endUse
+
           else
             font_characters = ASCII_CHARACTERS
           endIf
@@ -166,7 +183,8 @@ class Asset( filepath:String, rule:AssetRule )
       endWhile
 
       if (placements.count != font_characters.count)
-        throw rule.t.error( "The variable-width font strip defines $ characters but the font rule specifies $ characters."(placements.count,font_characters.count) )
+        local more_or_fewer = which{ placements.count>font_characters.count:"More" || "Fewer" }
+        throw rule.t.error( "$ characters defined than specified. The variable-width font strip defines $ characters but the font rule specifies $ characters."(more_or_fewer,placements.count,font_characters.count) )
       endIf
 
     method to->String
@@ -184,7 +202,7 @@ class Asset( filepath:String, rule:AssetRule )
       bitmap = Bitmap( File(filepath) )
       if (bitmap.error)
         is_invalid = true
-        throw rule.t.error( "Error loading bitmap '$'. File is corrupt or invalid."(filepath) )
+        throw rule.t.error( "Error loading image '$'. File is corrupt or invalid."(filepath) )
       endIf
 
     method .require_value( attribute:Attribute, error_message:String )
