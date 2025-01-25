@@ -4,8 +4,10 @@ $include "Scanner.rogue"
 $include "Parser.rogue" [optional]
 $include AssetGroup
 $include Asset
+$include AtlasPage
 $include CollectAssets
 $include GenerateAssetConfig
+$include ImagePacker
 $include Placement
 
 uses AssetCompiler
@@ -37,6 +39,8 @@ class AssetCompiler [singleton]
     asset_info      : Variant
     asset_info_json = ""
     asset_info_file : File
+
+    sheet_size = XY(2048,2048)
 
   METHODS
     method init( args:String[] )

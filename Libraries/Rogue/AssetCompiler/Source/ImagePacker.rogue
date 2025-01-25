@@ -1,0 +1,136 @@
+library AssetCompiler
+
+class ImagePacker
+  PROPERTIES
+    group      : AssetGroup
+    placements = Placement[]
+    pages      = AtlasPage[]
+    max_size   = XY(2048,2048)
+    padding    = 4  # Edges of each texture are extruded this many pixels to prevent
+                    # color artifacts.
+
+  METHODS
+    method init( group )
+
+    method pack( assets:Asset[] )
+      (forEach in assets).create_placements
+      placements.add( (forEach in assets).placements )
+
+      while (placements.count)
+        local page = pack_another_page( max_size )
+        if (not page)
+          # All remaining assets are larger than the max texture size.
+          local asset = placements.first.source_asset
+          throw asset.rule.t.error(
+            "$ ($x$) is too large to fit on a $x$ texture atlas page." ...
+            (asset.filepath, asset.image_size.x->Int, asset.image_size.y->Int,
+            max_size.x->Int, max_size.y->Int)
+          )
+        endIf
+        pages.add( page )
+      endWhile
+
+      # Make the final page as small as possible
+      while (pages.count and pages.last.size.min > 16)
+        if (pages.last.size.x > pages.last.size.y)
+          if (repack_last_page( pages.last.size / XY(2,1) )) nextIteration
+          if (repack_last_page( pages.last.size / XY(1,2) )) nextIteration
+        else
+          if (repack_last_page( pages.last.size / XY(1,2) )) nextIteration
+          if (repack_last_page( pages.last.size / XY(2,1) )) nextIteration
+        endIf
+        escapeWhile
+      endWhile
+
+      if (pages.count)
+        # Last page placements are messed up from the last failed attempt to downsize.
+        # Repack one final time.
+trace pages.last.size
+        repack_last_page( pages.last.size )
+      endIf
+
+      local folder = File("Build/$/Assets/Textures"(AssetCompiler.platform))
+      folder.create_folder
+      forEach (page at i in pages)
+        local filepath = "$/$-$.png"(folder,group.filename,i)
+        page.bitmap.save_as_png( filepath )
+      endForEach
+
+    method repack_last_page( new_page_size:XY )->Logical
+      placements.clear
+      placements.add( pages.last.placements )
+      local new_page = pack_another_page( new_page_size )
+      if (new_page and placements.is_empty)
+        pages.remove_last
+        pages.add( new_page )
+        return true
+      else
+        return false
+      endIf
+
+    method pack_another_page( page_size:XY )->AtlasPage
+      placements.sort(
+        function(a:Placement,b:Placement)->Logical
+          # Returns true if 'a' should come before 'b'.
+          # Sorts by tallest first and then widest.
+          if (a.size.y > b.size.y) return true
+          if (a.size.y < b.size.y) return false
+          # Heights are equal
+
+          return (a.size.x >= b.size.x)
+        endFunction
+      )
+
+      local page = AtlasPage( page_size )
+      if (perform_layout(page, Box(page_size))) return page
+      else                                     return null
+
+    method perform_layout( page:AtlasPage, bounds:Box )->Logical
+      # Find the largest asset we can place (including 4-pixel padding around
+      # the edge), delete it from the list, and then recursively place any
+      # remaining placements we can.
+      if (bounds.size.x <= 0 or bounds.size.y <= 0) return false
+
+      local padding_left   = which{ bounds.position.x==0:0     || padding }
+      local padding_top    = which{ bounds.position.y==0:0     || padding }
+      local padding_right  = which{ bounds.bottom_right.x==page.size.x:0 || padding }
+      local padding_bottom = which{ bounds.bottom_right.y==page.size.y:0 || padding }
+      local available_w = bounds.size.x - (padding_left + padding_right)
+      local available_h = bounds.size.y - (padding_top + padding_bottom)
+
+      forEach (placement in placements)
+        if (placement.size.x <= available_w and placement.size.y <= available_h)
+          if (padding_right == 0)
+            padding_right = (available_w - placement.size.x).or_smaller( padding )
+          endIf
+          if (padding_bottom == 0)
+            padding_bottom = (available_h - placement.size.y).or_smaller( padding )
+          endIf
+          local placed_w = padding_left + placement.size.x + padding_right
+          local placed_h = padding_top + placement.size.y + padding_bottom
+          placement.position = bounds.position
+          placement.padding_left = padding_left
+          placement.padding_top = padding_top
+          placement.padding_right = padding_right
+          placement.padding_bottom = padding_bottom
+          placements.remove( placement )
+          page.add( placement )
+
+          # We've just placed 'A', now recursively pack areas 'B' and 'C':
+          #
+          # AAA|BBBBBB
+          # AAA|BBBBBB
+          # ---+------
+          # CCCCCCCCCC
+          # CCCCCCCCCC
+          # CCCCCCCCCC
+          perform_layout( page, Box( bounds.position+XY(placed_w,0), bounds.size.x-placed_w, placed_h ) ) # B
+          perform_layout( page, Box( bounds.position+XY(0,placed_h), bounds.size.x, bounds.size.y-placed_h ) ) # C
+
+          return true
+        endIf
+      endForEach
+
+      # Unable to place any
+      return false
+endClass

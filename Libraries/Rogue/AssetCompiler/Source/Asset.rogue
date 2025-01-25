@@ -23,6 +23,17 @@ class Asset( filepath:String, rule:AssetRule )
     font_width      : Int  # -1 for variable, > 0 = fixed
 
   METHODS
+    method bitmap->Bitmap
+      if (@bitmap) return @bitmap
+
+      bitmap = Bitmap( File(filepath) )
+      if (@bitmap.error)
+        is_invalid = true
+        throw rule.t.error( "Error loading image '$'. File is corrupt or invalid."(filepath) )
+      endIf
+
+      return @bitmap
+
     method collect_properties( info )
       local file = File(filepath)
       if (not file.exists)
@@ -40,7 +51,6 @@ class Asset( filepath:String, rule:AssetRule )
           image_size = XY( info//image_size )
         unsatisfied
           is_modified = true
-          .load_bitmap
           info//image_size = bitmap.size
           image_size = bitmap.size
         endContingent
@@ -61,7 +71,6 @@ class Asset( filepath:String, rule:AssetRule )
         unsatisfied
           is_modified = true
 
-          .load_bitmap
           info//image_size = bitmap.size
           image_size = bitmap.size
 
@@ -121,7 +130,6 @@ class Asset( filepath:String, rule:AssetRule )
             font_height = height_attribute.value.cmd->Int
           else
             is_modified = true
-            .load_bitmap
             font_height = bitmap.height
             if (font_width == -1) --font_height
           endIf
@@ -163,7 +171,6 @@ class Asset( filepath:String, rule:AssetRule )
     method .create_variable_width_font_placements
       if (image_size.x == 0) return
 
-      .load_bitmap
       local h = image_size.y->Int - 1
       local x1 = 0
       local x2 = 1
@@ -172,7 +179,7 @@ class Asset( filepath:String, rule:AssetRule )
       while (x2 <= image_size.x)
         local is_finished = (x2 == image_size.x)
         if (is_finished or bitmap.pixels[x2] != cur_color)
-          local w = (x2 - x1) + 1
+          local w = (x2 - x1)
           placements.add( Placement(this, Box(x1,1,w,h)) )
           if (is_finished) escapeWhile
           x1 += w
@@ -191,19 +198,10 @@ class Asset( filepath:String, rule:AssetRule )
       return filepath
 
     method .infer_font_width
-      .load_bitmap
       if (bitmap.width % font_characters.count)
         throw rule.t.error( "Total size of fixed-width bitmap font ($px) is not evenly divisible by $ characters."(bitmap.width,font_characters.count) )
       endIf
       font_width = bitmap.width / font_characters.count
-
-    method .load_bitmap
-      if (bitmap) return  # already loaded?
-      bitmap = Bitmap( File(filepath) )
-      if (bitmap.error)
-        is_invalid = true
-        throw rule.t.error( "Error loading image '$'. File is corrupt or invalid."(filepath) )
-      endIf
 
     method .require_value( attribute:Attribute, error_message:String )
       if (not attribute.value) throw attribute.t.error( error_message )

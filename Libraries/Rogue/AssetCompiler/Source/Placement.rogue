@@ -2,21 +2,68 @@ library AssetCompiler
 
 class Placement
   PROPERTIES
-    position   : XY
-    size       : XY
-    is_rotated : Logical
+    position       : XY
+    size           : XY
+    padding_left   : Int
+    padding_top    : Int
+    padding_right  : Int
+    padding_bottom : Int
+    is_rotated     : Logical
 
-    bitmap        : Bitmap
-    source_asset  : Asset
-    source_bounds : Box
+    bitmap         : Bitmap
+    source_asset   : Asset
+    source_bounds  : Box
 
   METHODS
     method init( source_asset, source_bounds )
+      bitmap = Bitmap( source_asset.bitmap, source_bounds )
+
       size = source_bounds.size
-      if (size.x > size.y)
-        size = size.yx
-        is_rotated = true
+      #if (size.x > size.y)
+      #  size = size.yx
+      #  is_rotated = true
+      #  bitmap.rotate_90( &ccw )
+      #endIf
+
+    method draw_to( page:Bitmap )
+      local work_bitmap = bitmap
+      if (padding_left or padding_right or padding_top or padding_bottom)
+        work_bitmap = Bitmap( padding_left+size.x+padding_right, padding_top+size.y+padding_bottom, Color.YELLOW )
+        bitmap.blit( work_bitmap, XY(padding_left,padding_top) )
+
+        # Extrude edges into padding area
+        if (padding_left)
+          local left_edge = Box( padding_left, padding_top, 1, size.y )
+          forEach (dx in 0..<padding_left)
+            work_bitmap.blit( left_edge, work_bitmap, dx, padding_top )
+          endForEach
+        endIf
+
+        if (padding_right)
+          local x = padding_left + size.x
+          local right_edge = Box( x-1, padding_top, 1, size.y )
+          forEach (dx in 0..<padding_right)
+            work_bitmap.blit( right_edge, work_bitmap, x+dx, padding_top )
+          endForEach
+        endIf
+
+        if (padding_top)
+          local top_edge = Box( 0, padding_top, padding_left+size.x+padding_right, 1 )
+          forEach (dy in 0..<padding_top)
+            work_bitmap.blit( top_edge, work_bitmap, 0, dy )
+          endForEach
+        endIf
+
+        if (padding_bottom)
+          local y = padding_top + size.y
+          local bottom_edge = Box( 0, y-1, padding_left+size.x+padding_right, 1 )
+          forEach (dy in 0..<padding_bottom)
+            work_bitmap.blit( bottom_edge, work_bitmap, 0, y+dy )
+          endForEach
+        endIf
+
       endIf
+      work_bitmap.blit( page, position )
 
     method to->String
       return source_bounds

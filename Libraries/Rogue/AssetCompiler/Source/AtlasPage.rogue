@@ -1,0 +1,18 @@
+library AssetCompiler
+
+class AtlasPage
+  PROPERTIES
+    placements = Placement[]
+    size       : XY
+
+  METHODS
+    method init( size )
+
+    method add( placement:Placement )
+      placements.add( placement )
+
+    method bitmap->Bitmap
+      local bitmap = Bitmap( size, Color.BLUE )
+      (forEach in placements).draw_to( bitmap )
+      return bitmap
+endClass

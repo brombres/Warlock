@@ -38,7 +38,7 @@ class AssetGroup
       builder.print( ('A' + (n % 26))->Character )
 
     method build_texture_atlas
-      (forEach in assets).create_placements
+      ImagePacker( this ).pack( assets )
 
     method has_modified_assets->Logical
       if (assets.is_empty) return false
