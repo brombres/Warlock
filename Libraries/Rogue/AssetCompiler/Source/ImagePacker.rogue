@@ -12,54 +12,77 @@ class ImagePacker
   METHODS
     method init( group )
 
-    method pack( assets:Asset[] )
+    method pack( assets:Asset[] )->AtlasPage[]
       (forEach in assets).create_placements
       placements.add( (forEach in assets).placements )
+      if (placements.is_empty) return pages
+
+      .convert_oversize_placements_to_standalone
 
       while (placements.count)
-        local page = pack_another_page( max_size )
-        if (not page)
-          # All remaining assets are larger than the max texture size.
-          local asset = placements.first.source_asset
-          throw asset.rule.t.error(
-            "$ ($x$) is too large to fit on a $x$ texture atlas page." ...
-            (asset.filepath, asset.image_size.x->Int, asset.image_size.y->Int,
-            max_size.x->Int, max_size.y->Int)
-          )
-        endIf
-        pages.add( page )
+        pages.add( .pack_another_page(max_size) )
       endWhile
 
       # Make the final page as small as possible
       while (pages.count and pages.last.size.min > 16)
         if (pages.last.size.x > pages.last.size.y)
-          if (repack_last_page( pages.last.size / XY(2,1) )) nextIteration
-          if (repack_last_page( pages.last.size / XY(1,2) )) nextIteration
+          if (.repack_last_page( pages.last.size / XY(2,1) )) nextIteration
+          if (.repack_last_page( pages.last.size / XY(1,2) )) nextIteration
         else
-          if (repack_last_page( pages.last.size / XY(1,2) )) nextIteration
-          if (repack_last_page( pages.last.size / XY(2,1) )) nextIteration
+          if (.repack_last_page( pages.last.size / XY(1,2) )) nextIteration
+          if (.repack_last_page( pages.last.size / XY(2,1) )) nextIteration
         endIf
         escapeWhile
       endWhile
 
       if (pages.count)
-        # Last page placements are messed up from the last failed attempt to downsize.
-        # Repack one final time.
-trace pages.last.size
-        repack_last_page( pages.last.size )
+        # Final page placements are messed up from the last failed attempt to downsize.
+        # Repack one last time.
+        .repack_last_page( pages.last.size )
       endIf
 
-      local folder = File("Build/$/Assets/Textures"(AssetCompiler.platform))
-      folder.create_folder
+      # Save images and store info in assets.
+      local build_folder = File("Build/$"(AssetCompiler.platform))
+      local folder = File("Assets/Textures")
+      (build_folder/folder).create_folder
       forEach (page at i in pages)
         local filepath = "$/$-$.png"(folder,group.filename,i)
-        page.bitmap.save_as_png( filepath )
+        local build_filepath = build_folder / filepath
+        page.build_filepath = build_filepath
+        page.filepath = filepath
+        forEach (placement in page.placements)
+          placement.build_folder   = build_folder
+          placement.atlas_filepath = filepath
+          placement.asset.group.filepaths.add( build_filepath )
+        endForEach
+        println "Saving $"(build_filepath)
+        page.bitmap.save_as_png( build_filepath )
       endForEach
 
-    method repack_last_page( new_page_size:XY )->Logical
+      return pages
+
+    method .convert_oversize_placements_to_standalone
+      .sort_placements
+      use remaining_placements = WorkList<<Placement>>
+        remaining_placements.add( placements )
+        forEach (placement in writer=remaining_placements.rewriter)
+          if (placement.size.x > max_size.x or placement.size.y > max_size.y)
+            placements.clear
+            placements.add( placement )
+            local pow2 = XY( placement.size.x->Int.to_power_of_2, placement.size.y->Int.to_power_of_2 )
+            pages.add( .pack_another_page(pow2) )
+          else
+            writer.write( placement )
+          endIf
+        endForEach
+        placements.clear
+        placements.add( remaining_placements )
+      endUse
+
+    method .repack_last_page( new_page_size:XY )->Logical
       placements.clear
       placements.add( pages.last.placements )
-      local new_page = pack_another_page( new_page_size )
+      local new_page = .pack_another_page( new_page_size )
       if (new_page and placements.is_empty)
         pages.remove_last
         pages.add( new_page )
@@ -68,24 +91,13 @@ trace pages.last.size
         return false
       endIf
 
-    method pack_another_page( page_size:XY )->AtlasPage
-      placements.sort(
-        function(a:Placement,b:Placement)->Logical
-          # Returns true if 'a' should come before 'b'.
-          # Sorts by tallest first and then widest.
-          if (a.size.y > b.size.y) return true
-          if (a.size.y < b.size.y) return false
-          # Heights are equal
-
-          return (a.size.x >= b.size.x)
-        endFunction
-      )
-
+    method .pack_another_page( page_size:XY )->AtlasPage
+      .sort_placements
       local page = AtlasPage( page_size )
-      if (perform_layout(page, Box(page_size))) return page
-      else                                     return null
+      if (.perform_layout(page, Box(page_size))) return page
+      else                                       return null
 
-    method perform_layout( page:AtlasPage, bounds:Box )->Logical
+    method .perform_layout( page:AtlasPage, bounds:Box )->Logical
       # Find the largest asset we can place (including 4-pixel padding around
       # the edge), delete it from the list, and then recursively place any
       # remaining placements we can.
@@ -108,7 +120,7 @@ trace pages.last.size
           endIf
           local placed_w = padding_left + placement.size.x + padding_right
           local placed_h = padding_top + placement.size.y + padding_bottom
-          placement.position = bounds.position
+          placement.position = bounds.position + XY(padding_left,padding_top)
           placement.padding_left = padding_left
           placement.padding_top = padding_top
           placement.padding_right = padding_right
@@ -124,8 +136,8 @@ trace pages.last.size
           # CCCCCCCCCC
           # CCCCCCCCCC
           # CCCCCCCCCC
-          perform_layout( page, Box( bounds.position+XY(placed_w,0), bounds.size.x-placed_w, placed_h ) ) # B
-          perform_layout( page, Box( bounds.position+XY(0,placed_h), bounds.size.x, bounds.size.y-placed_h ) ) # C
+          .perform_layout( page, Box( bounds.position+XY(placed_w,0), bounds.size.x-placed_w, placed_h ) ) # B
+          .perform_layout( page, Box( bounds.position+XY(0,placed_h), bounds.size.x, bounds.size.y-placed_h ) ) # C
 
           return true
         endIf
@@ -133,4 +145,17 @@ trace pages.last.size
 
       # Unable to place any
       return false
+
+    method .sort_placements
+      placements.sort(
+        function(a:Placement,b:Placement)->Logical
+          # Returns true if 'a' should come before 'b'.
+          # Sorts by tallest first and then widest.
+          if (a.size.y > b.size.y) return true
+          if (a.size.y < b.size.y) return false
+          # Heights are equal
+
+          return (a.size.x >= b.size.x)
+        endFunction
+      )
 endClass

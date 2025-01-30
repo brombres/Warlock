@@ -2,28 +2,24 @@ library AssetCompiler
 
 class Placement
   PROPERTIES
+    build_folder   : String
+    atlas_filepath : String
     position       : XY
     size           : XY
     padding_left   : Int
     padding_top    : Int
     padding_right  : Int
     padding_bottom : Int
-    is_rotated     : Logical
 
     bitmap         : Bitmap
-    source_asset   : Asset
+    asset          : Asset
     source_bounds  : Box
 
   METHODS
-    method init( source_asset, source_bounds )
-      bitmap = Bitmap( source_asset.bitmap, source_bounds )
+    method init( asset, source_bounds )
+      bitmap = Bitmap( asset.bitmap, source_bounds )
 
       size = source_bounds.size
-      #if (size.x > size.y)
-      #  size = size.yx
-      #  is_rotated = true
-      #  bitmap.rotate_90( &ccw )
-      #endIf
 
     method draw_to( page:Bitmap )
       local work_bitmap = bitmap
@@ -63,9 +59,15 @@ class Placement
         endIf
 
       endIf
-      work_bitmap.blit( page, position )
+      work_bitmap.blit( page, position-XY(padding_left,padding_top) )
 
     method to->String
       return source_bounds
       #return Box( position, size )
+
+    method write( manifest:Manifest )
+      manifest.print "  $"(AssetCompiler.textures[atlas_filepath])
+      manifest.print " $ $"(position.x->Int,position.y->Int)
+      manifest.print " $ $"(size.x->Int,size.y->Int)
+      manifest.println
 endClass

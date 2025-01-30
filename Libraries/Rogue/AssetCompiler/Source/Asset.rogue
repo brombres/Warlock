@@ -150,6 +150,11 @@ class Asset( filepath:String, rule:AssetRule )
         throw rule.t.error( "No type specified in rule. Append one of [image, font, sound, music, binary] or prefix with '-' instead of '$' to exclude."(info//rule[0]) )
       endIf
 
+    method collect_texture_filepaths( textures:IndexedSet<<String>> )
+      forEach (placement in placements)
+        textures.add( placement.atlas_filepath )
+      endForEach
+
     method create_placements
       which (type)
         case <Image>
@@ -158,6 +163,19 @@ class Asset( filepath:String, rule:AssetRule )
           if (font_width == -1) .create_variable_width_font_placements
           else                  .create_fixed_width_font_placements
       endWhich
+
+    method placement_info->Variant
+      local list = @[]
+      forEach (placement in placements)
+        list.add(
+          @{
+            atlas_filepath:placement.atlas_filepath,
+            position:{x:placement.position.x->Int,y:placement.position.y->Int},
+            size:{x:placement.size.x->Int,y:placement.size.y->Int}
+          }
+        )
+      endForEach
+      return list
 
     method .create_fixed_width_font_placements
       local w = (image_size.x / font_characters.count)->Int
@@ -196,6 +214,27 @@ class Asset( filepath:String, rule:AssetRule )
 
     method to->String
       return filepath
+
+    method write( manifest:Manifest )
+      which (type)
+        case <Image>
+          manifest.print ''"$"''(filepath)
+          manifest.print " image"
+          manifest.println
+          write_placements( manifest )
+        case <Font>
+          manifest.print ''"$"''(filepath)
+          manifest.print " font"
+          manifest.print " $"(font_height)
+          manifest.print '' "$"''(Variant(font_characters)->JSON.to_escaped_unicode("\""))
+          manifest.println
+          write_placements( manifest )
+      endWhich
+
+    method write_placements( manifest:Manifest )
+      forEach (placement in placements)
+        placement.write( manifest )
+      endForEach
 
     method .infer_font_width
       if (bitmap.width % font_characters.count)

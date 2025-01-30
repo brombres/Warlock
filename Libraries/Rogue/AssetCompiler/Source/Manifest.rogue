@@ -1,0 +1,4 @@
+library AssetCompiler
+
+class Manifest : String
+endClass

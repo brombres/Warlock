@@ -10,10 +10,12 @@ class AssetGroup
       return next_id
 
   PROPERTIES
-    id       : Int
-    assets   = Asset[]
-    filename : String
-    atlases  = String[]
+    id        : Int
+    assets    = Asset[]
+    filename  : String    # Base filename of texture atlas pages.
+    filepaths = String[]  # All atlas pages composing this group.
+    atlases   = String[]
+    pages     : AtlasPage[]
 
   METHODS
     method init
@@ -24,11 +26,17 @@ class AssetGroup
         filename = "TextureAtlas-$"(file_letter)
       endUse
 
-    method init( info:Variant, asset_lookup:[String:Asset] )
-      id = info//id
-      next_id .= or_larger( id )
-      filename = info//filename
-      assets.clear
+    method init( group_assets:Asset[], group_info:Variant )
+      temporarily assets = group_assets  # assets will be permanently added to group later
+        (forEach in assets).group = this
+        if local info = group_info[hash]
+          id = info//id
+          next_id .= or_larger( id )
+          filename = info//filename
+        else
+          init
+        endIf
+      endTemporarily
 
     method add( asset:Asset )
       assets.add( asset )
@@ -38,12 +46,12 @@ class AssetGroup
       builder.print( ('A' + (n % 26))->Character )
 
     method build_texture_atlas
-      ImagePacker( this ).pack( assets )
+      pages = ImagePacker( this ).pack( assets )
 
     method has_modified_assets->Logical
       if (assets.is_empty) return false
       if ((forEach in assets).is_modified) return true
-
+#trace atlases
       if (atlases.is_empty) return true
 
       return false
@@ -54,8 +62,17 @@ class AssetGroup
       return result
 
     method to->Variant
-      local result = @{ id, hash, filename, assets:[] }
-      local filepaths = result//assets
-      forEach (asset in assets) filepaths.add( asset.filepath )
+      local result = @{ id, hash, filename, assets:[], placements:{}, pages:[] }
+
+      local asset_filepaths = result//assets
+      local placements = result//placements
+      forEach (asset in assets)
+        asset_filepaths.add( asset.filepath )
+        placements[asset.filepath] = asset.placement_info
+      endForEach
+
+      local page_filepaths = result//pages
+      forEach (page in pages) page_filepaths.add( page.build_filepath )
+
       return result
 endClass

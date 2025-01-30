@@ -1,0 +1,18 @@
+library AssetCompiler
+
+class GroupIDManager [singleton]
+  PROPERTIES
+    next_id_index : Int
+    used_ids      = Logical[]
+
+  METHODS
+    method mark_id_used( id:Int )
+      used_ids.expand_to_include( id )
+      used_ids[id] = true
+
+    method next_id->Int
+      ++next_id_index
+      while (used_ids.count > next_id_index and used_ids[next_id_index]) ++next_id_index
+      mark_id_used( next_id_index )
+      return next_id_index
+endClass

@@ -7,10 +7,13 @@ $include Asset
 $include AtlasPage
 $include CollectAssets
 $include GenerateAssetConfig
+$include GroupIDManager
+$include Manifest
 $include ImagePacker
 $include Placement
 
 uses AssetCompiler
+uses Collection/IndexedSet
 uses Console/CommandLineParser
 uses Geometry
 uses Graphics
@@ -35,10 +38,12 @@ class AssetCompiler [singleton]
     targets  = Set<<String>>()
     assets   = [String:Asset]
     groups   = Set<<AssetGroup>>()
+    textures = IndexedSet<<String>>()
 
     asset_info      : Variant
     asset_info_json = ""
     asset_info_file : File
+    group_info      = @{}
 
     sheet_size = XY(2048,2048)
 
@@ -66,24 +71,39 @@ class AssetCompiler [singleton]
       load_asc
       # Second time to process those new files while loading.
 
-      # Ungrouped, non-standalone assets are assigned to a common group
-      local group : AssetGroup
-      forEach (asset in assets)
-        if (not asset.group and not asset.is_standalone)
-          ensure<<group>>
-          asset.group = group
-        endIf
-      endForEach
+      #trace group_info
+
+      # Apply exclusion rules
+      assets.discard( $.value.rule instanceOf ExcludedAssetRule )
+
+      block
+        # Ungrouped, non-standalone assets are assigned to a common group
+        local ungrouped = Asset[]
+        forEach (asset in assets)
+          if (not asset.group)
+            if (not asset.is_standalone)
+              ungrouped.add( asset )
+            endIf
+          endIf
+        endForEach
+        AssetGroup( ungrouped, group_info )
+      endBlock
 
       # Collect groups
       # Assets can be reassigned to a group multiple times, so after that's
       # all over we figure out the final group membership.
       forEach (asset in assets)
-        if (asset.group)
+        if local group = asset.group
           if (not groups.contains(group)) groups.add( group )
           group.add( asset )
         endIf
       endForEach
+
+      groups.remove( not $.has_modified_assets )
+
+      collect_asset_info
+
+      create_texture_atlases
 
       # Save groups in asset_info
       asset_info//groups = @[]
@@ -91,18 +111,40 @@ class AssetCompiler [singleton]
         asset_info//groups.add( group->Variant )
       endForEach
 
-      collect_asset_info
-
       # Save asset info
       block
-        local json = asset_info.to_json( &formatted )
+        local json = asset_info->JSON( &formatted )
         if (json != asset_info_json)
           asset_info_file.save( json )
         endIf
       endBlock
 
-      groups.remove( not $.has_modified_assets )
+      create_asset_manifest
 
+    method create_asset_manifest
+      local manifest = Manifest()
+
+      textures.clear
+      (forEach in assets).collect_texture_filepaths( textures )
+
+      manifest.println "textures $"(textures.count)
+      forEach (texture_filepath in textures)
+        manifest.println texture_filepath
+      endForEach
+      manifest.println
+
+      forEach (asset in assets)
+        asset.write( manifest )
+      endForEach
+      #println manifest
+
+      local file = File( "Build/$/Assets/AssetManifest.txt"(platform) )
+      if (not file.exists or String(file) != manifest)
+        println "Saving $"(file)
+        file.save( manifest )
+      endIf
+
+    method create_texture_atlases
       (forEach in groups).build_texture_atlas
 
     method load_asc( &suppress_errors )
@@ -169,6 +211,11 @@ class AssetCompiler [singleton]
 
         asc.save( new_asc )
       endIf
+
+      group_info.clear
+      forEach (group in asset_info//groups)
+        group_info[group//hash->Int] = group
+      endForEach
 
     method collect_asset_info
       local lookup = asset_info.ensure_table( "assets" )

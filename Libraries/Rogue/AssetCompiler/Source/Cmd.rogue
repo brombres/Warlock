@@ -570,3 +570,10 @@ class RangeUpTo : Binary
       result.print( forEach in left->Character..right->Character )
       return result
 endClass
+
+class ExcludedAssetRule : AssetRule
+  METHODS
+    method description->String
+      return "ExcludedAssetRule($,$)" (%filepath,%attributes)
+
+endClass

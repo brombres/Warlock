@@ -88,6 +88,10 @@ class GenerateAssetConfig : Visitor
     method on_visit_node( cmd:EmptyLine )
       writer.println
 
+    method on_visit_node( cmd:ExcludedAssetRule )
+      writer.print "- "
+      on_visit_node( cmd->(as AssetRule) )
+
     method on_visit_node( cmd:ExistingAssetRule )
       writer.print "@ "
       on_visit_node( cmd->(as AssetRule) )

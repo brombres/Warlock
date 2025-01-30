@@ -2,8 +2,10 @@ library AssetCompiler
 
 class AtlasPage
   PROPERTIES
-    placements = Placement[]
-    size       : XY
+    placements     = Placement[]
+    size           : XY
+    build_filepath : String
+    filepath       : String
 
   METHODS
     method init( size )
