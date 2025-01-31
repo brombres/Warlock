@@ -13,6 +13,7 @@ class Asset( filepath:String, rule:AssetRule )
 
     group           : AssetGroup
     info            : Variant
+    placement_info  : Variant
 
     type            = <Unknown>
     bitmap          : Bitmap
@@ -150,12 +151,18 @@ class Asset( filepath:String, rule:AssetRule )
         throw rule.t.error( "No type specified in rule. Append one of [image, font, sound, music, binary] or prefix with '-' instead of '$' to exclude."(info//rule[0]) )
       endIf
 
+      if (not is_modified and info.contains("placements"))
+        placement_info = info//placements
+      endIf
+
     method collect_texture_filepaths( textures:IndexedSet<<String>> )
-      forEach (placement in placements)
-        textures.add( placement.atlas_filepath )
+      forEach (placement in placement_info)
+        textures.add( placement//atlas_filepath )
       endForEach
 
     method create_placements
+      placement_info = undefined
+
       which (type)
         case <Image>
           placements.add( Placement(this, Box(image_size)) )
@@ -165,9 +172,12 @@ class Asset( filepath:String, rule:AssetRule )
       endWhich
 
     method placement_info->Variant
-      local list = @[]
+      if (@placement_info) return @placement_info
+
+      @placement_info = @[]
+
       forEach (placement in placements)
-        list.add(
+        @placement_info.add(
           @{
             atlas_filepath:placement.atlas_filepath,
             position:{x:placement.position.x->Int,y:placement.position.y->Int},
@@ -175,7 +185,8 @@ class Asset( filepath:String, rule:AssetRule )
           }
         )
       endForEach
-      return list
+
+      return @placement_info
 
     method .create_fixed_width_font_placements
       local w = (image_size.x / font_characters.count)->Int
@@ -215,6 +226,9 @@ class Asset( filepath:String, rule:AssetRule )
     method to->String
       return filepath
 
+    method update_placement_info
+      info//placements = placement_info
+
     method write( manifest:Manifest )
       which (type)
         case <Image>
@@ -232,8 +246,11 @@ class Asset( filepath:String, rule:AssetRule )
       endWhich
 
     method write_placements( manifest:Manifest )
-      forEach (placement in placements)
-        placement.write( manifest )
+      forEach (placement in placement_info)
+        manifest.print "  $"(AssetCompiler.textures[placement//atlas_filepath])
+        manifest.print " $ $"(placement//position//x,placement//position//y)
+        manifest.print " $ $"(placement//size//x,placement//size//y)
+        manifest.println
       endForEach
 
     method .infer_font_width

@@ -65,9 +65,4 @@ class Placement
       return source_bounds
       #return Box( position, size )
 
-    method write( manifest:Manifest )
-      manifest.print "  $"(AssetCompiler.textures[atlas_filepath])
-      manifest.print " $ $"(position.x->Int,position.y->Int)
-      manifest.print " $ $"(size.x->Int,size.y->Int)
-      manifest.println
 endClass

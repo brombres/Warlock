@@ -71,22 +71,19 @@ class AssetCompiler [singleton]
       load_asc
       # Second time to process those new files while loading.
 
-      #trace group_info
-
       # Apply exclusion rules
       assets.discard( $.value.rule instanceOf ExcludedAssetRule )
 
       block
         # Ungrouped, non-standalone assets are assigned to a common group
-        local ungrouped = Asset[]
+        local default_group : AssetGroup
         forEach (asset in assets)
           if (not asset.group)
             if (not asset.is_standalone)
-              ungrouped.add( asset )
+              asset.group = ensure<<default_group>>
             endIf
           endIf
         endForEach
-        AssetGroup( ungrouped, group_info )
       endBlock
 
       # Collect groups
@@ -99,17 +96,34 @@ class AssetCompiler [singleton]
         endIf
       endForEach
 
+      # Use the combined asset filepath hash to match saved group info with each
+      # current group.
+      forEach (group in groups)
+        if local info = group_info[group.hash]
+          forEach (page in info//pages)
+            group.filepaths.add( page )
+          endForEach
+        endIf
+      endForEach
+
+      (forEach in groups).configure_id
+
+      local all_groups = groups.cloned
       groups.remove( not $.has_modified_assets )
 
       collect_asset_info
 
       create_texture_atlases
 
-      # Save groups in asset_info
       asset_info//groups = @[]
-      forEach (group in groups)
+      forEach (group in all_groups)
         asset_info//groups.add( group->Variant )
       endForEach
+
+      textures.clear
+      (forEach in assets).collect_texture_filepaths( textures )
+      asset_info//textures = @[]
+      asset_info//textures.add( forEach in textures )
 
       # Save asset info
       block
@@ -123,9 +137,6 @@ class AssetCompiler [singleton]
 
     method create_asset_manifest
       local manifest = Manifest()
-
-      textures.clear
-      (forEach in assets).collect_texture_filepaths( textures )
 
       manifest.println "textures $"(textures.count)
       forEach (texture_filepath in textures)

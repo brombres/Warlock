@@ -1,31 +1,15 @@
 library AssetCompiler
 
 class AssetGroup
-  GLOBAL PROPERTIES
-    next_id : Int
-
-  GLOBAL METHODS
-    method .next_id->Int
-      ++next_id
-      return next_id
-
   PROPERTIES
-    id        : Int
+    id        : Int       # positive integer
     assets    = Asset[]
     filename  : String    # Base filename of texture atlas pages.
     filepaths = String[]  # All atlas pages composing this group.
-    atlases   = String[]
     pages     : AtlasPage[]
 
   METHODS
-    method init
-      id = .next_id
-
-      use file_letter = StringPool
-        base26( id-1, file_letter )
-        filename = "TextureAtlas-$"(file_letter)
-      endUse
-
+    #{
     method init( group_assets:Asset[], group_info:Variant )
       temporarily assets = group_assets  # assets will be permanently added to group later
         (forEach in assets).group = this
@@ -37,22 +21,30 @@ class AssetGroup
           init
         endIf
       endTemporarily
+      }#
+
+    method configure_id
+      if (not id)
+        id = GroupIDManager.next_id
+
+        use file_letter = StringPool
+          .base26( id-1, file_letter )
+          filename = "TextureAtlas-$"(file_letter)
+        endUse
+      endIf
 
     method add( asset:Asset )
       assets.add( asset )
 
-    method base26( n:Int, builder:String )
-      if (n >= 26) base26( n/26, builder )
-      builder.print( ('A' + (n % 26))->Character )
-
     method build_texture_atlas
       pages = ImagePacker( this ).pack( assets )
+      (forEach in assets).update_placement_info
 
     method has_modified_assets->Logical
       if (assets.is_empty) return false
       if ((forEach in assets).is_modified) return true
-#trace atlases
-      if (atlases.is_empty) return true
+
+      if (filepaths.is_empty) return true
 
       return false
 
@@ -62,17 +54,24 @@ class AssetGroup
       return result
 
     method to->Variant
-      local result = @{ id, hash, filename, assets:[], placements:{}, pages:[] }
+      local result = @{ id, hash, filename, assets:[], pages:[] }
 
       local asset_filepaths = result//assets
-      local placements = result//placements
       forEach (asset in assets)
         asset_filepaths.add( asset.filepath )
-        placements[asset.filepath] = asset.placement_info
       endForEach
 
       local page_filepaths = result//pages
-      forEach (page in pages) page_filepaths.add( page.build_filepath )
+      if (pages)
+        forEach (page in pages) page_filepaths.add( page.build_filepath )
+      else
+        page_filepaths.add( forEach in filepaths )
+      endIf
 
       return result
+
+    method .base26( n:Int, builder:String )
+      if (n >= 26) .base26( n/26, builder )
+      builder.print( ('A' + (n % 26))->Character )
+
 endClass
