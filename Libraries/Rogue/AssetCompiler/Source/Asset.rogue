@@ -223,6 +223,11 @@ class Asset( filepath:String, rule:AssetRule )
         throw rule.t.error( "$ characters defined than specified. The variable-width font strip defines $ characters but the font rule specifies $ characters."(more_or_fewer,placements.count,font_characters.count) )
       endIf
 
+    method timestamp->Timestamp
+      local file = File( filepath )
+      if (file.exists) return file.timestamp
+      else             return Timestamp.now
+
     method to->String
       return filepath
 

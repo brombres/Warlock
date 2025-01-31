@@ -71,6 +71,9 @@ class AssetCompiler [singleton]
       load_asc
       # Second time to process those new files while loading.
 
+      local existing_textures = Set<<String>>()
+      existing_textures.add( forEach in File("Build/$/Assets/Textures"(platform)).listing )
+
       # Apply exclusion rules
       assets.discard( $.value.rule instanceOf ExcludedAssetRule )
 
@@ -124,6 +127,14 @@ class AssetCompiler [singleton]
       (forEach in assets).collect_texture_filepaths( textures )
       asset_info//textures = @[]
       asset_info//textures.add( forEach in textures )
+
+      block build_folder = "Build/$"(platform)
+        existing_textures.remove( build_folder / (forEach in textures) )
+        forEach (texture in existing_textures)
+          println "Removing $"(texture)
+          File( texture ).delete
+        endForEach
+      endBlock
 
       # Save asset info
       block

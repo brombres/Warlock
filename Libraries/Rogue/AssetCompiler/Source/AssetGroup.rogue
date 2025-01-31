@@ -46,7 +46,18 @@ class AssetGroup
 
       if (filepaths.is_empty) return true
 
+      localize newest_timestamp
+      forEach (filepath in filepaths)
+        local file = File(filepath)
+        if (not file.exists or file.timestamp < newest_timestamp) return true
+      endForEach
+
       return false
+
+    method newest_timestamp->Timestamp
+      local newest_timestamp = assets.first.timestamp
+      newest_timestamp .= or_newer( (forEach in assets from 1).timestamp )
+      return newest_timestamp
 
     method hash->Int
       local result = assets.count
