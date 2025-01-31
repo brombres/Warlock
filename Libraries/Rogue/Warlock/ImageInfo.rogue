@@ -1,0 +1,4 @@
+library Warlock
+
+class ImageInfo( texture_index:Int, bounds:Box ) [compound]
+endClass

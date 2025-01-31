@@ -245,7 +245,9 @@ class Asset( filepath:String, rule:AssetRule )
           manifest.print ''"$"''(filepath)
           manifest.print " font"
           manifest.print " $"(font_height)
-          manifest.print '' "$"''(Variant(font_characters)->JSON.to_escaped_unicode("\""))
+          if (font_width == -1) manifest.print " variable"
+          else                  manifest.print " $"(font_width)
+          manifest.print '' "$"''(font_characters.to_escaped_unicode("\""))
           manifest.println
           write_placements( manifest )
       endWhich

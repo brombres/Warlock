@@ -2,6 +2,8 @@ library Warlock
 
 nativeHeader @|#include "WarlockInterface.h"
 
+$include Warlock/AssetInfo
+$include Warlock/AssetManifest
 $include Warlock/BitmapIO
 $include Warlock/Box
 $include Warlock/Macros
@@ -12,7 +14,9 @@ $include Warlock/RendererBatch
 $include Warlock/Framework
 $include Warlock/IDGenerator
 $include Warlock/Image
+$include Warlock/ImageInfo
 $include Warlock/Line
+$include Warlock/Log
 $include Warlock/MeshBuilder
 $include Warlock/ProjectionMode
 $include Warlock/Renderer
@@ -174,6 +178,8 @@ class Warlock [essential singleton]
       else          return null
 
     method on_configure
+      AssetManifest.load
+
       if (windows.is_empty)
         Window( "Warlock", 640, 360 )
       endIf
