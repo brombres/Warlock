@@ -1,0 +1,48 @@
+library Warlock
+
+class TextureImage : Image
+  PROPERTIES
+    image_info : ImageInfo
+    texture    : Texture
+
+  METHODS
+    method init( texture )
+      internal_size = texture.size
+      size = internal_size
+
+    method init( image_info )
+      internal_size = image_info.bounds.size
+      size          = internal_size
+
+    method init( asset_name )
+      asset = AssetManager.image_lookup[asset_name]
+      if (asset)
+        init( asset.images.first )
+      endIf
+
+    method .inner_draw [override]
+      local is_fg = attributes.fg
+
+      if (not is_fg)
+        if (texture)        Renderer.fill( Box(internal_size), texture, color )
+        elseIf (color.argb) Renderer.fill( Box(internal_size), color )
+      endIf
+
+      on_draw
+
+      if (count)
+        (forEach as Drawable2D in children).draw
+      endIf
+
+      if (is_fg)
+        if (texture)        Renderer.fill( Box(internal_size), texture, color )
+        elseIf (color.argb) Renderer.fill( Box(internal_size), color )
+      endIf
+
+      on_end_draw
+
+    method .prepare [override]
+      if (not texture)
+        texture = image_info.texture  # actually loads texture if necessary
+      endIf
+endClass

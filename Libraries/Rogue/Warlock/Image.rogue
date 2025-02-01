@@ -1,20 +1,22 @@
 library Warlock
 
 class Image : Drawable2D
+  GLOBAL METHODS
+    method create( name:String )->Image
+      return TextureImage( name )
+
   PROPERTIES
-    texture : Texture
+    asset_name : String
+    asset      : AssetInfo
 
   METHODS
-    method init( internal_size, color=Color.WHITE )
-      size = internal_size
-
-    method init( texture )
-      internal_size = texture.size
-      size = internal_size
+    method init( size, color=Color.WHITE )
+      internal_size = size
 
     method draw( position:XY ) [override]
       use Display.transform_stack
         Display.push_transform( Matrix.transform(XYZ(position,z),size,anchor,rotation,internal_size) )
+        .prepare
         .inner_draw
       endUse
 
@@ -28,8 +30,7 @@ class Image : Drawable2D
       local is_fg = attributes.fg
 
       if (not is_fg)
-        if (texture)        Renderer.fill( Box(internal_size), texture, color )
-        elseIf (color.argb) Renderer.fill( Box(internal_size), color )
+        if (color.argb) Renderer.fill( Box(internal_size), color )
       endIf
 
       on_draw
@@ -39,9 +40,11 @@ class Image : Drawable2D
       endIf
 
       if (is_fg)
-        if (texture)        Renderer.fill( Box(internal_size), texture, color )
-        elseIf (color.argb) Renderer.fill( Box(internal_size), color )
+        if (color.argb) Renderer.fill( Box(internal_size), color )
       endIf
 
       on_end_draw
+
+    method .prepare
+      noAction
 endClass

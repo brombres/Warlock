@@ -3,7 +3,7 @@ library Warlock
 nativeHeader @|#include "WarlockInterface.h"
 
 $include Warlock/AssetInfo
-$include Warlock/AssetManifest
+$include Warlock/AssetManager
 $include Warlock/BitmapIO
 $include Warlock/Box
 $include Warlock/Macros
@@ -25,6 +25,7 @@ $include Warlock/SceneState
 $include Warlock/Shader
 $include Warlock/State
 $include Warlock/Texture
+$include Warlock/TextureImage
 $include Warlock/Triangle
 $include Warlock/UpdateRegulator
 $include Warlock/Vertex
@@ -44,19 +45,16 @@ State = State() subclass
   PROPERTIES
     angle   : Degrees
     image   : Image
-    child   : Image
+    #child   : Image
     timer   = Timer()
 
   METHODS
     method on_start
-      if local file = Warlock.find_asset( "Assets/Images/Hannah-and-Burf.jpg" )
-        #if local file = Warlock.find_asset( "Assets/Images/123.png" )
-        local texture = Texture( Texture(file) )
-        image = Image( texture )
-        child = Image(XY(256,256),Color.YELLOW).[position=XY(128,128)]
-        child.add( Image(texture).[size=XY(120,120), position=XY(128,128)] )
-        image.add( child )
-      endIf
+      image = Image( "Red.png" )
+      #child = Image(XY(256,256),Color.YELLOW).[position=XY(128,128)]
+      #child.add( Image(texture).[size=XY(120,120), position=XY(128,128)] )
+      #image.add( child )
+
       Display.clear( Color.BLUE )
 
     method on_draw
@@ -76,7 +74,7 @@ State = State() subclass
       image.rotation = angle
       image.draw( Display.center )
       angle += 1
-      child.rotation += Degrees(1.5)
+      #child.rotation += Degrees(1.5)
 
       Line(  1, 0, 1, Display.height ).draw( Color(0xFF88FF88) )
       Line(  3, 0, 3, Display.height ).draw( Color(0xFF88FF88) )
@@ -112,6 +110,7 @@ class Warlock [essential singleton]
   PROPERTIES
     configured     : Logical
     windows        = Window[]
+    textures       = [File:Texture]
 
     update_regulator = UpdateRegulator()
     dt               : Real     # Delta Time - seconds since previous frame (may be 0.0)
@@ -178,7 +177,7 @@ class Warlock [essential singleton]
       else          return null
 
     method on_configure
-      AssetManifest.load
+      AssetManager.load
 
       if (windows.is_empty)
         Window( "Warlock", 640, 360 )

@@ -17,12 +17,18 @@ class Texture
       endIf
 
     method create( file:File )->Texture
+      if local cached = Warlock.textures[file]
+        return cached
+      endIf
+
       if (not file.exists)
         Global.error.println "File not found: " + file
         return Texture()
       endIf
-      return Texture( Bitmap(file) )
 
+      local texture = Texture( Bitmap(file) )
+      Warlock.textures[file] = texture
+      return texture
 
   METHODS
     method init
