@@ -158,6 +158,9 @@ class Display [singleton]
       object_transforms.clear
       should_clear_color = false
 
+    method safe_area->Box
+      return bounds
+
     method set_perspective_center( new_center:XY )
       if (perspective_center != new_center)
         @perspective_center = new_center

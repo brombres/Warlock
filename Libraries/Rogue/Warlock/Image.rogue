@@ -6,8 +6,8 @@ class Image : Drawable2D
       return TextureImage( name )
 
   PROPERTIES
-    asset_name : String
-    asset      : AssetInfo
+    asset   : AssetInfo
+    opacity = 1.0
 
   METHODS
     method init( size, color=Color.WHITE )

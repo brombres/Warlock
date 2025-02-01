@@ -5,11 +5,13 @@ class AssetManager [singleton]
     scanner           : Scanner
     texture_filepaths = String[]
     assets            = [String:AssetInfo]
-    image_lookup      = [String:AssetInfo]
-    font_lookup       = [String:AssetInfo]
+    is_loaded         : Logical
 
   METHODS
     method load
+      if (is_loaded) return
+      is_loaded = true
+
       if local file = Warlock.find_asset( "Assets/AssetManifest.txt" )
         Log.println "Loading AssetManifest.txt"
         scanner = Scanner( file )
@@ -18,13 +20,64 @@ class AssetManager [singleton]
         while (.load_another_asset)
           noAction
         endWhile
-        .create_lookup_tables
         Log.println "# asset".pluralized(assets.count)
       else
         Global.error.println "[ERROR] Assets/AssetManifest.txt is missing."
       endIf
 
+    method find_font( name:String )->AssetInfo
+      load
+      use work_name = StringPool
+        if (not name.begins_with("Assets/"))
+          work_name.print "Assets/"
+          if (not name.begins_with("Graphics/"))
+            work_name.print "Graphics/"
+            if (not name.begins_with("Fonts/"))
+              work_name.print "Fonts/"
+            endIf
+          endIf
+        endIf
+        work_name.print name
+
+        return find_asset( work_name )
+      endUse
+
+    method find_image( name:String )->AssetInfo
+      load
+      use work_name = StringPool
+        if (not name.begins_with("Assets/"))
+          work_name.print "Assets/"
+          if (not name.begins_with("Graphics/"))
+            work_name.print "Graphics/"
+          endIf
+        endIf
+        work_name.print name
+
+        return find_asset( work_name )
+      endUse
+
+    method find_asset( name:String )->AssetInfo
+      load
+      use candidates = WorkList<<AssetInfo>>
+        forEach (asset in assets.values)
+          if (asset.filepath.begins_with(name)) candidates.add( asset )
+        endForEach
+
+        if (candidates.count)
+          # Pick the candidate with the shortest filepath, e.g. "Alpha" matches
+          # "Alpha.png" before "AlphaBravo.png".
+          local min_length = candidates.first.filepath.count
+          min_length .= or_smaller( (forEach in candidates from 1).filepath.count )
+          forEach (candidate in candidates)
+            if (candidate.filepath.count == min_length) return candidate
+          endForEach
+        endIf
+
+        return null
+      endUse
+
     method get( name:String )->AssetInfo
+      load
       return assets[name]
 
     method .consume_ws( &eols )
@@ -37,47 +90,6 @@ class AssetManager [singleton]
         endIf
         return
       endLoop
-
-    method .create_lookup_tables
-      forEach (asset in assets)
-        local filepath = asset.filepath
-        which (asset.type)
-          case <Image>
-            image_lookup[filepath] = asset
-            image_lookup[File(filepath).without_extension] = asset
-
-            filepath = filepath.after_first("Assets/")
-            image_lookup[filepath] = asset
-            image_lookup[File(filepath).without_extension] = asset
-
-            if (filepath.begins_with("Graphics/"))
-              filepath = filepath.after_first("Graphics/")
-              image_lookup[filepath] = asset
-              image_lookup[File(filepath).without_extension] = asset
-            endIf
-
-          case <Font>
-            font_lookup[filepath] = asset
-            font_lookup[File(filepath).without_extension] = asset
-
-            filepath = filepath.after_first("Assets/")
-            font_lookup[filepath] = asset
-            font_lookup[File(filepath).without_extension] = asset
-
-            if (filepath.begins_with("Graphics/"))
-              filepath = filepath.after_first("Graphics/")
-              font_lookup[filepath] = asset
-              font_lookup[File(filepath).without_extension] = asset
-            endIf
-
-            if (filepath.begins_with("Font/"))
-              filepath = filepath.after_first("Font/")
-              font_lookup[filepath] = asset
-              font_lookup[File(filepath).without_extension] = asset
-            endIf
-
-        endWhich
-      endForEach
 
     method .load_texture_filepaths
       texture_filepaths.clear
@@ -117,7 +129,7 @@ class AssetManager [singleton]
       .consume_ws
       asset.font_height = scanner.scan_int
       .consume_ws
-      if (scanner.consume_identifier("variable")) asset.font_width = -1
+      if (scanner.consume_identifier("variable")) asset.font_width = 0
       else                                        asset.font_width = scanner.scan_int
       .consume_ws
       asset.font_characters = scanner.scan_string

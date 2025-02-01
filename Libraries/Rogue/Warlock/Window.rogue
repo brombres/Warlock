@@ -26,6 +26,7 @@ class Window : Display
       State.current.on_draw
       prior.render
       State.current.on_end_draw
+      OverlayLog.draw
       Renderer.on_end_render( this )
 
 endClass

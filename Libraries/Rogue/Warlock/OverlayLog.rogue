@@ -1,0 +1,65 @@
+library Warlock
+
+class OverlayLog : BufferedPrintWriter<<output_buffer>> [essential singleton]
+  PROPERTIES
+    font  = Font( "Font-System-17" )
+    lines = String[]
+    timer = Timer(6.0)  # time until lines removed
+    max_lines = 20 : Int?
+
+  METHODS
+    method init
+      Global.output = this
+
+    method clear
+      lines.clear
+
+    method draw
+      if (not lines.count) return
+      #if (not lines.count and not Plasmacore.show_fps) return
+
+      #Display.push_clip( null )
+
+      local max = Display.height / font.height
+      if (max_lines.exists and max_lines.value < max) max = max_lines.value
+      while (lines.count > max) lines.remove_first
+
+      font.scale = (Display.size.max / 800.0).or_larger(1.0)
+      font.color = Color.WHITE
+      font.anchor = Anchor.TOP_LEFT
+
+      local y = Display.safe_area.position.y
+
+      #if (Plasmacore.show_fps)
+      #  font.draw( "fps:$" (Plasmacore.fps), XY(0,0) )
+      #  y += font.height
+      #endIf
+
+      font.opacity = timer.remaining.clamped( 0, 1.0 )
+
+      forEach (line in lines)
+        font.draw( line, XY(0,y) )
+        y += font.height
+      endForEach
+
+      font.color = Color.WHITE
+
+      #Display.pop_clip
+
+    method flush( buffer:String )
+      if (buffer.count == 0) return # flush operation
+
+      timer.restart
+      Console.write( buffer )  # echo the message to the console
+      if (buffer.contains('\n'))
+        forEach (line in LineReader(buffer->String)) lines.add( line )
+      else
+        lines.add( buffer->String )
+      endIf
+      buffer.clear
+
+    method update
+      if (timer.is_expired) lines.clear
+
+endClass
+

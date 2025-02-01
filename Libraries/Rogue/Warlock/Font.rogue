@@ -1,0 +1,720 @@
+library Warlock
+
+class Font
+  PROPERTIES
+    asset_name         : String
+    asset              : AssetInfo
+    internal_height    : Int
+    scale              = XY(1,1)
+    fixed_width        : Int
+    ascii_characters   : FontCharacter[]
+    character_lookup   : [Character:FontCharacter]
+    anchor             = Anchor.TOP_LEFT : Anchor
+    color              = Color.WHITE : Color
+    opacity            = 1.0
+
+    error              : String
+    spacing_adjustment = 0
+    snap               : Logical
+
+  METHODS
+    method init( asset_name, snap=false, &snug )
+      asset = AssetManager.find_font( asset_name )
+      if (asset)
+        internal_height = asset.font_height
+        fixed_width     = asset.font_width
+
+        ascii_characters = Dim<<FontCharacter>>( 128 )
+        ensure<<character_lookup>>
+        forEach (unicode at i in asset.font_characters)
+          local font_ch = FontCharacter( asset, i, unicode )
+          if (unicode < 128) ascii_characters[unicode] = font_ch
+          character_lookup[unicode] = font_ch
+        endForEach
+      else
+        error = "No such font: " + asset_name
+        Global.error.println error
+      endIf
+
+      if (snug) spacing_adjustment = -1
+
+    method character( unicode:Character )->FontCharacter
+      if (error) return null
+      if (unicode <= 127) return ascii_characters[ unicode ]
+      return character_lookup[ unicode ]
+
+    method draw( text:String, position:XY  )
+      position = position - Box(measure(text)).at( anchor ).yv
+
+      if (text.contains('\n'))
+        local h = internal_height * scale.y
+        use buffer = StringPool
+          forEach (ch in text)
+            if (ch == '\n')
+              draw_line( buffer, position )
+              buffer.clear
+              position += XY( 0, h )
+            else
+              buffer.print( ch )
+            endIf
+          endForEach
+          if (buffer.count) draw_line( buffer, position )
+        endUse
+      else
+        draw_line( text, position )
+      endIf
+
+    method draw_line( text:String, position:XY  )
+      local cursor = position - Box(measure(text)).at( anchor ).xv
+      if (snap) cursor = cursor.floor
+      forEach (ch in text)
+        local font_ch = character( ch )
+        if (font_ch)
+          local image = font_ch.image
+          image.size = font_ch.size * scale
+          image.color = color.with_opacity( opacity )
+          #image.shader = shader  # if null, default is used
+          #image.render_mode = font.render_mode  # if null, default is used
+          image.position = cursor + font_ch.offset
+          image.opacity = opacity
+          image.draw
+          cursor += font_ch.advance * scale + XY(spacing_adjustment,0) * scale
+        endIf
+      endForEach
+
+    method height->Real
+      return internal_height * scale.y
+
+    method measure( text:String, i1=null:Int?, i2=null:Int? )->XY
+      if (error) return XY.zero
+
+      local line_height = height
+      if (snap) line_height = line_height.floor
+
+      local max_w = 0.0
+      local w = 0.0
+      local h = 0.0
+      local cur_h = 0.0
+      local max_i2 = text.count - 1
+      if (i1) i1 = i1.value.clamped(0,max_i2)
+      else    i1 = 0
+      if (i2) i2 = i2.value.clamped(i1.value,max_i2)
+      else    i2 = max_i2
+
+      local prev_advance : Int
+      local prev_width   : Int
+
+      if (fixed_width)
+        forEach (index in i1.value..i2.value)
+          local unicode = text[index]
+          cur_h = line_height
+          if (unicode == '\n')
+            max_w = max_w.or_larger( (w-prev_advance)+prev_width )
+            w = 0.0
+            h += cur_h
+            cur_h = 0.0
+            prev_advance = 0
+            prev_width = 0
+          else
+            prev_advance = fixed_width
+            prev_width   = fixed_width
+            w += prev_advance + spacing_adjustment
+          endIf
+        endForEach
+      else
+        forEach (index in i1.value..i2.value)
+          local unicode = text[index]
+          cur_h = line_height
+          if (unicode == '\n')
+            max_w = max_w.or_larger( (w-prev_advance)+prev_width )
+            w = 0.0
+            h += cur_h
+            cur_h = 0.0
+            prev_advance = 0
+            prev_width = 0
+          else
+            local ch = character( unicode )
+            if (ch)
+              prev_advance = ch.advance.x
+              prev_width   = ch.size.x
+              w += prev_advance + spacing_adjustment
+            endIf
+          endIf
+        endForEach
+      endIf
+
+      max_w = max_w.or_larger( (w-prev_advance)+prev_width )
+      h += cur_h
+
+      return XY( max_w*scale.x, h )
+
+    method set_height( new_height:Real )
+      @scale = XY( new_height / internal_height )
+
+    method set_scale( new_scale:Real )
+      @scale = XY( scale )
+
+    method set_scale( @scale )
+endClass
+
+class FontCharacter
+  PROPERTIES
+    unicode    : Character
+    image      : Image
+
+    size       : XY
+    offset     : XY  # Added to cursor during draw
+    advance    : XY  # Added to cursor after drawing
+
+  METHODS
+    method init( asset:AssetInfo, image_index:Int, unicode )
+      image = TextureImage( asset, image_index )
+      image.anchor = Anchor.TOP_LEFT
+      size = image.size
+      advance = size.xv
+endClass
+
+#{
+class Font
+  PROPERTIES
+    name           : String
+    image_info     : ImageInfo
+
+    data           : FontData
+    options        : @{}
+    snap           : Logical
+
+    anchor         = Anchor.CENTER : Anchor
+    scale          = XY(1,1)
+    spacing_adjustment = 0  # Added to each character's 'advance' (usually the width) to position the next character
+
+    color          = Color.WHITE : Color
+    opacity        = 1.0
+    shader         : Shader      # leave null to use default
+    #render_mode   : RenderMode  # leave null to use default
+
+  METHODS
+    method init( name, options=@{} )
+      data = FontData( name )
+      if (data.snap) snap = true
+      if (data.snug) spacing_adjustment = -1
+
+    method cloned->Font
+      local result = Font( name, options )
+      result.image_info = image_info
+      result.data = data
+      result.snap = snap
+      result.anchor = anchor
+      result.scale = scale
+      result.spacing_adjustment = spacing_adjustment
+      result.color = color
+      result.opacity = opacity
+      result.shader = shader
+      #result.render_mode = render_mode
+      return result
+
+    method load->this
+      data.load
+      return this
+
+    method draw( text:String, position:XY, max_width=null:Real64? )
+      local original_scale : XY?
+
+      if (max_width.exists)
+        local cur_w = measure( text ).x
+        if (cur_w > max_width.value)
+          original_scale = scale
+          scale = XY( max_width.value / cur_w, 1 ) * original_scale.value
+        endIf
+      endIf
+
+      data.draw( this, text, position )
+
+      if (original_scale.exists) scale = original_scale.value
+
+    method draw( text:StringBuilder, position:XY, max_width=null:Real64? )
+      local original_scale : XY?
+
+      if (max_width.exists)
+        local cur_w = measure( text ).x
+        if (cur_w > max_width.value)
+          original_scale = scale
+          scale = XY( max_width.value / cur_w, 1 ) * original_scale.value
+        endIf
+      endIf
+
+      data.draw( this, text, position )
+
+      if (original_scale.exists) scale = original_scale.value
+
+    method draw( text:String, box:Box, max_width=null:Real64? )
+      draw( text, box.at(anchor), max_width )
+
+    method draw( text:StringBuilder, box:Box, max_width=null:Real64? )
+      draw( text, box.at(anchor), max_width )
+
+    method exists->Logical
+      return data.exists
+
+    method get( ch:Character )->FontCharacter
+      return data[ ch ]
+
+    method height->Real64
+      return data.height * scale.y
+
+    method is_loaded->Logical
+      return data.is_loaded
+
+    method make_numerals_monospace
+      data.make_numerals_monospace
+
+    method reload
+      data = data.reload
+
+    method set_anchor( @anchor )->this
+      return this
+
+    method set_color( @color )->this
+      return this
+
+    method set_options( @options )->this
+      if (options.contains("anchor")) anchor = Anchor( options//anchor )
+      snap = options//snap->Logical
+      if (options//snug->Logical) spacing_adjustment = -1
+      if (options.contains("scale")) scale = XY( options//scale )
+
+      return this
+
+    method measure( text:String, i1=null:Int32?, i2=null:Int32? )->XY
+      return data.measure( this, text, i1, i2 )
+
+    method measure( text:StringBuilder, i1=null:Int32?, i2=null:Int32? )->XY
+      return data.measure( this, text, i1, i2 )
+
+    method measure( ch:Character )->XY
+      local result = data.measure( this, ch ) * scale
+      return result
+
+    method set_height( h:Real64 )
+      set_scale( h / data.height )
+
+    method set_scale( s:Real64 )->this
+      @scale = XY( s, s )
+      return this
+
+    method set_scale( @scale )->this
+      return this
+
+    method word_wrap( st:String, pixel_width:Int32 )->String[]
+     # Returns a word-wrapped version of the given string as a list of lines.
+      # Existing newlines characters will cause a new line to begin
+      # immediately. Spaces immediately following existing newline characters
+      # are preserved.
+      return word_wrap( st, pixel_width, StringBuilder() )->String.split('\n')
+
+    method word_wrap( st:String, pixel_width:Int32, buffer:StringBuilder )->StringBuilder
+      # Prints a word-wrapped version of the given string into the specified
+      # StringBuilder. Existing newline characters will cause a new line to
+      # begin immediately. Spaces immediately following existing newline
+      # characters are preserved.
+      local i1, i2 : Int32
+      local len = st.count
+      local w = 0.0
+
+      if (st == "" or pixel_width <= 0) return buffer
+
+      local needs_newline = false
+      local starting_i2 = i2
+      while (i2 < len)
+        starting_i2 = i2
+
+        # find last space or first \n
+        while (w <= pixel_width and i2 < len and st[i2] != '\n')
+          local char_w = measure( st, i2, i2 ).x
+          w += char_w
+          i2++
+        endWhile
+
+        local initial_i2 = i2
+
+        if (w > pixel_width)
+          --i2
+          while (st[i2]!=' ' and st[i2]!='\n' and i2>i1) i2--
+          if (i2 == i1) i2 = initial_i2 - 1
+        endIf
+
+        if (needs_newline) buffer.println
+        forEach (i in i1..<i2) buffer.print( st[i] )
+        needs_newline = true
+        w = 0
+
+        if (i2 == len)
+          return buffer
+        else
+          which (st[i2])
+            case ' ':
+              while (i2<len and st[i2]==' ') i2++
+              if (i2<len and st[i2]=='\n') i2++
+
+            case '\n':
+              i2++
+          endWhich
+          i1 = i2
+        endIf
+
+        if (starting_i2 == i2) return buffer  # Kludge/error
+
+      endWhile
+
+      return buffer
+
+    method unload
+      data.unload
+
+
+endClass
+
+class FontLoaders [singleton]
+  PROPERTIES
+    loaders = StringTable<<(Function(String)->FontData)>>()
+
+  METHODS
+    method init
+      this[ "SystemFont" ] = (function(name) => SystemFontData())
+      this[ "DefaultFont" ] = (function(name) => DefaultFontData())
+
+    method get( name:String )->(Function(String)->FontData)
+      return loaders[ name ]
+
+    method set( name:String, loader:Function(String)->FontData )->this
+      loaders[ name ] = loader
+      return this
+endClass
+
+class FontData
+  PROPERTIES
+    name             : String
+    image_info       : ImageInfo
+    exists           : Logical
+    is_loaded        : Logical
+    height           : Int32
+    characters       = FontCharacter[]( 128, null )  # first 128 are in correct slots, additional in any order
+    character_lookup = Table<<Character,FontCharacter>>()
+    snap, snug       : Logical
+    work_buffer      : StringBuilder
+
+  GLOBAL METHODS
+    method create( name:String )->FontData
+      local entry = Display.font_data_by_name.find( name )
+      if (entry) return entry.value
+
+      local loader = FontLoaders[ name ]
+      local font_data = which{ loader:loader(name) || FontData(name, Plasmacore.find_image_info(name)) }
+      Display.font_data_by_name[ name ] = font_data
+
+      return font_data
+
+  METHODS
+    method init( name, image_info )
+      if (image_info)
+        require (image_info.type == ImageInfo.TYPE_FONT)
+        if (image_info.snap) snap = true
+        forEach (character_info in image_info.images)
+          local ch = FontCharacter( character_info.unicode, TextureImage(character_info) )
+          height = height.or_larger( ch.image.size.y )
+          require (ch.unicode >= 0)
+          if (ch.unicode < 128)
+            characters[ ch.unicode ] = ch
+          else
+            characters.add( ch )
+          endIf
+          character_lookup[ ch.unicode ] = ch
+        endForEach
+        if (image_info.spacing)
+          local spacing = image_info.spacing
+          if (spacing//before)
+            forEach (pair in spacing//before)
+              local spec = pair->String
+              local offset = spec.before_first( ':' )->Int32
+              spec = spec.after_first( ':' )
+              if (spec.count)
+                # Apply to specified characters
+                forEach (ch in spec)
+                  local info = this[ ch ]
+                  if (info) info.offset += XY(offset,0); info.advance += XY(offset,0)
+                endForEach
+              else
+                # Apply to all characters
+                forEach (info in characters)
+                  if (info) info.offset += XY(offset,0); info.advance += XY(offset,0)
+                endForEach
+              endIf
+            endForEach
+          endIf
+          if (spacing//after)
+            forEach (pair in spacing//after)
+              local spec = pair->String
+              local offset = spec.before_first( ':' )->Int32
+              spec = spec.after_first( ':' )
+              if (spec.count)
+                # Apply to specified characters
+                forEach (ch in spec)
+                  local info = this[ ch ]
+                  if (info) info.advance += XY(offset,0)
+                endForEach
+              else
+                # Apply to all characters
+                forEach (info in characters)
+                  if (info) info.advance += XY(offset,0)
+                endForEach
+              endIf
+            endForEach
+          endIf
+        endIf
+        exists = true
+      endIf
+
+    method draw( font:Font, text:String, position:XY  )
+      load
+
+      position = position - Box(font.measure(text)).at( font.anchor ).yv
+
+      if (text.contains('\n'))
+        local h = height * font.scale.y
+        ensure work_buffer
+        work_buffer.clear
+        forEach (ch in text)
+          if (ch == '\n')
+            draw_line( font, work_buffer, position )
+            work_buffer.clear
+            position += XY(0,h)
+          else
+            work_buffer.print( ch )
+          endIf
+        endForEach
+        if (work_buffer.count) draw_line( font, work_buffer, position )
+      else
+        draw_line( font, text, position )
+      endIf
+
+    method draw( font:Font, text:StringBuilder, position:XY  )
+      load
+
+      position = position - Box(font.measure(text)).at( font.anchor ).yv
+
+      if (text.contains('\n'))
+        local h = height * font.scale.y
+        ensure work_buffer
+        work_buffer.clear
+        forEach (ch in text)
+          if (ch == '\n')
+            draw_line( font, work_buffer, position )
+            work_buffer.clear
+            position += XY(0,h)
+          else
+            work_buffer.print( ch )
+          endIf
+        endForEach
+        if (work_buffer.count) draw_line( font, work_buffer, position )
+      else
+        draw_line( font, text, position )
+      endIf
+
+    method draw_line( font:Font, text:String, position:XY  )
+      local cursor = position - Box(font.measure(text)).at( font.anchor ).xv
+      if (font.snap) cursor = cursor.floor
+      forEach (ch in text)
+        local font_ch = this[ ch ]
+        if (font_ch)
+          local image = font_ch.image
+          image.size = font_ch.size * font.scale
+          image.color = font.color.with_opacity( font.opacity )
+          image.shader = font.shader  # if null, default is used
+          #image.render_mode = font.render_mode  # if null, default is used
+          image.position = cursor + font_ch.offset
+          image.opacity = font.opacity
+          image.draw
+          cursor += font_ch.advance * font.scale + XY(font.spacing_adjustment,0) * font.scale
+        endIf
+      endForEach
+
+    method draw_line( font:Font, text:StringBuilder, position:XY  )
+      local cursor = position - Box(font.measure(text)).at( font.anchor ).xv
+      if (font.snap) cursor = cursor.floor
+      forEach (ch in text)
+        local font_ch = this[ ch ]
+        if (font_ch)
+          local image = font_ch.image
+          image.size = font_ch.size * font.scale
+          image.color = font.color.with_opacity( font.opacity )
+          image.shader = font.shader  # if null, default is used
+          #image.render_mode = font.render_mode  # if null, default is used
+          image.position = cursor + font_ch.offset
+          image.opacity = font.opacity
+          image.draw
+          cursor += font_ch.advance * font.scale + XY(font.spacing_adjustment,0) * font.scale
+        endIf
+      endForEach
+
+    method get( unicode:Character )->FontCharacter
+      if (unicode >= 0 and unicode <= 127) return characters[ unicode ]
+      return character_lookup[ unicode ]
+
+    method load
+      if (is_loaded) return
+
+      is_loaded = true
+      forEach (ch in characters)
+        if (ch)
+          ch.image.load
+          ch.image.anchor = Anchor.TOP_LEFT
+        endIf
+      endForEach
+
+    method make_numerals_monospace
+      local info = this['0']
+      if (not info) return
+      local max_w = Int32( info.advance.x )
+      forEach (ch in '1'..'9')
+        info = this[ch]
+        if (not info) return
+        max_w = max_w.or_larger( info.advance.x )
+      endForEach
+      forEach (ch in '0'..'9')
+        info = this[ch]
+        local padding = max_w - Int32( info.advance.x )
+        info.offset  = XY( info.offset.x + padding/2, info.offset.y )
+        info.advance = XY( max_w, info.advance.y )
+      endForEach
+
+    method measure( font:Font, text:String, i1=null:Int32?, i2=null:Int32? )->XY
+      local line_height = font.height
+      if (font.snap) line_height = line_height.floor
+
+      local max_w = 0.0
+      local w = 0.0
+      local h = 0.0
+      local cur_h = 0.0
+      local max_i2 = text.count - 1
+      if (i1) i1 = i1.value.clamped(0,max_i2)
+      if (i2) i2 = i2.value.clamped(0,max_i2)
+
+      local prev_advance : Int32
+      local prev_width   : Int32
+      forEach (index in which{i1||0}..which{i2||max_i2})
+        local ch = text[index]
+        cur_h = line_height
+        if (ch == '\n')
+          max_w = max_w.or_larger( (w-prev_advance)+prev_width )
+          w = 0.0
+          h += cur_h
+          cur_h = 0.0
+          prev_advance = 0
+          prev_width = 0
+        else
+          local info = this[ ch ]
+          if (info)
+            prev_advance = info.advance.x
+            prev_width   = info.size.x
+            w += prev_advance + font.spacing_adjustment
+          endIf
+        endIf
+      endForEach
+
+      max_w = max_w.or_larger( (w-prev_advance)+prev_width )
+      h += cur_h
+
+      return XY( max_w*font.scale.x, h )
+
+    method measure( font:Font, text:StringBuilder, i1=null:Int32?, i2=null:Int32? )->XY
+      local line_height = font.height
+      if (font.snap) line_height = line_height.floor
+
+      local max_w = 0.0
+      local w = 0.0
+      local h = 0.0
+      local cur_h = 0.0
+      local max_i2 = text.count - 1
+      if (i1) i1 = i1.value.clamped(0,max_i2)
+      if (i2) i2 = i2.value.clamped(0,max_i2)
+
+      local prev_advance : Int32
+      local prev_width   : Int32
+      forEach (index in which{i1||0}..which{i2||max_i2})
+        local ch = text[index]
+        cur_h = line_height
+        if (ch == '\n')
+          max_w = max_w.or_larger( (w-prev_advance)+prev_width )
+          w = 0.0
+          h += cur_h
+          cur_h = 0.0
+          prev_advance = 0
+          prev_width = 0
+        else
+          local info = this[ ch ]
+          if (info)
+            prev_advance = info.advance.x
+            prev_width = info.size.x
+            w += prev_advance + font.spacing_adjustment
+          endIf
+        endIf
+      endForEach
+
+      max_w = max_w.or_larger( (w-prev_advance)+prev_width )
+      h += cur_h
+      return XY( max_w*font.scale.x, h )
+
+    method measure( font:Font, ch:Character )->XY
+      if (ch == '\n') return XY(0,height)
+      local info = this[ ch ]
+      if (not info) return XY(0,0)
+      local result = info.size.xv
+      return result + XY(font.spacing_adjustment,height)
+
+    method reload->FontData
+      if (name and image_info)
+        local new_image_info = Plasmacore.find_image_info( name )
+        if (new_image_info is not image_info)
+          Display.font_data_by_name.remove( name )
+          return FontData( name )
+        endIf
+      endIf
+
+      return this
+
+    method unload
+      if (not is_loaded) return
+      is_loaded = false
+      forEach (ch in characters)
+        if (ch)
+          ch.image.unload
+        endIf
+      endForEach
+
+endClass
+
+
+class FontCharacter
+  PROPERTIES
+    unicode   : Character
+    image     : Image
+
+    size      : XY
+    offset    : XY  # Added to cursor during draw
+    advance   : XY  # Added to cursor after drawing
+
+  METHODS
+    method init( unicode, image )
+      size    = image.size
+      advance = size.xv
+
+    method init( unicode, size )
+      advance = size.xv
+
+    method height->Int32 [macro]
+      return Int32(size.y)
+
+    method width->Int32 [macro]
+      return Int32(size.x)
+endClass
+}#

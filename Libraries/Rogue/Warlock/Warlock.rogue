@@ -11,6 +11,7 @@ $include Warlock/Display
 $include Warlock/DisplayState
 $include Warlock/Drawable2D
 $include Warlock/RendererBatch
+$include Warlock/Font
 $include Warlock/Framework
 $include Warlock/IDGenerator
 $include Warlock/Image
@@ -18,6 +19,7 @@ $include Warlock/ImageInfo
 $include Warlock/Line
 $include Warlock/Log
 $include Warlock/MeshBuilder
+$include Warlock/OverlayLog
 $include Warlock/ProjectionMode
 $include Warlock/Renderer
 $include Warlock/Scene
@@ -47,10 +49,13 @@ State = State() subclass
     image   : Image
     #child   : Image
     timer   = Timer()
+    #font    : Font
 
   METHODS
     method on_start
       image = Image( "Red.png" )
+      #font = Font( "Font-System-17" )
+      #trace font.measure("Warlock")
       #child = Image(XY(256,256),Color.YELLOW).[position=XY(128,128)]
       #child.add( Image(texture).[size=XY(120,120), position=XY(128,128)] )
       #image.add( child )
@@ -85,8 +90,10 @@ State = State() subclass
       Line( 13, 0,13, Display.height ).draw( Color(0xFF88FF88) )
       Line( 15, 0,15, Display.height ).draw( Color(0xFF88FF88) )
 
+      #font.draw( "Warlock", XY.zero )
+
     method on( e:KeyEvent )
-      trace e
+      println e
 
 endSubclass
 
@@ -104,6 +111,7 @@ class Warlock [essential singleton]
 
       local keep_running = Framework.update_events
 
+      OverlayLog.update
       Warlock.render
       return keep_running
 
@@ -121,7 +129,8 @@ class Warlock [essential singleton]
 
   METHODS
     method init
-      println "Initializing Warlock"
+      OverlayLog
+      Log.println "Initializing Warlock"
       <Display.transform_modified>.on_signal( () => Renderer.flush )
 
     method add_window( window:Window )

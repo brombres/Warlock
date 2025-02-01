@@ -2,22 +2,24 @@ library Warlock
 
 class TextureImage : Image
   PROPERTIES
-    image_info : ImageInfo
-    texture    : Texture
+    texture     : Texture
+    image_index : Int
 
   METHODS
     method init( texture )
       internal_size = texture.size
       size = internal_size
 
-    method init( image_info )
-      internal_size = image_info.bounds.size
+    method init( asset, image_index )
+      internal_size = asset.images[image_index].bounds.size
       size          = internal_size
 
-    method init( asset_name )
-      asset = AssetManager.image_lookup[asset_name]
+    method init( asset_name:String )
+      local asset = AssetManager.find_image( asset_name )
       if (asset)
-        init( asset.images.first )
+        init( asset, 0 )
+      else
+        error.println "No such image: " + asset_name
       endIf
 
     method .inner_draw [override]
@@ -42,7 +44,7 @@ class TextureImage : Image
       on_end_draw
 
     method .prepare [override]
-      if (not texture)
-        texture = image_info.texture  # actually loads texture if necessary
+      if (not texture and asset)
+        texture = asset.images[image_index].texture  # actually loads texture if necessary
       endIf
 endClass

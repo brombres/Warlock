@@ -6,7 +6,7 @@ class AssetInfo
     type            : GlobalID
     images          : ImageInfo[]
     font_height     : Int
-    font_width      : Int  # -1 is variable-width
+    font_width      : Int  # 0 is variable-width
     font_characters : String
 
   METHODS

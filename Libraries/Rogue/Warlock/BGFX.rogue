@@ -124,7 +124,7 @@ class BGFX : Renderer [singleton]
        |  WarlockBGFXVertex* dest_data = (WarlockBGFXVertex*)($vertex_data->data);
        |  for (int i=(int)$data->vertices->count; --i>=0; )
        |  {
-       |    dest_data->x = (float) src_data->position.x;
+       |    dest_data->x = (float) src_data->position.x + 0.5f;
        |    dest_data->y = (float) src_data->position.y;
        |    dest_data->z = (float) src_data->position.z;
        |    dest_data->u = (float) src_data->uv.x;
