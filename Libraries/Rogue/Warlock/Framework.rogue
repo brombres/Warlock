@@ -25,7 +25,7 @@ class Framework [abstract singleton]
       return "No Framework selected. Include SDL to use the SDL framework."
 
     method print_error
-      Global.error.println this.error
+      println this.error
 
     method update_events->Logical
       # Returns false if the app should exit.

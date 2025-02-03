@@ -111,10 +111,10 @@ class AssetCompiler [singleton]
 
       (forEach in groups).configure_id
 
+      collect_asset_info
+
       local all_groups = groups.cloned
       groups.remove( not $.has_modified_assets )
-
-      collect_asset_info
 
       create_texture_atlases
 

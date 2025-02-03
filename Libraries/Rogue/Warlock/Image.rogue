@@ -10,7 +10,7 @@ class Image : Drawable2D
     opacity = 1.0
 
   METHODS
-    method init( size, color=Color.WHITE )
+    method init( size, color=Color(0) )
       internal_size = size
 
     method draw( position:XY ) [override]
@@ -23,28 +23,41 @@ class Image : Drawable2D
     method draw( bounds:Box ) [override]
       use Display.transform_stack
         Display.push_transform( Matrix.transform(XYZ(bounds.position,z),bounds.size/internal_size) )
+        .prepare
         .inner_draw
       endUse
 
     method .inner_draw
-      local is_fg = attributes.fg
+      .begin_draw
 
-      if (not is_fg)
-        if (color.argb) Renderer.fill( Box(internal_size), color )
+      local is_foreground = attributes.foreground
+
+      if (not is_foreground)
+        if (color.argb & 0xFF_000000) Renderer.fill( Box(internal_size), color )
       endIf
 
-      on_draw
+      .draw
 
-      if (count)
-        (forEach as Drawable2D in children).draw
+      if (is_foreground)
+        if (color.argb & 0xFF_000000) Renderer.fill( Box(internal_size), color )
       endIf
 
-      if (is_fg)
-        if (color.argb) Renderer.fill( Box(internal_size), color )
-      endIf
-
-      on_end_draw
+      .end_draw
 
     method .prepare
       noAction
 endClass
+
+augment Image[]
+  METHODS
+    method init( asset_name:String )
+      local asset = AssetManager.find_image( asset_name )
+      if (asset)
+        reserve( asset.image_count )
+        forEach (i in 0..<asset.image_count)
+          add( TextureImage(asset, i) )
+        endForEach
+      else
+        println "No such image collection: " + asset_name
+      endIf
+endAugment

@@ -54,7 +54,7 @@ class BGFX : Renderer [singleton]
        |init.platformData = platform_data;
        |
       if (not native("bgfx::init(init)")->Logical)
-        Global.error.println "[Warlock] Failed to initialize BGFX."
+        println "[Warlock] Failed to initialize BGFX."
         return
       endIf
 
@@ -93,6 +93,10 @@ class BGFX : Renderer [singleton]
       local clear_color = window.clear_color.rgba
       native @|bgfx::setViewClear( $window->id, (uint16_t)$clear_flags, (uint32_t)$clear_color );
 
+    method on_begin_render( window:Window )
+      prior.on_begin_render( window )
+      activate_graphics_context( window )
+
     method on_end_render( window:Window ) [override]
       prior.on_end_render( window )
 
@@ -124,7 +128,7 @@ class BGFX : Renderer [singleton]
        |  WarlockBGFXVertex* dest_data = (WarlockBGFXVertex*)($vertex_data->data);
        |  for (int i=(int)$data->vertices->count; --i>=0; )
        |  {
-       |    dest_data->x = (float) src_data->position.x + 0.5f;
+       |    dest_data->x = (float) src_data->position.x;
        |    dest_data->y = (float) src_data->position.y;
        |    dest_data->z = (float) src_data->position.z;
        |    dest_data->u = (float) src_data->uv.x;
@@ -266,7 +270,7 @@ augment Shader
           if (fs.contains("vs",&ignore_case)) swapValues( fs, vs )
           init( Warlock.load_asset_bytes(vs), Warlock.load_asset_bytes(fs) )
           if (not exists)
-            Global.error.println "[Warlock] Error loading BGFX shader: $"(filename)
+            println "[Warlock] Error loading BGFX shader: $"(filename)
           endIf
           return
         endIf

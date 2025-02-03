@@ -22,7 +22,7 @@ class Texture
       endIf
 
       if (not file.exists)
-        Global.error.println "File not found: " + file
+        println "File not found: " + file
         return Texture()
       endIf
 

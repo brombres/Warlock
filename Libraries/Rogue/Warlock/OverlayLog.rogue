@@ -24,7 +24,7 @@ class OverlayLog : BufferedPrintWriter<<output_buffer>> [essential singleton]
       if (max_lines.exists and max_lines.value < max) max = max_lines.value
       while (lines.count > max) lines.remove_first
 
-      font.scale = (Display.size.max / 800.0).or_larger(1.0)
+      font.scale = Display.density
       font.color = Color.WHITE
       font.anchor = Anchor.TOP_LEFT
 

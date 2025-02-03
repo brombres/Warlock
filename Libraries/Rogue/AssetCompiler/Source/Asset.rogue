@@ -19,6 +19,7 @@ class Asset( filepath:String, rule:AssetRule )
     bitmap          : Bitmap
     placements      = Placement[]
     image_size      : XY
+    image_split     = XY(1,1)
     font_characters : String
     font_height     : Int
     font_width      : Int  # -1 for variable, > 0 = fixed
@@ -49,11 +50,27 @@ class Asset( filepath:String, rule:AssetRule )
         contingent
           necessary (not is_modified)
           necessary (info.contains("image_size"))
+          necessary (info.contains("image_split"))
           image_size = XY( info//image_size )
+          image_split = XY( info//image_split )
         unsatisfied
           is_modified = true
           info//image_size = bitmap.size
           image_size = bitmap.size
+
+          if local split_attribute = rule.find_attribute( "split" )
+            .require_value(
+              split_attribute,
+              "COLUMNSxROWS expected, e.g. '4x2'."
+            )
+            local parts = split_attribute.value.value.split( 'x' )
+            if (parts.count != 2)
+              throw rule.t.error( "ROWSxCOLUMNS required after 'split', e.g. 'split:4x2'." )
+            endIf
+            image_split = XY( parts[0]->Int, parts[1]->Int )
+          endIf
+
+          info//image_split = image_split
         endContingent
 
       elseIf (rule.contains_attribute("font"))
@@ -165,7 +182,12 @@ class Asset( filepath:String, rule:AssetRule )
 
       which (type)
         case <Image>
-          placements.add( Placement(this, Box(image_size)) )
+          local split_size = image_size / image_split
+          forEach (j in 0..<image_split.y)
+            forEach (i in 0..<image_split.x)
+              placements.add( Placement(this, Box(XY(i,j)*split_size,split_size)) )
+            endForEach
+          endForEach
         case <Font>
           if (font_width == -1) .create_variable_width_font_placements
           else                  .create_fixed_width_font_placements
@@ -239,6 +261,10 @@ class Asset( filepath:String, rule:AssetRule )
         case <Image>
           manifest.print ''"$"''(filepath)
           manifest.print " image"
+          if (image_split.product > 1)
+            manifest.print " frames "
+            manifest.print image_split.product->Int
+          endIf
           manifest.println
           write_placements( manifest )
         case <Font>

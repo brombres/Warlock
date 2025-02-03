@@ -21,11 +21,11 @@ class Display [singleton]
     should_clear_color  : Logical
 
     transform_stack       : TransformStackState  # 'use Display.transform_stack / ... / endUse'
+    combined_transform    : Matrix   # projection * view * object
     projection_transform  : Matrix
     view_transform        : Matrix
-    object_transform      : Matrix
-    transform             : Matrix   # projection * view * object
-    object_transforms     = Matrix[]
+    transform             : Matrix   # object transform
+    transforms            = Matrix[] # object transform stack
     combined_transform_modified    = true
 
   METHODS
@@ -35,12 +35,18 @@ class Display [singleton]
     method begin_render
       Display = this
       reset
-      loop (Warlock.delta_ticks)
+      if (Warlock.delta_ticks)
+        loop (Warlock.delta_ticks)
+          state = state.updated || DisplayState()
+          current_state = state
+          current_state.update
+        endLoop
+      elseIf (not state.is_started)
         state = state.updated || DisplayState()
         current_state = state
         current_state.update
-        current_state.update( Warlock.dt )
-      endLoop
+      endIf
+      current_state.update( Warlock.dt )
 
     method bounds->Box
       return Box( size )
@@ -57,10 +63,10 @@ class Display [singleton]
     method combined_transform->Matrix
       # projection * world * object
       if (combined_transform_modified)
-        transform = projection_transform * view_transform * object_transform
+        combined_transform = projection_transform * view_transform * transform
         combined_transform_modified = false
       endIf
-      return @transform
+      return @combined_transform
 
     method draw
       on_draw
@@ -131,19 +137,19 @@ class Display [singleton]
     method on_update( dt:Real )
 
     method push_transform( m:Matrix )
-      if (object_transforms.count)
-        object_transforms.add( object_transforms.last * m )
+      if (transforms.count)
+        transforms.add( transforms.last * m )
       else
-        object_transforms.add( m )
+        transforms.add( m )
       endIf
-      set_object_transform( object_transforms.last, &pushed )
+      set_transform( transforms.last, &preserve_stack )
 
     method pop_transform( n=1:Int32 )
-      forEach (1..n.or_smaller(object_transforms.count))
-        object_transforms.remove_last
+      forEach (1..n.or_smaller(transforms.count))
+        transforms.remove_last
       endForEach
-      if (object_transforms.count) object_transform = object_transforms.last
-      else                         object_transform = Matrix.identity
+      if (transforms.count) set_transform( transforms.last, &preserve_stack )
+      else                  set_transform( Matrix.identity, &preserve_stack )
 
     method render
       Display = this
@@ -154,8 +160,8 @@ class Display [singleton]
       perspective_center = XY(0.5,0.5)
       projection_mode.update
       view_transform   = Matrix.identity
-      object_transform = Matrix.identity
-      object_transforms.clear
+      transform = Matrix.identity
+      transforms.clear
       should_clear_color = false
 
     method safe_area->Box
@@ -173,11 +179,11 @@ class Display [singleton]
         projection_mode.update
       endIf
 
-    method set_object_transform( new_transform:Matrix, &pushed )
-      if (not pushed) object_transforms.clear
-      if (object_transform != new_transform)
+    method set_transform( new_transform:Matrix, &preserve_stack )
+      if (not preserve_stack) transforms.clear
+      if (transform != new_transform)
         <Display.transform_modified>.signal
-        @object_transform = new_transform
+        @transform = new_transform
         combined_transform_modified = true
       endIf
 
@@ -209,10 +215,10 @@ endClass
 class TransformStackState( original_stack_count:Int ) [compound]
   METHODS
     method on_use->this [mutating]
-      original_stack_count = Display.object_transforms.count
+      original_stack_count = Display.transforms.count
       return this
 
     method on_end_use( state:TransformStackState )
-      local n = Display.object_transforms.count - state.original_stack_count
+      local n = Display.transforms.count - state.original_stack_count
       if (n) Display.pop_transform( n )
 endClass

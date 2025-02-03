@@ -5,10 +5,19 @@ class UpdateRegulator
     frame_timer = Timer()
     fps_timer   = Timer()
     max_fps     = 60
-    next_fps    : Int      # Accumulated frame count over current 1s interval.
-    time_debt   : Real
+    next_fps    = 0        # Accumulated frame count over current 1s interval.
+    time_debt   = 0.0
 
   METHODS
+    method reset
+      init_object
+      Warlock.dt = 1.0 / 60.0
+      Warlock.delta_ticks = 1
+      time_debt = 0
+      Warlock.fps = max_fps
+      frame_timer.restart
+      fps_timer.restart
+
     method update
       local elapsed_s = frame_timer.elapsed
       frame_timer.restart

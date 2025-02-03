@@ -29,7 +29,7 @@ augment Graphics::Bitmap
 
     method to_tiff_bytes->Byte[]
       if (System.is_macos) return MacOS.to_tiff_bytes( this )
-      Global.error.println "ERROR: No software TIFF encoder available."
+      println "ERROR: No software TIFF encoder available."
       return null
       }#
 endAugment

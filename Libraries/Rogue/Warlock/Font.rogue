@@ -33,7 +33,7 @@ class Font
         endForEach
       else
         error = "No such font: " + asset_name
-        Global.error.println error
+        println error
       endIf
 
       if (snug) spacing_adjustment = -1
@@ -152,7 +152,7 @@ class Font
       @scale = XY( new_height / internal_height )
 
     method set_scale( new_scale:Real )
-      @scale = XY( scale )
+      @scale = XY( new_scale )
 
     method set_scale( @scale )
 endClass

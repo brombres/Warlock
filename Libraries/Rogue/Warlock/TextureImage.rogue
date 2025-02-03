@@ -19,29 +19,27 @@ class TextureImage : Image
       if (asset)
         init( asset, 0 )
       else
-        error.println "No such image: " + asset_name
+        println "No such image: " + asset_name
       endIf
 
     method .inner_draw [override]
-      local is_fg = attributes.fg
+      .begin_draw
 
-      if (not is_fg)
+      local is_foreground = attributes.foreground
+
+      if (not is_foreground)
         if (texture)        Renderer.fill( Box(internal_size), texture, color )
-        elseIf (color.argb) Renderer.fill( Box(internal_size), color )
+        else                Renderer.fill( Box(internal_size), color )
       endIf
 
-      on_draw
+      .draw
 
-      if (count)
-        (forEach as Drawable2D in children).draw
-      endIf
-
-      if (is_fg)
+      if (is_foreground)
         if (texture)        Renderer.fill( Box(internal_size), texture, color )
-        elseIf (color.argb) Renderer.fill( Box(internal_size), color )
+        else                Renderer.fill( Box(internal_size), color )
       endIf
 
-      on_end_draw
+      .end_draw
 
     method .prepare [override]
       if (not texture and asset)

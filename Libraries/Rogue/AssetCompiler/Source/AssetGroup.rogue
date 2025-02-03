@@ -42,7 +42,10 @@ class AssetGroup
 
     method has_modified_assets->Logical
       if (assets.is_empty) return false
+
       if ((forEach in assets).is_modified) return true
+
+      if ((forEach in assets).placement_info.is_empty) return true
 
       if (filepaths.is_empty) return true
 

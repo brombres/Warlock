@@ -5,6 +5,7 @@ class AssetInfo
     filepath        : String
     type            : GlobalID
     images          : ImageInfo[]
+    frame_count     = 1
     font_height     : Int
     font_width      : Int  # 0 is variable-width
     font_characters : String
@@ -14,7 +15,7 @@ class AssetInfo
 
     method image_count->Int
       which (type)
-        case <Image>: return 1
+        case <Image>: return frame_count
         case <Font>:  return font_characters.count
         others:       return 0
       endWhich

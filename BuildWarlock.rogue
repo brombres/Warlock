@@ -258,13 +258,14 @@ routine build( platform:String, &debug, &rebuild )
 endRoutine
 
 routine compile_rogue( platform:String, &debug, &rebuild )
-  local files = Files( "Libraries/Warlock/Libraries/Rogue/**.rogue" )
+  local files = Files( ".", "Libraries/Warlock/Libraries/Rogue/**.rogue" )
+  files.add( "Source/**.rogue" )
   local source_folder = File("Build/$/Source"(platform)).[create_folder]
 
   local is_apple = (platform == "macOS" or platform == "iOS")
   local source_filename = "RogueProgram.$"(which{ is_apple:"mm" || "cpp" })
   if (rebuild or files.any_newer_than(source_folder/source_filename))
-    block cmd = "roguec Warlock"
+    block cmd = "roguec Source/Main.rogue Warlock"
       cmd .= appending( "Warlock/SDL" )
       cmd .= appending( "Warlock/BGFX" )
       cmd .= appending( "Warlock/Platform/$.rogue"(platform) )
@@ -295,12 +296,6 @@ routine compile_assets( platform:String )
   unsatisfied
     System.exit 1
   endContingent
-
-  block
-    local src  = Files( "Assets/Images/**" )
-    local dest = File( "Build/macOS/Assets/Images" )
-    src.sync_to( dest, &verbose )
-  endBlock
 
   rogo_shaders( platform )
 endRoutine

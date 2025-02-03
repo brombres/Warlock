@@ -22,7 +22,7 @@ class AssetManager [singleton]
         endWhile
         Log.println "# asset".pluralized(assets.count)
       else
-        Global.error.println "[ERROR] Assets/AssetManifest.txt is missing."
+        println "[ERROR] Assets/AssetManifest.txt is missing."
       endIf
 
     method find_font( name:String )->AssetInfo
@@ -80,6 +80,11 @@ class AssetManager [singleton]
       load
       return assets[name]
 
+    method .consume_id( identifier:String )->Logical
+      if (not scanner.consume_identifier(identifier)) return false
+      .consume_ws
+      return true
+
     method .consume_ws( &eols )
       loop
         if (scanner.consume_whitespace) nextIteration
@@ -94,8 +99,7 @@ class AssetManager [singleton]
     method .load_texture_filepaths
       texture_filepaths.clear
       .consume_ws( &eols )
-      if (not scanner.consume_identifier("textures")) return
-      .consume_ws
+      if (not .consume_id("textures")) return
       local n = scanner.scan_int
       loop (n)
         .consume_ws( &eols )
@@ -115,11 +119,11 @@ class AssetManager [singleton]
       elseIf (id == "font")
         if (not .load_font(asset)) return false
       else
-        Console.error.println "Unknown asset type in AssetManifest.txt: " + id
+        println "Unknown asset type in AssetManifest.txt: " + id
         return false
       endIf
 
-      if (not .load_images(asset)) return false
+      if (not .load_frames(asset)) return false
 
       assets[asset.filepath] = asset
       return true
@@ -129,19 +133,14 @@ class AssetManager [singleton]
       .consume_ws
       asset.font_height = scanner.scan_int
       .consume_ws
-      if (scanner.consume_identifier("variable")) asset.font_width = 0
-      else                                        asset.font_width = scanner.scan_int
+      if (.consume_id("variable")) asset.font_width = 0
+      else                                 asset.font_width = scanner.scan_int
       .consume_ws
       asset.font_characters = scanner.scan_string
       .consume_ws( &eols )
       return true
 
-    method .load_image( asset:AssetInfo )->Logical
-      asset.type = <Image>
-      .consume_ws( &eols )
-      return true
-
-    method .load_images( asset:AssetInfo )->Logical
+    method .load_frames( asset:AssetInfo )->Logical
       local n = asset.image_count
       if (not n) return true
 
@@ -161,6 +160,13 @@ class AssetManager [singleton]
         asset.images.add( ImageInfo(i, Box(x,y,w,h)) )
       endLoop
 
+      return true
+
+    method .load_image( asset:AssetInfo )->Logical
+      asset.type = <Image>
+      .consume_ws
+      if (.consume_id("frames")) asset.frame_count = scanner.scan_int
+      .consume_ws( &eols )
       return true
 
 endClass
