@@ -15,21 +15,21 @@ class Image : Drawable2D
 
     method draw( position:XY ) [override]
       use Display.transform_stack
+        .begin_draw
         Display.push_transform( Matrix.transform(XYZ(position,z),size,anchor,rotation,internal_size) )
-        .prepare
         .inner_draw
+        .end_draw
       endUse
 
     method draw( bounds:Box ) [override]
       use Display.transform_stack
+        .begin_draw
         Display.push_transform( Matrix.transform(XYZ(bounds.position,z),bounds.size/internal_size) )
-        .prepare
         .inner_draw
+        .end_draw
       endUse
 
     method .inner_draw
-      .begin_draw
-
       local is_foreground = attributes.foreground
 
       if (not is_foreground)
@@ -42,10 +42,6 @@ class Image : Drawable2D
         if (color.argb & 0xFF_000000) Renderer.fill( Box(internal_size), color )
       endIf
 
-      .end_draw
-
-    method .prepare
-      noAction
 endClass
 
 augment Image[]

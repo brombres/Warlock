@@ -22,27 +22,24 @@ class TextureImage : Image
         println "No such image: " + asset_name
       endIf
 
+    method .begin_draw [override]
+      if (not texture and asset)
+        texture = asset.images[image_index].texture  # actually loads texture if necessary
+      endIf
+      prior._begin_draw
+
+    method .end_draw
+      if (attributes.foreground)
+        if (texture) Renderer.fill( Box(internal_size), texture, color )
+        else         Renderer.fill( Box(internal_size), color )
+      endIf
+
     method .inner_draw [override]
-      .begin_draw
-
-      local is_foreground = attributes.foreground
-
-      if (not is_foreground)
-        if (texture)        Renderer.fill( Box(internal_size), texture, color )
-        else                Renderer.fill( Box(internal_size), color )
+      if (not attributes.foreground)
+        if (texture) Renderer.fill( Box(internal_size), texture, color )
+        else         Renderer.fill( Box(internal_size), color )
       endIf
 
       .draw
 
-      if (is_foreground)
-        if (texture)        Renderer.fill( Box(internal_size), texture, color )
-        else                Renderer.fill( Box(internal_size), color )
-      endIf
-
-      .end_draw
-
-    method .prepare [override]
-      if (not texture and asset)
-        texture = asset.images[image_index].texture  # actually loads texture if necessary
-      endIf
 endClass
