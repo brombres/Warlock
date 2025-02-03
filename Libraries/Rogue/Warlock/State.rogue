@@ -61,6 +61,10 @@ class State : Rogue::State<<Warlock::State>> [singleton]
 
     method on_draw
 
+    method on_draw_bg
+
+    method on_draw_fg
+
     method on_end( e:KeyEvent )
 
     method on_end( e:PointerEvent )
@@ -68,8 +72,6 @@ class State : Rogue::State<<Warlock::State>> [singleton]
     method on_end( e:ScrollEvent )
 
     method on_end( e:TextEvent )
-
-    method on_end_draw
 
     method on_end_render
 

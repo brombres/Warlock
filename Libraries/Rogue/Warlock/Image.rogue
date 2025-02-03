@@ -17,28 +17,27 @@ class Image : Drawable2D
       use Display.transform_stack
         .begin_draw
         Display.push_transform( Matrix.transform(XYZ(position,z),size,anchor,rotation,internal_size) )
-        .inner_draw
-        .end_draw
+        .dispatch_draw_bg
+        .dispatch_draw
+        .dispatch_draw_fg
       endUse
 
     method draw( bounds:Box ) [override]
       use Display.transform_stack
         .begin_draw
         Display.push_transform( Matrix.transform(XYZ(bounds.position,z),bounds.size/internal_size) )
-        .inner_draw
-        .end_draw
+        .dispatch_draw_bg
+        .dispatch_draw
+        .dispatch_draw_fg
       endUse
 
-    method .inner_draw
-      local is_foreground = attributes.foreground
-
-      if (not is_foreground)
+    method draw_bg
+      if (not attributes.foreground)
         if (color.argb & 0xFF_000000) Renderer.fill( Box(internal_size), color )
       endIf
 
-      .draw
-
-      if (is_foreground)
+    method draw_fg
+      if (attributes.foreground)
         if (color.argb & 0xFF_000000) Renderer.fill( Box(internal_size), color )
       endIf
 

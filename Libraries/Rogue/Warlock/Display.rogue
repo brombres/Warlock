@@ -69,8 +69,9 @@ class Display [singleton]
       return @combined_transform
 
     method draw
+      on_draw_bg
       on_draw
-      on_end_draw
+      on_draw_fg
 
     method end_render
       Display = this
@@ -128,9 +129,10 @@ class Display [singleton]
     method on_end( e:TextEvent )
 
     method on_draw
-      #trace Renderer.uses_normalized_depth
 
-    method on_end_draw
+    method on_draw_bg
+
+    method on_draw_fg
 
     method on_update
 

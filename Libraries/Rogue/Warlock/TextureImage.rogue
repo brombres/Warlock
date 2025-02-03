@@ -28,18 +28,16 @@ class TextureImage : Image
       endIf
       prior._begin_draw
 
-    method .end_draw
-      if (attributes.foreground)
-        if (texture) Renderer.fill( Box(internal_size), texture, color )
-        else         Renderer.fill( Box(internal_size), color )
-      endIf
-
-    method .inner_draw [override]
+    method draw_bg [override]
       if (not attributes.foreground)
         if (texture) Renderer.fill( Box(internal_size), texture, color )
         else         Renderer.fill( Box(internal_size), color )
       endIf
 
-      .draw
+    method draw_fg [override]
+      if (attributes.foreground)
+        if (texture) Renderer.fill( Box(internal_size), texture, color )
+        else         Renderer.fill( Box(internal_size), color )
+      endIf
 
 endClass

@@ -23,9 +23,10 @@ class Window : Display
 
     method render
       Renderer.on_begin_render( this )
+      State.current.on_draw_bg
       State.current.on_draw
       prior.render
-      State.current.on_end_draw
+      State.current.on_draw_fg
       OverlayLog.draw
       Renderer.on_end_render( this )
 
