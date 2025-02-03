@@ -16,7 +16,7 @@ class DisplayState : State<<DisplayState>>
         e.window.handle( e )
         necessary (not e.is_consumed)
 
-        on_end( e )
+        on_unhandled( e )
       endContingent
 
     method handle( e:PointerEvent )
@@ -27,7 +27,7 @@ class DisplayState : State<<DisplayState>>
         e.window.handle( e )
         necessary (not e.is_consumed)
 
-        on_end( e )
+        on_unhandled( e )
       endContingent
 
     method handle( e:ScrollEvent )
@@ -38,7 +38,7 @@ class DisplayState : State<<DisplayState>>
         e.window.handle( e )
         necessary (not e.is_consumed)
 
-        on_end( e )
+        on_unhandled( e )
       endContingent
 
     method handle( e:TextEvent )
@@ -49,7 +49,7 @@ class DisplayState : State<<DisplayState>>
         e.window.handle( e )
         necessary (not e.is_consumed)
 
-        on_end( e )
+        on_unhandled( e )
       endContingent
 
     method on( e:KeyEvent )
@@ -60,13 +60,13 @@ class DisplayState : State<<DisplayState>>
 
     method on( e:TextEvent )
 
-    method on_end( e:KeyEvent )
+    method on_unhandled( e:KeyEvent )
 
-    method on_end( e:PointerEvent )
+    method on_unhandled( e:PointerEvent )
 
-    method on_end( e:ScrollEvent )
+    method on_unhandled( e:ScrollEvent )
 
-    method on_end( e:TextEvent )
+    method on_unhandled( e:TextEvent )
 
     method on_draw
 
