@@ -93,12 +93,12 @@ class BGFX : Renderer [singleton]
       local clear_color = window.clear_color.rgba
       native @|bgfx::setViewClear( $window->id, (uint16_t)$clear_flags, (uint32_t)$clear_color );
 
-    method on_begin_render( window:Window )
-      prior.on_begin_render( window )
+    method on_render_begin( window:Window )
+      prior.on_render_begin( window )
       activate_graphics_context( window )
 
-    method on_end_render( window:Window ) [override]
-      prior.on_end_render( window )
+    method on_render_end( window:Window ) [override]
+      prior.on_render_end( window )
 
       block
         local clear_flags = 0

@@ -1,8 +1,20 @@
 library Warlock
 
-class State : Rogue::State<<Warlock::State>> [singleton]
+class WarlockState<<$ExtendedType>> : Rogue::State<<$ExtendedType>>
   METHODS
     #method draw
+
+    method dispatch( e:KeyEvent )
+      noAction
+
+    method dispatch( e:PointerEvent )
+      noAction
+
+    method dispatch( e:ScrollEvent )
+      noAction
+
+    method dispatch( e:TextEvent )
+      noAction
 
     method handle( e:KeyEvent )
       contingent
@@ -11,7 +23,7 @@ class State : Rogue::State<<Warlock::State>> [singleton]
         on( e )
         necessary (not e.is_consumed)
 
-        e.window.state.handle( e )
+        dispatch( e )
         necessary (not e.is_consumed)
 
         original_state.on_unhandled( e )
@@ -24,7 +36,7 @@ class State : Rogue::State<<Warlock::State>> [singleton]
         on( e )
         necessary (not e.is_consumed)
 
-        e.window.state.handle( e )
+        dispatch( e )
         necessary (not e.is_consumed)
 
         original_state.on_unhandled( e )
@@ -34,7 +46,7 @@ class State : Rogue::State<<Warlock::State>> [singleton]
       contingent
         local original_state = this
 
-        on( e )
+        dispatch( e )
         necessary (not e.is_consumed)
 
         e.window.state.handle( e )
@@ -50,7 +62,7 @@ class State : Rogue::State<<Warlock::State>> [singleton]
         on( e )
         necessary (not e.is_consumed)
 
-        e.window.state.handle( e )
+        dispatch( e )
         necessary (not e.is_consumed)
 
         original_state.on_unhandled( e )
@@ -70,9 +82,9 @@ class State : Rogue::State<<Warlock::State>> [singleton]
 
     method on_draw_fg
 
-    method on_end_render
+    method on_render_begin
 
-    method on_render
+    method on_render_end
 
     method on_unhandled( e:KeyEvent )
 

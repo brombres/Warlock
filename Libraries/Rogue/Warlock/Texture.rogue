@@ -26,6 +26,7 @@ class Texture
         return Texture()
       endIf
 
+      Log.println "Loading " + file
       local texture = Texture( Bitmap(file) )
       Warlock.textures[file] = texture
       return texture

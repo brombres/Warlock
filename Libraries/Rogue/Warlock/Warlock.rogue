@@ -4,6 +4,7 @@ nativeHeader @|#include "WarlockInterface.h"
 
 $include Warlock/Macros
 
+$include Warlock/ApplicationState
 $include Warlock/AssetInfo
 $include Warlock/AssetManager
 $include Warlock/BitmapIO
@@ -23,17 +24,16 @@ $include Warlock/OverlayLog
 $include Warlock/ProjectionMode
 $include Warlock/Renderer
 $include Warlock/RendererBatch
-$include Warlock/Scene
-$include Warlock/SceneState
+$include Warlock/Screen
+#$include Warlock/Scene
+#$include Warlock/SceneState
 $include Warlock/Shader
-$include Warlock/State
+$include Warlock/WarlockState
 $include Warlock/Texture
 $include Warlock/TextureImage
 $include Warlock/Triangle
 $include Warlock/UpdateRegulator
 $include Warlock/Vertex
-$include Warlock/View
-$include Warlock/ViewState
 $include Warlock/Window
 
 uses Control/State [export]
@@ -119,18 +119,18 @@ class Warlock [essential singleton]
 
       if (delta_ticks)
         loop (delta_ticks)
-          State = State.updated || State()
+          ApplicationState = ApplicationState.updated || ApplicationState()
         endLoop
-      elseIf (not State.is_started)
+      elseIf (not ApplicationState.is_started)
         # Make sure state's on_start() is called before its on_draw().
-        State = State.updated || State()
+        ApplicationState = ApplicationState.updated || ApplicationState()
       endIf
-      State.on_update( dt )
+      ApplicationState.on_update( dt )
 
-      State.on_render
+      ApplicationState.on_render_begin
       (forEach in windows).render
 
-      State.on_end_render
+      ApplicationState.on_render_end
       (forEach in windows).end_render
 
 endClass

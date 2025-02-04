@@ -22,13 +22,13 @@ class Window : Display
       noAction
 
     method render
-      Renderer.on_begin_render( this )
-      State.on_draw_bg
-      State.on_draw
+      Renderer.on_render_begin( this )
+      ApplicationState.on_draw_bg
+      ApplicationState.on_draw
       prior.render
-      State.on_draw_fg
+      ApplicationState.on_draw_fg
       OverlayLog.draw
-      Renderer.on_end_render( this )
+      Renderer.on_render_end( this )
 
 endClass
 

@@ -1,5 +1,0 @@
-library Warlock
-
-class SceneState : State<<SceneState>>
-  METHODS
-endClass

@@ -1,14 +1,7 @@
 library Warlock
 
-class DisplayState : State
+class DisplayState : WarlockState<<DisplayState>>
   METHODS
-    method change_state( new_state:State ) [override]
-      if (new_state instanceOf DisplayState)
-        prior.change_state( new_state )
-      else
-        println "ERROR: DisplayState.change_state() arg not instance of DisplayState."
-      endIf
-
     method draw
       on_draw_bg
       on_draw

@@ -128,12 +128,12 @@ class Renderer [singleton]
       first_vertex = vertex_count
       first_index  = index_count
 
-    method on_begin_render( window:Window )
+    method on_render_begin( window:Window )
       ++swap_index
       if (swap_index > 2) swap_index = 0
       reset
 
-    method on_end_render( window:Window )
+    method on_render_end( window:Window )
       flush
       ++frame
 
