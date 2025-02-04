@@ -1,54 +1,59 @@
 library Warlock
 
 class State : Rogue::State<<Warlock::State>> [singleton]
-  GLOBAL PROPERTIES
-    current : State
-
   METHODS
-    method draw
+    #method draw
 
     method handle( e:KeyEvent )
       contingent
+        local original_state = this
+
         on( e )
         necessary (not e.is_consumed)
 
-        e.window.current_state.handle( e )
+        e.window.state.handle( e )
         necessary (not e.is_consumed)
 
-        on_unhandled( e )
+        original_state.on_unhandled( e )
       endContingent
 
     method handle( e:PointerEvent )
       contingent
+        local original_state = this
+
         on( e )
         necessary (not e.is_consumed)
 
-        e.window.current_state.handle( e )
+        e.window.state.handle( e )
         necessary (not e.is_consumed)
 
-        on_unhandled( e )
+        original_state.on_unhandled( e )
       endContingent
 
     method handle( e:ScrollEvent )
       contingent
+        local original_state = this
+
         on( e )
         necessary (not e.is_consumed)
 
-        e.window.current_state.handle( e )
+        e.window.state.handle( e )
         necessary (not e.is_consumed)
 
-        on_unhandled( e )
+        original_state.on_unhandled( e )
       endContingent
 
     method handle( e:TextEvent )
       contingent
+        local original_state = this
+
         on( e )
         necessary (not e.is_consumed)
 
-        e.window.current_state.handle( e )
+        e.window.state.handle( e )
         necessary (not e.is_consumed)
 
-        on_unhandled( e )
+        original_state.on_unhandled( e )
       endContingent
 
     method on( e:KeyEvent )
@@ -65,6 +70,10 @@ class State : Rogue::State<<Warlock::State>> [singleton]
 
     method on_draw_fg
 
+    method on_end_render
+
+    method on_render
+
     method on_unhandled( e:KeyEvent )
 
     method on_unhandled( e:PointerEvent )
@@ -72,10 +81,6 @@ class State : Rogue::State<<Warlock::State>> [singleton]
     method on_unhandled( e:ScrollEvent )
 
     method on_unhandled( e:TextEvent )
-
-    method on_end_render
-
-    method on_render
 
     method on_update
 

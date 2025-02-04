@@ -4,8 +4,7 @@ class Display [singleton]
   AUTO_ID
 
   PROPERTIES
-    state         : DisplayState
-    current_state : DisplayState  # set after update, good for remainder of render
+    state   : DisplayState
 
     size    : XY  # In pixels.
     density = 1.0 # May be 2 or 3 (etc.) for Retina and other HD displays.
@@ -35,24 +34,15 @@ class Display [singleton]
     method begin_render
       Display = this
       reset
-      if (Warlock.delta_ticks)
-        loop (Warlock.delta_ticks)
-          state = state.updated || DisplayState()
-          current_state = state
-          current_state.update
-        endLoop
-      elseIf (not state.is_started)
-        state = state.updated || DisplayState()
-        current_state = state
-        current_state.update
-      endIf
-      current_state.update( Warlock.dt )
 
     method bounds->Box
       return Box( size )
 
     method center->XY
       return size/2
+
+    method change_state( new_state:DisplayState )
+      state.change_state( new_state )
 
     method clear
       should_clear_color = true
@@ -75,7 +65,7 @@ class Display [singleton]
 
     method end_render
       Display = this
-      current_state.on_end_render
+      state.on_end_render
 
     method handle( e:KeyEvent )
       contingent
@@ -155,8 +145,20 @@ class Display [singleton]
 
     method render
       Display = this
-      current_state.on_render
-      current_state.draw
+
+      if (Warlock.delta_ticks)
+        loop (Warlock.delta_ticks)
+          state = state.updated->(as DisplayState) || DisplayState()
+          state.update
+        endLoop
+      elseIf (not state.is_started)
+        state = state.updated->(as DisplayState) || DisplayState()
+        state.update
+      endIf
+      state.update( Warlock.dt )
+
+      state.on_render
+      state.draw
 
     method reset
       perspective_center = XY(0.5,0.5)

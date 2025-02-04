@@ -50,12 +50,6 @@ class Warlock [essential singleton]
       Warlock.on_configure
 
     method update->Logical [api]
-      # Ensure consistent state references are set before updating events
-      State.current = State
-      forEach (window in Warlock.windows)
-        window.current_state = window.state
-      endForEach
-
       local keep_running = Framework.update_events
 
       OverlayLog.update
@@ -131,13 +125,12 @@ class Warlock [essential singleton]
         # Make sure state's on_start() is called before its on_draw().
         State = State.updated || State()
       endIf
-      State.current = State  # ensure consistent state throughout render process, even after state change
-      State.current.on_update( dt )
+      State.on_update( dt )
 
-      State.current.on_render
+      State.on_render
       (forEach in windows).render
 
-      State.current.on_end_render
+      State.on_end_render
       (forEach in windows).end_render
 
 endClass

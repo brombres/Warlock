@@ -1,86 +1,71 @@
 library Warlock
 
-class DisplayState : State<<DisplayState>>
+class DisplayState : State
   METHODS
+    method change_state( new_state:State ) [override]
+      if (new_state instanceOf DisplayState)
+        prior.change_state( new_state )
+      else
+        println "ERROR: DisplayState.change_state() arg not instance of DisplayState."
+      endIf
+
     method draw
       on_draw_bg
       on_draw
       Display.draw
       on_draw_fg
 
-    method handle( e:KeyEvent )
+    method handle( e:KeyEvent ) [override]
       contingent
+        local original_state = this
+
         on( e )
         necessary (not e.is_consumed)
 
         e.window.handle( e )
         necessary (not e.is_consumed)
 
-        on_unhandled( e )
+        original_state.on_unhandled( e )
       endContingent
 
-    method handle( e:PointerEvent )
+    method handle( e:PointerEvent ) [override]
       contingent
+        local original_state = this
+
         on( e )
         necessary (not e.is_consumed)
 
         e.window.handle( e )
         necessary (not e.is_consumed)
 
-        on_unhandled( e )
+        original_state.on_unhandled( e )
       endContingent
 
-    method handle( e:ScrollEvent )
+    method handle( e:ScrollEvent ) [override]
       contingent
+        local original_state = this
+
         on( e )
         necessary (not e.is_consumed)
 
         e.window.handle( e )
         necessary (not e.is_consumed)
 
-        on_unhandled( e )
+        original_state.on_unhandled( e )
       endContingent
 
-    method handle( e:TextEvent )
+    method handle( e:TextEvent ) [override]
       contingent
+        local original_state = this
+
         on( e )
         necessary (not e.is_consumed)
 
         e.window.handle( e )
         necessary (not e.is_consumed)
 
-        on_unhandled( e )
+        original_state.on_unhandled( e )
       endContingent
-
-    method on( e:KeyEvent )
-
-    method on( e:PointerEvent )
-
-    method on( e:ScrollEvent )
-
-    method on( e:TextEvent )
-
-    method on_unhandled( e:KeyEvent )
-
-    method on_unhandled( e:PointerEvent )
-
-    method on_unhandled( e:ScrollEvent )
-
-    method on_unhandled( e:TextEvent )
-
-    method on_draw
-
-    method on_draw_bg
-
-    method on_draw_fg
-
-    method on_end_render
-
-    method on_render
-
-    method on_update
-
-    method on_update( dt:Real )
 
     method update
       Display.update
