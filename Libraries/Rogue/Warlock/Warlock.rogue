@@ -121,9 +121,9 @@ class Warlock [essential singleton]
         loop (delta_ticks)
           ApplicationState = ApplicationState.updated || ApplicationState()
         endLoop
-      elseIf (not ApplicationState.is_started)
+      else
         # Make sure state's on_start() is called before its on_draw().
-        ApplicationState = ApplicationState.updated || ApplicationState()
+        ApplicationState = ApplicationState.started || ApplicationState()
       endIf
       ApplicationState.on_update( dt )
 

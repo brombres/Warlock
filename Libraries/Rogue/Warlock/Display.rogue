@@ -5,7 +5,6 @@ class Display [singleton]
 
   PROPERTIES
     state   : DisplayState
-    screen  : Screen
 
     size    : XY  # In pixels.
     density = 1.0 # May be 2 or 3 (etc.) for Retina and other HD displays.
@@ -42,8 +41,8 @@ class Display [singleton]
     method center->XY
       return size/2
 
-    method change_state( new_state:Screen )
-      screen.change_state( new_state )
+    method change_state( new_state:DisplayState )
+      state.change_state( new_state )
 
     method clear
       should_clear_color = true
@@ -66,7 +65,7 @@ class Display [singleton]
 
     method end_render
       Display = this
-      #screen.on_render_end
+      state.on_render_end
 
     method handle( e:KeyEvent )
       contingent
@@ -147,21 +146,18 @@ class Display [singleton]
     method render
       Display = this
 
-      #{
       if (Warlock.delta_ticks)
         loop (Warlock.delta_ticks)
-          screen = screen.updated->(as Screen) || Screen()
-          screen.update
+          state = state.updated->(as DisplayState) || DisplayState()
+          state.update
         endLoop
-      elseIf (not screen.is_started)
-        screen = screen.updated->(as Screen) || Screen()
-        screen.update
+      else
+        state = state.started || DisplayState()
       endIf
-      screen.update( Warlock.dt )
+      state.update( Warlock.dt )
 
-      screen.on_render
-      screen.draw
-      }#
+      state.on_render_begin
+      state.draw
 
     method reset
       perspective_center = XY(0.5,0.5)
