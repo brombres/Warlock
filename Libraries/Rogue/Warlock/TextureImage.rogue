@@ -31,15 +31,17 @@ class TextureImage : Image
     method draw_bg [override]
       local color = color.with_opacity( opacity )
       if (not attributes.foreground)
-        if (texture) Renderer.fill( Box(internal_size), texture, color, shader||Shader.ALPHA_TEXTURE )
-        else         Renderer.fill( Box(internal_size), color, shader||Shader.ALPHA_COLOR )
+        local bounds = Box( internal_size )
+        if (texture) Renderer.fill( bounds, texture, color, shader||Shader.ALPHA_TEXTURE, subdivisions )
+        else         Renderer.fill( bounds, color, shader||Shader.ALPHA_COLOR, subdivisions )
       endIf
 
     method draw_fg [override]
       local color = color.with_opacity( opacity )
       if (attributes.foreground)
-        if (texture) Renderer.fill( Box(internal_size), texture, color, shader||Shader.ALPHA_TEXTURE )
-        else         Renderer.fill( Box(internal_size), color, shader||Shader.ALPHA_COLOR )
+        local bounds = Box( internal_size )
+        if (texture) Renderer.fill( bounds, texture, color, shader||Shader.ALPHA_TEXTURE, subdivisions )
+        else         Renderer.fill( bounds, color, shader||Shader.ALPHA_COLOR, subdivisions )
       endIf
 
 endClass

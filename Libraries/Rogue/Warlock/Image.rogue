@@ -6,11 +6,12 @@ class Image : Drawable2D
       return TextureImage( name )
 
   PROPERTIES
-    asset   : AssetInfo
-    opacity = 1.0
+    asset        : AssetInfo
+    opacity      = 1.0
+    subdivisions = XY(0,0)  # for shader effects - XY(0,4) would draw a mesh composed of 1x16 quads
 
   METHODS
-    method init( size, color=Color(0) )
+    method init( size=XY(1,1), color=Color(0) )
       internal_size = size
 
     method draw( position:XY ) [override]
@@ -32,13 +33,23 @@ class Image : Drawable2D
       endUse
 
     method draw_bg
-      if (not attributes.foreground)
-        if (color.argb & 0xFF_000000) Renderer.fill( Box(internal_size), color.with_opacity(opacity) )
+      if (not attributes.foreground and color.argb & 0xFF_000000)
+        Renderer.fill(
+          Box( internal_size),
+          color.with_opacity(opacity),
+          shader||Shader.ALPHA_COLOR,
+          subdivisions
+        )
       endIf
 
     method draw_fg
-      if (attributes.foreground)
-        if (color.argb & 0xFF_000000) Renderer.fill( Box(internal_size), color.with_opacity(opacity) )
+      if (attributes.foreground and color.argb & 0xFF_000000)
+        Renderer.fill(
+          Box( internal_size),
+          color.with_opacity(opacity),
+          shader||Shader.ALPHA_COLOR,
+          subdivisions
+        )
       endIf
 
 endClass
@@ -59,7 +70,22 @@ augment Image[]
     method set_anchor( anchor:Anchor )
       (forEach in this).anchor = anchor
 
+    method set_internal_size( size:XY )
+      (forEach in this).internal_size = internal_size
+
+    method set_scale( scale:Real )
+      (forEach in this).scale = scale
+
+    method set_scale( scale:XY )
+      (forEach in this).scale = scale
+
     method set_shader( shader:Shader )
       (forEach in this).shader = shader
+
+    method set_size( size:XY )
+      (forEach in this).size = size
+
+    method set_subdivisions( subdivisions:XY )
+      (forEach in this).subdivisions = subdivisions
 
 endAugment

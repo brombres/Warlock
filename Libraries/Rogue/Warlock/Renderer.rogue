@@ -49,35 +49,80 @@ class Renderer [singleton]
     method draw_triangles
       primitive_type = <triangles>
 
-    method fill( box:Box, color:Color, shader=Shader.ALPHA_COLOR )
+    method fill( box:Box, color:Color, shader=Shader.ALPHA_COLOR, subdivisions=XY(0,0):XY )
       clear_textures
       draw_triangles
-      local i1 = data.vertices.count - first_vertex
-      local a = box.position
-      local b = box.top_right
-      local c = box.bottom_right
-      local d = box.bottom_left
-      data.add Vertex( a, color )
-      data.add Vertex( b, color )
-      data.add Vertex( c, color )
-      data.add Vertex( d, color )
-      data.add( i1, i1+1, i1+2 )
-      data.add( i1, i1+2, i1+3 )
+      if (subdivisions.sum == 0)
+        local i1 = data.vertices.count - first_vertex
+        local a = box.position
+        local b = box.top_right
+        local c = box.bottom_right
+        local d = box.bottom_left
+        data.add Vertex( a, color )
+        data.add Vertex( b, color )
+        data.add Vertex( c, color )
+        data.add Vertex( d, color )
+        data.add( i1, i1+1, i1+2 )
+        data.add( i1, i1+2, i1+3 )
+      else
+        .generate_quad(
+          Vertex( box.position, color ),
+          Vertex( box.top_right, color ),
+          Vertex( box.bottom_right, color ),
+          Vertex( box.bottom_left, color ),
+          subdivisions
+        )
+      endIf
 
-    method fill( box:Box, texture:Texture, color:Color, shader=Shader.ALPHA_TEXTURE )
+    method fill( box:Box, texture:Texture, color:Color, shader=Shader.ALPHA_TEXTURE,
+                 subdivisions=XY(0,0):XY )
       set_texture( texture )
       draw_triangles
-      local i1 = data.vertices.count - first_vertex
-      local a = box.position
-      local b = box.top_right
-      local c = box.bottom_right
-      local d = box.bottom_left
-      data.add Vertex( a, color, texture.uv.a )
-      data.add Vertex( b, color, texture.uv.b )
-      data.add Vertex( c, color, texture.uv.c )
-      data.add Vertex( d, color, texture.uv.d )
-      data.add( i1, i1+1, i1+2 )
-      data.add( i1, i1+2, i1+3 )
+      if (subdivisions.sum == 0)
+        local i1 = data.vertices.count - first_vertex
+        local a = box.position
+        local b = box.top_right
+        local c = box.bottom_right
+        local d = box.bottom_left
+        data.add Vertex( a, color, texture.uv.a )
+        data.add Vertex( b, color, texture.uv.b )
+        data.add Vertex( c, color, texture.uv.c )
+        data.add Vertex( d, color, texture.uv.d )
+        data.add( i1, i1+1, i1+2 )
+        data.add( i1, i1+2, i1+3 )
+      else
+        .generate_quad(
+          Vertex( box.position, color, texture.uv.a ),
+          Vertex( box.top_right, color, texture.uv.b ),
+          Vertex( box.bottom_right, color, texture.uv.c ),
+          Vertex( box.bottom_left, color, texture.uv.d ),
+          subdivisions
+        )
+      endIf
+
+    method .generate_quad( tl:Vertex, tr:Vertex, br:Vertex, bl:Vertex, subdivisions:XY )
+      if (subdivisions.x > 0)
+        local tc = tl.avg(tr)
+        local bc = bl.avg(br)
+        .generate_quad( tl, tc, bc, bl, subdivisions-XY(1,0) )
+        .generate_quad( tc, tr, br, bc, subdivisions-XY(1,0) )
+
+      elseIf (subdivisions.y > 0)
+        local cl = tl.avg(bl)
+        local cr = tr.avg(br)
+        .generate_quad( tl, tr, cr, cl, subdivisions-XY(0,1) )
+        .generate_quad( cl, cr, br, bl, subdivisions-XY(0,1) )
+
+      else
+        local i1 = data.vertices.count - first_vertex
+        data.add tl
+        data.add tr
+        data.add br
+        data.add bl
+        data.add( i1, i1+1, i1+2 )
+        data.add( i1, i1+2, i1+3 )
+
+      endIf
 
     method fill( triangle:Triangle, color:Color, shader=Shader.ALPHA_COLOR )
       clear_textures

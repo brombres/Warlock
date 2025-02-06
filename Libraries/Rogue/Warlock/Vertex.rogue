@@ -1,4 +1,12 @@
 library Warlock
 
 class Vertex( position:XYZ, color:Color, uv=XY(0,0):XY ) [compound]
+  METHODS
+    method avg( other:Vertex )->Vertex
+      return Vertex(
+        (position + other.position) / 2,
+        (color->XYZW + other.color->XYZW) / 2,
+        (uv + other.uv) / 2
+      )
+
 endClass
