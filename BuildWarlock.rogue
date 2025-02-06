@@ -77,11 +77,14 @@ routine rogo_shaders( platform=null:String )
   endWhich
 
   platform_flags .= appending( "-i Libraries/bgfx/src" )
+  platform_flags .= appending( "--varyingdef Libraries/Warlock/Libraries/Shaders/varying.def.sc" )
 
   local vs_cmd = "$ --type vertex"(shaderc).appending( platform_flags )
   local fs_cmd = "$ --type fragment"(shaderc).appending( platform_flags )
 
-  local files = Files( "Libraries/Warlock/Libraries/Shaders/*" )
+  local files = Files( ".", "Libraries/Warlock/Libraries/Shaders/*" )
+  files.add( "Assets/Shaders/*" )
+
   local varying_defs = File( "Libraries/Warlock/Libraries/Shaders/varying.def.sc" )
 
   local pairs = organize_shader_pairs( files->String[] )

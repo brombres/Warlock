@@ -199,6 +199,8 @@ class BGFX : Renderer [singleton]
           endForEach
         endIf
 
+        batch.shader.apply_uniforms
+
         native
         @|bgfx::setState( (uint64_t)$bgfx_state_flags );
          |bgfx::submit( $display_id, $batch.shader->bgfx_program );
@@ -251,10 +253,74 @@ endClass
 
 augment Shader
   PROPERTIES
+    filename  : String
+    is_loaded : Logical
+
     native @|bgfx::ProgramHandle bgfx_program;
+    native @|bgfx::UniformHandle bgfx_uniforms[8];
 
   METHODS
-    method init( filename:String )
+    method init
+      noAction
+
+    method init( vertex_shader:Byte[], fragment_shader:Byte[] )
+      init
+
+      native
+      @|$this->bgfx_program = bgfx::createProgram(
+       |  bgfx::createShader( bgfx::copy($vertex_shader->as_bytes, (uint32_t)$vertex_shader->count) ),
+       |  bgfx::createShader( bgfx::copy($fragment_shader->as_bytes, (uint32_t)$fragment_shader->count) ),
+       |  true  // have BGFX destroy shaders
+       |);
+
+    method init_object
+      native
+      @|for (int i=8; --i>=0; )
+       |{
+       |  $this->bgfx_uniforms[i] = BGFX_INVALID_HANDLE;
+       |}
+
+    method on_cleanup
+      native
+      @|for (int i=8; --i>=0; )
+       |{
+       |  bgfx::destroy( $this->bgfx_uniforms[i] );
+       |  $this->bgfx_uniforms[i] = BGFX_INVALID_HANDLE;
+       |}
+       |
+       |bgfx::destroy( $this->bgfx_program );
+       |$this->bgfx_program = BGFX_INVALID_HANDLE;
+
+    method apply_uniforms
+      local uniforms = @uniforms
+      if (not uniforms or uniforms.is_empty) return
+
+      if (uniforms.count > 8) println "Warlock Shader exceeds maximum of 8 uniforms."
+
+      ensure_loaded
+
+      local i = 0
+      forEach (value at name in uniforms)
+        if (not native("bgfx::isValid($this->bgfx_uniforms[$i])")->Logical)
+          native
+          @|$this->bgfx_uniforms[$i] = bgfx::createUniform( $name->data->as_utf8, bgfx::UniformType::Vec4 );
+          if (not native("bgfx::isValid($this->bgfx_uniforms[$i])")->Logical)
+            println "No such uniform '$' in shader '$'."(name,filename)
+          endIf
+        endIf
+
+        native
+        @|float data[4] = { (float)$value.x, (float)$value.y, (float)$value.z, (float)$value.w };
+         |bgfx::setUniform( $this->bgfx_uniforms[$i], data );
+
+        ++i
+        if (i == 8) escapeForEach
+      endForEach
+
+    method ensure_loaded->this
+      if (is_loaded) return this
+      is_loaded = true
+
       native @|$this->bgfx_program = BGFX_INVALID_HANDLE;
 
       if local shaders_path = Warlock.find_asset( "Assets/Shaders" )
@@ -272,19 +338,12 @@ augment Shader
           if (not exists)
             println "[Warlock] Error loading BGFX shader: $"(filename)
           endIf
-          return
+          return this
         endIf
       endIf
 
       println "Shader not found: " + filename
-
-    method init( vertex_shader:Byte[], fragment_shader:Byte[] )
-      native
-      @|$this->bgfx_program = bgfx::createProgram(
-       |  bgfx::createShader( bgfx::copy($vertex_shader->as_bytes, (uint32_t)$vertex_shader->count) ),
-       |  bgfx::createShader( bgfx::copy($fragment_shader->as_bytes, (uint32_t)$fragment_shader->count) ),
-       |  true  // have BGFX destroy shaders
-       |);
+      return this
 
     method exists->Logical
       return native("bgfx::isValid($this->bgfx_program)")->Logical

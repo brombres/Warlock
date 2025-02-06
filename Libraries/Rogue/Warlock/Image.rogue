@@ -33,12 +33,12 @@ class Image : Drawable2D
 
     method draw_bg
       if (not attributes.foreground)
-        if (color.argb & 0xFF_000000) Renderer.fill( Box(internal_size), color )
+        if (color.argb & 0xFF_000000) Renderer.fill( Box(internal_size), color.with_opacity(opacity) )
       endIf
 
     method draw_fg
       if (attributes.foreground)
-        if (color.argb & 0xFF_000000) Renderer.fill( Box(internal_size), color )
+        if (color.argb & 0xFF_000000) Renderer.fill( Box(internal_size), color.with_opacity(opacity) )
       endIf
 
 endClass
@@ -55,4 +55,11 @@ augment Image[]
       else
         println "No such image collection: " + asset_name
       endIf
+
+    method set_anchor( anchor:Anchor )
+      (forEach in this).anchor = anchor
+
+    method set_shader( shader:Shader )
+      (forEach in this).shader = shader
+
 endAugment

@@ -2,7 +2,8 @@ library Warlock
 
 class Drawable2D : Entity2D
   PROPERTIES
-    color = Color.WHITE : Color
+    color  = Color.WHITE : Color
+    shader : Shader
 
   METHODS
     method draw

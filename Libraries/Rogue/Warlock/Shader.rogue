@@ -4,4 +4,42 @@ class Shader
   GLOBAL PROPERTIES
     ALPHA_COLOR   : Shader
     ALPHA_TEXTURE : Shader
+
+    cache    = [String:Shader]
+
+  GLOBAL METHODS
+    method create( filename:String )->Shader
+      local existing = cache[filename]
+      if (existing) return existing
+
+      local shader = Shader().[ filename=filename ]
+      cache[filename] = shader
+      return shader
+
+  PROPERTIES
+    filename : String
+    uniforms : ShaderUniforms
+
+  METHODS
+    method has_uniforms->Logical
+      return @uniforms
+
+    method to->String
+      return filename
+
+    method uniforms->ShaderUniforms
+      return ensure<<@uniforms>>
 endClass
+
+class ShaderUniforms : [String:XYZW]
+  METHODS
+    method set( name:String, value:Real )
+      set( name, XYZW(value) )
+
+    method set( name:String, value:XY )
+      set( name, XYZW(value) )
+
+    method set( name:String, value:XYZ )
+      set( name, XYZW(value) )
+endClass
+
