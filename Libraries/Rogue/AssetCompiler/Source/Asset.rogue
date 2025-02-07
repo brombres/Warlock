@@ -168,6 +168,11 @@ class Asset( filepath:String, rule:AssetRule )
         throw rule.t.error( "No type specified in rule. Append one of [image, font, sound, music, binary] or prefix with '-' instead of '$' to exclude."(info//rule[0]) )
       endIf
 
+      if (info//type->GlobalID != type)
+        info//type = type
+        is_modified = true
+      endIf
+
       if (not is_modified and info.contains("placements"))
         placement_info = info//placements
       endIf

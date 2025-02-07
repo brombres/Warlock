@@ -36,24 +36,46 @@ class AssetGroup
     method add( asset:Asset )
       assets.add( asset )
 
-    method build_texture_atlas
-      pages = ImagePacker( this ).pack( assets )
-      (forEach in assets).update_placement_info
+    method process
+      which (assets.first.type)
+        case <Image>, <Font>
+          pages = ImagePacker( this ).pack( assets )
+          (forEach in assets).update_placement_info
+        case <Binary>
+          local output_folder = "Build/$"(AssetCompiler.platform)
+          forEach (asset in assets)
+            local output_filepath = output_folder/asset.filepath
+            if (File(asset.filepath).is_newer_than(File(output_filepath)))
+              File( asset.filepath ).copy_to( File(output_filepath), &verbose )
+            endIf
+          endForEach
+      endWhich
 
     method has_modified_assets->Logical
       if (assets.is_empty) return false
 
       if ((forEach in assets).is_modified) return true
 
-      if ((forEach in assets).placement_info.is_empty) return true
+      which (assets.first.type)
+        case <Image>, <Font>
+          if (filepaths.is_empty) return true
+          if ((forEach in assets).placement_info.is_empty) return true
 
-      if (filepaths.is_empty) return true
+          localize newest_timestamp
+          forEach (filepath in filepaths)
+            local file = File(filepath)
+            if (not file.exists or file.timestamp < newest_timestamp) return true
+          endForEach
 
-      localize newest_timestamp
-      forEach (filepath in filepaths)
-        local file = File(filepath)
-        if (not file.exists or file.timestamp < newest_timestamp) return true
-      endForEach
+        case <Binary>
+          local output_folder = "Build/$"(AssetCompiler.platform)
+          forEach (asset in assets)
+            local output_filepath = output_folder/asset.filepath
+            if (File(asset.filepath).is_newer_than(File(output_filepath)))
+              return true
+            endIf
+          endForEach
+      endWhich
 
       return false
 
@@ -66,6 +88,9 @@ class AssetGroup
       local result = assets.count
       result ~= ((forEach in assets).filepath.hashcode)
       return result
+
+    method to->String
+      return assets->String
 
     method to->Variant
       local result = @{ id, hash, filename, assets:[], pages:[] }

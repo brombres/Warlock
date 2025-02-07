@@ -77,13 +77,28 @@ class AssetCompiler [singleton]
       # Apply exclusion rules
       assets.discard( $.value.rule instanceOf ExcludedAssetRule )
 
+      collect_asset_info
+
       block
-        # Ungrouped, non-standalone assets are assigned to a common group
-        local default_group : AssetGroup
+        # Ungrouped, non-standalone assets are assigned to a common group.
+        # Separate groups for Graphics, Audio, and Data
+        local default_audio    : AssetGroup
+        local default_data     : AssetGroup
+        local default_graphics : AssetGroup
         forEach (asset in assets)
           if (not asset.group)
             if (not asset.is_standalone)
-              asset.group = ensure<<default_group>>
+              which (asset.type)
+                case <Image>, <Font>
+                  asset.group = ensure<<default_graphics>>
+                case <Sound>, <Music>
+                  asset.group = ensure<<default_audio>>
+                case <Binary>
+                  asset.group = ensure<<default_data>>
+                others
+                  trace
+                  throw asset.rule.t.error( "[INTERNAL] Unhandled asset type $."(asset.type) )
+              endWhich
             endIf
           endIf
         endForEach
@@ -111,12 +126,10 @@ class AssetCompiler [singleton]
 
       (forEach in groups).configure_id
 
-      collect_asset_info
-
       local all_groups = groups.cloned
       groups.remove( not $.has_modified_assets )
 
-      create_texture_atlases
+      process_group
 
       asset_info//groups = @[]
       forEach (group in all_groups)
@@ -166,8 +179,8 @@ class AssetCompiler [singleton]
         file.save( manifest )
       endIf
 
-    method create_texture_atlases
-      (forEach in groups).build_texture_atlas
+    method process_group
+      (forEach in groups).process
 
     method load_asc( &suppress_errors )
       asset_info_file = File( "Build/$/Cache/AssetInfo.json"(platform) )
