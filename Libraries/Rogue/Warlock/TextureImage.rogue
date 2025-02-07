@@ -22,12 +22,6 @@ class TextureImage : Image
         println "No such image: " + asset_name
       endIf
 
-    method .begin_draw [override]
-      if (not texture and asset)
-        texture = asset.images[image_index].texture  # actually loads texture if necessary
-      endIf
-      prior._begin_draw
-
     method draw_bg [override]
       local color = color.with_opacity( opacity )
       if (not attributes.foreground)
@@ -43,5 +37,11 @@ class TextureImage : Image
         if (texture) Renderer.fill( bounds, texture, color, shader||Shader.ALPHA_TEXTURE, subdivisions )
         else         Renderer.fill( bounds, color, shader||Shader.ALPHA_COLOR, subdivisions )
       endIf
+
+    method texture->Texture
+      if (not @texture and asset)
+        texture = asset.images[image_index].texture  # actually loads texture if necessary
+      endIf
+      return @texture
 
 endClass
