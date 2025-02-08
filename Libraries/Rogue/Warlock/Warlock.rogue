@@ -31,6 +31,7 @@ $include Warlock/Shader
 $include Warlock/WarlockState
 $include Warlock/Texture
 $include Warlock/TextureImage
+#$include Warlock/TileMapLayout
 $include Warlock/Triangle
 $include Warlock/UpdateRegulator
 $include Warlock/Vertex
@@ -81,6 +82,14 @@ class Warlock [essential singleton]
       local filepath = native("WarlockInterface_find_asset($name)")->String
       if (filepath) return File( filepath )
       else          return null
+
+    method find_data_file( file:File )->File?
+      if (not file.filepath.begins_with("Assets/Data/"))
+        if (file.filepath.begins_with("Data/")) file = "Assets"/file
+        else                                    file = "Assets/Data"/file
+      endIf
+
+      return find_asset( file.filepath )
 
     method find_window( id=null:Int?, native_id=null:Int? )->Window
       if local native_id = native_id

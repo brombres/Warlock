@@ -5,6 +5,7 @@ class Display [singleton]
 
   PROPERTIES
     state   : DisplayState
+    ui      = UI()
 
     size    : XY  # In pixels.
     density = 1.0 # May be 2 or 3 (etc.) for Retina and other HD displays.
@@ -61,6 +62,7 @@ class Display [singleton]
     method draw
       on_draw_bg
       on_draw
+      ui.draw
       on_draw_fg
 
     method end_render
@@ -206,6 +208,7 @@ class Display [singleton]
 
     method update
       on_update
+      ui.update( bounds )
 
     method update( dt:Real )
       on_update( dt )
