@@ -12,6 +12,7 @@ $include Warlock/Box
 $include Warlock/Display
 $include Warlock/DisplayState
 $include Warlock/Drawable2D
+$include Warlock/Entity
 $include Warlock/Font
 $include Warlock/Framework
 $include Warlock/IDGenerator

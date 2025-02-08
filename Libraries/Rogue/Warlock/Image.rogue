@@ -8,29 +8,11 @@ class Image : Drawable2D
   PROPERTIES
     asset        : AssetInfo
     opacity      = 1.0
-    subdivisions = XY(0,0)  # for shader effects - XY(0,4) would draw a mesh composed of 1x16 quads
+    subdivisions = XY(0,0)  # for shader effects - XY(4,0) would draw a mesh composed of 16x1 quads
 
   METHODS
     method init( size=XY(1,1), color=Color(0) )
       internal_size = size
-
-    method draw( position:XY ) [override]
-      use Display.transform_stack
-        .begin_draw
-        Display.push_transform( Matrix.transform(XYZ(position,z),size,anchor,rotation,internal_size) )
-        .dispatch_draw_bg
-        .dispatch_draw
-        .dispatch_draw_fg
-      endUse
-
-    method draw( bounds:Box ) [override]
-      use Display.transform_stack
-        .begin_draw
-        Display.push_transform( Matrix.transform(XYZ(bounds.position,z),bounds.size/internal_size) )
-        .dispatch_draw_bg
-        .dispatch_draw
-        .dispatch_draw_fg
-      endUse
 
     method draw_bg
       if (not attributes.foreground and color.argb & 0xFF_000000)

@@ -1,0 +1,27 @@
+library Entity
+
+uses Warlock
+
+augment Entity2D
+  METHODS
+    method draw
+      draw( position )
+
+    method draw( position:XY )
+      use Display.transform_stack
+        .begin_draw
+        Display.push_transform( Matrix.transform(XYZ(position,z),size,anchor,rotation,internal_size) )
+        .dispatch_draw_bg
+        .dispatch_draw
+        .dispatch_draw_fg
+      endUse
+
+    method draw( bounds:Box )
+      use Display.transform_stack
+        .begin_draw
+        Display.push_transform( Matrix.transform(XYZ(bounds.position,z),bounds.size/internal_size) )
+        .dispatch_draw_bg
+        .dispatch_draw
+        .dispatch_draw_fg
+      endUse
+endAugment
