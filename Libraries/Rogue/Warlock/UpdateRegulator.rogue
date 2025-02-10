@@ -40,29 +40,9 @@ class UpdateRegulator
         Warlock.delta_ticks = 0
       else
         Warlock.dt = elapsed_s
-        local interval_ticks = (elapsed_s * 60 + 0.5)->Int
-        if (interval_ticks)
-          local ratio = elapsed_s / (interval_ticks / 60.0)   # actual / expected
-          local error = (1.0 - ratio).abs   # E.g. 0.02 = 2%
-          if (error <= 0.05)
-            # Count this time interval as a whole number of frames
-            Warlock.delta_ticks = interval_ticks
-            time_debt = 0
-          else
-            # Wait for our time debt to accumlate to 1/60.
-            time_debt += elapsed_s
-            Warlock.delta_ticks = 0
-          endIf
-        else
-          time_debt += elapsed_s
-          if (time_debt >= 1.0/60.0)
-            Warlock.delta_ticks = (time_debt * 60)->Int
-            time_debt -= Warlock.delta_ticks / 60.0
-          else
-            Warlock.delta_ticks = 0
-          endIf
-        endIf
-
+        time_debt += elapsed_s
+        Warlock.delta_ticks = (time_debt * 60)->Int
+        time_debt -= Warlock.delta_ticks / 60.0
       endIf
       Warlock.ticks += Warlock.delta_ticks
 
