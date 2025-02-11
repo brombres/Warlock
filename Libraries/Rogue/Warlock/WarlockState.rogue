@@ -94,8 +94,4 @@ class WarlockState<<$ExtendedType>> : Rogue::State<<$ExtendedType>>
 
     method on_unhandled( e:TextEvent )
 
-    method on_update
-
-    method on_update( dt:Real )
-
 endClass

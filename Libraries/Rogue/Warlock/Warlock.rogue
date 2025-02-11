@@ -34,7 +34,6 @@ $include Warlock/Texture
 $include Warlock/TextureImage
 #$include Warlock/TileMapLayout
 $include Warlock/Triangle
-$include Warlock/UpdateRegulator
 $include Warlock/Vertex
 $include Warlock/Window
 
@@ -62,13 +61,6 @@ class Warlock [essential singleton]
     configured     : Logical
     windows        = Window[]
     textures       = [File:Texture]
-
-    update_regulator = UpdateRegulator()
-    dt               : Real     # Delta Time - seconds since previous frame (may be 0.0)
-    delta_ticks      : Int      # Ticks applied this frame (may be 0)
-    ticks            : Int      # Lifetime tick count
-    frames           : Int      # Lifetime frame count
-    fps              = 60       # Current fps
 
   METHODS
     method init
@@ -119,23 +111,9 @@ class Warlock [essential singleton]
       endIf
 
     method render
-      ++frames
-      update_regulator.update
-      if (frames < 5 and delta_ticks > 2)
-        update_regulator.reset # max 2 updates per frame at start
-      endIf
-
       (forEach in windows).begin_render
 
-      if (delta_ticks)
-        loop (delta_ticks)
-          ApplicationState = ApplicationState.updated || ApplicationState()
-        endLoop
-      else
-        # Make sure state's on_start() is called before its on_draw().
-        ApplicationState = ApplicationState.started || ApplicationState()
-      endIf
-      ApplicationState.on_update( dt )
+      ApplicationState = ApplicationState.updated || ApplicationState()
 
       ApplicationState.on_render_begin
       (forEach in windows).render

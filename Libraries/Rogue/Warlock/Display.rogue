@@ -126,6 +126,8 @@ class Display [singleton]
 
     method on_draw_fg
 
+    method on_tick
+
     method on_update
 
     method on_update( dt:Real )
@@ -148,16 +150,7 @@ class Display [singleton]
     method render
       Display = this
 
-      if (Warlock.delta_ticks)
-        loop (Warlock.delta_ticks)
-          state = state.updated->(as DisplayState) || DisplayState()
-          state.update
-        endLoop
-      else
-        state = state.started || DisplayState()
-      endIf
-      state.update( Warlock.dt )
-
+      state = state.updated || DisplayState()
       state.on_render_begin
       state.draw
 
@@ -206,12 +199,16 @@ class Display [singleton]
         combined_transform_modified = true
       endIf
 
+    method tick
+      on_tick
+      # Note: UI is ticked from UI.update(Box)
+
     method update
       on_update
-      ui.update( bounds )
 
     method update( dt:Real )
       on_update( dt )
+      ui.update( bounds )
 
     method width->Real
       return size.x

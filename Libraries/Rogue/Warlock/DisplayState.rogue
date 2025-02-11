@@ -60,8 +60,9 @@ class DisplayState : WarlockState<<DisplayState>>
         original_state.on_unhandled( e )
       endContingent
 
-    method update
-      Display.update
+    method tick
+      on_tick
+      Display.tick
 
     method update( dt:Real )
       on_update( dt )
