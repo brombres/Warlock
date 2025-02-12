@@ -52,8 +52,11 @@ augment Image[]
     method set_anchor( anchor:Anchor )
       (forEach in this).anchor = anchor
 
-    method set_internal_size( size:XY )
+    method set_internal_size( internal_size:XY )
       (forEach in this).internal_size = internal_size
+
+    method set_position( position:XY )
+      (forEach in this).position = position
 
     method set_scale( scale:Real )
       (forEach in this).scale = scale
