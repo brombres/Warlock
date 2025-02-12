@@ -18,6 +18,10 @@ class Window : Display
       Framework.update_window_size( this )
       prior.begin_render
 
+    method close
+      Warlock.windows.remove( this )
+      Framework.close_window( this )
+
     method native_id->Int
       noAction
 

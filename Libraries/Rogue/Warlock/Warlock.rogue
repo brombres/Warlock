@@ -55,12 +55,20 @@ class Warlock [essential singleton]
 
       OverlayLog.update
       Warlock.render
+
+      if (not keep_running)
+        use list = Warlock.windows.working_copy
+          (forEach in list).close
+        endUse
+      endIf
+
       return keep_running
 
   PROPERTIES
     configured     : Logical
     windows        = Window[]
     textures       = [File:Texture]
+    ticker         = Ticker()
 
   METHODS
     method init
@@ -111,6 +119,8 @@ class Warlock [essential singleton]
       endIf
 
     method render
+      ticker.update
+
       (forEach in windows).begin_render
 
       ApplicationState = ApplicationState.updated || ApplicationState()

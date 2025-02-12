@@ -16,6 +16,9 @@ class Framework [abstract singleton]
     method configure
       print_error
 
+    method close_window( window:Window )
+      noAction
+
     method create_window( window:Window )->Logical
       trace
       print_error

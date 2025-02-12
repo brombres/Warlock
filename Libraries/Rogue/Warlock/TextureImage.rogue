@@ -23,25 +23,27 @@ class TextureImage : Image
       endIf
 
     method draw_bg [override]
-      local color = color.with_opacity( opacity )
-      if (not attributes.foreground)
-        local bounds = Box( internal_size )
-        if (texture) Renderer.fill( bounds, texture, color, shader||Shader.ALPHA_TEXTURE, subdivisions )
-        else         Renderer.fill( bounds, color, shader||Shader.ALPHA_COLOR, subdivisions )
-      endIf
+      if (not attributes.foreground) .draw_texture_image
 
     method draw_fg [override]
-      local color = color.with_opacity( opacity )
-      if (attributes.foreground)
-        local bounds = Box( internal_size )
-        if (texture) Renderer.fill( bounds, texture, color, shader||Shader.ALPHA_TEXTURE, subdivisions )
-        else         Renderer.fill( bounds, color, shader||Shader.ALPHA_COLOR, subdivisions )
-      endIf
+      if (attributes.foreground) .draw_texture_image
 
     method texture->Texture
       if (not @texture and asset)
         texture = asset.images[image_index].texture  # actually loads texture if necessary
       endIf
       return @texture
+
+    method .draw_texture_image
+      local color = color.with_opacity( opacity )
+      local bounds = Box( internal_size )
+      if (texture)
+        local h_flip = attributes.h_flip
+        local v_flip = attributes.v_flip
+        local shader = shader || Shader.ALPHA_TEXTURE
+        Renderer.fill( bounds, texture, color, shader, subdivisions, &=h_flip, &=v_flip )
+      else
+        Renderer.fill( bounds, color, shader||Shader.ALPHA_COLOR, subdivisions )
+      endIf
 
 endClass

@@ -75,27 +75,43 @@ class Renderer [singleton]
       endIf
 
     method fill( box:Box, texture:Texture, color:Color, shader=Shader.ALPHA_TEXTURE,
-                 subdivisions=XY(0,0):XY )
+        subdivisions=XY(0,0):XY, &h_flip, &v_flip )
       set_texture( texture )
       draw_triangles
+
+      local uv_a = texture.uv.a
+      local uv_b = texture.uv.b
+      local uv_c = texture.uv.c
+      local uv_d = texture.uv.d
+
+      if (h_flip)
+        swapValues( uv_a, uv_b )
+        swapValues( uv_c, uv_d )
+      endIf
+
+      if (v_flip)
+        swapValues( uv_a, uv_d )
+        swapValues( uv_b, uv_c )
+      endIf
+
       if (subdivisions.sum == 0)
         local i1 = data.vertices.count - first_vertex
         local a = box.position
         local b = box.top_right
         local c = box.bottom_right
         local d = box.bottom_left
-        data.add Vertex( a, color, texture.uv.a )
-        data.add Vertex( b, color, texture.uv.b )
-        data.add Vertex( c, color, texture.uv.c )
-        data.add Vertex( d, color, texture.uv.d )
+        data.add Vertex( a, color, uv_a )
+        data.add Vertex( b, color, uv_b )
+        data.add Vertex( c, color, uv_c )
+        data.add Vertex( d, color, uv_d )
         data.add( i1, i1+1, i1+2 )
         data.add( i1, i1+2, i1+3 )
       else
         .generate_quad(
-          Vertex( box.position, color, texture.uv.a ),
-          Vertex( box.top_right, color, texture.uv.b ),
-          Vertex( box.bottom_right, color, texture.uv.c ),
-          Vertex( box.bottom_left, color, texture.uv.d ),
+          Vertex( box.position, color,     uv_a ),
+          Vertex( box.top_right, color,    uv_b ),
+          Vertex( box.bottom_right, color, uv_c ),
+          Vertex( box.bottom_left, color,  uv_d ),
           subdivisions
         )
       endIf

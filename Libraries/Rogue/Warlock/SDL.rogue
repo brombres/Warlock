@@ -44,6 +44,12 @@ class SDL : Framework [singleton]
 
       is_configured = true
 
+    method close_window( window:Window )
+      if (native("!!$window->sdl_window")->Logical)
+        native @|SDL_DestroyWindow( $window->sdl_window );
+                |$window->sdl_window = 0;
+      endIf
+
     method create_window( window:Window )->Logical
       native @|SDL_WindowFlags flags = 0;
       native @|flags |= SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY;

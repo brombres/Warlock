@@ -2,7 +2,10 @@ library Entity
 
 uses Warlock
 
-augment Entity2D
+augment Entity::Entity2D
+  PROPERTIES
+    position : XY
+
   METHODS
     method draw
       draw( position )
