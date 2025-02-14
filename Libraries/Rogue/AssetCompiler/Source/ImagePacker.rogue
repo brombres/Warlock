@@ -6,7 +6,7 @@ class ImagePacker
     placements = Placement[]
     pages      = AtlasPage[]
     max_size   = XY(2048,2048)
-    padding    = 4  # Edges of each texture are extruded this many pixels to prevent
+    padding    = 16  # Edges of each texture are extruded this many pixels to prevent
                     # color artifacts.
 
   METHODS
@@ -98,7 +98,7 @@ class ImagePacker
       else                                       return null
 
     method .perform_layout( page:AtlasPage, bounds:Box )->Logical
-      # Find the largest asset we can place (including 4-pixel padding around
+      # Find the largest asset we can place (including 16-pixel padding around
       # the edge), delete it from the list, and then recursively place any
       # remaining placements we can.
       if (bounds.size.x <= 0 or bounds.size.y <= 0) return false

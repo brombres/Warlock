@@ -6,4 +6,8 @@ class Drawable2D : Entity2D
     shader : Shader
 
   METHODS
+    method init( existing:Drawable2D )
+      prior.init( existing )
+      color  = existing.color
+      shader = existing.shader
 endClass

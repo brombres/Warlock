@@ -50,6 +50,7 @@ routine rogo_macos_open
 endRoutine
 
 routine rogo_clean
+  print_cmd( "Delete Build/" )
   File("Build").delete
 endRoutine
 

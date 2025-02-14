@@ -14,6 +14,12 @@ class Image : Drawable2D
     method init( size=XY(1,1), color=Color(0) )
       internal_size = size
 
+    method init( existing:Image )
+      prior.init( existing )
+      asset        = existing.asset
+      opacity      = existing.opacity
+      subdivisions = existing.subdivisions
+
     method draw_bg
       if (not attributes.foreground and color.argb & 0xFF_000000)
         Renderer.fill(

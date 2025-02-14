@@ -22,6 +22,11 @@ class TextureImage : Image
         println "No such image: " + asset_name
       endIf
 
+    method init( existing:TextureImage )
+      prior.init( existing )
+      texture     = existing.texture
+      image_index = existing.image_index
+
     method draw_bg [override]
       if (not attributes.foreground) .draw_texture_image
 
