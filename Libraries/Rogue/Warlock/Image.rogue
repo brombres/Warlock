@@ -11,8 +11,8 @@ class Image : Drawable2D
     subdivisions = XY(0,0)  # for shader effects - XY(4,0) would draw a mesh composed of 16x1 quads
 
   METHODS
-    method init( size=XY(1,1), color=Color(0) )
-      internal_size = size
+    method init( size=XY(1,1):XY, color=Color(0) )
+      this.size = size
 
     method init( existing:Image )
       prior.init( existing )
@@ -23,7 +23,7 @@ class Image : Drawable2D
     method draw_bg
       if (not attributes.foreground and color.argb & 0xFF_000000)
         Renderer.fill(
-          Box( internal_size),
+          Box( nominal_size),
           color.with_opacity(opacity),
           shader||Shader.ALPHA_COLOR,
           subdivisions
@@ -33,7 +33,7 @@ class Image : Drawable2D
     method draw_fg
       if (attributes.foreground and color.argb & 0xFF_000000)
         Renderer.fill(
-          Box( internal_size),
+          Box( nominal_size),
           color.with_opacity(opacity),
           shader||Shader.ALPHA_COLOR,
           subdivisions
@@ -58,8 +58,8 @@ augment Image[]
     method set_anchor( anchor:Anchor )
       (forEach in this).anchor = anchor
 
-    method set_internal_size( internal_size:XY )
-      (forEach in this).internal_size = internal_size
+    method set_nominal_size( nominal_size:XY )
+      (forEach in this).nominal_size = nominal_size
 
     method set_position( position:XY )
       (forEach in this).position = position

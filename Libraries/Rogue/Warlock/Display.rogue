@@ -214,6 +214,7 @@ class Display [singleton]
     method update( dt:Real )
       on_update( dt )
       ui.update( bounds )
+      ui.request_redraw
 
     method width->Real
       return size.x

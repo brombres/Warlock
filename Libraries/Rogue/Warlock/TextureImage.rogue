@@ -7,12 +7,12 @@ class TextureImage : Image
 
   METHODS
     method init( texture )
-      internal_size = texture.size
-      size = internal_size
+      nominal_size = texture.size
+      size = nominal_size
 
     method init( asset, image_index )
-      internal_size = asset.images[image_index].bounds.size
-      size          = internal_size
+      nominal_size = asset.images[image_index].bounds.size
+      size          = nominal_size
 
     method init( asset_name:String )
       local asset = AssetManager.find_image( asset_name )
@@ -41,7 +41,7 @@ class TextureImage : Image
 
     method .draw_texture_image
       local color = color.with_opacity( opacity )
-      local bounds = Box( internal_size )
+      local bounds = Box( nominal_size )
       if (texture)
         local h_flip = attributes.h_flip
         local v_flip = attributes.v_flip

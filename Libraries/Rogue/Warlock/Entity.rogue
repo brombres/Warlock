@@ -13,7 +13,7 @@ augment Entity::Entity2D
     method draw( position:XY )
       use Display.transform_stack
         .begin_draw
-        Display.push_transform( Matrix.transform(XYZ(position,z),size,anchor,rotation,internal_size) )
+        Display.push_transform( Matrix.transform(XYZ(position,z),size,anchor,rotation,nominal_size) )
         .dispatch_draw_bg
         .dispatch_draw
         .dispatch_draw_fg
@@ -22,7 +22,7 @@ augment Entity::Entity2D
     method draw( bounds:Box )
       use Display.transform_stack
         .begin_draw
-        Display.push_transform( Matrix.transform(XYZ(bounds.position,z),bounds.size/internal_size) )
+        Display.push_transform( Matrix.transform(XYZ(bounds.position,z),bounds.size/nominal_size) )
         .dispatch_draw_bg
         .dispatch_draw
         .dispatch_draw_fg
