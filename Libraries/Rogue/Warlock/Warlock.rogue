@@ -68,7 +68,6 @@ class Warlock [essential singleton]
     configured     : Logical
     windows        = Window[]
     textures       = [File:Texture]
-    ticker         = Ticker()
 
   METHODS
     method init
@@ -119,8 +118,6 @@ class Warlock [essential singleton]
       endIf
 
     method render
-      ticker.update
-
       (forEach in windows).begin_render
 
       ApplicationState = ApplicationState.updated || ApplicationState()

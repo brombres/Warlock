@@ -28,9 +28,6 @@ class Display [singleton]
     transforms            = Matrix[] # object transform stack
     combined_transform_modified    = true
 
-    dt    = 1.0/60.0
-    ticks = 1
-
   METHODS
     method at( p:XY )->XY
       return p * size
@@ -38,8 +35,6 @@ class Display [singleton]
     method begin_render
       Display = this
       reset
-      dt = Warlock.ticker.dt
-      ticks = Warlock.ticker.ticks
 
     method bounds->Box
       return Box( size )
@@ -131,8 +126,6 @@ class Display [singleton]
 
     method on_draw_fg
 
-    method on_tick
-
     method on_update
 
     method on_update( dt:Real )
@@ -203,10 +196,6 @@ class Display [singleton]
         @view_transform = new_transform
         combined_transform_modified = true
       endIf
-
-    method tick
-      on_tick
-      # Note: UI is ticked from UI.update(Box)
 
     method update
       on_update
