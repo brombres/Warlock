@@ -13,16 +13,29 @@ class Renderer [singleton]
 
     render_queue   = RendererBatch[]
 
+    display_id     : Int
     swap_index     : Int
 
   METHODS
     method init
       Framework.configure
 
+    method activate_display_graphics_context( display:Display )
+      print_error
+
+    method activate_window_graphics_context( window:Window )
+      print_error
+
     method clear_textures
       if (textures.is_empty) return
       flush
       textures.clear
+
+    method configure_canvas( canvas:Canvas )
+      print_error
+
+    method configure_render_target_image( image:RenderTargetImage )
+      print_error
 
     method configure_window( window:Window )
       print_error
@@ -174,6 +187,7 @@ class Renderer [singleton]
 
       render_queue.add(
         RendererBatch(
+          display_id,
           primitive_type,
           first_vertex,
           vertex_count - first_vertex,
@@ -189,10 +203,20 @@ class Renderer [singleton]
       first_vertex = vertex_count
       first_index  = index_count
 
+    method on_render_begin( canvas:Canvas )
+      display_id = canvas.id
+      draw_triangles
+      shader = Shader.ALPHA_COLOR
+      clear_textures
+
     method on_render_begin( window:Window )
       ++swap_index
       if (swap_index > 2) swap_index = 0
       reset
+      display_id = window.id
+
+    method on_render_end( canvas:Canvas )
+      flush
 
     method on_render_end( window:Window )
       flush
@@ -212,6 +236,11 @@ class Renderer [singleton]
       shader = Shader.ALPHA_COLOR
       clear_textures
 
+    method set_display_id( new_display_id:Int )
+      if (display_id == new_display_id) return
+      flush
+      @display_id = new_display_id
+
     method set_primitive_type( new_type:GlobalID )
       if (primitive_type == new_type) return
       flush
@@ -230,6 +259,7 @@ class Renderer [singleton]
       textures[0] = new_texture
 
     method set_texture( stage:Int, new_texture:Texture )
+      if (new_texture.source) new_texture .= source
       if (textures.count > stage and textures[stage] is new_texture) return
       flush
       textures.expand_to_include( stage )

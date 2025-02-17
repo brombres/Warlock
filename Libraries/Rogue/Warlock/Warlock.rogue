@@ -9,6 +9,7 @@ $include Warlock/AssetInfo
 $include Warlock/AssetManager
 $include Warlock/BitmapIO
 $include Warlock/Box
+$include Warlock/Canvas
 $include Warlock/Display
 $include Warlock/DisplayState
 $include Warlock/Drawable2D
@@ -24,11 +25,14 @@ $include Warlock/MeshBuilder
 $include Warlock/OverlayLog
 $include Warlock/ProjectionMode
 $include Warlock/Renderer
+$include Warlock/RenderTargetImage
+$include Warlock/RenderTargetTexture
 $include Warlock/RendererBatch
 $include Warlock/Screen
 #$include Warlock/Scene
 #$include Warlock/SceneState
 $include Warlock/Shader
+$include Warlock/SystemFont
 $include Warlock/WarlockState
 $include Warlock/Texture
 $include Warlock/TextureImage
@@ -55,6 +59,7 @@ class Warlock [essential singleton]
 
       OverlayLog.update
       Warlock.render
+      ++Warlock.frames
 
       if (not keep_running)
         use list = Warlock.windows.working_copy
@@ -68,6 +73,7 @@ class Warlock [essential singleton]
     configured     : Logical
     windows        = Window[]
     textures       = [File:Texture]
+    frames         : Int
 
   METHODS
     method init

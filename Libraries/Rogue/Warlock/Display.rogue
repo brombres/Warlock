@@ -28,6 +28,11 @@ class Display [singleton]
     transforms            = Matrix[] # object transform stack
     combined_transform_modified    = true
 
+  GLOBAL METHODS
+    method on_singleton_change( old_display:Display, new_display:Display, &before )
+      if (before) Renderer.flush
+      else        Renderer.display_id = new_display.id
+
   METHODS
     method at( p:XY )->XY
       return p * size
@@ -148,7 +153,7 @@ class Display [singleton]
     method render
       Display = this
 
-      state = state.updated || DisplayState()
+      state = state?.updated || DisplayState()
       state.on_render_begin
       state.draw
 

@@ -23,7 +23,7 @@ class Window : Display
       Framework.close_window( this )
 
     method native_id->Int
-      noAction
+      noAction  # defined by extended Platform, e.g. SDL
 
     method render
       Renderer.on_render_begin( this )

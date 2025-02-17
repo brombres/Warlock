@@ -1,0 +1,61 @@
+library Warlock
+
+class RenderTargetImage : TextureImage
+  PROPERTIES
+    depth_texture : Texture
+
+  METHODS
+    method init( size:XY, &round_down )
+      # Creates a texture canvas (offscreen buffer / render target).
+      # Rounds the width and height either up (default) or down (&round_down)
+      # to the nearest power of 2.
+      #
+      # Some use cases such as drawing a 2D shadow layer do not need a 1:1
+      # pixel match with the main display and can round down their size to
+      # conserve memory.
+      #
+      # The initial size determines the resolution of the offscreen buffer
+      # but can be changed after initialization.
+      init( size.x, size.y, &=round_down )
+
+    method init( width:Int, height:Int, &round_down )
+      # Creates a texture canvas (offscreen texture / render target).
+      # Rounds the width and height either up (default) or down (&round_down)
+      # to the nearest power of 2.
+      #
+      # Some use cases such as drawing a 2D shadow layer do not need a 1:1
+      # pixel match with the main display and can round down their size to
+      # conserve memory.
+      local wp2 = width.to_power_of_2
+      local hp2 = height.to_power_of_2
+      local subset_w = width
+      local subset_h = height
+      if (round_down)
+        if (width  < wp2) wp2 /= 2; subset_w /= 2
+        if (height < hp2) hp2 /= 2; subset_h /= 2
+      endIf
+
+      texture = RenderTargetTexture( XY(wp2,hp2), RenderTargetTexture.COLOR )
+      depth_texture = RenderTargetTexture( XY(wp2,hp2), RenderTargetTexture.DEPTH )
+      if (wp2 != subset_w or hp2 != subset_h)
+        texture = Texture( texture, Box(subset_w,subset_h) )
+        depth_texture = Texture( depth_texture, Box(subset_w,subset_h) )
+      endIf
+
+      nominal_size = XY( width, height )
+
+      Renderer.configure_render_target_image( this )
+
+    method color_texture->RenderTargetTexture
+      local result = texture
+      if (result.source) result .= source
+      return result->(as RenderTargetTexture)
+
+    method depth_texture->RenderTargetTexture
+      local result = @depth_texture
+      if (result.source) result .= source
+      return result->(as RenderTargetTexture)
+
+    method texture->Texture
+      return @texture
+endClass

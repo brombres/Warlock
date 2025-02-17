@@ -1,0 +1,9 @@
+library Warlock
+
+class RenderTargetTexture : Texture
+  # Renderer-specific definitions in e.g. BGFX.rogue
+  DEFINITIONS
+    COLOR = <COLOR>
+    DEPTH = <DEPTH>
+
+endClass

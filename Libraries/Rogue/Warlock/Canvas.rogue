@@ -1,0 +1,56 @@
+library Warlock
+
+class Canvas : Display
+  PROPERTIES
+    previous_display : Display
+    image            : RenderTargetImage
+    round_down       : Logical
+
+  METHODS
+    method init( size, round_down=false )
+      # Creates a texture canvas (offscreen buffer / render target).
+      # Rounds the width and height either up (default) or down (&round_down)
+      # to the nearest power of 2.
+      #
+      # Some use cases such as drawing a 2D shadow layer do not need a 1:1
+      # pixel match with the main display and can round down their size to
+      # conserve memory.
+      #
+      # The initial size determines the resolution of the offscreen buffer
+      # but can be changed after initialization.
+      noAction
+
+    method init( width:Int, height:Int, &round_down )
+      # Creates a texture canvas (offscreen texture / render target).
+      # Rounds the width and height either up (default) or down (&round_down)
+      # to the nearest power of 2.
+      #
+      # Some use cases such as drawing a 2D shadow layer do not need a 1:1
+      # pixel match with the main display and can round down their size to
+      # conserve memory.
+      init( XY(width,height), &=round_down )
+
+    method image->RenderTargetImage
+      prepare
+      return @image
+
+    method prepare
+      if (@image) return
+      image = RenderTargetImage( size.x, size.y, &=round_down )
+      size = @image.texture.size  # may have been adjusted
+      Renderer.configure_canvas( this )
+
+    method on_use->Canvas
+      prepare
+      previous_display = Display
+      Display = this
+      reset
+
+      Renderer.on_render_begin( this )
+      prior.render
+
+    method on_end_use( canvas:Canvas )
+      Renderer.on_render_end( this )
+      Display = previous_display
+
+endClass

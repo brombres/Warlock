@@ -1,6 +1,7 @@
 library Warlock
 
 class RendererBatch(
+  display_id:Int,
   primitive_type:GlobalID,
   first_vertex:Int,
   vertex_count:Int,

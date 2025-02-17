@@ -12,7 +12,7 @@ class TextureImage : Image
 
     method init( asset, image_index )
       nominal_size = asset.images[image_index].bounds.size
-      size          = nominal_size
+      size         = nominal_size
 
     method init( asset_name:String )
       local asset = AssetManager.find_image( asset_name )
