@@ -59,7 +59,7 @@ class SDL : Framework [singleton]
       @|$window->sdl_window =
        |  SDL_CreateWindow(
        |    $window->title->data->as_utf8,
-       |    (int)$window->size.x, (int)$window->size.y,
+       |    (int)$window->pixel_size.x, (int)$window->pixel_size.y,
        |    flags
        |  );
 
@@ -199,9 +199,10 @@ class SDL : Framework [singleton]
       native
       @|int w, h;
        |SDL_GetWindowSizeInPixels( $window->sdl_window, &w, &h );
-       |$window->size.x = w;
-       |$window->size.y = h;
+       |$window->pixel_size.x = w;
+       |$window->pixel_size.y = h;
        |$window->density = SDL_GetWindowPixelDensity( $window->sdl_window );
+      window.update_size
 
   GLOBAL METHODS
     method .sdl_scancode_to_keycode( scancode:Int )->Keycode

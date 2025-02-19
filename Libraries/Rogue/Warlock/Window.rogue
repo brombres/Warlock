@@ -8,7 +8,7 @@ class Window : Display
     method init( title, width:Int, height:Int, state=DisplayState() )
       ensure<<state>>
 
-      size = XY(width,height)
+      pixel_size = XY(width,height)
       if (Framework.create_window(this))
         Warlock.add_window( this )
         Renderer.configure_window( this )

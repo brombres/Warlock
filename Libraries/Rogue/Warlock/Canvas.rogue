@@ -7,7 +7,7 @@ class Canvas : Display
     round_down       : Logical
 
   METHODS
-    method init( size, round_down=false )
+    method init( pixel_size, round_down=false )
       # Creates a texture canvas (offscreen buffer / render target).
       # Rounds the width and height either up (default) or down (&round_down)
       # to the nearest power of 2.
@@ -16,8 +16,8 @@ class Canvas : Display
       # pixel match with the main display and can round down their size to
       # conserve memory.
       #
-      # The initial size determines the resolution of the offscreen buffer
-      # but can be changed after initialization.
+      # The initial pixel_size sets the logical resolution of the offscreen
+      # buffer but can be changed after initialization.
       noAction
 
     method init( width:Int, height:Int, &round_down )
@@ -36,8 +36,8 @@ class Canvas : Display
 
     method prepare
       if (@image) return
-      image = RenderTargetImage( size.x, size.y, &=round_down )
-      size = @image.texture.size  # may have been adjusted
+      image = RenderTargetImage( pixel_size.x, pixel_size.y, &=round_down )
+      pixel_size = @image.texture.size  # may have been adjusted
       Renderer.configure_canvas( this )
 
     method on_use->Canvas
@@ -48,6 +48,7 @@ class Canvas : Display
 
       Renderer.on_render_begin( this )
       prior.render
+      return this
 
     method on_end_use( canvas:Canvas )
       Renderer.on_render_end( this )

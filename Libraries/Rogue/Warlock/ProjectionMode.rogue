@@ -16,11 +16,14 @@ class ProjectionMode2DX : ProjectionMode [singleton]
     method init( depth_scale )
 
     method update
-      nominal_z = ((Display.width^2 + Display.height^2).sqrt * depth_scale).floor
+      update( Display.width, Display.height )
+
+    method update( width:Int, height:Int )
+      nominal_z = ((width^2 + height^2).sqrt * depth_scale).floor
       local perspective_center = Display.perspective_center
       Display.projection_transform =
         Matrix.mode_2dx(
-          Display.width, Display.height,
+          width, height,
           &=depth_scale,
           &=perspective_center
           &homogeneous_depth=Renderer.uses_homogeneous_depth

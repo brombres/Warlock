@@ -7,7 +7,9 @@ class Display [singleton]
     state   : DisplayState
     ui      = UI()
 
-    size    : XY  # In pixels.
+    pixel_size        : XY  # True size in pixels.
+    size       : XY  # Scaled size.
+    scale_to_fit_size : XY?
     density = 1.0 # May be 2 or 3 (etc.) for Retina and other HD displays.
 
     projection_mode = ProjectionMode2DX : ProjectionMode
@@ -157,14 +159,17 @@ class Display [singleton]
 
     method reset
       perspective_center = XY(0.5,0.5)
-      projection_mode.update
       view_transform   = Matrix.identity
       transform = Matrix.identity
       transforms.clear
       should_clear_color = false
+      update_size
 
     method safe_area->Box
       return bounds
+
+    method scale_to_fit( scale_to_fit_size )
+      update_size
 
     method set_perspective_center( new_center:XY )
       if (perspective_center != new_center)
@@ -184,6 +189,12 @@ class Display [singleton]
         <Display.transform_modified>.signal
         @transform = new_transform
         combined_transform_modified = true
+      endIf
+
+    method set_pixel_size( new_pixel_size:XY )
+      if (pixel_size != new_pixel_size)
+        @pixel_size = new_pixel_size
+        update_size
       endIf
 
     method set_projection_transform( new_transform:Matrix )
@@ -207,6 +218,15 @@ class Display [singleton]
       on_update( dt )
       ui.update( bounds )
       ui.request_redraw
+
+    method update_size
+      if local fit_size = scale_to_fit_size
+        local scale = (fit_size / pixel_size).min
+        size = (pixel_size * scale).floor
+      else
+        size = pixel_size
+      endIf
+      projection_mode.update
 
     method width->Real
       return size.x

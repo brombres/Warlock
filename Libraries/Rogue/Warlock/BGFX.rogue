@@ -21,8 +21,8 @@ class BGFX : Renderer [singleton]
 
     method activate_display_graphics_context( display:Display ) [override]
       native
-      @|uint16_t w = static_cast<uint16_t>( $display->size.x );
-       |uint16_t h = static_cast<uint16_t>( $display->size.y );
+      @|uint16_t w = static_cast<uint16_t>( $display->pixel_size.x );
+       |uint16_t h = static_cast<uint16_t>( $display->pixel_size.y );
        |bgfx::setViewRect( $display->id, 0, 0, w, h );
        |bgfx::setViewMode( $display->id, bgfx::ViewMode::Sequential );
        |bgfx::touch( $display->id );
@@ -45,8 +45,8 @@ class BGFX : Renderer [singleton]
 
       native
       @|SDL_Window* window = $window->sdl_window;
-       |uint16_t w = static_cast<uint16_t>( $window->size.x );
-       |uint16_t h = static_cast<uint16_t>( $window->size.y );
+       |uint16_t w = static_cast<uint16_t>( $window->pixel_size.x );
+       |uint16_t h = static_cast<uint16_t>( $window->pixel_size.y );
        |
        |bgfx::Init init;
        |init.type = bgfx::RendererType::Count;
@@ -256,7 +256,7 @@ class BGFX : Renderer [singleton]
 
     method on_window_resized( window:Window ) [override]
       if (is_initialized)
-        local size = window.size
+        local size = window.pixel_size
         activate_window_graphics_context( window )
 
         native
