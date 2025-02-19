@@ -1,0 +1,7 @@
+library Warlock
+
+class SystemFont : Font [singleton]
+  METHODS
+    method init
+      prior.init( "Font-System-17" )
+endClass
