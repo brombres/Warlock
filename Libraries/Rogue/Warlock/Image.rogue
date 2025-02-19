@@ -20,24 +20,17 @@ class Image : Drawable2D
       opacity      = existing.opacity
       subdivisions = existing.subdivisions
 
-    method draw_bg
-      if (not attributes.foreground and color.argb & 0xFF_000000)
-        Renderer.fill(
-          Box( nominal_size),
-          color.with_opacity(opacity),
-          shader||Shader.ALPHA_COLOR,
-          subdivisions
-        )
-      endIf
-
-    method draw_fg
-      if (attributes.foreground and color.argb & 0xFF_000000)
-        Renderer.fill(
-          Box( nominal_size),
-          color.with_opacity(opacity),
-          shader||Shader.ALPHA_COLOR,
-          subdivisions
-        )
+    method draw( &bg )
+      if (color.argb & 0xFF_000000)
+        local require_bg = not attributes.foreground
+        if (bg == require_bg)
+          Renderer.fill(
+            Box( nominal_size),
+            color.with_opacity(opacity),
+            shader||Shader.ALPHA_COLOR,
+            subdivisions
+          )
+        endIf
       endIf
 
 endClass

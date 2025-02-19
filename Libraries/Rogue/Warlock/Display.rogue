@@ -65,10 +65,10 @@ class Display [singleton]
       return @combined_transform
 
     method draw
-      on_draw_bg
+      on_draw( &bg )
       on_draw
       ui.draw
-      on_draw_fg
+      on_draw( &!bg )
 
     method end_render
       Display = this
@@ -127,9 +127,7 @@ class Display [singleton]
 
     method on_draw
 
-    method on_draw_bg
-
-    method on_draw_fg
+    method on_draw( &bg )
 
     method on_update
 

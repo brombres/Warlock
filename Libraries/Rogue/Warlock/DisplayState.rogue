@@ -3,10 +3,10 @@ library Warlock
 class DisplayState : WarlockState<<DisplayState>>
   METHODS
     method draw
-      on_draw_bg
+      on_draw( &bg )
       on_draw
       Display.draw
-      on_draw_fg
+      on_draw( &!bg )
 
     method handle( e:KeyEvent ) [override]
       contingent

@@ -78,9 +78,7 @@ class WarlockState<<$ExtendedType>> : Rogue::State<<$ExtendedType>>
 
     method on_draw
 
-    method on_draw_bg
-
-    method on_draw_fg
+    method on_draw( &bg )
 
     method on_render_begin
 

@@ -27,11 +27,9 @@ class TextureImage : Image
       texture     = existing.texture
       image_index = existing.image_index
 
-    method draw_bg [override]
-      if (not attributes.foreground) .draw_texture_image
-
-    method draw_fg [override]
-      if (attributes.foreground) .draw_texture_image
+    method draw( &bg ) [override]
+      local draw_bg = not attributes.foreground
+      if (bg == draw_bg) .draw_texture_image
 
     method texture->Texture
       if (not @texture and asset)

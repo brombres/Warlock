@@ -99,8 +99,7 @@ class BGFX : Renderer [singleton]
        |  static_cast<uint16_t>($texture.size.y)
        |);
        |
-       |//bgfx::setViewClear( $canvas->id, BGFX_CLEAR_COLOR|BGFX_CLEAR_DEPTH, 0xffffffff, 1.0f, 0 );
-       |bgfx::setViewClear( $canvas->id, BGFX_CLEAR_COLOR, 0xffffffff, 1.0f, 0 );
+       |bgfx::setViewClear( $canvas->id, BGFX_CLEAR_COLOR|BGFX_CLEAR_DEPTH, 0xffffffff, 1.0f, 0 );
        |
        |bgfx::touch( $canvas->id );
 
