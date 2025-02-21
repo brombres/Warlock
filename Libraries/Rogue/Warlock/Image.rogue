@@ -51,8 +51,14 @@ augment Image[]
     method set_anchor( anchor:Anchor )
       (forEach in this).anchor = anchor
 
+    method set_color( color:Color )
+      (forEach in this).color = color
+
     method set_nominal_size( nominal_size:XY )
       (forEach in this).nominal_size = nominal_size
+
+    method set_opacity( opacity:Real )
+      (forEach in this).opacity = opacity
 
     method set_position( position:XY )
       (forEach in this).position = position

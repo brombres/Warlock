@@ -36,6 +36,10 @@ class Display [singleton]
       else        Renderer.display_id = new_display.id
 
   METHODS
+    method on_cleanup
+      IDManager.return_id( this )
+
+  METHODS
     method at( p:XY )->XY
       return p * size
 
@@ -50,7 +54,8 @@ class Display [singleton]
       return size/2
 
     method change_state( new_state:DisplayState )
-      state.change_state( new_state )
+      if (state) state.change_state( new_state )
+      else       state = new_state
 
     method clear
       should_clear_color = true
@@ -74,7 +79,7 @@ class Display [singleton]
 
     method end_render
       Display = this
-      state.on_render_end
+      state?.on_render_end
 
     method handle( e:KeyEvent )
       contingent

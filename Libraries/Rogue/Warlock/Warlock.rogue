@@ -16,7 +16,7 @@ $include Warlock/Drawable2D
 $include Warlock/Entity
 $include Warlock/Font
 $include Warlock/Framework
-$include Warlock/IDGenerator
+$include Warlock/IDManager
 $include Warlock/Image
 $include Warlock/ImageInfo
 $include Warlock/Line

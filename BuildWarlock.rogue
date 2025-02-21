@@ -248,7 +248,7 @@ routine rogo_macos
   local rebuild = args.contains("rebuild")
   #execute "cd ~/Projects/Rogue && rogo libs"
   #rebuild = true
-  build( "macOS", &=debug )
+  build( "macOS", &=debug, &=rebuild )
 endRoutine
 
 routine rogo_build_debug( &rebuild )

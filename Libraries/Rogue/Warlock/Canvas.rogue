@@ -40,7 +40,7 @@ class Canvas : Display
       pixel_size = @image.texture.size  # may have been adjusted
       Renderer.configure_canvas( this )
 
-    method on_use->Canvas
+    method begin_render [override]
       prepare
       previous_display = Display
       Display = this
@@ -48,10 +48,16 @@ class Canvas : Display
 
       Renderer.on_render_begin( this )
       prior.render
+
+    method end_render [override]
+      Renderer.on_render_end( this )
+      Display = previous_display
+
+    method on_use->Canvas
+      begin_render
       return this
 
     method on_end_use( canvas:Canvas )
-      Renderer.on_render_end( this )
-      Display = previous_display
+      end_render
 
 endClass

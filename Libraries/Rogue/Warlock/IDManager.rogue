@@ -1,0 +1,27 @@
+library Warlock
+
+class IDManager [singleton]
+  # BGFX renders lower-numbered views before higher-numbered, so we need to
+  # have Canvases (offscreen buffers) be lower numbers and Windows be higher.
+  PROPERTIES
+    next_buffer_id = 1   : Int
+    next_window_id = 100 : Int
+    available_buffer_ids = Int[]
+    available_window_ids = Int[]
+
+  METHODS
+    method obtain_id( display:Display )->Int
+      if (display instanceOf Window)
+        if (available_window_ids.count) return available_window_ids.remove_last
+        ++next_window_id
+        return (next_window_id - 1)
+      else
+        if (available_buffer_ids.count) return available_buffer_ids.remove_last
+        ++next_buffer_id
+        return (next_buffer_id - 1)
+      endIf
+
+    method return_id( display:Display )
+      if (display instanceOf Window) available_window_ids.add( display.id )
+      else                           available_buffer_ids.add( display.id )
+endClass

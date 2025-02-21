@@ -19,7 +19,7 @@ class ProjectionMode2DX : ProjectionMode [singleton]
       update( Display.width, Display.height )
 
     method update( width:Int, height:Int )
-      nominal_z = ((width^2 + height^2).sqrt * depth_scale).floor
+      nominal_z = ((width^2 + height^2).sqrt * depth_scale).floor.or_larger( 1000 )
       local perspective_center = Display.perspective_center
       Display.projection_transform =
         Matrix.mode_2dx(
