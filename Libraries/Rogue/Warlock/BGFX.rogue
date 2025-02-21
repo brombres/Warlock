@@ -207,7 +207,12 @@ class BGFX : Renderer [singleton]
        |  bgfx::makeRef( $index_data->data, (uint32_t)($data->indices->count * sizeof(uint16_t)) )
        |);
 
+      local clip : Box?
       forEach (batch in render_queue)
+        if (clip != batch.clip)
+          clip = batch.clip
+          set_clip( clip )
+        endIf
 
         local transform = batch.transform->Matrix32
         native @|bgfx::setTransform( reinterpret_cast<float*>( &$transform ) );
@@ -248,6 +253,8 @@ class BGFX : Renderer [singleton]
       endForEach
       render_queue.clear
 
+      set_clip( null )
+
       native @|bgfx::frame();
 
       data.clear
@@ -282,6 +289,23 @@ class BGFX : Renderer [singleton]
          |int n = stats->numDraw;
          |if ( !n ) n = 1;
          |for (int i=n; --i>=0; ) bgfx::frame();
+      endIf
+
+    method set_clip( clip:Box? ) [override]
+      if local pixel_clip = clip
+        if (pixel_clip.size.x == 0)
+          pixel_clip = Box( Display.pixel_size, 1, 1 )
+        endIf
+
+        native
+        @|bgfx::setScissor(
+         |  (uint16_t)$pixel_clip.position.x,
+         |  (uint16_t)$pixel_clip.position.y,
+         |  (uint16_t)$pixel_clip.size.x,
+         |  (uint16_t)$pixel_clip.size.y
+         |);
+      else
+        native @|bgfx::setScissor();
       endIf
 
     method uses_homogeneous_depth->Logical [override]

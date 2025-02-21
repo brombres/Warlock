@@ -1,6 +1,9 @@
 library Warlock
 
 class WarlockState<<$ExtendedType>> : Rogue::State<<$ExtendedType>>
+  PROPERTIES
+    actions : Action
+
   METHODS
     #method draw
 
@@ -92,4 +95,7 @@ class WarlockState<<$ExtendedType>> : Rogue::State<<$ExtendedType>>
 
     method on_unhandled( e:TextEvent )
 
+    method update( dt:Real ) [override]
+      actions = actions?.updated
+      prior.update( dt )
 endClass

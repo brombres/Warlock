@@ -185,6 +185,15 @@ class Renderer [singleton]
         others: batch_textures = ObjectPool<<Texture[]>>.on_use.[ add(textures) ]
       endWhich
 
+      local clip = Display.clip
+      if (clip)
+        local world_transform = Display.world_transform
+        local scale = (Display.pixel_size / Display.size).x
+        local pos  = (world_transform*clip.value.position).xy * scale
+        local size = (world_transform*clip.value.size).xy * scale
+        clip = Box( pos, size ).floor
+      endIf
+
       render_queue.add(
         RendererBatch(
           display_id,
@@ -196,7 +205,8 @@ class Renderer [singleton]
           Display.combined_transform,
           shader,
           batch_texture,
-          batch_textures
+          batch_textures,
+          clip
         )
       )
 
@@ -235,6 +245,9 @@ class Renderer [singleton]
       first_index = 0
       shader = Shader.ALPHA_COLOR
       clear_textures
+
+    method set_clip( clip:Box? )
+      print_error
 
     method set_display_id( new_display_id:Int )
       if (display_id == new_display_id) return

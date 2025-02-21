@@ -10,6 +10,7 @@ class RendererBatch(
   transform:Matrix,
   shader:Shader,
   texture:Texture,   # stage 0 only
-  textures:Texture[] # multi-stage texture
+  textures:Texture[], # multi-stage texture
+  clip:Box?
 ) [compound]
 endClass

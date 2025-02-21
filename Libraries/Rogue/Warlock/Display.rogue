@@ -8,7 +8,7 @@ class Display [singleton]
     ui      = UI()
 
     pixel_size        : XY  # True size in pixels.
-    size       : XY  # Scaled size.
+    size              : XY  # Scaled size.
     scale_to_fit_size : XY?
     density = 1.0 # May be 2 or 3 (etc.) for Retina and other HD displays.
 
@@ -23,12 +23,17 @@ class Display [singleton]
     should_clear_color  : Logical
 
     transform_stack       : TransformStackState  # 'use Display.transform_stack / ... / endUse'
-    combined_transform    : Matrix   # projection * view * object
+    combined_transform    : Matrix   # projection * world
+    world_transform       : Matrix   # view * object
     projection_transform  : Matrix
     view_transform        : Matrix
     transform             : Matrix   # object transform
     transforms            = Matrix[] # object transform stack
-    combined_transform_modified    = true
+    combined_transform_modified = true
+    world_transform_modified    = true
+
+    clip                  : Box?
+    clip_stack            = Box?[]
 
   GLOBAL METHODS
     method on_singleton_change( old_display:Display, new_display:Display, &before )
@@ -63,10 +68,14 @@ class Display [singleton]
     method clear( clear_color )
       should_clear_color = true
 
+    method clear_clip
+      clip_stack.clear
+      clip = null
+
     method combined_transform->Matrix
       # projection * world * object
       if (combined_transform_modified)
-        combined_transform = projection_transform * view_transform * transform
+        combined_transform = projection_transform * world_transform
         combined_transform_modified = false
       endIf
       return @combined_transform
@@ -140,6 +149,12 @@ class Display [singleton]
 
     method on_update( dt:Real )
 
+    method pop_clip( n=1:Int )
+      if (n >= 1 and n >= clip_stack.count)
+        clip_stack.discard_last( n - 1 )
+        clip = clip_stack.remove_last
+      endIf
+
     method push_transform( m:Matrix )
       if (transforms.count)
         transforms.add( transforms.last * m )
@@ -155,6 +170,21 @@ class Display [singleton]
       if (transforms.count) set_transform( transforms.last, &preserve_stack )
       else                  set_transform( Matrix.identity, &preserve_stack )
 
+    method push_clip( new_clip:Box? )
+      clip_stack.add( clip )
+
+      if (new_clip)
+        if (clip)
+          new_clip = clip.value & new_clip.value
+          if (not new_clip)
+            # No interesection, but don't use 'null' as that means "no clip".
+            new_clip = Box(0,0,0,0)
+          endIf
+        endIf
+      endIf
+
+      clip = new_clip
+
     method render
       Display = this
 
@@ -169,12 +199,19 @@ class Display [singleton]
       transforms.clear
       should_clear_color = false
       update_size
+      clear_clip
 
     method safe_area->Box
       return bounds
 
     method scale_to_fit( scale_to_fit_size )
       update_size
+
+    method set_clip( new_clip:Box? )
+      if (clip != new_clip)
+        Renderer.flush
+        @clip = new_clip
+      endIf
 
     method set_perspective_center( new_center:XY )
       if (perspective_center != new_center)
@@ -194,6 +231,7 @@ class Display [singleton]
         <Display.transform_modified>.signal
         @transform = new_transform
         combined_transform_modified = true
+        world_transform_modified = true
       endIf
 
     method set_pixel_size( new_pixel_size:XY )
@@ -214,6 +252,7 @@ class Display [singleton]
         <Display.transform_modified>.signal
         @view_transform = new_transform
         combined_transform_modified = true
+        world_transform_modified = true
       endIf
 
     method update
@@ -225,6 +264,7 @@ class Display [singleton]
       ui.request_redraw
 
     method update_size
+      Renderer.flush
       if local fit_size = scale_to_fit_size
         local scale = (fit_size / pixel_size).min
         size = (pixel_size * scale).floor
@@ -235,6 +275,14 @@ class Display [singleton]
 
     method width->Real
       return size.x
+
+    method world_transform->Matrix
+      # projection * world * object
+      if (world_transform_modified)
+        world_transform = view_transform * transform
+        world_transform_modified = false
+      endIf
+      return @world_transform
 
 endClass
 
