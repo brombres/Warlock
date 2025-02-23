@@ -111,6 +111,10 @@ scanner
       consume ':'
       markPosition
       create SYMBOL_COLON
+      if (nextIs(' ') or nextIs('\t'))
+        consume_ws
+        restart
+      endIf
 
       scan_string  # will restart if string
     elseIf (not scan([^ \t\n]*))
@@ -182,7 +186,64 @@ parser
   on '-' file_attributes -> ExcludedAssetRule( filepath:String, attributes:AttributeList ):AssetRule
   on COMMENT -> Comment( content=content )
 
+  on 'group'
+    asset_group
+    return
+  endOn
+
   syntaxError
+
+- asset_group
+  if (consume(':'))
+    # Single line anonymous group
+    single_line_filepaths
+    produce AnonymousGroup( filepaths )
+
+  elseIf (consume(EOL))
+    # Multi-line anonymous group
+    multi_line_filepaths
+    mustConsume 'endGroup'
+    produce AnonymousGroup( filepaths )
+
+  elseIf (nextIs(IDENTIFIER))
+    identifier
+
+    if (consume(':'))
+      # Single line named group
+      single_line_filepaths
+      produce NamedGroup( name:String, filepaths )
+    elseIf (consume(EOL))
+      # Multi-line named group
+      multi_line_filepaths
+      mustConsume 'endGroup'
+      produce NamedGroup( name:String, filepaths )
+    endIf
+
+  else
+    syntaxError
+
+  endIf
+
+- single_line_filepaths
+  beginList
+    filepath_term_or_id
+    while (consume(','))
+      consume_eols
+      filepath_term_or_id
+    endWhile
+  produceList
+
+- multi_line_filepaths
+  beginList
+    while (not (nextIs('endGroup') or nextIs('endStandalone')))
+      filepath_term_or_id
+      while (consume(','))
+        consume_eols
+        filepath_term_or_id
+      endWhile
+      must_consume_eols
+    endWhile
+  produceList
 
 - file_attributes
   filepath_term_or_id
@@ -228,6 +289,13 @@ parser
 
 - require_eol
   if (not consume(EOL)) syntaxError "Expected end of line."
+
+- consume_eols
+  while (consume(EOL)) noAction
+
+- must_consume_eols
+  if (not consume(EOL)) syntaxError "Expected end of line."
+  consume_eols
 
 - arg_list
   beginList

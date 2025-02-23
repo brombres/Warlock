@@ -92,4 +92,10 @@ class Visitor
     method on_visit_node( cmd:SetTarget )
       current_target = cmd.name
 
+    method on_visit_children( cmd:AnonymousGroup )
+      cmd.filepaths = visit(cmd.filepaths)
+
+    method on_visit_children( cmd:NamedGroup )
+      cmd.filepaths = visit(cmd.filepaths)
+
 endClass

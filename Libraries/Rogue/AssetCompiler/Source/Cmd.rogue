@@ -577,3 +577,38 @@ class ExcludedAssetRule : AssetRule
       return "ExcludedAssetRule($,$)" (%filepath,%attributes)
 
 endClass
+
+
+class AnonymousGroup : Cmd
+  PROPERTIES
+    filepaths : Cmd
+
+  METHODS
+    method init( t, filepaths )
+
+    method init( existing:AnonymousGroup )
+      prior.init( existing )
+      if (existing.filepaths) filepaths = existing.filepaths.cloned
+
+    method description->String
+      return "AnonymousGroup($)" (%filepaths)
+
+endClass
+
+class NamedGroup : Cmd
+  PROPERTIES
+    name      : String
+    filepaths : Cmd
+
+  METHODS
+    method init( t, name, filepaths )
+
+    method init( existing:NamedGroup )
+      prior.init( existing )
+      name = existing.name
+      if (existing.filepaths) filepaths = existing.filepaths.cloned
+
+    method description->String
+      return "NamedGroup($,$)" (%name,%filepaths)
+
+endClass

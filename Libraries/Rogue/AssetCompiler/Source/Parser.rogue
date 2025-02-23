@@ -5,4 +5,14 @@ $include "ParserCore.rogue"
 
 class Parser : ParserCore
   METHODS
+    method print_peek->Int
+      forEach (i in _position..<_limit)
+        local t = _tokens[ i ]
+        @trace t.type, t
+      endForEach
+      return 0
+
+    method print_stack_top->Int
+      if (_cmd_stack.count) trace _cmd_stack.last
+      return 0
 endClass
