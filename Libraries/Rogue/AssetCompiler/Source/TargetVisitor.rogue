@@ -1,0 +1,22 @@
+library AssetCompiler
+
+class TargetVisitor : Visitor
+  PROPERTIES
+    target           : String
+    is_target_active : Logical
+
+  METHODS
+    method process( statements:Cmd )
+      local platform = AssetCompiler.platform
+
+      target = "Global"
+      visit( statements )
+
+      if (AssetCompiler.targets.contains(platform)) target = platform
+      else                                          target = "Default"
+      visit( statements )
+
+    method on_visit_node( cmd:SetTarget )
+      current_target = cmd.name
+      is_target_active = (current_target == target)
+endClass

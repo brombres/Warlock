@@ -24,14 +24,12 @@ class AssetGroup
       }#
 
     method configure_id
-      if (not id)
-        id = GroupIDManager.next_id
+      if (not id) id = GroupIDManager.next_id
 
-        use file_letter = StringPool
-          .base26( id-1, file_letter )
-          filename = "TextureAtlas-$"(file_letter)
-        endUse
-      endIf
+      use file_letter = StringPool
+        .base26( id-1, file_letter )
+        filename = "TextureAtlas-$"(file_letter)
+      endUse
 
     method add( asset:Asset )
       assets.add( asset )
@@ -88,6 +86,9 @@ class AssetGroup
       local result = assets.count
       result ~= ((forEach in assets).filepath.hashcode)
       return result
+
+    method set_id( @id )
+      GroupIDManager.mark_id_used( id )
 
     method to->String
       return assets->String

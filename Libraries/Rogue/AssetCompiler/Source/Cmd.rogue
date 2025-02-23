@@ -595,20 +595,3 @@ class AnonymousGroup : Cmd
 
 endClass
 
-class NamedGroup : Cmd
-  PROPERTIES
-    name      : String
-    filepaths : Cmd
-
-  METHODS
-    method init( t, name, filepaths )
-
-    method init( existing:NamedGroup )
-      prior.init( existing )
-      name = existing.name
-      if (existing.filepaths) filepaths = existing.filepaths.cloned
-
-    method description->String
-      return "NamedGroup($,$)" (%name,%filepaths)
-
-endClass

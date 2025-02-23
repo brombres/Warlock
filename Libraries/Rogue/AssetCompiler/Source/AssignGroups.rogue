@@ -1,0 +1,23 @@
+library AssetCompiler
+
+class AssignGroups : TargetVisitor [singleton]
+  METHODS
+    method on_visit_node( cmd:AnonymousGroup )
+      if (is_target_active)
+        local group : AssetGroup
+        forEach (filepath in cmd.filepaths)
+          local assets = AssetCompiler.find_assets( FilePattern(current_folder/filepath) )
+          if (assets.count)
+            forEach (asset in assets)
+              asset.group = ensure<<group>>
+            endForEach
+          else
+            if (not File(filepath).contains_wildcards)
+              throw filepath.t.error( "Asset not found: " + filepath )
+            endIf
+          endIf
+        endForEach
+      endIf
+      visit_children( cmd )
+
+endClass

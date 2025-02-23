@@ -1,9 +1,6 @@
 library AssetCompiler
 
-class CollectAssets( target:String, suppress_errors=false:Logical ) : Visitor
-  PROPERTIES
-    target_active : Logical
-
+class CollectAssets( target, suppress_errors=false:Logical ) : TargetVisitor
   METHODS
     method on_visit_node( cmd:AssetRule )
       if (not current_target)
@@ -22,8 +19,6 @@ class CollectAssets( target:String, suppress_errors=false:Logical ) : Visitor
       else
         store_asset( filepath, cmd )
       endIf
-      #println (forEach in AssetCompiler.files)
-      #local entry = AssetCompiler.find(
 
     method store_asset( filepath:String, rule:AssetRule )
       if (AssetCompiler.file_lookup.contains(filepath))
@@ -36,13 +31,12 @@ class CollectAssets( target:String, suppress_errors=false:Logical ) : Visitor
           AssetCompiler.assets[filepath] = Asset( filepath, rule )
         endIf
       elseIf (rule instanceOf ExistingAssetRule)
-        if (target_active and not suppress_errors)
+        if (is_target_active and not suppress_errors)
           throw rule.t.error( "File not found '$'."(filepath) )
         endIf
       endIf
 
     method on_visit_node( cmd:SetTarget )
-      current_target = cmd.name
-      target_active = (current_target == target)
+      prior.on_visit_node( cmd )
       AssetCompiler.targets.add( current_target )
 endClass

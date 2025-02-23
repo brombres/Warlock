@@ -4,6 +4,7 @@ $include "Scanner.rogue"
 $include "Parser.rogue" [optional]
 $include AssetGroup
 $include Asset
+$include AssignGroups
 $include AtlasPage
 $include CollectAssets
 $include GenerateAssetConfig
@@ -11,6 +12,7 @@ $include GroupIDManager
 $include Manifest
 $include ImagePacker
 $include Placement
+$include TargetVisitor
 
 uses AssetCompiler
 uses Collection/IndexedSet
@@ -118,6 +120,7 @@ class AssetCompiler [singleton]
       # current group.
       forEach (group in groups)
         if local info = group_info[group.hash]
+          group.id = info//id
           forEach (page in info//pages)
             group.filepaths.add( page )
           endForEach
@@ -178,6 +181,13 @@ class AssetCompiler [singleton]
         println "Saving $"(file)
         file.save( manifest )
       endIf
+
+    method find_assets( pattern:FilePattern )->Asset[]
+      local result = Asset[]
+      forEach (value at key in assets)
+        if (pattern.matches(key)) result.add( value )
+      endForEach
+      return result
 
     method process_group
       (forEach in groups).process
@@ -247,10 +257,14 @@ class AssetCompiler [singleton]
         asc.save( new_asc )
       endIf
 
+      # Organize cached group info
       group_info.clear
       forEach (group in asset_info//groups)
         group_info[group//hash->Int] = group
       endForEach
+
+      # Assign groups
+      AssignGroups.process( statements )
 
     method collect_asset_info
       local lookup = asset_info.ensure_table( "assets" )

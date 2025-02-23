@@ -95,7 +95,4 @@ class Visitor
     method on_visit_children( cmd:AnonymousGroup )
       cmd.filepaths = visit(cmd.filepaths)
 
-    method on_visit_children( cmd:NamedGroup )
-      cmd.filepaths = visit(cmd.filepaths)
-
 endClass
