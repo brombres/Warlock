@@ -95,12 +95,18 @@ class Display [singleton]
         on( e )
         necessary (not e.is_consumed)
 
+        ui.handle( e )
+        necessary (not e.is_consumed)
+
         on_unhandled( e )
       endContingent
 
     method handle( e:PointerEvent )
       contingent
         on( e )
+        necessary (not e.is_consumed)
+
+        ui.handle( e )
         necessary (not e.is_consumed)
 
         on_unhandled( e )
@@ -111,12 +117,18 @@ class Display [singleton]
         on( e )
         necessary (not e.is_consumed)
 
+        ui.handle( e )
+        necessary (not e.is_consumed)
+
         on_unhandled( e )
       endContingent
 
     method handle( e:TextEvent )
       contingent
         on( e )
+        necessary (not e.is_consumed)
+
+        ui.handle( e )
         necessary (not e.is_consumed)
 
         on_unhandled( e )
