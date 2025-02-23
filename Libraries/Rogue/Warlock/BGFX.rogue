@@ -90,13 +90,14 @@ class BGFX : Renderer [singleton]
       local image   = canvas.image
       local texture = image.texture
 
+      native
       @|bgfx::setViewFrameBuffer( $canvas->id, $image->bgfx_frame_buffer );
        |
        |bgfx::setViewRect(
        |  $canvas->id,
        |  0, 0,
-       |  static_cast<uint16_t>($texture.size.x),
-       |  static_cast<uint16_t>($texture.size.y)
+       |  static_cast<uint16_t>($texture->size.x),
+       |  static_cast<uint16_t>($texture->size.y)
        |);
        |
        |bgfx::setViewClear( $canvas->id, BGFX_CLEAR_COLOR|BGFX_CLEAR_DEPTH, 0xffffffff, 1.0f, 0 );

@@ -155,7 +155,7 @@ routine find_shader( filepaths:String[], filepath:String, replace_old:String, re
 endRoutine
 
 routine rogo_deps
-  # SYNTAX: rogo deps [update|rebuild] [sdl|stb]*
+  # SYNTAX: rogo deps [update|rebuild] [sdl|spine|stb]*
   local args = System.command_line_arguments.cloned
   local rebuild = args.remove( "rebuild" )
   local update  = args.remove( "update" )
@@ -180,8 +180,9 @@ routine deps( args:String[], &update, &rebuild )
   local libs = @{}
   local select_all = false
   loop 2
-    if (select_all or args.contains("sdl")) libs//sdl = true
-    if (select_all or args.contains("stb")) libs//stb = true
+    if (select_all or args.contains("sdl"))   libs//sdl = true
+    if (select_all or args.contains("spine")) libs//spine = true
+    if (select_all or args.contains("stb"))   libs//stb = true
     if (args.count) escapeLoop
     select_all = true
   endLoop
@@ -202,6 +203,23 @@ routine deps( args:String[], &update, &rebuild )
 
       if (repo.has_remote_changes)
         banner "Updating SDL repo"
+        repo.pull( &verbose )
+      endIf
+    endIf
+  endIf
+
+  -------- Libraries/spine --------
+  if (select_all or libs//spine)
+    local folder = File("Libraries/spine-runtimes")
+    local repo = GitRepo( "https://github.com/EsotericSoftware/spine-runtimes.git", folder )
+
+    if (not repo.exists)
+      banner "Cloning spine repo"
+      repo.clone( &verbose )
+
+    elseIf (update)
+      if (repo.has_remote_changes)
+        banner "Updating spine repo"
         repo.pull( &verbose )
       endIf
     endIf
