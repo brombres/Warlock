@@ -47,7 +47,7 @@ class AssetCompiler [singleton]
     asset_info_file : File
     group_info      = @{}
 
-    sheet_size = XY(2048,2048)
+    sheet_size = XY(4096)
 
   METHODS
     method init( args:String[] )

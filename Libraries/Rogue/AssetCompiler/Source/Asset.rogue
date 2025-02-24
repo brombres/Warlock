@@ -1,12 +1,15 @@
 library AssetCompiler
 
-class Asset( filepath:String, rule:AssetRule )
+class Asset
   DEFINITIONS
     ASCII_CHARACTERS = @| !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
 
     # "
 
   PROPERTIES
+    filepath        : String
+    rule            : AssetRule
+
     is_modified     : Logical
     is_invalid      : Logical
     is_standalone   : Logical
@@ -25,6 +28,10 @@ class Asset( filepath:String, rule:AssetRule )
     font_width      : Int  # -1 for variable, > 0 = fixed
 
   METHODS
+    method init( filepath, rule )
+      is_standalone = rule?.find_attribute( "standalone" )?
+      if (is_standalone) group = AssetGroup()
+
     method bitmap->Bitmap
       if (@bitmap) return @bitmap
 

@@ -33,10 +33,8 @@ SYMBOL_SLASH         /
 tokens Keywords
 --------------------------------------------------------------------------------
 KEYWORD_END_GROUP      endGroup       [structural]
-KEYWORD_END_STANDALONE endStandalone  [structural]
 KEYWORD_FOLDER         folder
 KEYWORD_GROUP          group
-KEYWORD_STANDALONE     standalone
 
 --------------------------------------------------------------------------------
 scanner
@@ -198,7 +196,7 @@ parser
     # Multi-line anonymous group
     multi_line_filepaths
     mustConsume 'endGroup'
-    produce AnonymousGroup( filepaths )
+    produce AnonymousGroup( filepaths, multiline="true":Logical )
   else
     # Single line anonymous group
     single_line_filepaths
@@ -216,7 +214,7 @@ parser
 
 - multi_line_filepaths
   beginList
-    while (not (nextIs('endGroup') or nextIs('endStandalone')))
+    while (not (nextIs('endGroup')))
       filepath_term_or_id
       while (consume(','))
         consume_eols

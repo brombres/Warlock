@@ -42,7 +42,15 @@ class AssetGroup
         case <Binary>
           local output_folder = "Build/$"(AssetCompiler.platform)
           forEach (asset in assets)
-            local output_filepath = output_folder/asset.filepath
+
+            local output_filepath = asset.filepath
+            if (not output_filepath.begins_with("Assets/Data/"))
+              output_filepath .= after_first( '/' )
+              output_filepath .= after_first( '/' )
+              output_filepath = "Assets/Data" / output_filepath
+            endIf
+            output_filepath = output_folder/output_filepath
+
             if (File(asset.filepath).is_newer_than(File(output_filepath)))
               File( asset.filepath ).copy_to( File(output_filepath), &verbose )
             endIf

@@ -582,9 +582,10 @@ endClass
 class AnonymousGroup : Cmd
   PROPERTIES
     filepaths : Cmd
+    multiline : Logical
 
   METHODS
-    method init( t, filepaths )
+    method init( t, filepaths, multiline=false )
 
     method init( existing:AnonymousGroup )
       prior.init( existing )
