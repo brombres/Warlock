@@ -24,6 +24,7 @@ $include Warlock/Log
 $include Warlock/MeshBuilder
 $include Warlock/OverlayLog
 $include Warlock/ProjectionMode
+$include Warlock/Quad
 $include Warlock/Renderer
 $include Warlock/RenderTargetImage
 $include Warlock/RenderTargetTexture
@@ -32,6 +33,7 @@ $include Warlock/Screen
 #$include Warlock/Scene
 #$include Warlock/SceneState
 $include Warlock/Shader
+$include Warlock/Spine
 $include Warlock/SystemFont
 $include Warlock/WarlockState
 $include Warlock/Texture

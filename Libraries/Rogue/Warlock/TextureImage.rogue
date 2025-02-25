@@ -31,7 +31,11 @@ class TextureImage : Image
       local draw_bg = not attributes.foreground
       if (bg == draw_bg) .draw_texture_image
 
-    method texture->Texture
+    method load [override]
+      # Ensures image is fully loaded.
+      texture  # will load if necessary
+
+    method texture->Texture [override]
       if (not @texture and asset)
         texture = asset.images[image_index].texture  # actually loads texture if necessary
       endIf

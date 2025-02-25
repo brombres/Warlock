@@ -222,7 +222,7 @@ class BGFX : Renderer [singleton]
         native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A);
         native @|$bgfx_state_flags |= (RogueInt) BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_ONE, BGFX_STATE_BLEND_INV_SRC_ALPHA);
         native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_WRITE_Z);
-        native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_CULL_CCW);
+        #native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_CULL_CCW);
         #native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_DEPTH_TEST_LEQUAL);
         native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_DEPTH_TEST_ALWAYS);
         which (batch.primitive_type)

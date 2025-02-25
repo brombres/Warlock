@@ -23,13 +23,13 @@ class MeshBuilder
     method add( indices:Int[] )
       this.indices.add( indices )
 
-    method add( other:MeshBuilder )
+    method add( other:MeshBuilder, first_vertex=0:Int )
       vertices.reserve( other.vertices.count )
       indices.reserve( other.indices.count )
+      local i0 = this.vertices.count - first_vertex
       vertices.add( other.vertices )
-      local n = this.indices.count
       forEach (index in other.indices)
-        indices.add( n + index )
+        indices.add( index + i0 )
       endForEach
 
     method add( vertex:Vertex, &auto_index )->Int
@@ -46,6 +46,12 @@ class MeshBuilder
     method clear
       vertices.clear
       indices.clear
+
+    method fill( texture:Texture )
+      Renderer.shader = Shader.ALPHA_TEXTURE
+      Renderer.texture = texture
+      Renderer.draw_triangles
+      Renderer.data.add( this, Renderer.first_vertex )
 
     method reserve( vertex_count:Int, index_count=null:Int?  )
       # Reserves capacity for an additional 'vertex_count' vertices and 'index_count'

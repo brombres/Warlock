@@ -1,0 +1,22 @@
+library Geometry
+
+uses Graphics
+uses Warlock
+
+augment Quad
+  METHODS
+    method draw( color:Color, shader=Shader.ALPHA_COLOR:Shader, thickness=1.0:Int )
+      Line( a, b ).draw( color, shader, thickness )
+      Line( b, c ).draw( color, shader, thickness )
+      Line( c, d ).draw( color, shader, thickness )
+      Line( d, a ).draw( color, shader, thickness )
+
+      #{
+    method fill( color:Color, shader=Shader.ALPHA_COLOR:Shader )
+      Renderer.fill( this, color, shader )
+
+    method fill( texture:Texture, color=Color.WHITE:Color, shader=Shader.ALPHA_TEXTURE:Shader )
+      Renderer.fill( this, texture, color, shader )
+      }#
+endAugment
+

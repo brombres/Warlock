@@ -47,10 +47,10 @@ class Renderer [singleton]
       if (thickness == 1.0)
         clear_textures
         draw_lines
-        local i1 = data.vertices.count - first_vertex
+        local i0 = data.vertices.count - first_vertex
         data.add Vertex( line.a, color )
         data.add Vertex( line.b, color )
-        data.add( i1, i1+1 )
+        data.add( i0, i0+1 )
       endIf
 
     method draw_lines
@@ -66,7 +66,7 @@ class Renderer [singleton]
       clear_textures
       draw_triangles
       if (subdivisions.sum == 0)
-        local i1 = data.vertices.count - first_vertex
+        local i0 = data.vertices.count - first_vertex
         local a = box.position
         local b = box.top_right
         local c = box.bottom_right
@@ -75,8 +75,8 @@ class Renderer [singleton]
         data.add Vertex( b, color )
         data.add Vertex( c, color )
         data.add Vertex( d, color )
-        data.add( i1, i1+1, i1+2 )
-        data.add( i1, i1+2, i1+3 )
+        data.add( i0, i0+1, i0+2 )
+        data.add( i0, i0+2, i0+3 )
       else
         .generate_quad(
           Vertex( box.position, color ),
@@ -108,7 +108,7 @@ class Renderer [singleton]
       endIf
 
       if (subdivisions.sum == 0)
-        local i1 = data.vertices.count - first_vertex
+        local i0 = data.vertices.count - first_vertex
         local a = box.position
         local b = box.top_right
         local c = box.bottom_right
@@ -117,8 +117,8 @@ class Renderer [singleton]
         data.add Vertex( b, color, uv_b )
         data.add Vertex( c, color, uv_c )
         data.add Vertex( d, color, uv_d )
-        data.add( i1, i1+1, i1+2 )
-        data.add( i1, i1+2, i1+3 )
+        data.add( i0, i0+1, i0+2 )
+        data.add( i0, i0+2, i0+3 )
       else
         .generate_quad(
           Vertex( box.position, color,     uv_a ),
@@ -143,33 +143,33 @@ class Renderer [singleton]
         .generate_quad( cl, cr, br, bl, subdivisions-XY(0,1) )
 
       else
-        local i1 = data.vertices.count - first_vertex
+        local i0 = data.vertices.count - first_vertex
         data.add tl
         data.add tr
         data.add br
         data.add bl
-        data.add( i1, i1+1, i1+2 )
-        data.add( i1, i1+2, i1+3 )
+        data.add( i0, i0+1, i0+2 )
+        data.add( i0, i0+2, i0+3 )
 
       endIf
 
     method fill( triangle:Triangle, color:Color, shader=Shader.ALPHA_COLOR )
       clear_textures
       draw_triangles
-      local i1 = data.vertices.count - first_vertex
+      local i0 = data.vertices.count - first_vertex
       data.add Vertex( triangle.a, color )
       data.add Vertex( triangle.b, color )
       data.add Vertex( triangle.c, color )
-      data.add( i1, i1+1, i1+2 )
+      data.add( i0, i0+1, i0+2 )
 
     method fill( triangle:Triangle, texture:Texture, color:Color, shader=Shader.ALPHA_TEXTURE )
       set_texture( texture )
       draw_triangles
-      local i1 = data.vertices.count - first_vertex
+      local i0 = data.vertices.count - first_vertex
       data.add Vertex( triangle.a, color, XY(0,0) )
       data.add Vertex( triangle.b, color, XY(1,0) )
       data.add Vertex( triangle.c, color, XY(1,1) )
-      data.add( i1, i1+1, i1+2 )
+      data.add( i0, i0+1, i0+2 )
 
     method flush
       local index_count = data.indices.count

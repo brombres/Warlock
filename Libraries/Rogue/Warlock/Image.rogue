@@ -33,6 +33,13 @@ class Image : Drawable2D
         endIf
       endIf
 
+    method load
+      # Ensures image is fully loaded.
+      noAction
+
+    method texture->Texture
+      return null
+
 endClass
 
 augment Image[]
