@@ -12,7 +12,7 @@ class Image : Drawable2D
 
   METHODS
     method init( size=XY(1,1):XY, color=Color(0) )
-      this.size = size
+      reset_size( size )
 
     method init( existing:Image )
       prior.init( existing )
@@ -20,18 +20,15 @@ class Image : Drawable2D
       opacity      = existing.opacity
       subdivisions = existing.subdivisions
 
-    method draw( &bg )
-      if (color.argb & 0xFF_000000)
-        local require_bg = not attributes.foreground
-        if (bg == require_bg)
-          Renderer.fill(
-            Box( nominal_size),
-            color.with_opacity(opacity),
-            shader||Shader.ALPHA_COLOR,
-            subdivisions
-          )
-        endIf
-      endIf
+    method fill( color=null:Color? )
+      if (not color) color = this.color
+
+      Renderer.fill(
+        Box(nominal_size),
+        color.value,
+        shader||Shader.ALPHA_COLOR,
+        subdivisions
+      )
 
     method load
       # Ensures image is fully loaded.
@@ -54,6 +51,9 @@ augment Image[]
       else
         println "No such image collection: " + asset_name
       endIf
+
+    method reset_size( size:XY )
+      (forEach in this).reset_size( size )
 
     method set_anchor( anchor:Anchor )
       (forEach in this).anchor = anchor
@@ -81,6 +81,9 @@ augment Image[]
 
     method set_size( size:XY )
       (forEach in this).size = size
+
+    method set_size( size:XY, scale:XY )
+      (forEach in this).set_size( size, scale )
 
     method set_subdivisions( subdivisions:XY )
       (forEach in this).subdivisions = subdivisions

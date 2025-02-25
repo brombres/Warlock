@@ -1,9 +1,38 @@
 library Warlock
 
-class Spine [essential]
-  GLOBAL PROPERTIES
-    atlas_images = [String:Image]
+class SpineSprite : Image
+  PROPERTIES
+    animation : SpineAnimation
 
+  METHODS
+    method init( skeleton_name:String, atlas=null:SpineAtlas )
+      init( SpineAnimation(skeleton_name,atlas) )
+
+    method init( definition:SpineDefinition )
+      init( SpineAnimation(definition) )
+
+    method init( animation )
+      reset_size( XY(1.0,1.0) )
+
+    method on_draw
+      # Spine doesn't work well with very small scales such as 0.001 so we don't
+      # scale down the spine animation directly. Instead we'll scale down the Spine
+      # drawing by a factor of 1,000.
+      Display.push_transform( Matrix.translate(animation.offset) )
+      Display.push_transform( Matrix.scale(1.0/1000.0) )
+      animation.h_flip = this.attributes.h_flip
+      animation.v_flip = this.attributes.v_flip
+      animation.draw( XY(0,0) )
+      Display.pop_transform
+      Display.pop_transform
+      #nominal_size = XY(1000)
+      #set_scale( scale / 1000.0 )
+
+    method on_update( dt:Real )
+      animation.update( dt )
+endClass
+
+class Spine [essential singleton]
   GLOBAL METHODS
     # The following methods are marked [essential] because they are called directly from C++.
     method data_filepath( name:String )->String [essential]
@@ -15,12 +44,18 @@ class Spine [essential]
       endIf
 
     method load_atlas_image( name:String )->Image [essential]
-      local result = atlas_images[name]
+      local result = Spine.atlas_images[name]
       if (result) return result
 
-      local img = Image(name).[ load ]
-      atlas_images[name] = img
+      local img = Image(name)
+      Spine.atlas_images[name] = img
       return img
+
+  PROPERTIES
+    atlas_images  = [String:Image]
+    atlases       = [String:SpineAtlas]
+    default_atlas : SpineAtlas
+    definitions   = [String:SpineDefinition]
 
   NATIVE
     nativeHeader
@@ -74,16 +109,28 @@ class SpineAtlas
 
     native "spAtlas *atlas;"
 
-  METHODS
-    method init( name )
-      local atlas_name = name
-      if (not atlas_name.to_lowercase.ends_with(".atlas")) atlas_name += ".atlas"
-      if (not Warlock.find_data_file(atlas_name)) atlas_name += ".txt"
+  GLOBAL METHODS
+    method create( name:String )->SpineAtlas
+      if (not name.ends_with(".atlas", &ignore_case)) name += ".atlas"
+      if (not Warlock.find_data_file(name) and Warlock.find_data_file(name+".txt"))
+        name += ".txt"
+      endIf
 
-      native @|$this->atlas = spAtlas_createFromFile( $atlas_name->data->as_utf8, 0 );
+      if local atlas = Spine.atlases[name]
+        return atlas
+      endIf
+
+      local atlas = SpineAtlas( name, &new_instance )
+      Spine.atlases[name] = atlas
+      Spine.default_atlas = atlas  # most recent atlas created becomes default
+      return atlas
+
+  METHODS
+    method init( name, new_instance:Logical )
+      native @|$this->atlas = spAtlas_createFromFile( $name->data->as_utf8, 0 );
       if (native("!$this->atlas")->Logical)
         error = true
-        println "ERROR loading Spine atlas " + atlas_name
+        println "ERROR loading Spine atlas " + name
       endIf
 
       #scale = native( "Rogue_spine_skeleton_scale" )->Real
@@ -94,23 +141,42 @@ class SpineAtlas
 endClass
 
 class SpineDefinition
-
   PROPERTIES
-    name  : String
-    error : Logical
-    atlas : SpineAtlas
-    size  : XY
-    scale = 1.0
+    name   : String
+    error  : String
+    atlas  : SpineAtlas
+    size   : XY
+    offset : XY
+    scale  = 1.0
     animation_names : String[]
 
     native "spSkeletonData*       skeleton_data;"
     native "spAnimationStateData* animation_state_definition;"
 
+  GLOBAL METHODS
+    method create( skeleton_name:String, atlas=null:SpineAtlas )->SpineDefinition
+      if local def = Spine.definitions[skeleton_name]
+        return def
+      endIf
+
+      local def = SpineDefinition( skeleton_name, atlas, &new_instance )
+      Spine.definitions[skeleton_name] = def
+      return def
+
   METHODS
-    method init( name, atlas ) [essential]
+    method init( name, atlas, new_instance:Logical ) [essential]
+      if (not atlas)
+        atlas = Spine.default_atlas
+        if (not atlas)
+          error = ''Error creating SpineDefinition("$") - no atlas specified and no default atlas exists. Send a SpineAtlas as the second argument or assign one to 'Spine.default_atlas'.''(name)
+          println error
+          return
+        endIf
+      endIf
+
       if (atlas.error)
-        error = true
-        println "Error loading Spine skeleton: " + name
+        error = "Error loading Spine skeleton: " + name
+        println error
         return
       endIf
 
@@ -132,12 +198,12 @@ class SpineDefinition
           skeleton_name += ".json"
         endIf
 
-        error = true
         if (Warlock.find_data_file(skeleton_name))
-          println "Spine skeleton data file must end with '.skel' or '.json'."
+          error = "Spine skeleton data file must end with '.skel' or '.json'."
         else
-          println "Cannot find data file '$.skel' or '$.json'."(skeleton_name,skeleton_name)
+          error = "Cannot find data file '$.skel' or '$.json'."(skeleton_name,skeleton_name)
         endIf
+        println error
         return
       endContingent
 
@@ -183,8 +249,8 @@ class SpineDefinition
       size = XY(w,h)
 
       if (native("!$this->skeleton_data")->Logical)
-        error = true
-        println "ERROR loading Spine skeleton " + skeleton_name
+        error = "ERROR loading Spine skeleton " + skeleton_name
+        println error
 
       else
         native @|$this->animation_state_definition = spAnimationStateData_create( $this->skeleton_data );
@@ -310,6 +376,9 @@ class SpineAnimation
     animation_lookup = Table<<Int64,WeakReference<<SpineAnimation>>>>()
 
   GLOBAL METHODS
+    method create( skeleton_name:String, atlas=null:SpineAtlas )->SpineAnimation
+      return SpineAnimation( SpineDefinition(skeleton_name,atlas) )
+
     method dispatch( animation_id:Int64, e:SpineAnimationEvent ) [essential]
       local animation_ref = animation_lookup[ animation_id ]
       if (animation_ref) animation_ref.object.handle( e )
@@ -359,9 +428,10 @@ class SpineAnimation
     definition : SpineDefinition
 
     position   : XY
+    offset     : XY
     scale      : Real
-    hflip      : Logical
-    vflip      : Logical
+    h_flip     : Logical
+    v_flip     : Logical
 
     color      = Color.WHITE : Color
 
@@ -375,7 +445,8 @@ class SpineAnimation
     method init( definition )
       error = definition.error
       if (not error)
-        scale = definition.scale
+        scale  = definition.scale
+        offset = definition.offset
         native @|$this->skeleton = spSkeleton_create( $this->definition->skeleton_data );
                 |$this->animation_state = spAnimationState_create( $this->definition->animation_state_definition );
                 |$this->animation_state->listener = SpineAnimation_listener;
@@ -422,8 +493,8 @@ class SpineAnimation
       @|spSkeleton* skeleton = $this->skeleton;
        |skeleton->x = $position.x;
        |skeleton->y = $position.y;
-       |skeleton->scaleX = $hflip ? -1*$scale : $scale;
-       |skeleton->scaleY = $vflip ? $scale : -1*$scale;
+       |skeleton->scaleX = $h_flip ? -1*$scale : $scale;
+       |skeleton->scaleY = $v_flip ? $scale : -1*$scale;
        |spAnimationState_apply( $this->animation_state, skeleton );
        |
        |spSkeleton_updateWorldTransform( skeleton, SP_PHYSICS_UPDATE );
@@ -738,9 +809,9 @@ class SpineAnimation
         native @|spAnimationState_clearTracks( $this->animation_state );
       endIf
 
-    method update
+    method update( dt:Real )
       if (error) return
-      native @|spAnimationState_update( $this->animation_state, 1.0/60.0 );
+      native @|spAnimationState_update( $this->animation_state, (float)$dt );
 
 endClass
 
