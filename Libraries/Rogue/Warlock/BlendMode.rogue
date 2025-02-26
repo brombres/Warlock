@@ -1,0 +1,8 @@
+library Warlock
+
+enum BlendMode
+  ONE
+  ZERO
+  SOURCE_ALPHA
+  INVERSE_SOURCE_ALPHA
+endEnum

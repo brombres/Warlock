@@ -262,7 +262,7 @@ class Renderer [singleton]
     method set_shader( new_shader:Shader )
       if (shader is new_shader) return
       flush
-      @shader = new_shader.ensure_loaded
+      @shader = new_shader.[load]
 
     method set_texture( new_texture:Texture )
       if (new_texture.source) new_texture .= source

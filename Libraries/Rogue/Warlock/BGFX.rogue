@@ -83,6 +83,8 @@ class BGFX : Renderer [singleton]
 
       Shader.ALPHA_COLOR   = Shader( "AlphaColor" )
       Shader.ALPHA_TEXTURE = Shader( "AlphaTexture" )
+      Shader.ALPHA_COLOR_ADDITIVE   = Shader( "AlphaColor", BlendMode.ONE, BlendMode.ONE )
+      Shader.ALPHA_TEXTURE_ADDITIVE = Shader( "AlphaTexture", BlendMode.ONE, BlendMode.ONE )
 
       is_initialized = true
 
@@ -218,9 +220,12 @@ class BGFX : Renderer [singleton]
         local transform = batch.transform->Matrix32
         native @|bgfx::setTransform( reinterpret_cast<float*>( &$transform ) );
 
+        local shader = batch.shader
+
         local bgfx_state_flags = 0
         native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A);
-        native @|$bgfx_state_flags |= (RogueInt) BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_ONE, BGFX_STATE_BLEND_INV_SRC_ALPHA);
+        bgfx_state_flags |= shader.blend_flags
+        #native @|$bgfx_state_flags |= (RogueInt) BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_ONE, BGFX_STATE_BLEND_INV_SRC_ALPHA);
         native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_WRITE_Z);
         #native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_CULL_CCW);
         #native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_DEPTH_TEST_LEQUAL);
@@ -244,10 +249,10 @@ class BGFX : Renderer [singleton]
           endForEach
         endIf
 
-        batch.shader.apply_uniforms
+        shader.apply_uniforms
         native
         @|bgfx::setState( (uint64_t)$bgfx_state_flags );
-         |bgfx::submit( $batch.display_id, $batch.shader->bgfx_program );
+         |bgfx::submit( $batch.display_id, $shader->program->bgfx_program );
 
         if (batch.textures) ObjectPool<<Texture[]>>.on_end_use( batch.textures.[clear] )
 
@@ -319,7 +324,7 @@ endClass
 class BGFXVertex( x:Real32, y:Real32, z:Real32, abgr:Int32, u:Real32, v:Real32 ) [compound]
 endClass
 
-augment Shader
+augment ShaderProgram
   PROPERTIES
     filename  : String
     is_loaded : Logical
@@ -365,7 +370,7 @@ augment Shader
 
       if (uniforms.count > 8) println "Warlock Shader exceeds maximum of 8 uniforms."
 
-      ensure_loaded
+      load
 
       local i = 0
       forEach (value at name in uniforms)
@@ -385,7 +390,7 @@ augment Shader
         if (i == 8) escapeForEach
       endForEach
 
-    method ensure_loaded->this
+    method load->this
       if (is_loaded) return this
       is_loaded = true
 
@@ -549,5 +554,48 @@ endAugment
 
 augment Window
   METHODS
+endAugment
+
+
+augment Shader
+  METHODS
+    method blend_flags->Int
+      local flags = 0
+      local src = 0
+      local dest = 0
+
+      which (source_blend)
+        case ONE
+          native @|$src = (RogueInt) BGFX_STATE_BLEND_ONE;
+        case ZERO
+          native @|$src = (RogueInt) BGFX_STATE_BLEND_ZERO;
+        case SOURCE_ALPHA
+          native @|$src = (RogueInt) BGFX_STATE_BLEND_SRC_ALPHA;
+        case INVERSE_SOURCE_ALPHA
+          native @|$src = (RogueInt) BGFX_STATE_BLEND_INV_SRC_ALPHA;
+        others
+          println "[BGFX] Shader.blend_flags unhandled blend mode $."(source_blend)
+      endWhich
+
+      which (dest_blend)
+        case ONE
+          native @|$dest = (RogueInt) BGFX_STATE_BLEND_ONE;
+        case ZERO
+          native @|$dest = (RogueInt) BGFX_STATE_BLEND_ZERO;
+        case SOURCE_ALPHA
+          native @|$dest = (RogueInt) BGFX_STATE_BLEND_SRC_ALPHA;
+        case INVERSE_SOURCE_ALPHA
+          native @|$dest = (RogueInt) BGFX_STATE_BLEND_INV_SRC_ALPHA;
+        others
+          println "[BGFX] Shader.blend_flags unhandled blend mode $."(dest_blend)
+      endWhich
+
+      native @|$flags = (RogueInt) BGFX_STATE_BLEND_FUNC(
+              |  (uint64_t)$src,
+              |  (uint64_t)$dest
+              |);
+
+      return flags
+
 endAugment
 

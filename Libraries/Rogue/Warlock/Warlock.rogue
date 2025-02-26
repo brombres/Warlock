@@ -8,6 +8,7 @@ $include Warlock/ApplicationState
 $include Warlock/AssetInfo
 $include Warlock/AssetManager
 $include Warlock/BitmapIO
+$include Warlock/BlendMode
 $include Warlock/Box
 $include Warlock/Canvas
 $include Warlock/Display

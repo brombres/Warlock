@@ -2,19 +2,45 @@ library Warlock
 
 class Shader
   GLOBAL PROPERTIES
-    ALPHA_COLOR   : Shader
-    ALPHA_TEXTURE : Shader
+    ALPHA_COLOR            : Shader
+    ALPHA_TEXTURE          : Shader
+    ALPHA_COLOR_ADDITIVE   : Shader
+    ALPHA_TEXTURE_ADDITIVE : Shader
 
-    cache    = [String:Shader]
+  PROPERTIES
+    program      : ShaderProgram
+    source_blend : BlendMode
+    dest_blend   : BlendMode
+    uniforms     : ShaderUniforms
+
+  METHODS
+    method init( filename:String, source_blend=BlendMode.ONE, dest_blend=BlendMode.INVERSE_SOURCE_ALPHA )
+      program = ShaderProgram( filename )
+
+    method apply_uniforms
+      program.uniforms = uniforms
+      program.apply_uniforms
+
+    method load
+      program.load
+
+    method uniforms->ShaderUniforms
+      return ensure<<@uniforms>>
+endClass
+
+
+class ShaderProgram
+  GLOBAL PROPERTIES
+    cache = [String:ShaderProgram]
 
   GLOBAL METHODS
-    method create( filename:String )->Shader
+    method create( filename:String )->ShaderProgram
       local existing = cache[filename]
       if (existing) return existing
 
-      local shader = Shader().[ filename=filename ]
-      cache[filename] = shader
-      return shader
+      local program = ShaderProgram().[ filename=filename ]
+      cache[filename] = program
+      return program
 
   PROPERTIES
     filename : String
@@ -27,8 +53,6 @@ class Shader
     method to->String
       return filename
 
-    method uniforms->ShaderUniforms
-      return ensure<<@uniforms>>
 endClass
 
 class ShaderUniforms : [String:XYZW]

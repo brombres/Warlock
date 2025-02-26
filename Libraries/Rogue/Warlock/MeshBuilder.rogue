@@ -47,8 +47,8 @@ class MeshBuilder
       vertices.clear
       indices.clear
 
-    method fill( texture:Texture )
-      Renderer.shader = Shader.ALPHA_TEXTURE
+    method fill( texture:Texture, shader=null:Shader )
+      Renderer.shader = shader || Shader.ALPHA_TEXTURE
       Renderer.texture = texture
       Renderer.draw_triangles
       Renderer.data.add( this, Renderer.first_vertex )

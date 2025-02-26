@@ -515,20 +515,15 @@ class SpineAnimation
        |  switch (slot->data->blendMode)
        |  {
        |     case SP_BLEND_MODE_NORMAL:
-               #mesh_builder.shader = ImageShader.TEXTURE_WITH_COLOR_MULTIPLY
-               #mesh_builder.render_mode = RenderMode.ALPHA_IMAGE
+               Renderer.shader = Shader.ALPHA_TEXTURE
       native
       @|        break;
        |     case SP_BLEND_MODE_ADDITIVE:
-               @trace "TODO: SP_BLEND_MODE_ADDITIVE"
-               #mesh_builder.shader = ImageShader.TEXTURE_WITH_COLOR_MULTIPLY
-               #mesh_builder.render_mode = RenderMode.ADDITIVE_IMAGE
+               Renderer.shader = Shader.ALPHA_TEXTURE_ADDITIVE
       native
       @|        break;
        |     case SP_BLEND_MODE_MULTIPLY:
-               @trace "TODO: SP_BLEND_MODE_ADDITIVE"
-               #mesh_builder.shader = ImageShader.TEXTURE_WITH_COLOR_MULTIPLY
-               #mesh_builder.render_mode = RenderMode.ALPHA_IMAGE
+               Renderer.shader = Shader.ALPHA_TEXTURE
       native
       @|        break;
        |     case SP_BLEND_MODE_SCREEN:
@@ -633,7 +628,7 @@ class SpineAnimation
                   mesh_builder.add( 2, 3, 0 )
                 endBlock
 
-                mesh_builder.fill( img.texture )
+                mesh_builder.fill( img.texture, &shader=Renderer.shader )
               endIf
             endIf
 
@@ -706,7 +701,7 @@ class SpineAnimation
                  mesh_builder.add( Vertex(pos, color, uv), &auto_index )
                endForEach
 
-               mesh_builder.fill( texture )
+               mesh_builder.fill( texture, &shader=Renderer.shader )
 
       native
       @|       //addVertex(worldVerticesPositions[index], worldVerticesPositions[index + 1],
