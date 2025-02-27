@@ -18,9 +18,12 @@ class SpineSprite : Image
       # Spine doesn't work well with very small scales such as 0.001 so we don't
       # scale down the spine animation directly. Instead we'll scale down the Spine
       # drawing by a factor of 1,000.
-      Display.push_transform( Matrix.translate(animation.offset) )
+      local h_flip = this.attributes.h_flip
+      local offset = animation.offset
+      if (h_flip) offset = XY( 0.5 - offset.x, offset.y )
+      Display.push_transform( Matrix.translate(animation.offset+XY(0.5)) )
       Display.push_transform( Matrix.scale(1.0/1000.0) )
-      animation.h_flip = this.attributes.h_flip
+      animation.h_flip = h_flip
       animation.v_flip = this.attributes.v_flip
       animation.draw( XY(0,0) )
       Display.pop_transform
