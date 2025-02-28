@@ -1,0 +1,21 @@
+uses Graphics
+
+augment Graphics::Bitmap
+  METHODS
+    method resize_to( other:Bitmap ) [replace]
+      local was_premultiplied = is_premultiplied_alpha
+      if (not is_premultiplied_alpha) premultiply_alpha
+
+      other.is_premultiplied_alpha = true
+
+      native
+      @|Warlock_resize_image(
+       |  $this->pixels->as_bytes,
+       |  $this->width, $this->height,
+       |  $other->pixels->as_bytes,
+       |  $other->width, $other->height
+       |);
+
+      if (not was_premultiplied) unmultiply_alpha
+
+endAugment

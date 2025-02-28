@@ -7,6 +7,7 @@ $include Warlock/Macros
 $include Warlock/ApplicationState
 $include Warlock/AssetInfo
 $include Warlock/AssetManager
+$include Warlock/Bitmap
 $include Warlock/BitmapIO
 $include Warlock/BlendMode
 $include Warlock/Box

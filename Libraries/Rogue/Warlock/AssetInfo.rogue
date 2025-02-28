@@ -6,6 +6,7 @@ class AssetInfo
     type            : GlobalID
     images          : ImageInfo[]
     frame_count     = 1
+    image_mipmaps   : Logical
     font_height     : Int
     font_width      : Int  # 0 is variable-width
     font_characters : String

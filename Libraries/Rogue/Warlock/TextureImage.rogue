@@ -37,7 +37,8 @@ class TextureImage : Image
 
     method texture->Texture [override]
       if (not @texture and asset)
-        texture = asset.images[image_index].texture  # actually loads texture if necessary
+        texture = asset.images[image_index].texture( &mipmaps )
+        # actually loads texture if necessary
       endIf
       return @texture
 

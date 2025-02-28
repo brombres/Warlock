@@ -23,6 +23,8 @@ class Asset
     placements      = Placement[]
     image_size      : XY
     image_split     = XY(1,1)
+    image_mipmaps   : Logical
+
     font_characters : String
     font_height     : Int
     font_width      : Int  # -1 for variable, > 0 = fixed
@@ -58,12 +60,15 @@ class Asset
           necessary (not is_modified)
           necessary (info.contains("image_size"))
           necessary (info.contains("image_split"))
+          necessary (info.contains("image_mipmaps"))
           image_size = XY( info//image_size )
           image_split = XY( info//image_split )
+          image_mipmaps = info//image_mipmaps->Logical
         unsatisfied
           is_modified = true
           info//image_size = bitmap.size
           image_size = bitmap.size
+          image_mipmaps = false
 
           if local split_attribute = rule.find_attribute( "split" )
             .require_value(
@@ -78,6 +83,21 @@ class Asset
           endIf
 
           info//image_split = image_split
+
+          if local mipmaps_attribute = rule.find_attribute( "mipmaps" )
+            image_mipmaps = true
+
+            local setting = mipmaps_attribute.value?.value
+            if (setting)
+              if (setting == "true" or setting == "false")
+                image_mipmaps = setting->Logical
+              else
+                throw rule.t.error( "Expected 'mipmaps:true' or 'mipmaps:false' (default)." )
+              endIf
+            endIf
+          endIf
+
+          info//image_mipmaps = image_mipmaps
         endContingent
 
       elseIf (rule.contains_attribute("font"))
@@ -276,6 +296,9 @@ class Asset
           if (image_split.product > 1)
             manifest.print " frames "
             manifest.print image_split.product->Int
+          endIf
+          if (image_mipmaps)
+            manifest.print " mipmaps"
           endIf
           manifest.println
           write_placements( manifest )

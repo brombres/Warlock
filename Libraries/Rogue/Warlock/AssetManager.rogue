@@ -166,6 +166,8 @@ class AssetManager [singleton]
       asset.type = <Image>
       .consume_ws
       if (.consume_id("frames")) asset.frame_count = scanner.scan_int
+      .consume_ws
+      if (.consume_id("mipmaps")) asset.image_mipmaps = true
       .consume_ws( &eols )
       return true
 

@@ -432,7 +432,7 @@ augment Texture
       native @|$this->bgfx_texture = BGFX_INVALID_HANDLE;
 
   METHODS
-    method set( bitmap:Bitmap )
+    method set( bitmap:Bitmap, &mipmaps=true )
       local is_cloned = false
       if (not bitmap.is_power_of_2 or not bitmap.is_premultiplied_alpha)
         is_cloned = true
@@ -446,42 +446,48 @@ augment Texture
 
       bitmap.swap_red_and_blue
 
-      local mip_w = bitmap.width
-      local mip_h = bitmap.height
-      local mipmap_pixel_count = 1   # final 1x1
-      while (mip_w > 1 or mip_h > 1)
-        mipmap_pixel_count += mip_w * mip_h
-        mip_w = (mip_w/2).or_larger(1)
-        mip_h = (mip_h/2).or_larger(1)
-      endWhile
+      local mipmap_pixels : Color[]
 
-      local mipmap_pixels = Color[]( mipmap_pixel_count )
-      mipmap_pixels.add( bitmap.pixels )
-      mip_w = bitmap.width
-      mip_h = bitmap.height
-      if (mip_w > 1 or mip_h > 1)
-        mip_w = (mip_w / 2).or_larger( 1 )
-        mip_h = (mip_h / 2).or_larger( 1 )
-        local mipmap : Bitmap
-        if (is_cloned) mipmap = bitmap.[ resize(mip_w,mip_h) ]
-        else           mipmap = bitmap.resized( mip_w, mip_h )
+      if (mipmaps)
+        local mip_w = bitmap.width
+        local mip_h = bitmap.height
+        local mipmap_pixel_count = 1   # final 1x1
         while (mip_w > 1 or mip_h > 1)
-          mipmap_pixels.add( mipmap.pixels )
+          mipmap_pixel_count += mip_w * mip_h
+          mip_w = (mip_w/2).or_larger(1)
+          mip_h = (mip_h/2).or_larger(1)
+        endWhile
+
+        mipmap_pixels = Color[]( mipmap_pixel_count )
+        mipmap_pixels.add( bitmap.pixels )
+        mip_w = bitmap.width
+        mip_h = bitmap.height
+        if (mip_w > 1 or mip_h > 1)
           mip_w = (mip_w / 2).or_larger( 1 )
           mip_h = (mip_h / 2).or_larger( 1 )
-          mipmap.resize( mip_w, mip_h )
-        endWhile
-        mipmap_pixels.add( mipmap.pixels )
+          local mipmap : Bitmap
+          if (is_cloned) mipmap = bitmap.[ resize(mip_w,mip_h) ]
+          else           mipmap = bitmap.resized( mip_w, mip_h )
+          while (mip_w > 1 or mip_h > 1)
+            mipmap_pixels.add( mipmap.pixels )
+            mip_w = (mip_w / 2).or_larger( 1 )
+            mip_h = (mip_h / 2).or_larger( 1 )
+            mipmap.resize( mip_w, mip_h )
+          endWhile
+          mipmap_pixels.add( mipmap.pixels )
+        endIf
+      else
+        mipmap_pixels = bitmap.pixels
       endIf
 
       native
       @|$this->bgfx_texture = bgfx::createTexture2D(
        |  static_cast<uint16_t>($size.x), static_cast<uint16_t>($size.y),
-       |  true,
+       |  $mipmaps,
        |  1,
        |  bgfx::TextureFormat::RGBA8,
        |  BGFX_SAMPLER_UVW_CLAMP | BGFX_SAMPLER_MIN_ANISOTROPIC | BGFX_SAMPLER_MAG_ANISOTROPIC,
-       |  bgfx::copy( $mipmap_pixels->as_bytes, (uint32_t) ($mipmap_pixel_count*4) )
+       |  bgfx::copy( $mipmap_pixels->as_bytes, (uint32_t) ($mipmap_pixels->count*4) )
        |);
 
       if (not is_cloned) bitmap.swap_red_and_blue

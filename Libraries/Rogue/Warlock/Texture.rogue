@@ -7,8 +7,8 @@ class Texture
     source : Texture  # if non-null, the original texture this is a subset of.
 
   GLOBAL METHODS
-    method create( bitmap:Bitmap )->Texture
-      local texture = Texture().[ set(bitmap) ]
+    method create( bitmap:Bitmap, &mipmaps=true )->Texture
+      local texture = Texture().[ set(bitmap,&=mipmaps) ]
       if (texture.size != bitmap.size)
         # Texture size was expanded to power of 2; return a subset texture.
         return Texture( texture, Box(bitmap.size) )
@@ -16,7 +16,7 @@ class Texture
         return texture
       endIf
 
-    method create( file:File )->Texture
+    method create( file:File, &mipmaps=true )->Texture
       if local cached = Warlock.textures[file]
         return cached
       endIf
@@ -27,7 +27,7 @@ class Texture
       endIf
 
       Log.println "Loading " + file
-      local texture = Texture( Bitmap(file) )
+      local texture = Texture( Bitmap(file), &=mipmaps )
       Warlock.textures[file] = texture
       return texture
 
