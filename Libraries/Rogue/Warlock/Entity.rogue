@@ -13,7 +13,30 @@ augment Entity::Entity2D
     method draw( position:XY )
       use Display.transform_stack
         .begin_draw
-        Display.push_transform( Matrix.transform(XYZ(position,z),size,anchor,rotation,nominal_size) )
+        local flip_scale = XY(
+          which{attributes.h_flip:-1||1},
+          which{attributes.v_flip:-1||1}
+        )
+        Display.push_transform(
+          Matrix.transform(
+            XYZ(position,z),
+            size,
+            anchor,
+            rotation,
+            nominal_size,
+            attributes.h_flip,
+            attributes.v_flip
+          )
+        )
+
+        #Display.push_transform( Matrix.transform(XYZ(position,z),size,anchor,rotation,nominal_size) )
+
+        #Display.push_transform( Matrix.translate(XYZ(position,z)) )
+        #Display.push_transform( Matrix.rotate_z(rotation) )
+        #Display.push_transform( Matrix.scale( (size/nominal_size) ) )
+        #Display.push_transform( Matrix.translate(-(anchor.position - XY(0.5,0.5)) * nominal_size) )
+        #Display.push_transform( Matrix.scale( flip_scale ) )
+        #Display.push_transform( Matrix.translate(XY(-0.5,-0.5)*nominal_size) )
         .dispatch_draw( &bg )
         .dispatch_draw
         .dispatch_draw( &!bg )

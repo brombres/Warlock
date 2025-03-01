@@ -27,10 +27,6 @@ class TextureImage : Image
       texture     = existing.texture
       image_index = existing.image_index
 
-    method draw( &bg ) [override]
-      local draw_bg = not attributes.foreground
-      if (bg == draw_bg) .draw_texture_image
-
     method load [override]
       # Ensures image is fully loaded.
       texture  # will load if necessary
@@ -42,7 +38,7 @@ class TextureImage : Image
       endIf
       return @texture
 
-    method .draw_texture_image
+    method .draw_entity [override]
       local color = color.with_opacity( opacity )
       local bounds = Box( nominal_size )
       if (texture)

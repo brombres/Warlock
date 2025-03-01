@@ -14,22 +14,15 @@ class SpineSprite : Image
     method init( animation )
       reset_size( XY(1.0,1.0) )
 
-    method on_draw
+    method .draw_entity [override]
       # Spine doesn't work well with very small scales such as 0.001 so we don't
       # scale down the spine animation directly. Instead we'll scale down the Spine
       # drawing by a factor of 1,000.
-      local h_flip = this.attributes.h_flip
-      local offset = animation.offset
-      if (h_flip) offset = XY( 0.5 - offset.x, offset.y )
       Display.push_transform( Matrix.translate(animation.offset+XY(0.5)) )
       Display.push_transform( Matrix.scale(1.0/1000.0) )
-      animation.h_flip = h_flip
-      animation.v_flip = this.attributes.v_flip
-      animation.draw( XY(0,0) )
+      animation.draw( XY(0,0), color )
       Display.pop_transform
       Display.pop_transform
-      #nominal_size = XY(1000)
-      #set_scale( scale / 1000.0 )
 
     method on_update( dt:Real )
       animation.update( dt )
@@ -480,10 +473,10 @@ class SpineAnimation
     method animation_names->String[]
       return definition.animation_names
 
-    method draw( @position )
-      draw
+    method draw( @position, tint=Color.WHITE:Color )
+      draw( tint )
 
-    method draw
+    method draw( tint=Color.WHITE:Color )
       if (error) return
 
       local wvp = world_vertex_positions
@@ -565,7 +558,7 @@ class SpineAnimation
           local r = (((color.argb:>>>:16) & 0xFF) * ((this_color.argb:>>>:16) & 0xFF)) / 255
           local g = (((color.argb:>>>:8) & 0xFF) * ((this_color.argb:>>>:8) & 0xFF)) / 255
           local b = (((color.argb) & 0xFF) * ((this_color.argb) & 0xFF)) / 255
-          color = Color(r,g,b,a)
+          color = Color(r,g,b,a) * tint
 
       native
       @|  // Fill the vertices array depending on the type of attachment
