@@ -29,25 +29,17 @@ augment Entity::Entity2D
           )
         )
 
-        #Display.push_transform( Matrix.transform(XYZ(position,z),size,anchor,rotation,nominal_size) )
-
-        #Display.push_transform( Matrix.translate(XYZ(position,z)) )
-        #Display.push_transform( Matrix.rotate_z(rotation) )
-        #Display.push_transform( Matrix.scale( (size/nominal_size) ) )
-        #Display.push_transform( Matrix.translate(-(anchor.position - XY(0.5,0.5)) * nominal_size) )
-        #Display.push_transform( Matrix.scale( flip_scale ) )
-        #Display.push_transform( Matrix.translate(XY(-0.5,-0.5)*nominal_size) )
-        .dispatch_draw( &bg )
-        .dispatch_draw
-        .dispatch_draw( &!bg )
+        .handle_draw( &bg )
+        .handle_draw
+        .handle_draw( &!bg )
       endUse
 
     method draw( bounds:Box )
       use Display.transform_stack
         .begin_draw
         Display.push_transform( Matrix.transform(XYZ(bounds.position,z),bounds.size/nominal_size) )
-        .dispatch_draw( &bg )
-        .dispatch_draw
-        .dispatch_draw( &!bg )
+        .handle_draw( &bg )
+        .handle_draw
+        .handle_draw( &!bg )
       endUse
 endAugment

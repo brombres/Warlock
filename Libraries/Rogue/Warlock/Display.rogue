@@ -5,7 +5,7 @@ class Display [singleton]
 
   PROPERTIES
     state   : DisplayState
-    ui      = UI()
+    ui      : UI
 
     pixel_size        : XY  # True size in pixels.
     size              : XY  # Scaled size.
@@ -83,7 +83,7 @@ class Display [singleton]
     method draw
       on_draw( &bg )
       on_draw
-      ui.draw
+      if (@ui) @ui.draw
       on_draw( &!bg )
 
     method end_render
@@ -95,8 +95,10 @@ class Display [singleton]
         on( e )
         necessary (not e.is_consumed)
 
-        ui.handle( e )
-        necessary (not e.is_consumed)
+        if (@ui)
+          @ui.handle( e )
+          necessary (not e.is_consumed)
+        endIf
 
         on_unhandled( e )
       endContingent
@@ -106,8 +108,10 @@ class Display [singleton]
         on( e )
         necessary (not e.is_consumed)
 
-        ui.handle( e )
-        necessary (not e.is_consumed)
+        if (@ui)
+          @ui.handle( e )
+          necessary (not e.is_consumed)
+        endIf
 
         on_unhandled( e )
       endContingent
@@ -117,8 +121,10 @@ class Display [singleton]
         on( e )
         necessary (not e.is_consumed)
 
-        ui.handle( e )
-        necessary (not e.is_consumed)
+        if (@ui)
+          @ui.handle( e )
+          necessary (not e.is_consumed)
+        endIf
 
         on_unhandled( e )
       endContingent
@@ -128,8 +134,10 @@ class Display [singleton]
         on( e )
         necessary (not e.is_consumed)
 
-        ui.handle( e )
-        necessary (not e.is_consumed)
+        if (@ui)
+          @ui.handle( e )
+          necessary (not e.is_consumed)
+        endIf
 
         on_unhandled( e )
       endContingent
@@ -267,13 +275,20 @@ class Display [singleton]
         world_transform_modified = true
       endIf
 
+    method ui->UI
+      if (@ui) return @ui
+      ui = UI()
+      return @ui
+
     method update
       on_update
 
     method update( dt:Real )
       on_update( dt )
-      ui.update( bounds )
-      ui.request_redraw
+      if (@ui)
+        @ui.update( bounds )
+        @ui.request_redraw
+      endIf
 
     method update_size
       Renderer.flush

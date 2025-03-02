@@ -42,6 +42,7 @@ $include Warlock/Texture
 $include Warlock/TextureImage
 #$include Warlock/TileMapLayout
 $include Warlock/Triangle
+$include Warlock/UI
 $include Warlock/Vertex
 $include Warlock/Window
 
@@ -62,8 +63,11 @@ class Warlock [essential singleton]
       local keep_running = Framework.update_events
 
       OverlayLog.update
-      Warlock.render
+      #Warlock.render
+native @|bgfx::frame();
       ++Warlock.frames
+System.sleep(0.1)
+println Warlock.frames
 
       if (not keep_running)
         use list = Warlock.windows.working_copy

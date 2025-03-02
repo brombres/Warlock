@@ -1,0 +1,30 @@
+library Warlock
+
+class ImagePanel : Component
+  PROPERTIES
+    image : Image
+
+  METHODS
+    method init( image )
+
+    method aspect_fill
+      aspect_fill = image.nominal_size
+
+    method aspect_fill_height
+      aspect_fill_height = image.nominal_size
+
+    method aspect_fill_width
+      aspect_fill_width = image.nominal_size
+
+    method aspect_fit
+      aspect_fit = image.nominal_size
+
+    method aspect_fit_height
+      aspect_fit_height = image.nominal_size
+
+    method aspect_fit_width
+      aspect_fit_width = image.nominal_size
+
+    method .draw_entity [override]
+      image.draw( display_bounds )
+endClass
