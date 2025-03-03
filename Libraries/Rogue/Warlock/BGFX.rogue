@@ -25,15 +25,14 @@ class BGFX : Renderer [singleton]
        |uint16_t h = static_cast<uint16_t>( $display->pixel_size.y );
        |bgfx::setViewRect( $display->id, 0, 0, w, h );
        |bgfx::setViewMode( $display->id, bgfx::ViewMode::Sequential );
-       |bgfx::touch( $display->id );
 
     method activate_window_graphics_context( window:Window ) [override]
+      activate_display_graphics_context( window )
+
       native
       @|bgfx::PlatformData pd;
        |pd.nwh = $window->native_window_handle;
        |bgfx::setPlatformData( pd );
-
-      activate_display_graphics_context( window )
 
     method configure_bgfx( window:Window )
       if (is_initialized) return
@@ -284,8 +283,6 @@ class BGFX : Renderer [singleton]
          |  static_cast<uint16_t>($size.x),
          |  static_cast<uint16_t>($size.y)
          |);
-         |
-         |bgfx::touch( $window->id );
       endIf
 
     method render_pending_frames

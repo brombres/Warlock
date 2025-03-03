@@ -1,15 +1,23 @@
 library Warlock
 
-nativeHeader @|#include <SDL3/SDL.h>
+nativeHeader
+@|#include <SDL3/SDL.h>
 
 SDL  # instance SDL singleton on launch
 
 class SDL : Framework [singleton]
   NATIVE
+    nativeHeader
+    @|extern SDL_Event* Warlock_sdl_event;
+
+    nativeCode
+    @|SDL_Event* Warlock_sdl_event = NULL;
+
     nativeCode
     @|bool WarlockSDL_event_filter( void* data, SDL_Event* event )
      |{
-     |  if (event->type == SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED)
+     |  //if (event->type == SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED)
+     |  if (event->type == SDL_EVENT_WINDOW_RESIZED)
      |  {
      |    WarlockSDL__on_window_resized__RogueInt( event->window.windowID );
      |  }
@@ -63,12 +71,12 @@ class SDL : Framework [singleton]
        |    flags
        |  );
 
-      update_window_size( window )
-
       if (not native("!!$window->sdl_window")->Logical)
         println "Failed to create SDL window: $."(SDL.error)
         return false
       endIf
+
+      update_window_size( window )
 
       native @|SDL_SetEventFilter( WarlockSDL_event_filter, $window->sdl_window );
 
@@ -79,118 +87,116 @@ class SDL : Framework [singleton]
     method error->String
       return native("RogueString_create(SDL_GetError())")->String
 
-    method update_events->Logical [override]
+    method handle_native_event->Logical [override]
       local keep_running = true
 
       native
-      @|SDL_Event event;
-       |while (SDL_PollEvent(&event))
+      @|SDL_Event& event = *Warlock_sdl_event;
+       |switch (event.type)
        |{
-       |  switch (event.type)
-       |  {
-       |    case SDL_EVENT_QUIT:
-       |      $keep_running = false;
-       |      break;
-       |    case SDL_EVENT_MOUSE_MOTION:
-              block
-                if local window = Warlock.find_window( &native_id=native("event.button.windowID")->Int )
-                  local x = native("event.motion.x")->Int * window.density
-                  local y = native("event.motion.y")->Int * window.density
-                  local delta : XY
-                  if local previous_position = Pointer.position
-                    delta = XY(x,y) - previous_position
-                  endIf
-                  if (pointer_event.refcount) pointer_event = PointerEvent()
-                  pointer_event.init( <MOVE>, XY(x,y), delta, 0 )
-                  pointer_event.window = window
-                  pointer_event.timestamp = native("event.button.timestamp")->Int
-                  Pointer.on( pointer_event )
-                  ApplicationState.handle( pointer_event )
+       |  case SDL_EVENT_QUIT:
+       |printf("QUIT\n");
+       |    $keep_running = false;
+       |    break;
+       |  case SDL_EVENT_MOUSE_MOTION:
+            block
+              if local window = Warlock.find_window( &native_id=native("event.button.windowID")->Int )
+                local x = native("event.motion.x")->Int * window.density
+                local y = native("event.motion.y")->Int * window.density
+                local delta : XY
+                if local previous_position = Pointer.position
+                  delta = XY(x,y) - previous_position
                 endIf
-              endBlock
+                if (pointer_event.refcount) pointer_event = PointerEvent()
+                pointer_event.init( <MOVE>, XY(x,y), delta, 0 )
+                pointer_event.window = window
+                pointer_event.timestamp = native("event.button.timestamp")->Int
+                Pointer.on( pointer_event )
+                ApplicationState.handle( pointer_event )
+              endIf
+            endBlock
       native
-      @|      break;
-       |    case SDL_EVENT_MOUSE_BUTTON_DOWN:
-       |    case SDL_EVENT_MOUSE_BUTTON_UP:
-              block
-                if local window = Warlock.find_window( &native_id=native("event.button.windowID")->Int )
-                  local x = native("event.button.x")->Int * window.density
-                  local y = native("event.button.y")->Int * window.density
-                  local delta : XY
-                  if local previous_position = Pointer.position
-                    delta = XY(x,y) - previous_position
-                  endIf
-                  local index = native("event.button.button")->Int
-                  index = which{ index==1:0 || index==3:1 || index==2:2 || index-1 }
-                  local type = which{ native("event.type == SDL_EVENT_MOUSE_BUTTON_DOWN")->Logical:<PRESS> || <RELEASE> }
-                  if (pointer_event.refcount) pointer_event = PointerEvent()
-                  pointer_event.init( type, XY(x,y), delta, index )
-                  pointer_event.window = window
-                  pointer_event.timestamp = native("event.button.timestamp")->Int
-                  Pointer.on( pointer_event )
-                  ApplicationState.handle( pointer_event )
+      @|    break;
+       |  case SDL_EVENT_MOUSE_BUTTON_DOWN:
+       |  case SDL_EVENT_MOUSE_BUTTON_UP:
+            block
+              if local window = Warlock.find_window( &native_id=native("event.button.windowID")->Int )
+                local x = native("event.button.x")->Int * window.density
+                local y = native("event.button.y")->Int * window.density
+                local delta : XY
+                if local previous_position = Pointer.position
+                  delta = XY(x,y) - previous_position
                 endIf
-              endBlock
+                local index = native("event.button.button")->Int
+                index = which{ index==1:0 || index==3:1 || index==2:2 || index-1 }
+                local type = which{ native("event.type == SDL_EVENT_MOUSE_BUTTON_DOWN")->Logical:<PRESS> || <RELEASE> }
+                if (pointer_event.refcount) pointer_event = PointerEvent()
+                pointer_event.init( type, XY(x,y), delta, index )
+                pointer_event.window = window
+                pointer_event.timestamp = native("event.button.timestamp")->Int
+                Pointer.on( pointer_event )
+                ApplicationState.handle( pointer_event )
+              endIf
+            endBlock
       native
-      @|      break;
+      @|    break;
        |
-       |    case SDL_EVENT_MOUSE_WHEEL:
-              block
-                if local window = Warlock.find_window( &native_id=native("event.wheel.windowID")->Int )
-                  local x = native("event.wheel.x")->Int * window.density
-                  local y = -native("event.wheel.y")->Int * window.density
-                  if (scroll_event.refcount) scroll_event = ScrollEvent()
-                  scroll_event.init( XY(x,y) )
-                  scroll_event.window = window
-                  scroll_event.timestamp = native("event.button.timestamp")->Int
-                  ApplicationState.handle( scroll_event )
-                endIf
-              endBlock
+       |  case SDL_EVENT_MOUSE_WHEEL:
+            block
+              if local window = Warlock.find_window( &native_id=native("event.wheel.windowID")->Int )
+                local x = native("event.wheel.x")->Int * window.density
+                local y = -native("event.wheel.y")->Int * window.density
+                if (scroll_event.refcount) scroll_event = ScrollEvent()
+                scroll_event.init( XY(x,y) )
+                scroll_event.window = window
+                scroll_event.timestamp = native("event.button.timestamp")->Int
+                ApplicationState.handle( scroll_event )
+              endIf
+            endBlock
       native
-      @|    case SDL_EVENT_KEY_DOWN:
-       |    case SDL_EVENT_KEY_UP:
-              block
-                if local window = Warlock.find_window( &native_id=native("event.key.windowID")->Int )
-                  local scancode  = native("event.key.scancode")->Int
-                  local mods      = native("event.key.mod")->Int
-                  local is_repeat = native("event.key.repeat")->Logical
-                  local is_press  = native("event.type == SDL_EVENT_KEY_DOWN")->Logical
-                  local keycode = .sdl_scancode_to_keycode( scancode )
+      @|  case SDL_EVENT_KEY_DOWN:
+       |  case SDL_EVENT_KEY_UP:
+            block
+              if local window = Warlock.find_window( &native_id=native("event.key.windowID")->Int )
+                local scancode  = native("event.key.scancode")->Int
+                local mods      = native("event.key.mod")->Int
+                local is_repeat = native("event.key.repeat")->Logical
+                local is_press  = native("event.type == SDL_EVENT_KEY_DOWN")->Logical
+                local keycode = .sdl_scancode_to_keycode( scancode )
 
-                  local modifiers : KeyModifier
-                  if (native("$mods & SDL_KMOD_LSHIFT")->LiteralInt32)  modifiers |= KeyModifier.LEFT_SHIFT
-                  if (native("$mods & SDL_KMOD_RSHIFT")->LiteralInt32)  modifiers |= KeyModifier.RIGHT_SHIFT
-                  if (native("$mods & SDL_KMOD_LCTRL")->LiteralInt32)   modifiers |= KeyModifier.LEFT_CONTROL
-                  if (native("$mods & SDL_KMOD_RCTRL")->LiteralInt32)   modifiers |= KeyModifier.RIGHT_CONTROL
-                  if (native("$mods & SDL_KMOD_LALT")->LiteralInt32)    modifiers |= KeyModifier.LEFT_ALT
-                  if (native("$mods & SDL_KMOD_RALT")->LiteralInt32)    modifiers |= KeyModifier.RIGHT_ALT
-                  if (native("$mods & SDL_KMOD_LGUI")->LiteralInt32)    modifiers |= KeyModifier.LEFT_OS
-                  if (native("$mods & SDL_KMOD_RGUI")->LiteralInt32)    modifiers |= KeyModifier.RIGHT_OS
-                  if (native("$mods & SDL_KMOD_NUM")->LiteralInt32)     modifiers |= KeyModifier.NUM_LOCK
-                  if (native("$mods & SDL_KMOD_CAPS")->LiteralInt32)    modifiers |= KeyModifier.CAPS_LOCK
-                  if (native("$mods & SDL_KMOD_SCROLL")->LiteralInt32)  modifiers |= KeyModifier.SCROLL_LOCK
+                local modifiers : KeyModifier
+                if (native("$mods & SDL_KMOD_LSHIFT")->LiteralInt32)  modifiers |= KeyModifier.LEFT_SHIFT
+                if (native("$mods & SDL_KMOD_RSHIFT")->LiteralInt32)  modifiers |= KeyModifier.RIGHT_SHIFT
+                if (native("$mods & SDL_KMOD_LCTRL")->LiteralInt32)   modifiers |= KeyModifier.LEFT_CONTROL
+                if (native("$mods & SDL_KMOD_RCTRL")->LiteralInt32)   modifiers |= KeyModifier.RIGHT_CONTROL
+                if (native("$mods & SDL_KMOD_LALT")->LiteralInt32)    modifiers |= KeyModifier.LEFT_ALT
+                if (native("$mods & SDL_KMOD_RALT")->LiteralInt32)    modifiers |= KeyModifier.RIGHT_ALT
+                if (native("$mods & SDL_KMOD_LGUI")->LiteralInt32)    modifiers |= KeyModifier.LEFT_OS
+                if (native("$mods & SDL_KMOD_RGUI")->LiteralInt32)    modifiers |= KeyModifier.RIGHT_OS
+                if (native("$mods & SDL_KMOD_NUM")->LiteralInt32)     modifiers |= KeyModifier.NUM_LOCK
+                if (native("$mods & SDL_KMOD_CAPS")->LiteralInt32)    modifiers |= KeyModifier.CAPS_LOCK
+                if (native("$mods & SDL_KMOD_SCROLL")->LiteralInt32)  modifiers |= KeyModifier.SCROLL_LOCK
 
-                  if (key_event.refcount) key_event = KeyEvent()
-                  key_event.init( keycode, scancode, &=is_press, &=is_repeat, modifiers )
-                  key_event.window = window
-                  key_event.timestamp = native("event.button.timestamp")->Int
-                  Keyboard.on( key_event )
-                  ApplicationState.handle( key_event )
+                if (key_event.refcount) key_event = KeyEvent()
+                key_event.init( keycode, scancode, &=is_press, &=is_repeat, modifiers )
+                key_event.window = window
+                key_event.timestamp = native("event.button.timestamp")->Int
+                Keyboard.on( key_event )
+                ApplicationState.handle( key_event )
 
-                  if (key_event.is_printable)
-                    if (text_event.refcount) text_event = TextEvent()
-                    text_event.init( key_event.unicode )
-                    text_event.window = window
-                    text_event.timestamp = native("event.button.timestamp")->Int
-                    ApplicationState.handle( text_event )
-                  endIf
-
+                if (key_event.is_printable)
+                  if (text_event.refcount) text_event = TextEvent()
+                  text_event.init( key_event.unicode )
+                  text_event.window = window
+                  text_event.timestamp = native("event.button.timestamp")->Int
+                  ApplicationState.handle( text_event )
                 endIf
-              endBlock
+
+              endIf
+            endBlock
       native
-      @|      break;
+      @|    break;
        |
-       |  }
        |}
 
       return keep_running

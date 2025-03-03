@@ -59,15 +59,8 @@ class Warlock [essential singleton]
     method configure [api]
       Warlock.on_configure
 
-    method update->Logical [api]
-      local keep_running = Framework.update_events
-
-      OverlayLog.update
-      #Warlock.render
-native @|bgfx::frame();
-      ++Warlock.frames
-System.sleep(0.1)
-println Warlock.frames
+    method handle_event->Logical [api]
+      local keep_running = Framework.handle_native_event
 
       if (not keep_running)
         use list = Warlock.windows.working_copy
@@ -76,6 +69,14 @@ println Warlock.frames
       endIf
 
       return keep_running
+
+
+    method update->Logical [api]
+      OverlayLog.update
+      Warlock.render
+      ++Warlock.frames
+
+      return true  # keep running
 
   PROPERTIES
     configured     : Logical

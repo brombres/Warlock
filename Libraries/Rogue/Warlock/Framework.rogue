@@ -27,12 +27,12 @@ class Framework [abstract singleton]
     method error->String
       return "No Framework selected. Include SDL to use the SDL framework."
 
-    method print_error
-      println this.error
-
-    method update_events->Logical
+    method handle_native_event->Logical
       # Returns false if the app should exit.
       return false
+
+    method print_error
+      println this.error
 
     method update_window_size( window:Window ) [abstract]
 endClass
