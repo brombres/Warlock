@@ -87,6 +87,32 @@ class Renderer [singleton]
         )
       endIf
 
+    method fill( box:Box, tl:Color, tr:Color, br:Color, bl:Color,
+        shader=Shader.ALPHA_COLOR, subdivisions=XY(0,0):XY )
+      clear_textures
+      draw_triangles
+      if (subdivisions.sum == 0)
+        local i0 = data.vertices.count - first_vertex
+        local a = box.position
+        local b = box.top_right
+        local c = box.bottom_right
+        local d = box.bottom_left
+        data.add Vertex( a, tl )
+        data.add Vertex( b, tr )
+        data.add Vertex( c, br )
+        data.add Vertex( d, bl )
+        data.add( i0, i0+1, i0+2 )
+        data.add( i0, i0+2, i0+3 )
+      else
+        .generate_quad(
+          Vertex( box.position, tl ),
+          Vertex( box.top_right, tr ),
+          Vertex( box.bottom_right, br ),
+          Vertex( box.bottom_left, bl ),
+          subdivisions
+        )
+      endIf
+
     method fill( box:Box, texture:Texture, color:Color, shader=Shader.ALPHA_TEXTURE,
         subdivisions=XY(0,0):XY, &h_flip, &v_flip )
       set_texture( texture )
