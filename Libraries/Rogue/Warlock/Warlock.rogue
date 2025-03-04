@@ -42,8 +42,8 @@ $include Warlock/Texture
 $include Warlock/TextureImage
 #$include Warlock/TileMapLayout
 $include Warlock/Triangle
-$include Warlock/UI
 $include Warlock/Vertex
+$include Warlock/WarlockUI
 $include Warlock/Window
 
 uses Control/State [export]

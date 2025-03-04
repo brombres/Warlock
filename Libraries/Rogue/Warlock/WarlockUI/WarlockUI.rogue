@@ -1,0 +1,4 @@
+library Warlock
+
+$include ColorFillComponent
+$include ImageComponent

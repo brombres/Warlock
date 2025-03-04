@@ -1,6 +1,6 @@
 library Warlock
 
-class ImagePanel : Component
+class ImageComponent : Component
   PROPERTIES
     image : Image
 

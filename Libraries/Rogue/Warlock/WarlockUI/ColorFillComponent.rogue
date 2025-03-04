@@ -1,0 +1,50 @@
+library Warlock
+
+class ColorFillComponent : Component
+  GLOBAL METHODS
+    method create( color:Color )->ColorFillSolidComponent
+      return ColorFillSolidComponent( color )
+
+    method create( a:Color, b:Color, &h, &v )->ColorFillGradientComponent
+      if (h) return ColorFillGradientComponent( a, b, b, a )
+      else   return ColorFillGradientComponent( a, a, b, b )
+
+    method create( top_left:Color, top_right:Color,
+      bottom_right:Color, bottom_left:Color )->ColorFillGradientComponent
+      return ColorFillGradientComponent(
+        top_left,
+        top_right,
+        bottom_right,
+        bottom_left
+      )
+endClass
+
+class ColorFillSolidComponent : ColorFillComponent
+  PROPERTIES
+    color : Color
+
+  METHODS
+    method init( color )
+      noAction
+
+    method on_draw
+      display_bounds.fill( color )
+
+endClass
+
+class ColorFillGradientComponent : ColorFillComponent
+  PROPERTIES
+    top_left_color     : Color
+    top_right_color    : Color
+    bottom_right_color : Color
+    bottom_left_color  : Color
+
+  METHODS
+    method init( top_left_color, top_right_color, bottom_right_color, bottom_left_color )
+      noAction
+
+    method on_draw
+      display_bounds.fill( top_left_color, top_right_color, bottom_right_color, bottom_left_color )
+
+endClass
+
