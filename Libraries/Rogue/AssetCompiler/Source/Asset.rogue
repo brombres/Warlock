@@ -7,27 +7,28 @@ class Asset
     # "
 
   PROPERTIES
-    filepath        : String
-    rule            : AssetRule
+    filepath          : String
+    rule              : AssetRule
 
-    is_modified     : Logical
-    is_invalid      : Logical
-    is_standalone   : Logical
+    is_modified       : Logical
+    is_invalid        : Logical
+    is_standalone     : Logical
 
-    group           : AssetGroup
-    info            : Variant
-    placement_info  : Variant
+    group             : AssetGroup
+    info              : Variant
+    placement_info    : Variant
 
-    type            = <Unknown>
-    bitmap          : Bitmap
-    placements      = Placement[]
-    image_size      : XY
-    image_split     = XY(1,1)
-    image_mipmaps   : Logical
+    type              = <Unknown>
+    bitmap            : Bitmap
+    placements        = Placement[]
+    image_size        : XY
+    image_split       = XY(1,1)
+    image_mipmaps     : Logical
+    image_patch_count : Int
 
-    font_characters : String
-    font_height     : Int
-    font_width      : Int  # -1 for variable, > 0 = fixed
+    font_characters   : String
+    font_height       : Int
+    font_width        : Int  # -1 for variable, > 0 = fixed
 
   METHODS
     method init( filepath, rule )
@@ -61,14 +62,17 @@ class Asset
           necessary (info.contains("image_size"))
           necessary (info.contains("image_split"))
           necessary (info.contains("image_mipmaps"))
+          necessary (info.contains("image_patch_count"))
           image_size = XY( info//image_size )
           image_split = XY( info//image_split )
           image_mipmaps = info//image_mipmaps->Logical
+          image_patch_count = info//image_patch_count->Int
         unsatisfied
           is_modified = true
           info//image_size = bitmap.size
           image_size = bitmap.size
           image_mipmaps = false
+          image_patch_count = 0
 
           if local split_attribute = rule.find_attribute( "split" )
             .require_value(
@@ -84,20 +88,39 @@ class Asset
 
           info//image_split = image_split
 
-          if local mipmaps_attribute = rule.find_attribute( "mipmaps" )
-            image_mipmaps = true
+          block
+            if local mipmaps_attribute = rule.find_attribute( "mipmaps" )
+              image_mipmaps = true
 
-            local setting = mipmaps_attribute.value?.value
-            if (setting)
-              if (setting == "true" or setting == "false")
-                image_mipmaps = setting->Logical
-              else
-                throw rule.t.error( "Expected 'mipmaps:true' or 'mipmaps:false' (default)." )
+              local setting = mipmaps_attribute.value?.value
+              if (setting)
+                if (setting == "true" or setting == "false")
+                  image_mipmaps = setting->Logical
+                else
+                  throw rule.t.error( "Expected 'mipmaps:true' or 'mipmaps:false' (default)." )
+                endIf
               endIf
             endIf
-          endIf
 
-          info//image_mipmaps = image_mipmaps
+            info//image_mipmaps = image_mipmaps
+          endBlock
+
+          block
+            if local patch_attribute = rule.find_attribute( "patch" )
+              image_patch_count = 9
+
+              local setting = patch_attribute.value?.value
+              if (setting)
+                image_patch_count = setting->Int
+                if (image_patch_count < 8 or image_patch_count > 9)
+                  throw rule.t.error( "Expected 'patch:8', 'patch:9', or 'patch' (implies 'patch:9')." )
+                endIf
+              endIf
+            endIf
+
+            info//image_patch_count = image_patch_count
+          endBlock
+
         endContingent
 
       elseIf (rule.contains_attribute("font"))
@@ -214,12 +237,19 @@ class Asset
 
       which (type)
         case <Image>
-          local split_size = image_size / image_split
-          forEach (j in 0..<image_split.y)
-            forEach (i in 0..<image_split.x)
-              placements.add( Placement(this, Box(XY(i,j)*split_size,split_size)) )
+          if (image_patch_count)
+            if (image_split != XY(1,1))
+              throw rule.t.error( "An image cannot have both 'split' and 'patch' attributes." )
+            endIf
+            .create_patch_placements
+          else
+            local split_size = image_size / image_split
+            forEach (j in 0..<image_split.y)
+              forEach (i in 0..<image_split.x)
+                placements.add( Placement(this, Box(XY(i,j)*split_size,split_size)) )
+              endForEach
             endForEach
-          endForEach
+          endIf
         case <Font>
           if (font_width == -1) .create_variable_width_font_placements
           else                  .create_fixed_width_font_placements
@@ -251,25 +281,97 @@ class Asset
         x += w
       endLoop
 
+    method .create_patch_placements
+      if (image_size.x == 0) return
+
+      local x2 = image_size.x - 1
+      local y2 = image_size.y - 1
+
+      local w1 = .contiguous_color_count_x( 1,    0 )
+      local w2 = .contiguous_color_count_x( 1+w1, 0 )
+      local w3 = bitmap.width - (w1 + w2 + 2)
+
+      local h1 = .contiguous_color_count_y( 0, 1 )
+      local h2 = .contiguous_color_count_y( 0, 1+h1 )
+      local h3 = bitmap.height - (h1 + h2 + 2)
+
+      local alt_w2 = .contiguous_color_count_x( 1+.contiguous_color_count_x(1,y2), y2 )
+      local alt_h2 = .contiguous_color_count_y( x2, 1+.contiguous_color_count_y(x2,1) )
+
+      if (w2 != alt_w2)
+        local dim1 = "# pixel".pluralized( w2 )
+        local dim2 = "# pixel".pluralized( alt_w2 )
+        local message = "$-patch horizontal size guides do not match: the middle piece is marked as $ on the top edge and $ on the bottom edge."(image_patch_count,dim1,dim2)
+        throw rule.t.error( message )
+      endIf
+
+      if (h2 != alt_h2)
+        local dim1 = "# pixel".pluralized( h2 )
+        local dim2 = "# pixel".pluralized( alt_h2 )
+        local message = "$-patch vertical size guides do not match: the middle piece is marked as $ on the left edge and $ on the right edge."(image_patch_count,dim1,dim2)
+        throw rule.t.error( message )
+      endIf
+
+      placements.add( Placement(this, Box(1,      1,w1,h1)) )
+      placements.add( Placement(this, Box(1+w1,   1,w2,h1)) )
+      placements.add( Placement(this, Box(1+w1+w2,1,w3,h1)) )
+
+      placements.add( Placement(this, Box(1,      1+h1,w1,h2)) )
+      if (image_patch_count == 9)
+        placements.add( Placement(this, Box(1+w1,   1+h1,w2,h2)) )
+      endIf
+      placements.add( Placement(this, Box(1+w1+w2,1+h1,w3,h2)) )
+
+      placements.add( Placement(this, Box(1,      1+h1+h2,w1,h3)) )
+      placements.add( Placement(this, Box(1+w1,   1+h1+h2,w2,h3)) )
+      placements.add( Placement(this, Box(1+w1+w2,1+h1+h2,w3,h3)) )
+
+    method .contiguous_color_count_x( x1:Int, y1:Int )->Int
+      local x2 = x1 + 1
+      local i1 = y1 * bitmap.width + x1
+      local i2 = i1 + 1
+      local cur_color = bitmap.pixels[i1]
+
+      while (x2 <= image_size.x)
+        local is_finished = (x2 == image_size.x)
+        if (is_finished or bitmap.pixels[i2] != cur_color)
+          return (x2 - x1)
+        else
+          ++x2
+          ++i2
+        endIf
+      endWhile
+
+      return 0
+
+    method .contiguous_color_count_y( x1:Int, y1:Int )->Int
+      local w = bitmap.width
+      local y2 = y1 + 1
+      local j1 = y1 * w + x1
+      local j2 = j1 + w
+      local cur_color = bitmap.pixels[j1]
+
+      while (y2 <= image_size.y)
+        local is_finished = (y2 == image_size.y)
+        if (is_finished or bitmap.pixels[j2] != cur_color)
+          return (y2 - y1)
+        else
+          ++y2
+          j2 += w
+        endIf
+      endWhile
+
+      return 0
+
     method .create_variable_width_font_placements
       if (image_size.x == 0) return
 
       local h = image_size.y->Int - 1
       local x1 = 0
-      local x2 = 1
-      local cur_color = bitmap.pixels[0]
-      local n = 0
-      while (x2 <= image_size.x)
-        local is_finished = (x2 == image_size.x)
-        if (is_finished or bitmap.pixels[x2] != cur_color)
-          local w = (x2 - x1)
-          placements.add( Placement(this, Box(x1,1,w,h)) )
-          if (is_finished) escapeWhile
-          x1 += w
-          cur_color = bitmap.pixels[x1]
-        else
-          ++x2
-        endIf
+      while (x1 < image_size.x)
+        local n = .contiguous_color_count_x( x1, 0 )
+        placements.add( Placement(this, Box(x1,1,n,h)) )
+        x1 += n
       endWhile
 
       if (placements.count != font_characters.count)
@@ -299,6 +401,10 @@ class Asset
           endIf
           if (image_mipmaps)
             manifest.print " mipmaps"
+          endIf
+          if (image_patch_count)
+            manifest.print " frames "
+            manifest.print image_patch_count
           endIf
           manifest.println
           write_placements( manifest )

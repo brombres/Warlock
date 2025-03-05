@@ -19,8 +19,12 @@ $include Warlock/Entity
 $include Warlock/Font
 $include Warlock/Framework
 $include Warlock/IDManager
-$include Warlock/Image
-$include Warlock/ImageInfo
+$include Warlock/Image/ColorFillImage
+$include Warlock/Image/Image
+$include Warlock/Image/ImageInfo
+$include Warlock/Image/PatchImage
+$include Warlock/Image/RenderTargetImage
+$include Warlock/Image/TextureImage
 $include Warlock/Line
 $include Warlock/Log
 $include Warlock/MeshBuilder
@@ -28,7 +32,6 @@ $include Warlock/OverlayLog
 $include Warlock/ProjectionMode
 $include Warlock/Quad
 $include Warlock/Renderer
-$include Warlock/RenderTargetImage
 $include Warlock/RenderTargetTexture
 $include Warlock/RendererBatch
 $include Warlock/Screen
@@ -39,7 +42,6 @@ $include Warlock/Spine
 $include Warlock/SystemFont
 $include Warlock/WarlockState
 $include Warlock/Texture
-$include Warlock/TextureImage
 #$include Warlock/TileMapLayout
 $include Warlock/Triangle
 $include Warlock/Vertex

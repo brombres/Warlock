@@ -1,0 +1,39 @@
+library Warlock
+
+class ColorFillImage : Image
+  GLOBAL METHODS
+    method create( a:Color, b:Color, &h, &v )->ColorFillImage
+      if (h) return ColorGradientImage( a, b, b, a )
+      else   return ColorGradientImage( a, a, b, b )
+
+    method create( top_left:Color, top_right:Color, bottom_right:Color, bottom_left:Color )->ColorFillImage
+      return ColorGradientImage( top_left, top_right, bottom_right, bottom_left )
+
+  METHODS
+    method init( color )
+
+    method .draw_entity [override]
+      fill
+
+endClass
+
+class ColorGradientImage : ColorFillImage
+  PROPERTIES
+    top_left     : Color
+    top_right    : Color
+    bottom_right : Color
+    bottom_left  : Color
+
+  METHODS
+    method init( top_left, top_right, bottom_right, bottom_left )
+      prior.init
+
+    method .draw_entity [override]
+      localize opacity
+      local tl = top_left.with_opacity( opacity )
+      local tr = top_right.with_opacity( opacity )
+      local br = bottom_right.with_opacity( opacity )
+      local bl = bottom_left.with_opacity( opacity )
+      local bounds = Box( nominal_size )
+      Renderer.fill( bounds, tl, tr, br, bl, shader||Shader.ALPHA_COLOR, &=subdivisions )
+endClass

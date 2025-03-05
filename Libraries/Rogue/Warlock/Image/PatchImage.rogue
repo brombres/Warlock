@@ -1,0 +1,68 @@
+library Warlock
+
+class PatchImage : Image
+  PROPERTIES
+    border_scale  = 1.0
+    patch_count   : Int
+    patches       : Image[]
+
+  METHODS
+    method init( asset_name:String, border_scale=1.0 )
+      prior.init
+
+      patches = Image[]( asset_name ).[ anchor=Anchor.TOP_LEFT ]
+      patch_count = patches.count
+      if (patch_count < 8 or patch_count > 9)
+        println ''PatchImage("$") expects asset to be image list of 8 or 9 images.''(asset_name)
+        patches = null
+        return
+      endIf
+
+      if (patch_count == 8) patches.insert( null->(as Image), 4 )
+
+    method draw( position:XY )
+      if (not patches) return
+      temporarily nominal_size=size, scale=1.0
+        prior.draw( position )
+      endTemporarily
+
+    method draw( bounds:Box )
+      if (not patches) return
+      temporarily nominal_size=bounds.size, scale=1.0
+        prior.draw( bounds )
+      endTemporarily
+
+    method .draw_entity [override]
+      local size = nominal_size
+      local w1 = patches[0].size.x * border_scale
+      local w3 = patches[2].size.x * border_scale
+      local h1 = patches[0].size.y * border_scale
+      local h3 = patches[6].size.y * border_scale
+      if (w1 + w3 > nominal_size.x or h1 + h3 > nominal_size.y)
+        local scale = (nominal_size.x / (w1+w3)).or_smaller( nominal_size.y / (h1+h3) )
+        w1 *= scale
+        w3 *= scale
+        h1 *= scale
+        h3 *= scale
+      endIf
+
+      local w2 = nominal_size.x - (w1 + w3)
+      local h2 = nominal_size.y - (h1 + h3)
+      local w12 = w1 + w2
+      local h12 = h1 + h2
+
+      patches[0].draw( Box(0,0,w1,h1) )
+      patches[1].draw( Box(w1,0,w2,h1) )
+      patches[2].draw( Box(w12,0,w3,h1) )
+
+      patches[3].draw( Box(0,h1,w1,h2) )
+      if local p4 = patches[4]
+        p4.draw( Box(w1,h1,w2,h2) )
+      endIf
+      patches[5].draw( Box(w12,h1,w3,h2) )
+
+      patches[6].draw( Box(0,h12,w1,h3) )
+      patches[7].draw( Box(w1,h12,w2,h3) )
+      patches[8].draw( Box(w12,h12,w3,h3) )
+
+endClass
