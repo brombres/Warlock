@@ -220,7 +220,7 @@ class BGFX : Renderer [singleton]
         native @|bgfx::setTransform( reinterpret_cast<float*>( &$transform ) );
 
         local shader = batch.shader
-        shader.uniforms//u_mipmaps = batch.use_mipmaps
+        shader.uniforms//u_mipmap_level = batch.mipmap_level
 
         local bgfx_state_flags = 0
         native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A);

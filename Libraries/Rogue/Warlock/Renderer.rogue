@@ -10,7 +10,7 @@ class Renderer [singleton]
     first_index    : Int
     shader         : Shader
     textures       = Texture[]
-    use_mipmaps    = true
+    mipmap_level   = -1
 
     render_queue   = RendererBatch[]
 
@@ -115,8 +115,8 @@ class Renderer [singleton]
       endIf
 
     method fill( box:Box, texture:Texture, color:Color, shader=Shader.ALPHA_TEXTURE,
-        subdivisions=XY(0,0):XY, &h_flip, &v_flip, &use_mipmaps )
-      set_texture( texture, &=use_mipmaps )
+        subdivisions=XY(0,0):XY, &h_flip, &v_flip, mipmap_level=-1:Int )
+      set_texture( texture, &=mipmap_level )
       draw_triangles
 
       local uv_a = texture.uv.a
@@ -189,8 +189,8 @@ class Renderer [singleton]
       data.add Vertex( triangle.c, color )
       data.add( i0, i0+1, i0+2 )
 
-    method fill( triangle:Triangle, texture:Texture, color:Color, shader=Shader.ALPHA_TEXTURE, &use_mipmaps )
-      set_texture( texture, &=use_mipmaps )
+    method fill( triangle:Triangle, texture:Texture, color:Color, shader=Shader.ALPHA_TEXTURE, mipmap_level=-1:Int )
+      set_texture( texture, &=mipmap_level )
       draw_triangles
       local i0 = data.vertices.count - first_vertex
       data.add Vertex( triangle.a, color, XY(0,0) )
@@ -234,7 +234,7 @@ class Renderer [singleton]
           batch_texture,
           batch_textures,
           clip,
-          use_mipmaps
+          mipmap_level
         )
       )
 
@@ -273,7 +273,7 @@ class Renderer [singleton]
       first_index = 0
       shader = Shader.ALPHA_COLOR
       clear_textures
-      use_mipmaps = true
+      mipmap_level = -1
 
     method set_clip( clip:Box? )
       print_error
@@ -293,26 +293,26 @@ class Renderer [singleton]
       flush
       @shader = new_shader.[load]
 
-    method set_texture( new_texture:Texture, use_mipmaps=true:Logical  )
-      set_use_mipmaps( use_mipmaps )
+    method set_texture( new_texture:Texture, mipmap_level=-1:Int )
+      set_mipmap_level( mipmap_level )
       if (new_texture.source) new_texture .= source
       if (textures.count == 1 and textures[0] is new_texture) return
       flush
       textures.expand_to_include( 0 )
       textures[0] = new_texture
 
-    method set_texture( stage:Int, new_texture:Texture, use_mipmaps=true:Logical )
-      set_use_mipmaps( use_mipmaps )
+    method set_texture( stage:Int, new_texture:Texture, mipmap_level=-1:Int )
+      set_mipmap_level( mipmap_level )
       if (new_texture.source) new_texture .= source
       if (textures.count > stage and textures[stage] is new_texture) return
       flush
       textures.expand_to_include( stage )
       textures[stage] = new_texture
 
-    method set_use_mipmaps( setting:Logical )
-      if (use_mipmaps == setting) return
+    method set_mipmap_level( level:Int )
+      if (mipmap_level == level) return
       flush
-      @use_mipmaps = setting
+      @mipmap_level = level
 
     method uses_homogeneous_depth->Logical
       return true

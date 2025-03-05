@@ -13,7 +13,7 @@ augment Triangle
     method fill( color:Color, shader=Shader.ALPHA_COLOR:Shader )
       Renderer.fill( this, color, shader )
 
-    method fill( texture:Texture, color=Color.WHITE:Color, shader=Shader.ALPHA_TEXTURE:Shader, &use_mipmaps )
-      Renderer.fill( this, texture, color, shader, &=use_mipmaps )
+    method fill( texture:Texture, color=Color.WHITE:Color, shader=Shader.ALPHA_TEXTURE:Shader, mipmap_level=-1:Int )
+      Renderer.fill( this, texture, color, shader, &=mipmap_level )
 endAugment
 

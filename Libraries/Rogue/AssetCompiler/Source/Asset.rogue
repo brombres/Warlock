@@ -71,7 +71,7 @@ class Asset
           is_modified = true
           info//image_size = bitmap.size
           image_size = bitmap.size
-          image_mipmaps = false
+          image_mipmaps = true
           image_patch_count = 0
 
           if local split_attribute = rule.find_attribute( "split" )
@@ -399,8 +399,8 @@ class Asset
             manifest.print " frames "
             manifest.print image_split.product->Int
           endIf
-          if (image_mipmaps)
-            manifest.print " mipmaps"
+          if (not image_mipmaps)
+            manifest.print " mipmaps false"
           endIf
           if (image_patch_count)
             manifest.print " frames "

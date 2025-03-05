@@ -45,7 +45,7 @@ class TextureImage : Image
         local h_flip = attributes.h_flip
         local v_flip = attributes.v_flip
         local shader = shader || Shader.ALPHA_TEXTURE
-        Renderer.fill( bounds, texture, color, shader, &=subdivisions, &=h_flip, &=v_flip, &=use_mipmaps )
+        Renderer.fill( bounds, texture, color, shader, &=subdivisions, &=h_flip, &=v_flip, &=mipmap_level )
       else
         Renderer.fill( bounds, color, shader||Shader.ALPHA_COLOR, &=subdivisions )
       endIf
