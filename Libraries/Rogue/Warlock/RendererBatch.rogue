@@ -11,6 +11,7 @@ class RendererBatch(
   shader:Shader,
   texture:Texture,   # stage 0 only
   textures:Texture[], # multi-stage texture
-  clip:Box?
+  clip:Box?,
+  use_mipmaps:Logical
 ) [compound]
 endClass

@@ -88,4 +88,7 @@ augment Image[]
     method set_subdivisions( subdivisions:XY )
       (forEach in this).subdivisions = subdivisions
 
+    method set_use_mipmaps( setting:Logical )
+      (forEach in this).use_mipmaps = setting
+
 endAugment

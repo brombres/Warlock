@@ -10,7 +10,7 @@ class PatchImage : Image
     method init( asset_name:String, border_scale=1.0 )
       prior.init
 
-      patches = Image[]( asset_name ).[ anchor=Anchor.TOP_LEFT ]
+      patches = Image[]( asset_name ).[ anchor=Anchor.TOP_LEFT, use_mipmaps=false ]
       patch_count = patches.count
       if (patch_count < 8 or patch_count > 9)
         println ''PatchImage("$") expects asset to be image list of 8 or 9 images.''(asset_name)
@@ -65,4 +65,6 @@ class PatchImage : Image
       patches[7].draw( Box(w1,h12,w2,h3) )
       patches[8].draw( Box(w12,h12,w3,h3) )
 
+    method set_use_mipmaps( @use_mipmaps )
+      if (patches) patches.use_mipmaps = use_mipmaps
 endClass

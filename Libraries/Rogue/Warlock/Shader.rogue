@@ -57,6 +57,9 @@ endClass
 
 class ShaderUniforms : [String:XYZW]
   METHODS
+    method set( name:String, value:Logical )
+      set( name, XYZW( which{value:1.0||0.0} ) )
+
     method set( name:String, value:Real )
       set( name, XYZW(value) )
 

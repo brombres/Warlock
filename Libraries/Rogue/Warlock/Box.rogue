@@ -19,7 +19,7 @@ augment Box
     method fill( tl:Color, tr:Color, br:Color, bl:Color, shader=Shader.ALPHA_COLOR:Shader )
       Renderer.fill( this, tl, tr, br, bl, shader )
 
-    method fill( texture:Texture, color=Color.WHITE:Color, shader=Shader.ALPHA_TEXTURE:Shader )
-      Renderer.fill( this, texture, color, shader )
+    method fill( texture:Texture, color=Color.WHITE:Color, shader=Shader.ALPHA_TEXTURE:Shader, &use_mipmaps )
+      Renderer.fill( this, texture, color, shader, &=use_mipmaps )
 endAugment
 

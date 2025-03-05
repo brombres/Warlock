@@ -220,11 +220,11 @@ class BGFX : Renderer [singleton]
         native @|bgfx::setTransform( reinterpret_cast<float*>( &$transform ) );
 
         local shader = batch.shader
+        shader.uniforms//u_mipmaps = batch.use_mipmaps
 
         local bgfx_state_flags = 0
         native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A);
         bgfx_state_flags |= shader.blend_flags
-        #native @|$bgfx_state_flags |= (RogueInt) BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_ONE, BGFX_STATE_BLEND_INV_SRC_ALPHA);
         native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_WRITE_Z);
         #native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_CULL_CCW);
         #native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_DEPTH_TEST_LEQUAL);
@@ -374,9 +374,6 @@ augment ShaderProgram
         if (not native("bgfx::isValid($this->bgfx_uniforms[$i])")->Logical)
           native
           @|$this->bgfx_uniforms[$i] = bgfx::createUniform( $name->data->as_utf8, bgfx::UniformType::Vec4 );
-          if (not native("bgfx::isValid($this->bgfx_uniforms[$i])")->Logical)
-            println "No such uniform '$' in shader '$'."(name,filename)
-          endIf
         endIf
 
         native

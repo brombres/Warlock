@@ -2,6 +2,15 @@ library Entity
 
 uses Warlock
 
+augment Entity::Entity
+  PROPERTIES
+    use_mipmaps = true
+
+  METHODS
+    method set_use_mipmaps( @use_mipmaps )
+      noAction
+endAugment
+
 augment Entity::Entity2D
   PROPERTIES
     position : XY
