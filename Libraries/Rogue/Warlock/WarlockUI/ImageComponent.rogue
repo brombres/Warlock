@@ -26,5 +26,7 @@ class ImageComponent : Component
       aspect_fit_width = image.nominal_size
 
     method .draw_entity [override]
-      image.draw( display_bounds )
+      temporarily image.opacity = opacity
+        image.draw( display_bounds )
+      endTemporarily
 endClass

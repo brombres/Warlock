@@ -20,6 +20,7 @@ augment Entity::Entity2D
       draw( position )
 
     method draw( position:XY )
+      if (attributes.hidden) return
       use Display.transform_stack
         .begin_draw
         local flip_scale = XY(
@@ -44,6 +45,7 @@ augment Entity::Entity2D
       endUse
 
     method draw( bounds:Box )
+      if (attributes.hidden) return
       use Display.transform_stack
         .begin_draw
         Display.push_transform( Matrix.transform(XYZ(bounds.position,z),bounds.size/nominal_size) )
