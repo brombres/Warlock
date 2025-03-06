@@ -287,44 +287,88 @@ class Asset
       local x2 = image_size.x - 1
       local y2 = image_size.y - 1
 
-      local w1 = .contiguous_color_count_x( 1,    0 )
-      local w2 = .contiguous_color_count_x( 1+w1, 0 )
-      local w3 = bitmap.width - (w1 + w2 + 2)
+      local uses_h_guides = true
+      local (w1,w2,w3,uses_h_guides) = .detect_patch_widths( 0 )
 
-      local h1 = .contiguous_color_count_y( 0, 1 )
-      local h2 = .contiguous_color_count_y( 0, 1+h1 )
-      local h3 = bitmap.height - (h1 + h2 + 2)
-
-      local alt_w2 = .contiguous_color_count_x( 1+.contiguous_color_count_x(1,y2), y2 )
-      local alt_h2 = .contiguous_color_count_y( x2, 1+.contiguous_color_count_y(x2,1) )
-
-      if (w2 != alt_w2)
-        local dim1 = "# pixel".pluralized( w2 )
-        local dim2 = "# pixel".pluralized( alt_w2 )
-        local message = "$-patch horizontal size guides do not match: the middle piece is marked as $ on the top edge and $ on the bottom edge."(image_patch_count,dim1,dim2)
-        throw rule.t.error( message )
+      if (uses_h_guides)
+        local (alt_w1,alt_w2,alt_w3,alt_uses_guides) = .detect_patch_widths( y2 )
+        if (w2 != alt_w2)
+          local dim1 = "# pixel".pluralized( w2 )
+          local dim2 = "# pixel".pluralized( alt_w2 )
+          local message = "$-patch horizontal size guides do not match: the middle piece is marked as $ on the top edge and $ on the bottom edge."(image_patch_count,dim1,dim2)
+          throw rule.t.error( message )
+        endIf
       endIf
 
-      if (h2 != alt_h2)
-        local dim1 = "# pixel".pluralized( h2 )
-        local dim2 = "# pixel".pluralized( alt_h2 )
-        local message = "$-patch vertical size guides do not match: the middle piece is marked as $ on the left edge and $ on the right edge."(image_patch_count,dim1,dim2)
-        throw rule.t.error( message )
+      local uses_v_guides = true
+      local (h1,h2,h3,uses_v_guides) = .detect_patch_heights( 0 )
+
+      if (uses_v_guides)
+        local (alt_h1,alt_h2,alt_h3,alt_uses_guides) = .detect_patch_heights( y2 )
+        if (h2 != alt_h2)
+          local dim1 = "# pixel".pluralized( h2 )
+          local dim2 = "# pixel".pluralized( alt_h2 )
+          local message = "$-patch vertical size guides do not match: the middle piece is marked as $ on the left edge and $ on the right edge."(image_patch_count,dim1,dim2)
+          throw rule.t.error( message )
+        endIf
       endIf
 
-      placements.add( Placement(this, Box(1,      1,w1,h1)) )
-      placements.add( Placement(this, Box(1+w1,   1,w2,h1)) )
-      placements.add( Placement(this, Box(1+w1+w2,1,w3,h1)) )
+      local x1 = which{ uses_h_guides:1 || 0 }
+      local y1 = which{ uses_v_guides:1 || 0 }
 
-      placements.add( Placement(this, Box(1,      1+h1,w1,h2)) )
+      placements.add( Placement(this, Box(x1,      y1,w1,h1)) )
+      placements.add( Placement(this, Box(x1+w1,   y1,w2,h1)) )
+      placements.add( Placement(this, Box(x1+w1+w2,y1,w3,h1)) )
+
+      placements.add( Placement(this, Box(x1,      y1+h1,w1,h2)) )
       if (image_patch_count == 9)
-        placements.add( Placement(this, Box(1+w1,   1+h1,w2,h2)) )
+        placements.add( Placement(this, Box(x1+w1,   y1+h1,w2,h2)) )
       endIf
-      placements.add( Placement(this, Box(1+w1+w2,1+h1,w3,h2)) )
+      placements.add( Placement(this, Box(x1+w1+w2,y1+h1,w3,h2)) )
 
-      placements.add( Placement(this, Box(1,      1+h1+h2,w1,h3)) )
-      placements.add( Placement(this, Box(1+w1,   1+h1+h2,w2,h3)) )
-      placements.add( Placement(this, Box(1+w1+w2,1+h1+h2,w3,h3)) )
+      placements.add( Placement(this, Box(x1,      y1+h1+h2,w1,h3)) )
+      placements.add( Placement(this, Box(x1+w1,   y1+h1+h2,w2,h3)) )
+      placements.add( Placement(this, Box(x1+w1+w2,y1+h1+h2,w3,h3)) )
+
+    method .detect_patch_heights( x:Int )->(Int,Int,Int,Logical)
+      local h1, h2, h3 : Int
+      h1 = .contiguous_color_count_x( x, 1 )
+      if (h1 < bitmap.height - 2)
+        h2 = .contiguous_color_count_x( x, 1+h1 )
+        if (h1 + h2 < bitmap.height - 2)
+          h3 = .contiguous_color_count_x( x, 1+h1+h2 ) - 1
+          if (h1 + h2 + h3 + 2 == bitmap.height) return (h1,h2,h3,true)
+        else
+          h3 = h2 - 1
+          h2 = 0
+          return (h1,h2,h3,true)
+        endIf
+      endIf
+
+      h1 = bitmap.height / 3
+      h3 = h1
+      h2 = bitmap.height - (h1 + h3)
+      return (h1,h2,h3,false)
+
+    method .detect_patch_widths( y:Int )->(Int,Int,Int,Logical)
+      local w1, w2, w3 : Int
+      w1 = .contiguous_color_count_x( 1, y )
+      if (w1 < bitmap.width - 2)
+        w2 = .contiguous_color_count_x( 1+w1, y )
+        if (w1 + w2 < bitmap.width - 2)
+          w3 = .contiguous_color_count_x( 1+w1+w2, y ) - 1
+          if (w1 + w2 + w3 + 2 == bitmap.width) return (w1,w2,w3,true)
+        else
+          w3 = w2 - 1
+          w2 = 0
+          return (w1,w2,w3,true)
+        endIf
+      endIf
+
+      w1 = bitmap.width / 3
+      w3 = w1
+      w2 = bitmap.width - (w1 + w3)
+      return (w1,w2,w3,false)
 
     method .contiguous_color_count_x( x1:Int, y1:Int )->Int
       local x2 = x1 + 1

@@ -6,6 +6,7 @@ class ImageComponent : Component
 
   METHODS
     method init( image )
+      prior.init
 
     method aspect_fill
       aspect_fill = image.nominal_size
