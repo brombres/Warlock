@@ -5,14 +5,14 @@ class ImageComponent : Component
     image : Image
 
   METHODS
-    method init( image )
+    method init( image, &aspect_fit )
       prior.init
+      if (aspect_fit) this.aspect_fit
 
     method init( asset_name:String )
       local asset = AssetManager.find_image( asset_name )
-      if (asset.image_patch_count) image = PatchImage( asset_name )
-      else                         image = Image( asset_name )
-      prior.init
+      if (asset.image_patch_count) init( PatchImage(asset_name) )
+      else                         init( Image(asset_name) )
 
     method aspect_fill
       aspect_fill = image.nominal_size
