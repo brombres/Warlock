@@ -165,6 +165,8 @@ class AssetManager [singleton]
     method .load_image( asset:AssetInfo )->Logical
       asset.type = <Image>
       .consume_ws
+      if (.consume_id("patch")) asset.image_patch_count = scanner.scan_int
+      .consume_ws
       if (.consume_id("frames")) asset.frame_count = scanner.scan_int
       .consume_ws
       if (.consume_id("mipmaps"))

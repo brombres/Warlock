@@ -2,14 +2,15 @@ library Warlock
 
 class AssetInfo
   PROPERTIES
-    filepath        : String
-    type            : GlobalID
-    images          : ImageInfo[]
-    frame_count     = 1
-    image_mipmaps   : Logical
-    font_height     : Int
-    font_width      : Int  # 0 is variable-width
-    font_characters : String
+    filepath          : String
+    type              : GlobalID
+    images            : ImageInfo[]
+    frame_count       = 1
+    image_mipmaps     : Logical
+    image_patch_count : Int
+    font_height       : Int
+    font_width        : Int  # 0 is variable-width
+    font_characters   : String
 
   METHODS
     method init( filepath )

@@ -8,6 +8,12 @@ class ImageComponent : Component
     method init( image )
       prior.init
 
+    method init( asset_name:String )
+      local asset = AssetManager.find_image( asset_name )
+      if (asset.image_patch_count) image = PatchImage( asset_name )
+      else                         image = Image( asset_name )
+      prior.init
+
     method aspect_fill
       aspect_fill = image.nominal_size
 

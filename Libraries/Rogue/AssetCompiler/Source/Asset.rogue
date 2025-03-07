@@ -447,6 +447,8 @@ class Asset
             manifest.print " mipmaps false"
           endIf
           if (image_patch_count)
+            manifest.print " patch "
+            manifest.print image_patch_count
             manifest.print " frames "
             manifest.print image_patch_count
           endIf
