@@ -304,7 +304,7 @@ class Asset
       local (h1,h2,h3,uses_v_guides) = .detect_patch_heights( 0 )
 
       if (uses_v_guides)
-        local (alt_h1,alt_h2,alt_h3,alt_uses_guides) = .detect_patch_heights( y2 )
+        local (alt_h1,alt_h2,alt_h3,alt_uses_guides) = .detect_patch_heights( x2 )
         if (h2 != alt_h2)
           local dim1 = "# pixel".pluralized( h2 )
           local dim2 = "# pixel".pluralized( alt_h2 )
@@ -332,11 +332,11 @@ class Asset
 
     method .detect_patch_heights( x:Int )->(Int,Int,Int,Logical)
       local h1, h2, h3 : Int
-      h1 = .contiguous_color_count_x( x, 1 )
+      h1 = .contiguous_color_count_y( x, 1 )
       if (h1 < bitmap.height - 2)
-        h2 = .contiguous_color_count_x( x, 1+h1 )
+        h2 = .contiguous_color_count_y( x, 1+h1 )
         if (h1 + h2 < bitmap.height - 2)
-          h3 = .contiguous_color_count_x( x, 1+h1+h2 ) - 1
+          h3 = .contiguous_color_count_y( x, 1+h1+h2 ) - 1
           if (h1 + h2 + h3 + 2 == bitmap.height) return (h1,h2,h3,true)
         else
           h3 = h2 - 1
