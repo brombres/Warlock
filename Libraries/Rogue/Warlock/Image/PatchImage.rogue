@@ -2,9 +2,13 @@ library Warlock
 
 class PatchImage : Image
   PROPERTIES
-    border_scale  = 1.0
-    patch_count   : Int
-    patches       : Image[]
+    border_scale     = 1.0
+    patch_count      : Int
+    patches          : Image[]
+    .truncate_top    : Logical
+    .truncate_left   : Logical
+    .truncate_bottom : Logical
+    .truncate_right  : Logical
 
   METHODS
     method init( asset_name:String, border_scale=1.0 )
@@ -34,37 +38,148 @@ class PatchImage : Image
 
     method .draw_entity [override]
       local size = nominal_size
-      local w1 = patches[0].size.x * border_scale
-      local w3 = patches[2].size.x * border_scale
-      local h1 = patches[0].size.y * border_scale
-      local h3 = patches[6].size.y * border_scale
-      if (w1 + w3 > nominal_size.x or h1 + h3 > nominal_size.y)
-        local scale = (nominal_size.x / (w1+w3)).or_smaller( nominal_size.y / (h1+h3) )
-        w1 *= scale
-        w3 *= scale
-        h1 *= scale
-        h3 *= scale
+      local w_col_1 = patches[0].size.x * border_scale
+      local w_col_3 = patches[2].size.x * border_scale
+      local h_row_1 = patches[0].size.y * border_scale
+      local h_row_3 = patches[6].size.y * border_scale
+
+      if (w_col_1 + w_col_3 > nominal_size.x or h_row_1 + h_row_3 > nominal_size.y)
+        local scale = (nominal_size.x / (w_col_1+w_col_3)).or_smaller( nominal_size.y / (h_row_1+h_row_3) )
+        w_col_1 *= scale
+        w_col_3 *= scale
+        h_row_1 *= scale
+        h_row_3 *= scale
       endIf
 
-      local w2 = nominal_size.x - (w1 + w3)
-      local h2 = nominal_size.y - (h1 + h3)
-      local w12 = w1 + w2
-      local h12 = h1 + h2
+      local w_col_2 = nominal_size.x - (w_col_1 + w_col_3)
+      local h_row_2 = nominal_size.y - (h_row_1 + h_row_3)
 
-      patches[0].draw( Box(0,0,w1,h1) )
-      patches[1].draw( Box(w1,0,w2,h1) )
-      patches[2].draw( Box(w12,0,w3,h1) )
+      local x0 = 0
+      local x1 = w_col_1
+      local x2 = w_col_1 + w_col_2
+      local x3 = 0
+      local x4 = w_col_1
+      local x5 = x2
+      local x6 = 0
+      local x7 = w_col_1
+      local x8 = x2
 
-      patches[3].draw( Box(0,h1,w1,h2) )
+      local w0 = w_col_1
+      local w1 = w_col_2
+      local w2 = w_col_3
+      local w3 = w_col_1
+      local w4 = w_col_2
+      local w5 = w_col_3
+      local w6 = w_col_1
+      local w7 = w_col_2
+      local w8 = w_col_3
+
+      local y0 = 0
+      local y1 = 0
+      local y2 = 0
+      local y3 = h_row_1
+      local y4 = h_row_1
+      local y5 = h_row_1
+      local y6 = h_row_1 + h_row_2
+      local y7 = y6
+      local y8 = y6
+
+      local h0 = h_row_1
+      local h1 = h_row_1
+      local h2 = h_row_1
+      local h3 = h_row_2
+      local h4 = h_row_2
+      local h5 = h_row_2
+      local h6 = h_row_3
+      local h7 = h_row_3
+      local h8 = h_row_3
+
+      if (.truncate_top)
+        y3 = y0
+        y4 = y1
+        y5 = y2
+        h3 += h0
+        h4 += h1
+        h5 += h2
+        h0 = 0
+        h1 = 0
+        h2 = 0
+      endIf
+
+      if (.truncate_left)
+        x1 = x0
+        x4 = x3
+        x7 = x6
+        w1 += w0
+        w4 += w3
+        w7 += w6
+        w0 = 0
+        w3 = 0
+        w6 = 0
+      endIf
+
+      if (.truncate_bottom)
+        h3 += h6
+        h4 += h7
+        h5 += h8
+        h6 = 0
+        h7 = 0
+        h8 = 0
+      endIf
+
+      if (.truncate_right)
+        w1 += w2
+        w4 += w5
+        w7 += w8
+        w2 = 0
+        w5 = 0
+        w8 = 0
+      endIf
+
+      if (h1)
+        if (w0) patches[0].draw( Box(x0,y0,w0,h0) )
+        patches[1].draw( Box(x1,y1,w1,h1) )
+        if (w2) patches[2].draw( Box(x2,y2,w2,h2) )
+      endIf
+
+      if (w3) patches[3].draw( Box(x3,y3,w3,h3) )
       if local p4 = patches[4]
-        p4.draw( Box(w1,h1,w2,h2) )
+        p4.draw( Box(x4,y4,w4,h4) )
       endIf
-      patches[5].draw( Box(w12,h1,w3,h2) )
+      if (w5) patches[5].draw( Box(x5,y5,w5,h5) )
 
-      patches[6].draw( Box(0,h12,w1,h3) )
-      patches[7].draw( Box(w1,h12,w2,h3) )
-      patches[8].draw( Box(w12,h12,w3,h3) )
+      if (h7)
+        if (w6) patches[6].draw( Box(x6,y6,w6,h6) )
+        patches[7].draw( Box(x7,y7,w7,h7) )
+        if (w8) patches[8].draw( Box(x8,y8,w8,h8) )
+      endIf
 
     method set_mipmap_level( @mipmap_level )
       if (patches) patches.mipmap_level = mipmap_level
+
+    method set_truncate_top( setting:Logical )
+      .truncate_top = setting
+
+    method set_truncate_left( setting:Logical )
+      .truncate_left = setting
+
+    method set_truncate_bottom( setting:Logical )
+      .truncate_bottom = setting
+
+    method set_truncate_right( setting:Logical )
+      .truncate_right = setting
+
+    method truncate_top
+      .truncate_top = true
+
+    method truncate_left
+      .truncate_left = true
+
+    method truncate_bottom
+      .truncate_bottom = true
+
+    method truncate_right
+      .truncate_right = true
+
+
 endClass
