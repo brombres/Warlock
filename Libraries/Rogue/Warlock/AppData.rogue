@@ -2,54 +2,130 @@ library Warlock
 
 class AppData [singleton]
   PROPERTIES
-    data        = @{}
-    access_path = String()
-    signal_args = @[]
+    data = AppDataValue.table : AppDataValue
 
   METHODS
-    method init
-
-    method get( name:String )->AppDataValue
-      access_path.[clear].print( name )
-      signal_args.clear
-      return AppDataValue( data, name )
+    method get( name:String )->AppDataContext
+      return AppDataContext( data, name )
 
     method set( name:String, value:Variant )
-      access_path.[clear].print( name )
-      data[name] = value
-      signal_change( value )
+      if (data.contains(name))
+        local existing = data[name]
+        existing.value = value
+        data[name] = existing
+      else
+        data[name] = value
+      endIf
+      signal_change( data[name].on_change, value )
 
-    method signal_change( value:Variant )
-      signal_args.[ clear, add(access_path), add(value) ]
-      <AppData.change>.signal( signal_args )
+    method on_change<<$ID>>( callback:Function(Variant) )
+      local id = <App.$ID>
+      local parts = id->String.clipped(1,1).split('.').[ remove_first ]
+      local context = get( parts.remove_first )
+      forEach (part in parts)
+        context = context[part]
+      endForEach
+
+      context.on_change = id
+
+      id.on_signal( callback )
+
+    method signal_change( signal_id:GlobalID, value:Variant )
+      if (signal_id != <UNDEFINED>)
+        signal_id.signal( value )
+      endIf
 
     method to->String
       return data->String
 endClass
 
+class AppDataValue( value:Variant, data:[String:AppDataValue], on_change:GlobalID ) [compound]
+  GLOBAL METHODS
+    method create->AppDataValue
+      return AppDataValue( undefined, null, <UNDEFINED> )
 
-class AppDataValue( context:Variant, key:String ) [compound]
+    method create( value:Variant )->AppDataValue
+      return AppDataValue( value, null, <UNDEFINED> )
+
+    method create( value:Variant, on_change:GlobalID )->AppDataValue
+      return AppDataValue( value, null, on_change )
+
+    method table->AppDataValue
+      return AppDataValue( undefined, [String:AppDataValue], <UNDEFINED> )
+
   METHODS
-    method get( name:String )->AppDataValue
-      AppData.access_path.[ print('.'), print(name) ]
-      if local table = context[key]
-        return AppDataValue( table, name )
-      else
-        local table = @{}
-        context[key] = table
-        return AppDataValue( table, name )
+    method contains( key:String )->Logical
+      if (data) return data.contains( key )
+      return false
+
+    method get( key:String )->AppDataValue
+      if (data)
+        return data[key]
       endIf
+      return AppDataValue()
+
+    method is_table->Logical
+      return data?
+
+    method operator?->Logical
+      return value? or data?
+
+    method set( key:String, value:AppDataValue )
+      if (data)
+        data[key] = value
+        AppData.signal_change( data[key].on_change, value.value )
+      endIf
+
+    method to->String
+      if (data) return data->String
+      return "$ $"(value->String,on_change)
+endClass
+
+augment Rogue::Variant
+  METHODS
+    method to->AppDataValue
+      return AppDataValue( this )
+endAugment
+
+class AppDataContext( context:AppDataValue, key:String ) [compound]
+  METHODS
+    method get( name:String )->AppDataContext
+      if local table = context[key]
+        return AppDataContext( table, name )
+      else
+        local table = AppDataValue.table
+        context[key] = table
+        return AppDataContext( table, name )
+      endIf
+
+    method is_table->Logical
+      return context[key].is_table
 
     method set( name:String, value:Variant )
-      AppData.access_path.[ print('.'), print(name) ]
-      if local table = context[key]
-        table[name] = value
-      else
-        local table = @{}
-        table[name] = value
-        context[key] = table
+      local data = context[key]
+      if (data.is_table)
+        local existing = data[name]
+        existing.value = value
+        data[name] = existing
+        return
       endIf
-      AppData.signal_change( value )
+
+      local table = AppDataValue.table
+      table[name] = value
+      context[key] = table
+
+    method set_on_change( on_change_id:GlobalID )
+      local table = context[key]
+      if (table.is_table)
+        local existing = table[key]
+        existing.on_change = on_change_id
+        table.data[key] = existing
+      else
+        context.data[key] = AppDataValue( undefined, null, on_change_id )
+      endIf
+
+    method to->AppDataValue
+      return context[key]
 
     method to->Int
       return this->Variant->Int
@@ -58,13 +134,14 @@ class AppDataValue( context:Variant, key:String ) [compound]
       return this->Variant->Real
 
     method to->String
-      return this->Variant->String
+      return this->AppDataValue->String
 
     method to->Variant
       if local value = context[key]
-        return value
+        return value.value
       else
         return undefined
       endIf
 endClass
+
 
