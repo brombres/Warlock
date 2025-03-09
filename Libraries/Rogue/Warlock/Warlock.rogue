@@ -4,7 +4,7 @@ nativeHeader @|#include "WarlockInterface.h"
 
 $include Warlock/Macros
 
-$include Warlock/ApplicationState
+$include Warlock/AppState
 $include Warlock/AssetInfo
 $include Warlock/AssetManager
 $include Warlock/Bitmap
@@ -137,12 +137,12 @@ class Warlock [essential singleton]
     method render
       (forEach in windows).begin_render
 
-      ApplicationState = ApplicationState.updated || ApplicationState()
+      AppState = AppState.updated || AppState()
 
-      ApplicationState.on_render_begin
+      AppState.on_render_begin
       (forEach in windows).render
 
-      ApplicationState.on_render_end
+      AppState.on_render_end
       (forEach in windows).end_render
 
 endClass

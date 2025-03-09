@@ -1,6 +1,6 @@
 library Warlock
 
-class ApplicationState : WarlockState<<ApplicationState>> [singleton]
+class AppState : WarlockState<<AppState>> [singleton]
   METHODS
     method dispatch( e:KeyEvent ) [override]
       e.window.state.handle( e )

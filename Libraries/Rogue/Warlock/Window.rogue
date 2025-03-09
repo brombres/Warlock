@@ -27,10 +27,10 @@ class Window : Display
 
     method render
       Renderer.on_render_begin( this )
-      ApplicationState.on_draw( &bg )
-      ApplicationState.on_draw
+      AppState.on_draw( &bg )
+      AppState.on_draw
       prior.render
-      ApplicationState.on_draw( &!bg )
+      AppState.on_draw( &!bg )
       OverlayLog.draw
       Renderer.on_render_end( this )
 
