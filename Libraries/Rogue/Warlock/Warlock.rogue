@@ -4,6 +4,7 @@ nativeHeader @|#include "WarlockInterface.h"
 
 $include Warlock/Macros
 
+$include Warlock/AppData
 $include Warlock/AppState
 $include Warlock/AssetInfo
 $include Warlock/AssetManager

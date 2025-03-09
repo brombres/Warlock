@@ -1,0 +1,70 @@
+library Warlock
+
+class AppData [singleton]
+  PROPERTIES
+    data        = @{}
+    access_path = String()
+    signal_args = @[]
+
+  METHODS
+    method init
+
+    method get( name:String )->AppDataValue
+      access_path.[clear].print( name )
+      signal_args.clear
+      return AppDataValue( data, name )
+
+    method set( name:String, value:Variant )
+      access_path.[clear].print( name )
+      data[name] = value
+      signal_change( value )
+
+    method signal_change( value:Variant )
+      signal_args.[ clear, add(access_path), add(value) ]
+      <AppData.change>.signal( signal_args )
+
+    method to->String
+      return data->String
+endClass
+
+
+class AppDataValue( context:Variant, key:String ) [compound]
+  METHODS
+    method get( name:String )->AppDataValue
+      AppData.access_path.[ print('.'), print(name) ]
+      if local table = context[key]
+        return AppDataValue( table, name )
+      else
+        local table = @{}
+        context[key] = table
+        return AppDataValue( table, name )
+      endIf
+
+    method set( name:String, value:Variant )
+      AppData.access_path.[ print('.'), print(name) ]
+      if local table = context[key]
+        table[name] = value
+      else
+        local table = @{}
+        table[name] = value
+        context[key] = table
+      endIf
+      AppData.signal_change( value )
+
+    method to->Int
+      return this->Variant->Int
+
+    method to->Real
+      return this->Variant->Real
+
+    method to->String
+      return this->Variant->String
+
+    method to->Variant
+      if local value = context[key]
+        return value
+      else
+        return undefined
+      endIf
+endClass
+
