@@ -71,11 +71,8 @@ class InspectionVisitor<<$ReturnType>>
 
     method on_visit_children( cmd:Group )->$ReturnType
       local result : $ReturnType
-      result = visit(cmd.filepaths)
-      return result
-
-    method on_visit_children( cmd:AnonymousGroup )->$ReturnType
-      local result : $ReturnType
+      result = visit(cmd.attributes)
+      if (result?) return result
       result = visit(cmd.filepaths)
       return result
 

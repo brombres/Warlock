@@ -94,13 +94,13 @@ routine rogo_froley
 endRoutine
 
 routine rogo_build_debug
-  # Force-rebuilds in debug mode.
-  rogo_rebuild_debug
+  Build.BUILD_MODE = "debug"
+  rogo_build
 endRoutine
 
 routine rogo_build_release
-  # Force-rebuilds in release mode.
-  rogo_rebuild_release
+  Build.BUILD_MODE = "release"
+  rogo_build
 endRoutine
 
 routine rogo_rebuild

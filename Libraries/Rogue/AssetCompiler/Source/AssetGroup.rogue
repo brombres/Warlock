@@ -2,11 +2,14 @@ library AssetCompiler
 
 class AssetGroup
   PROPERTIES
-    id        : Int       # positive integer
-    assets    = Asset[]
-    filename  : String    # Base filename of texture atlas pages.
-    filepaths = String[]  # All atlas pages composing this group.
-    pages     : AtlasPage[]
+    id          : Int       # positive integer
+    assets      = Asset[]
+    filename    : String    # Base filename of texture atlas pages.
+    filepaths   = String[]  # All atlas pages composing this group.
+    pages       : AtlasPage[]
+    attributes  : AttributeList
+    is_modified : Logical
+    padding     = 8
 
   METHODS
     #{
@@ -34,10 +37,24 @@ class AssetGroup
     method add( asset:Asset )
       assets.add( asset )
 
+    method check_for_changes( info:Variant )
+      contingent
+        necessary (info//attributes.count == attributes?.count)
+        if (attributes)
+          forEach (key in info//attributes.keys)
+            local attr = attributes.find( key )
+            necessary (attr)
+            necessary (attr.value.value == info//attributes[key])
+          endForEach
+        endIf
+      unsatisfied
+        is_modified = true
+      endContingent
+
     method process
       which (assets.first.type)
         case <Image>, <Font>
-          pages = ImagePacker( this ).pack( assets )
+          pages = ImagePacker( this ).[padding=padding].pack( assets )
           (forEach in assets).update_placement_info
         case <Binary>
           local output_folder = "Build/$"(AssetCompiler.platform)
@@ -59,6 +76,7 @@ class AssetGroup
 
     method has_modified_assets->Logical
       if (assets.is_empty) return false
+      if (is_modified) return true
 
       if ((forEach in assets).is_modified) return true
 
@@ -98,11 +116,23 @@ class AssetGroup
     method set_id( @id )
       GroupIDManager.mark_id_used( id )
 
+    method set_attributes( @attributes )
+      if local attr = attributes.find( "padding" )
+        padding = attr.value->Int
+      endIf
+
     method to->String
       return assets->String
 
     method to->Variant
-      local result = @{ id, hash, filename, assets:[], pages:[] }
+      local result = @{ id, hash, filename, attributes:{}, assets:[], pages:[] }
+
+      if (attributes)
+        local attribute_table = result//attributes
+        forEach (attribute in attributes)
+          attribute_table[attribute.name] = attribute.value.value
+        endForEach
+      endIf
 
       local asset_filepaths = result//assets
       forEach (asset in assets)

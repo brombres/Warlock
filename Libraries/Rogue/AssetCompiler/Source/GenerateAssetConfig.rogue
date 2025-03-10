@@ -70,7 +70,7 @@ class GenerateAssetConfig : Visitor
     method on_visit_node( cmd:Cmd )
       throw cmd.t.error( "TODO: GenerateAssetConfig.on_visit_node($)"(cmd.type_name) )
 
-    method on_visit_node( cmd:AnonymousGroup )
+    method on_visit_node( cmd:Group )
       writer.print "group"
       if (cmd.multiline)
         writer.println

@@ -429,6 +429,12 @@ class AttributeList : CmdList
     method description->String
       return "AttributeList" + list_description
 
+    method find( name:String )->Attribute
+      forEach (attribute in this)
+        if (attribute.name == name) return attribute
+      endForEach
+      return null
+
     method get( index:Int )->Attribute
       return prior.get( index )->(as Attribute)
 endClass
@@ -517,10 +523,7 @@ class AssetRule : Cmd
       return "AssetRule($,$,$)" (%folder,%filepath,%attributes)
 
     method find_attribute( name:String )->Attribute
-      forEach (attribute in attributes)
-        if (attribute.name == name) return attribute
-      endForEach
-      return null
+      return attributes.find( name )
 
     method to->String
       local result = String()
@@ -579,20 +582,22 @@ class ExcludedAssetRule : AssetRule
 endClass
 
 
-class AnonymousGroup : Cmd
+class Group : Cmd
   PROPERTIES
-    filepaths : Cmd
-    multiline : Logical
+    attributes : AttributeList
+    filepaths  : Cmd
+    multiline  : Logical
 
   METHODS
-    method init( t, filepaths, multiline=false )
+    method init( t, attributes, filepaths, multiline )
 
-    method init( existing:AnonymousGroup )
+    method init( existing:Group )
       prior.init( existing )
+      if (existing.attributes) attributes = existing.attributes.cloned
       if (existing.filepaths) filepaths = existing.filepaths.cloned
+      multiline = existing.multiline
 
     method description->String
-      return "AnonymousGroup($)" (%filepaths)
+      return "Group($,$,$)" (%attributes,%filepaths,%multiline)
 
 endClass
-

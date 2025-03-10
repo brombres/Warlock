@@ -192,16 +192,12 @@ parser
   syntaxError
 
 - asset_group
-  if (consume(EOL))
-    # Multi-line anonymous group
-    multi_line_filepaths
-    mustConsume 'endGroup'
-    produce AnonymousGroup( filepaths, multiline="true":Logical )
-  else
-    # Single line anonymous group
-    single_line_filepaths
-    produce AnonymousGroup( filepaths )
-  endIf
+  # Multi-line group
+  attribute_list
+  must_consume_eols
+  multi_line_filepaths
+  mustConsume 'endGroup'
+  produce Group( attributes:AttributeList, filepaths, multiline="true":Logical )
 
 - single_line_filepaths
   beginList

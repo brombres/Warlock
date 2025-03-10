@@ -6,7 +6,7 @@ class ImagePacker
     placements = Placement[]
     pages      = AtlasPage[]
     max_size   = XY(4096)
-    padding    = 16  # Edges of each texture are extruded this many pixels to prevent
+    padding    = 8  # Edges of each texture are extruded this many pixels to prevent
                     # color artifacts.
 
   METHODS

@@ -120,6 +120,7 @@ class AssetCompiler [singleton]
       # current group.
       forEach (group in groups)
         if local info = group_info[group.hash]
+          group.check_for_changes( info )
           group.id = info//id
           forEach (page in info//pages)
             group.filepaths.add( page )
