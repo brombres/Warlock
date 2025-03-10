@@ -18,17 +18,18 @@ class AppData [singleton]
       endIf
       signal_change( data[name].on_change, value )
 
-    method on_change<<$ID>>( callback:Function(Variant) )
-      local id = <App.$ID>
+    method on_change( id:GlobalID, callback:Function(Variant) )
       local parts = id->String.clipped(1,1).split('.').[ remove_first ]
       local context = get( parts.remove_first )
       forEach (part in parts)
         context = context[part]
       endForEach
 
-      context.on_change = id
-
       id.on_signal( callback )
+
+      local value = context.context[context.key]
+      value.on_change = id
+      context.context[context.key] = value
 
     method signal_change( signal_id:GlobalID, value:Variant )
       if (signal_id != <UNDEFINED>)
@@ -67,18 +68,23 @@ class AppDataValue( value:Variant, data:[String:AppDataValue], on_change:GlobalI
     method is_table->Logical
       return data?
 
+    method operator==( other:AppDataValue )->Logical
+      return value == other.value and data is other.data and on_change == other.on_change
+
     method operator?->Logical
       return value? or data?
 
     method set( key:String, value:AppDataValue )
       if (data)
-        data[key] = value
-        AppData.signal_change( data[key].on_change, value.value )
+        if (data[key] != value)
+          data[key] = value
+          AppData.signal_change( data[key].on_change, value.value )
+        endIf
       endIf
 
     method to->String
       if (data) return data->String
-      return "$ $"(value->String,on_change)
+      return value->String
 endClass
 
 augment Rogue::Variant
@@ -113,16 +119,6 @@ class AppDataContext( context:AppDataValue, key:String ) [compound]
       local table = AppDataValue.table
       table[name] = value
       context[key] = table
-
-    method set_on_change( on_change_id:GlobalID )
-      local table = context[key]
-      if (table.is_table)
-        local existing = table[key]
-        existing.on_change = on_change_id
-        table.data[key] = existing
-      else
-        context.data[key] = AppDataValue( undefined, null, on_change_id )
-      endIf
 
     method to->AppDataValue
       return context[key]

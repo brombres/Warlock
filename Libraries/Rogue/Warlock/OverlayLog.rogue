@@ -2,7 +2,7 @@ library Warlock
 
 class OverlayLog : BufferedPrintWriter<<output_buffer>> [essential singleton]
   PROPERTIES
-    font  = Font( "Font-System-17" )
+    font  = SystemFont.cloned : SystemFont
     lines = String[]
     timer = Timer(6.0)  # time until lines removed
     max_lines = 20 : Int?

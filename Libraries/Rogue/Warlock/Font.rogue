@@ -7,8 +7,8 @@ class Font
     internal_height    : Int
     scale              = XY(1,1)
     fixed_width        : Int
-    ascii_characters   : FontCharacter[]
-    character_lookup   : [Character:FontCharacter]
+    ascii_characters   = Dim<<FontCharacter>>(128)
+    character_lookup   = [Character:FontCharacter]
     anchor             = Anchor.TOP_LEFT : Anchor
     color              = Color.WHITE : Color
     opacity            = 1.0
@@ -24,8 +24,6 @@ class Font
         internal_height = asset.font_height
         fixed_width     = asset.font_width
 
-        ascii_characters = Dim<<FontCharacter>>( 128 )
-        ensure<<character_lookup>>
         forEach (unicode at i in asset.font_characters)
           local font_ch = FontCharacter( asset, i, unicode )
           if (unicode < 128) ascii_characters[unicode] = font_ch
@@ -38,12 +36,31 @@ class Font
 
       if (snug) spacing_adjustment = -1
 
+    method init( existing:Font )
+      asset_name         = existing.asset_name
+      asset              = existing.asset
+      internal_height    = existing.internal_height
+      scale              = existing.scale
+      fixed_width        = existing.fixed_width
+      ascii_characters   = existing.ascii_characters
+      character_lookup   = existing.character_lookup
+      anchor             = existing.anchor
+      color              = existing.color
+      opacity            = existing.opacity
+      error              = existing.error
+      spacing_adjustment = existing.spacing_adjustment
+      snap               = existing.snap
+
+    method cloned->ThisType [propagated]
+      return ThisType(this)
+
     method character( unicode:Character )->FontCharacter
       if (error) return null
       if (unicode <= 127) return ascii_characters[ unicode ]
       return character_lookup[ unicode ]
 
     method draw( text:String, position:XY  )
+      load
       position = position - Box(measure(text)).at( anchor ).yv
 
       if (text.contains('\n'))
@@ -84,6 +101,9 @@ class Font
 
     method height->Real
       return internal_height * scale.y
+
+    method load
+      noAction
 
     method measure( text:String, i1=null:Int?, i2=null:Int? )->XY
       if (error) return XY.zero
@@ -167,11 +187,15 @@ class FontCharacter
     advance    : XY  # Added to cursor after drawing
 
   METHODS
-    method init( asset:AssetInfo, image_index:Int, unicode )
+    method init( asset:AssetInfo, image_index:Int, unicode:Character )
       image = TextureImage( asset, image_index )
-      image.anchor = Anchor.TOP_LEFT
-      size = image.size
+      init( unicode, image.size )
+
+    method init( unicode, size )
       advance = size.xv
+
+    method set_image( @image )
+      if (image) image.anchor = Anchor.TOP_LEFT
 endClass
 
 #{
