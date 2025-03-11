@@ -8,7 +8,10 @@ class SystemFont : Font [singleton]
     method init
       internal_height = 17
       fixed_width     = 9
+      snap = true
 
+      ascii_characters = Dim<<FontCharacter>>(128)
+      character_lookup = [Character:FontCharacter]
       forEach (unicode at i in ' '..'~')
         local font_ch = FontCharacter( unicode, XY(9,17) )
         ascii_characters[unicode] = font_ch
@@ -17,6 +20,7 @@ class SystemFont : Font [singleton]
 
     method init( existing:SystemFont )
       prior.init( existing )
+      is_loaded = existing.is_loaded
 
     method load [override]
       if (is_loaded) return

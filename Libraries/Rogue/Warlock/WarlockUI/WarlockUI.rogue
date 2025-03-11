@@ -1,4 +1,13 @@
 library Warlock
 
-$include ColorFillComponent
-$include ImageComponent
+$include WarlockUI/ColorFillComponent
+$include WarlockUI/ImageComponent
+
+class WarlockUI : UI
+  PROPERTIES
+    default_font = SystemFont
+
+  METHODS
+    #method default_font->UI::Font
+    #return
+endClass

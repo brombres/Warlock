@@ -5,7 +5,7 @@ class Display [singleton]
 
   PROPERTIES
     state   : DisplayState
-    ui      : UI
+    ui      : WarlockUI
 
     pixel_size        : XY  # True size in pixels.
     size              : XY  # Scaled size.
@@ -277,7 +277,7 @@ class Display [singleton]
 
     method ui->UI
       if (@ui) return @ui
-      ui = UI()
+      ui = WarlockUI()
       return @ui
 
     method update

@@ -1,14 +1,15 @@
 library Warlock
 
-class Font
+class Font : UI::Font
   PROPERTIES
     asset_name         : String
     asset              : AssetInfo
     internal_height    : Int
     scale              = XY(1,1)
+    offset             : XY  # as a fraction of height
     fixed_width        : Int
-    ascii_characters   = Dim<<FontCharacter>>(128)
-    character_lookup   = [Character:FontCharacter]
+    ascii_characters   : FontCharacter[]
+    character_lookup   : [Character:FontCharacter]
     anchor             = Anchor.TOP_LEFT : Anchor
     color              = Color.WHITE : Color
     opacity            = 1.0
@@ -19,6 +20,9 @@ class Font
 
   METHODS
     method init( asset_name, snap=false, &snug )
+      ascii_characters = Dim<<FontCharacter>>(128)
+      character_lookup = [Character:FontCharacter]
+
       asset = AssetManager.find_font( asset_name )
       if (asset)
         internal_height = asset.font_height
@@ -37,10 +41,12 @@ class Font
       if (snug) spacing_adjustment = -1
 
     method init( existing:Font )
+      prior.init( existing )
       asset_name         = existing.asset_name
       asset              = existing.asset
       internal_height    = existing.internal_height
       scale              = existing.scale
+      offset             = existing.offset
       fixed_width        = existing.fixed_width
       ascii_characters   = existing.ascii_characters
       character_lookup   = existing.character_lookup
@@ -59,9 +65,23 @@ class Font
       if (unicode <= 127) return ascii_characters[ unicode ]
       return character_lookup[ unicode ]
 
+    method draw( text:Text )
+      local bounds = text.display_bounds
+      local scale_x = scale.x
+      local scale_y = scale.y
+      if (text.layout_mode.x == LayoutMode.EXPAND_TO_FILL or text.layout_mode.y == LayoutMode.EXPAND_TO_FILL)
+        local text_size = measure( text.value )
+        if (text_size.x > bounds.size.x) scale_x *= bounds.size.x / text_size.x
+        if (text_size.y > bounds.size.y) scale_y *= bounds.size.y / text_size.y
+      endIf
+
+      temporarily scale = XY(scale_x,scale_y)
+        draw( text.value, bounds )
+      endTemporarily
+
     method draw( text:String, position:XY  )
       load
-      position = position - Box(measure(text)).at( anchor ).yv
+      position = position - Box(measure(text)).at( anchor ).yv + XY(0,offset.y*internal_height*scale.y)
 
       if (text.contains('\n'))
         local h = internal_height * scale.y
@@ -82,14 +102,14 @@ class Font
       endIf
 
     method draw_line( text:String, position:XY  )
-      local cursor = position - Box(measure(text)).at( anchor ).xv
+      local cursor = (position - Box(measure(text)).at( anchor ).xv) + XY(offset.x*internal_height*scale.x,0)
       if (snap) cursor = cursor.floor
       forEach (ch in text)
         local font_ch = character( ch )
         if (font_ch)
           local image = font_ch.image
           image.size = font_ch.size * scale
-          image.color = color.with_opacity( opacity )
+          image.color = color
           #image.shader = shader  # if null, default is used
           #image.render_mode = font.render_mode  # if null, default is used
           image.position = cursor + font_ch.offset
@@ -104,6 +124,27 @@ class Font
 
     method load
       noAction
+
+    method measure( ch:Character )->XY
+      local h = internal_height * scale.y
+      if (fixed_width)
+        local w = (fixed_width + spacing_adjustment) * scale.x
+        which (ch)
+          case '\n': return XY(0,h)
+          case '\t': return XY(w,h)
+          others
+            if (ch < 32) return XY.zero
+            else         return XY(w,h)
+        endWhich
+      else
+        which (ch)
+          case '\n': return XY(0,h)
+          case '\t': return XY((character(' ').advance.x+spacing_adjustment)*scale.x*2,h)
+          others
+            if (ch < 32) return XY.zero
+            else         return XY((character(ch).advance.x+spacing_adjustment)*scale.x,h)
+        endWhich
+      endIf
 
     method measure( text:String, i1=null:Int?, i2=null:Int? )->XY
       if (error) return XY.zero
@@ -175,6 +216,7 @@ class Font
       @scale = XY( new_scale )
 
     method set_scale( @scale )
+
 endClass
 
 class FontCharacter
