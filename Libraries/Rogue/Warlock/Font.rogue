@@ -69,10 +69,10 @@ class Font : UI::Font
       local bounds = text.display_bounds
       local scale_x = scale.x
       local scale_y = scale.y
-      if (text.layout_mode.x == LayoutMode.EXPAND_TO_FILL or text.layout_mode.y == LayoutMode.EXPAND_TO_FILL)
+      if (text.shrink_to_fit_text_x or text.shrink_to_fit_text_y)
         local text_size = measure( text.value )
-        if (text_size.x > bounds.size.x) scale_x *= bounds.size.x / text_size.x
-        if (text_size.y > bounds.size.y) scale_y *= bounds.size.y / text_size.y
+        if (text.shrink_to_fit_text_x and text_size.x > bounds.size.x) scale_x *= bounds.size.x / text_size.x
+        if (text.shrink_to_fit_text_y and text_size.y > bounds.size.y) scale_y *= bounds.size.y / text_size.y
       endIf
 
       temporarily scale = XY(scale_x,scale_y)
