@@ -2,8 +2,7 @@
 # to this folder and type "rogo" at the command line, or "rogo help" for a list
 # of supported commands.
 
-$define SDL_BRANCH "preview-3.1.8"
-#$define SDL_BRANCH "release-2.30.x"
+$define SDL_BRANCH "release-3.2.x"
 
 $requireRogue "2.34.3"
 
@@ -150,7 +149,9 @@ routine find_shader( filepaths:String[], filepath:String, replace_old:String, re
 endRoutine
 
 routine rogo_deps [append]
-  # SYNTAX: rogo deps [update|rebuild] [sdl|spine|stb]*
+  # SYNTAX: rogo deps [update|rebuild] [<libs>]*
+  # Where <libs> is any combination of: [bgfx bimg bx sdl spine stb]
+
   local args = System.command_line_arguments.cloned
   local rebuild = args.remove( "rebuild" )
   local update  = args.remove( "update" )
@@ -175,17 +176,89 @@ routine deps( args:String[], &update, &rebuild )
   local libs = @{}
   local select_all = false
   loop 2
-    if (select_all or args.contains("sdl"))   libs//sdl = true
-    if (select_all or args.contains("spine")) libs//spine = true
-    if (select_all or args.contains("stb"))   libs//stb = true
-    if (args.count) escapeLoop
+    forEach (lib in ["bgfx","bimg","bx","sdl","spine","stb"])
+      if (select_all or args.contains(lib)) libs[lib] = true
+    endForEach
+    if (libs.count) escapeLoop
     select_all = true
   endLoop
 
   ensure_folder( File("Libraries") )
 
+  -------- Libraries/bx --------
+  if (libs//bx)
+    local folder = File("Libraries/bx")
+    local repo = GitRepo( "https://github.com/bkaradzic/bx.git", folder )
+
+    if (not repo.exists)
+      banner "Cloning BX repo"
+      repo.clone( &verbose )
+
+    elseIf (update)
+      if (repo.has_remote_changes)
+        banner "Updating BX repo"
+        repo.pull( &verbose )
+      endIf
+    endIf
+  endIf
+
+  -------- Libraries/bimg --------
+  if (libs//bimg)
+    local folder = File("Libraries/bimg")
+    local repo = GitRepo( "https://github.com/bkaradzic/bimg.git", folder )
+
+    if (not repo.exists)
+      banner "Cloning BIMG repo"
+      repo.clone( &verbose )
+
+    elseIf (update)
+      if (repo.has_remote_changes)
+        banner "Updating BIMG repo"
+        repo.pull( &verbose )
+      endIf
+    endIf
+  endIf
+
+  -------- Libraries/bgfx --------
+  if (libs//bgfx)
+    local folder = File("Libraries/bgfx")
+    local repo = GitRepo( "https://github.com/bkaradzic/bgfx.git", folder )
+
+    local needs_rebuild = false
+    if (not repo.exists)
+      banner "Cloning BGFX repo"
+      repo.clone( &verbose )
+      needs_rebuild = true
+
+    elseIf (update)
+      if (repo.has_remote_changes)
+        banner "Updating BGFX repo"
+        repo.pull( &verbose )
+        needs_rebuild = true
+      endIf
+    endIf
+
+    contingent
+      sufficient needs_rebuild
+      if (System.is_macos) necessary File("Libraries/bgfx/.build/osx-arm64").exists
+    unsatisfied
+      needs_rebuild = true
+    endContingent
+
+    if (needs_rebuild)
+      # https://bkaradzic.github.io/bgfx/build.html
+      if (System.is_macos)
+        banner "Building BGFX library"
+        #execute "cd Libraries/bgfx && ../bx/tools/bin/darwin/genie --with-tools --gcc=osx-x64 gmake"
+        execute( "cd Libraries/bgfx && make osx-arm64" )
+      else
+        trace "TODO"
+      endIf
+    endIf
+  endIf
+
   -------- Libraries/SDL --------
-  if (select_all or libs//sdl)
+  if (libs//sdl)
     local folder = File("Libraries/SDL")
     local repo = GitRepo( "https://github.com/libsdl-org/SDL.git", folder )
 
@@ -204,7 +277,7 @@ routine deps( args:String[], &update, &rebuild )
   endIf
 
   -------- Libraries/spine --------
-  if (select_all or libs//spine)
+  if (libs//spine)
     local folder = File("Libraries/spine-runtimes")
     local repo = GitRepo( "https://github.com/EsotericSoftware/spine-runtimes.git", folder )
 
@@ -221,7 +294,7 @@ routine deps( args:String[], &update, &rebuild )
   endIf
 
   -------- Libraries/stb --------
-  if (select_all or libs//stb)
+  if (libs//stb)
     local folder = File("Libraries/stb")
     local repo = GitRepo( "https://github.com/nothings/stb.git", folder )
 

@@ -203,10 +203,12 @@ class AssetCompiler [singleton]
       endIf
       if (not asset_info) asset_info = @{}
 
+      #{
       local font_system_17 = File( "Libraries/Warlock/Libraries/Framework/Assets/Font-System-17.png" )
       if (font_system_17.exists)
         font_system_17.copy_to( File("Assets/Graphics/Fonts"), &if_different )
       endIf
+      }#
 
       files = Files( "Assets" )
       files.add( "Graphics/**" )
