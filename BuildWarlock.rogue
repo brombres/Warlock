@@ -40,11 +40,6 @@ augment Build
     ]
 endAugment
 
-routine rogo_default
-  rogo_deps
-  rogo_help
-endRoutine
-
 routine rogo_macos_open
   open_xcode( "Platforms/macOS" )
 endRoutine
@@ -154,7 +149,7 @@ routine find_shader( filepaths:String[], filepath:String, replace_old:String, re
   endIf
 endRoutine
 
-routine rogo_deps
+routine rogo_deps [append]
   # SYNTAX: rogo deps [update|rebuild] [sdl|spine|stb]*
   local args = System.command_line_arguments.cloned
   local rebuild = args.remove( "rebuild" )
