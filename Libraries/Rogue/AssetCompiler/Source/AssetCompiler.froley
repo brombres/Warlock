@@ -182,6 +182,7 @@ parser
   on 'folder' filepath_term_or_id -> SetFolder(path:String)
   on '@' file_attributes -> ExistingAssetRule( filepath:String, attributes:AttributeList ):AssetRule
   on '-' file_attributes -> ExcludedAssetRule( filepath:String, attributes:AttributeList ):AssetRule
+  on '+' file_attributes -> GenerateAssetRule( filepath:String, attributes:AttributeList ):AssetRule
   on COMMENT -> Comment( content=content )
 
   on 'group'

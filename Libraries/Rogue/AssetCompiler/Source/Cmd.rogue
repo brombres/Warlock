@@ -601,3 +601,10 @@ class Group : Cmd
       return "Group($,$,$)" (%attributes,%filepaths,%multiline)
 
 endClass
+
+class GenerateAssetRule : AssetRule
+  METHODS
+    method description->String
+      return "GenerateAssetRule($,$)" (%filepath,%attributes)
+
+endClass

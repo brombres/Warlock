@@ -4,7 +4,7 @@ class Asset
   DEFINITIONS
     ASCII_CHARACTERS = @| !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
 
-    # "
+  # "  <- Fix string highlighting bug
 
   PROPERTIES
     filepath          : String
@@ -142,36 +142,7 @@ class Asset
           info//image_size = bitmap.size
           image_size = bitmap.size
 
-          if local characters_attribute = rule.find_attribute( "characters" )
-            .require_value(
-              characters_attribute,
-              "Expected 'characters:ascii' or e.g. 'characters:[32,'0'..'9',65..90]'."
-            )
-            font_characters = characters_attribute.value.cmd.to_characters
-
-            # Ensure characters are unique
-            use characters_used = WorkList<<Logical>>
-              characters_used.reserve( (font_characters.last+1).or_larger(font_characters.count+1) )
-              forEach (ch in font_characters)
-                characters_used.expand_to_include( ch )
-                if (characters_used[ch])
-                  local ascii : String
-                  if (ch >= 32 and ch != 126)
-                    if (ch == '\'' or ch == '"') ascii = ch
-                    else                         ascii = "'$'"(ch)
-                  else
-                    ascii = ch.to_escaped_ascii
-                  endIf
-                  throw rule.t.error( "Character $ (unicode $) is defined multiple times."(ascii,ch->Int) )
-                else
-                  characters_used[ch] = true
-                endIf
-              endForEach
-            endUse
-
-          else
-            font_characters = ASCII_CHARACTERS
-          endIf
+          font_characters = parse_characters
 
           if local width_attribute = rule.find_attribute( "width" )
             .require_value(
@@ -254,6 +225,39 @@ class Asset
           if (font_width == -1) .create_variable_width_font_placements
           else                  .create_fixed_width_font_placements
       endWhich
+
+    method parse_characters->String
+      local result = ASCII_CHARACTERS
+
+      if local characters_attribute = rule.find_attribute( "characters" )
+        .require_value(
+          characters_attribute,
+          "Expected 'characters:ascii' or e.g. 'characters:[32,'0'..'9',65..90]'."
+        )
+        result = characters_attribute.value.cmd.to_characters
+
+        # Ensure characters are unique
+        use characters_used = WorkList<<Logical>>
+          characters_used.reserve( (result.last+1).or_larger(result.count+1) )
+          forEach (ch in result)
+            characters_used.expand_to_include( ch )
+            if (characters_used[ch])
+              local ascii : String
+              if (ch >= 32 and ch != 126)
+                if (ch == '\'' or ch == '"') ascii = ch
+                else                         ascii = "'$'"(ch)
+              else
+                ascii = ch.to_escaped_ascii
+              endIf
+              throw rule.t.error( "Character $ (unicode $) is defined multiple times."(ascii,ch->Int) )
+            else
+              characters_used[ch] = true
+            endIf
+          endForEach
+        endUse
+      endIf
+
+      return result
 
     method placement_info->Variant
       if (@placement_info) return @placement_info

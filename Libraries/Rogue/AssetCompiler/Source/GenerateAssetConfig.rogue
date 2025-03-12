@@ -121,6 +121,10 @@ class GenerateAssetConfig : Visitor
       writer.print "@ "
       on_visit_node( cmd->(as AssetRule) )
 
+    method on_visit_node( cmd:GenerateAssetRule )
+      writer.print "+ "
+      on_visit_node( cmd->(as AssetRule) )
+
     method on_visit_node( cmd:SetFolder )
       if (current_target == "Global")
         append_remaining( "Graphics", unreferenced_graphics, &if_current_folder )

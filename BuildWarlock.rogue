@@ -15,8 +15,10 @@ uses Utility/VersionNumber
 #$ LIBRARIES(macOS)   = libjpeg
 #$ LIBRARIES(macOS)   = libpng
 #$ LIBRARIES(macOS)   = zlib(flags:-lz)
+
 #$ LIBRARIES(Linux)   = libjpeg(install:libjpeg-dev)
 #$ LIBRARIES(Linux)   = libpng(install:libpng-dev)
+
 #$ LIBRARIES(Windows) = brombres/windowsmedialibs
 #$ CC_LINK(macOS)     = -I /System/Libraries/Frameworks -framework Foundation -framework AppKit
 #$ CC_LINK(Windows)   = /link /LTCG
@@ -167,11 +169,12 @@ routine deps( args:String[], &update, &rebuild )
   ensure_folder( File("Assets/Audio") )
   ensure_folder( File("Assets/Data") )
   ensure_folder( File("Assets/Fonts") )
-  ensure_folder( File("Assets/Graphics/Fonts") )
 
   ensure_folder( File("Build/macOS/Assets") )
   ensure_folder( File("Build/macOS/Source") )
   ensure_folder( File("Source") )
+
+  create_default_asset_config
 
   local libs = @{}
   local select_all = false
@@ -310,6 +313,17 @@ routine deps( args:String[], &update, &rebuild )
     endIf
   endIf
 
+endRoutine
+
+routine create_default_asset_config
+  local file = File( "Assets/AssetConfig.asc" )
+  if (file.exists) return
+
+  print_cmd( "Create $"(file) )
+  local default =
+  @|# AssetConfig.asc
+
+  file.save( default )
 endRoutine
 
 routine rogo_debug

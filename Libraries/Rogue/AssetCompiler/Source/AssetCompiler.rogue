@@ -19,6 +19,7 @@ uses Collection/IndexedSet
 uses Console/CommandLineParser
 uses Geometry
 uses Graphics
+uses Graphics/FreeType
 
 try
   AssetCompiler.init( System.command_line_arguments )

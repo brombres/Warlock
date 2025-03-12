@@ -12,9 +12,14 @@ uses Utility/VersionNumber
 #$ LIBRARIES(macOS)   = libjpeg
 #$ LIBRARIES(macOS)   = libpng
 #$ LIBRARIES(macOS)   = zlib(flags:-lz)
+#$ LIBRARIES(macOS)   = freetype(freetype2) bzip2(ignore-exe-only:true)
+
 #$ LIBRARIES(Linux)   = libjpeg(install:libjpeg-dev)
 #$ LIBRARIES(Linux)   = libpng(install:libpng-dev)
+#$ LIBRARIES(Linux)   = freetype2(libfreetype6-dev)
+
 #$ LIBRARIES(Windows) = brombres/windowsmedialibs
+
 #$ CC_LINK(macOS)     = -I /System/Libraries/Frameworks -framework Foundation -framework AppKit
 #$ CC_LINK(Windows)   = /link /LTCG
 
@@ -33,7 +38,7 @@ augment Build
     LAUNCHER_FOLDER  = "/usr/local/bin"
     ROGUEC_FLAGS     = ""
     CC_ARGS_MACOS    = ""
-    CC_LINK_MACOS    = "-I /System/Libraries/Frameworks -framework Foundation -framework AppKit"
+    CC_LINK_MACOS    = "-I /System/Libraries/Frameworks -framework Foundation -framework AppKit -lbz2"
     CC_ARGS_UNIX     = ""
     CC_LINK_UNIX     = ""
     CC_ARGS_WINDOWS  = ""
