@@ -103,14 +103,15 @@ class ImagePacker
       # remaining placements we can.
       if (bounds.size.x <= 0 or bounds.size.y <= 0) return false
 
-      local padding_left   = which{ bounds.position.x==0:0     || padding }
-      local padding_top    = which{ bounds.position.y==0:0     || padding }
-      local padding_right  = which{ bounds.bottom_right.x==page.size.x:0 || padding }
-      local padding_bottom = which{ bounds.bottom_right.y==page.size.y:0 || padding }
-      local available_w = bounds.size.x - (padding_left + padding_right)
-      local available_h = bounds.size.y - (padding_top + padding_bottom)
-
       forEach (placement in placements)
+        local padding = which{ placement.asset.image_padding || this.padding }
+        local padding_left   = which{ bounds.position.x==0:0     || padding }
+        local padding_top    = which{ bounds.position.y==0:0     || padding }
+        local padding_right  = which{ bounds.bottom_right.x==page.size.x:0 || padding }
+        local padding_bottom = which{ bounds.bottom_right.y==page.size.y:0 || padding }
+        local available_w = bounds.size.x - (padding_left + padding_right)
+        local available_h = bounds.size.y - (padding_top + padding_bottom)
+
         if (placement.size.x <= available_w and placement.size.y <= available_h)
           if (padding_right == 0)
             padding_right = (available_w - placement.size.x).or_smaller( padding )

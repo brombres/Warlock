@@ -226,6 +226,17 @@ class Asset
           else                  .create_fixed_width_font_placements
       endWhich
 
+    method image_padding->Int?
+      if local padding_attribute = rule.find_attribute( "padding" )
+        .require_value(
+          padding_attribute,
+          "Expected 'padding:<pixels-per-side>' e.g. 'padding:4'."
+        )
+        return padding_attribute.value.cmd->Int
+      endIf
+
+      return null
+
     method parse_characters->String
       local result = ASCII_CHARACTERS
 
