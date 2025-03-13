@@ -41,15 +41,37 @@ class CollectAssets( target, suppress_errors=false:Logical ) : TargetVisitor
 
           local unicode = asset.parse_characters
 
+          local is_italic = false
+          if local italic_attribute = rule.find_attribute("italic")
+            if (italic_attribute.value)
+              is_italic = italic_attribute.value.cmd->Logical
+            else
+              is_italic = true
+            endIf
+          endIf
+
+          local is_monospace = false
+          local is_monospace_numbers = false
+          if local monospace_attribute = rule.find_attribute("monospace")
+            if (monospace_attribute.value)
+              local value = monospace_attribute.value.cmd->String
+              if (value == "numbers")
+                is_monospace_numbers = true
+              elseIf (value == "true")
+                is_monospace = true
+              elseIf (value != "false")
+                throw monospace_attribute.value.t.error( "Expected 'monospace' or 'monospace:numbers'." )
+              endIf
+            else
+              is_monospace = true
+            endIf
+          endIf
+
           local search_folders = ["Assets/Fonts"]
           local font_face = FreeTypeFace( font_name, height )
           if (font_face.error) throw source_attribute.value.cmd.t.error( font_face.error )
 
           local characters = font_face.render( unicode )
-
-          local is_italic = false
-          local is_monospace = false
-          local is_monospace_numbers = false
 
           if (is_italic)
             forEach (ch in characters)
@@ -69,37 +91,37 @@ class CollectAssets( target, suppress_errors=false:Logical ) : TargetVisitor
             endForEach
           endIf
 
-          #{
           if (is_monospace)
             local max_w = 0
             forEach (ch in characters)
-              max_w = max_w.or_larger( ch.width )
+              max_w = max_w.or_larger( ch.bitmap.width )
             endForEach
-            forEach (ch at index in characters)
-              if (ch.width != max_w)
-                local new_ch = Bitmap( max_w, ch.height )
-                ch.blit( new_ch, XY((max_w-ch.width)/2,0) )
-                characters[ index ] = new_ch
+            forEach (ch in characters)
+              local bmp = ch.bitmap
+              if (bmp.width != max_w)
+                local new_bmp = Bitmap( max_w, bmp.height )
+                bmp.blit( new_bmp, XY((max_w-bmp.width)/2,0) )
+                ch.bitmap = new_bmp
               endIf
             endForEach
           elseIf (is_monospace_numbers)
             local max_w = 0
-            forEach (ch at index in characters)
-              if (unicode[index] == ' ' or unicode[index]->Character.is_number)
-                max_w = max_w.or_larger( ch.width )
+            forEach (ch in characters)
+              if (ch.character == ' ' or ch.character.is_number)
+                max_w = max_w.or_larger( ch.bitmap.width )
               endIf
             endForEach
-            forEach (ch at index in characters)
-              if (ch.width != max_w)
-                if (unicode[index] == ' ' or unicode[index]->Character.is_number)
-                  local new_ch = Bitmap( max_w, ch.height )
-                  ch.blit( new_ch, XY((max_w-ch.width)/2,0) )
-                  characters[ index ] = new_ch
+            forEach (ch in characters)
+              local bmp = ch.bitmap
+              if (bmp.width != max_w)
+                if (ch.character == ' ' or ch.character.is_number)
+                  local new_bmp = Bitmap( max_w, bmp.height )
+                  bmp.blit( new_bmp, XY((max_w-bmp.width)/2,0) )
+                  ch.bitmap = new_bmp
                 endIf
               endIf
             endForEach
           endIf
-          }#
 
           local bitmap = pack_varfont_characters( characters )
           println "Creating font strip $ [$x$]"(filepath,bitmap.width,bitmap.height)
