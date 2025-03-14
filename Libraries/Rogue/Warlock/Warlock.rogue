@@ -14,7 +14,6 @@ $include Warlock/BlendMode
 $include Warlock/Box
 $include Warlock/Canvas
 $include Warlock/Display
-$include Warlock/DisplayState
 $include Warlock/Drawable2D
 $include Warlock/Entity
 $include Warlock/Font
@@ -36,6 +35,7 @@ $include Warlock/Renderer
 $include Warlock/RenderTargetTexture
 $include Warlock/RendererBatch
 $include Warlock/Screen
+$include Warlock/ScreenState
 #$include Warlock/Scene
 #$include Warlock/SceneState
 $include Warlock/Shader
@@ -139,6 +139,7 @@ class Warlock [essential singleton]
       (forEach in windows).begin_render
 
       AppState = AppState.updated || AppState()
+      Screen.state = Screen.started.state.updated || ScreenState()
 
       AppState.on_render_begin
       (forEach in windows).render

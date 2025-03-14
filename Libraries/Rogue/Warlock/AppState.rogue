@@ -3,14 +3,14 @@ library Warlock
 class AppState : WarlockState<<AppState>> [singleton]
   METHODS
     method dispatch( e:KeyEvent ) [override]
-      e.window.state.handle( e )
+      Screen.state.handle( e )
 
     method dispatch( e:PointerEvent ) [override]
-      e.window.state.handle( e )
+      Screen.state.handle( e )
 
     method dispatch( e:ScrollEvent ) [override]
-      e.window.state.handle( e )
+      Screen.state.handle( e )
 
     method dispatch( e:TextEvent ) [override]
-      e.window.state.handle( e )
+      Screen.state.handle( e )
 endClass

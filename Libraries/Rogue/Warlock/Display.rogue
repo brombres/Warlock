@@ -4,9 +4,6 @@ class Display [singleton]
   AUTO_ID
 
   PROPERTIES
-    state   : DisplayState
-    ui      : WarlockUI
-
     pixel_size        : XY  # True size in pixels.
     size              : XY  # Scaled size.
     scale_to_fit_size : XY?
@@ -58,10 +55,6 @@ class Display [singleton]
     method center->XY
       return size/2
 
-    method change_state( new_state:DisplayState )
-      if (state) state.change_state( new_state )
-      else       state = new_state
-
     method clear
       should_clear_color = true
 
@@ -81,93 +74,13 @@ class Display [singleton]
       return @combined_transform
 
     method draw
-      on_draw( &bg )
-      on_draw
-      if (@ui) @ui.draw
-      on_draw( &!bg )
+      noAction
 
     method end_render
       Display = this
-      state?.on_render_end
-
-    method handle( e:KeyEvent )
-      contingent
-        on( e )
-        necessary (not e.is_consumed)
-
-        if (@ui)
-          @ui.handle( e )
-          necessary (not e.is_consumed)
-        endIf
-
-        on_unhandled( e )
-      endContingent
-
-    method handle( e:PointerEvent )
-      contingent
-        on( e )
-        necessary (not e.is_consumed)
-
-        if (@ui)
-          @ui.handle( e )
-          necessary (not e.is_consumed)
-        endIf
-
-        on_unhandled( e )
-      endContingent
-
-    method handle( e:ScrollEvent )
-      contingent
-        on( e )
-        necessary (not e.is_consumed)
-
-        if (@ui)
-          @ui.handle( e )
-          necessary (not e.is_consumed)
-        endIf
-
-        on_unhandled( e )
-      endContingent
-
-    method handle( e:TextEvent )
-      contingent
-        on( e )
-        necessary (not e.is_consumed)
-
-        if (@ui)
-          @ui.handle( e )
-          necessary (not e.is_consumed)
-        endIf
-
-        on_unhandled( e )
-      endContingent
 
     method height->Real
       return size.y
-
-    method on( e:KeyEvent )
-
-    method on( e:PointerEvent )
-
-    method on( e:ScrollEvent )
-
-    method on( e:TextEvent )
-
-    method on_unhandled( e:KeyEvent )
-
-    method on_unhandled( e:PointerEvent )
-
-    method on_unhandled( e:ScrollEvent )
-
-    method on_unhandled( e:TextEvent )
-
-    method on_draw
-
-    method on_draw( &bg )
-
-    method on_update
-
-    method on_update( dt:Real )
 
     method pop_clip( n=1:Int )
       if (n >= 1 and n >= clip_stack.count)
@@ -207,10 +120,6 @@ class Display [singleton]
 
     method render
       Display = this
-
-      state = state?.updated || DisplayState()
-      state.on_render_begin
-      state.draw
 
     method reset
       perspective_center = XY(0.5,0.5)
@@ -276,15 +185,9 @@ class Display [singleton]
       endIf
 
     method ui->UI
-      if (@ui) return @ui
-      ui = WarlockUI()
-      return @ui
-
-    method update
-      on_update
+      return null
 
     method update( dt:Real )
-      on_update( dt )
       if (@ui)
         @ui.update( bounds )
         @ui.request_redraw

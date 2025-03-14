@@ -1,67 +1,61 @@
 library Warlock
 
-class DisplayState : WarlockState<<DisplayState>>
+class ScreenState : WarlockState<<ScreenState>>
   METHODS
     method draw
-      on_draw( &bg )
       on_draw
-      Display.draw
-      on_draw( &!bg )
+      Screen.draw
+
+    method draw( &bg )
+      on_draw( &bg )
+      Screen.draw( &bg )
 
     method handle( e:KeyEvent ) [override]
       contingent
-        local original_state = this
-
         on( e )
         necessary (not e.is_consumed)
 
-        e.window.handle( e )
+        Screen.handle( e )
         necessary (not e.is_consumed)
 
-        original_state.on_unhandled( e )
+        on_unhandled( e )
       endContingent
 
     method handle( e:PointerEvent ) [override]
       contingent
-        local original_state = this
-
         on( e )
         necessary (not e.is_consumed)
 
-        e.window.handle( e )
+        Screen.handle( e )
         necessary (not e.is_consumed)
 
-        original_state.on_unhandled( e )
+        on_unhandled( e )
       endContingent
 
     method handle( e:ScrollEvent ) [override]
       contingent
-        local original_state = this
-
         on( e )
         necessary (not e.is_consumed)
 
-        e.window.handle( e )
+        Screen.handle( e )
         necessary (not e.is_consumed)
 
-        original_state.on_unhandled( e )
+        on_unhandled( e )
       endContingent
 
     method handle( e:TextEvent ) [override]
       contingent
-        local original_state = this
-
         on( e )
         necessary (not e.is_consumed)
 
-        e.window.handle( e )
+        Screen.handle( e )
         necessary (not e.is_consumed)
 
-        original_state.on_unhandled( e )
+        on_unhandled( e )
       endContingent
 
     method update( dt:Real )
       on_update( dt )
-      Display.update( dt )
+      Screen.update( dt )
 
 endClass

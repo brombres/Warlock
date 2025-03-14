@@ -95,7 +95,6 @@ class SDL : Framework [singleton]
        |switch (event.type)
        |{
        |  case SDL_EVENT_QUIT:
-       |printf("QUIT\n");
        |    $keep_running = false;
        |    break;
        |  case SDL_EVENT_MOUSE_MOTION:

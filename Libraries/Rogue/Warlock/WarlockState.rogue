@@ -21,54 +21,43 @@ class WarlockState<<$ExtendedType>> : Rogue::State<<$ExtendedType>>
 
     method handle( e:KeyEvent )
       contingent
-        local original_state = this
-
         on( e )
         necessary (not e.is_consumed)
 
         dispatch( e )
         necessary (not e.is_consumed)
 
-        original_state.on_unhandled( e )
+        on_unhandled( e )
       endContingent
 
     method handle( e:PointerEvent )
       contingent
-        local original_state = this
-
         on( e )
         necessary (not e.is_consumed)
 
         dispatch( e )
         necessary (not e.is_consumed)
 
-        original_state.on_unhandled( e )
+        on_unhandled( e )
       endContingent
 
     method handle( e:ScrollEvent )
       contingent
-        local original_state = this
-
         dispatch( e )
         necessary (not e.is_consumed)
 
-        e.window.state.handle( e )
-        necessary (not e.is_consumed)
-
-        original_state.on_unhandled( e )
+        on_unhandled( e )
       endContingent
 
     method handle( e:TextEvent )
       contingent
-        local original_state = this
-
         on( e )
         necessary (not e.is_consumed)
 
         dispatch( e )
         necessary (not e.is_consumed)
 
-        original_state.on_unhandled( e )
+        on_unhandled( e )
       endContingent
 
     method on( e:KeyEvent )

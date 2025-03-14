@@ -3,11 +3,10 @@ library Warlock
 class Window : Display
   PROPERTIES
     title  : String
+    ui     : WarlockUI
 
   METHODS
-    method init( title, width:Int, height:Int, state=DisplayState() )
-      ensure<<state>>
-
+    method init( title, width:Int, height:Int )
       pixel_size = XY(width,height)
       if (Framework.create_window(this))
         Warlock.add_window( this )
@@ -22,18 +21,40 @@ class Window : Display
       Warlock.windows.remove( this )
       Framework.close_window( this )
 
+    method draw [override]
+      if (@ui) @ui.draw
+
+    method handle( e:KeyEvent )
+      if (@ui) @ui.handle( e )
+
+    method handle( e:PointerEvent )
+      if (@ui) @ui.handle( e )
+
+    method handle( e:ScrollEvent )
+      if (@ui) @ui.handle( e )
+
+    method handle( e:TextEvent )
+      if (@ui) @ui.handle( e )
+
     method native_id->Int
       noAction  # defined by extended Platform, e.g. SDL
 
     method render
+      Display = this
       Renderer.on_render_begin( this )
       AppState.on_draw( &bg )
+      Screen.state.draw( &bg )
       AppState.on_draw
-      prior.render
+      Screen.state.draw
       AppState.on_draw( &!bg )
+      Screen.state.draw( &!bg )
       OverlayLog.draw
       Renderer.on_render_end( this )
 
+    method ui->UI [override]
+      if (@ui) return @ui
+      ui = WarlockUI()
+      return @ui
 endClass
 
 augment UI::Event
