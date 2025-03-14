@@ -34,10 +34,7 @@ $include Warlock/Quad
 $include Warlock/Renderer
 $include Warlock/RenderTargetTexture
 $include Warlock/RendererBatch
-$include Warlock/Screen
-$include Warlock/ScreenState
-#$include Warlock/Scene
-#$include Warlock/SceneState
+$include Warlock/DisplayState
 $include Warlock/Shader
 $include Warlock/Spine
 $include Warlock/SystemFont
@@ -139,7 +136,7 @@ class Warlock [essential singleton]
       (forEach in windows).begin_render
 
       AppState = AppState.updated || AppState()
-      Screen.state = Screen.started.state.updated || ScreenState()
+      DisplayState = DisplayState.updated || DisplayState()
 
       AppState.on_render_begin
       (forEach in windows).render

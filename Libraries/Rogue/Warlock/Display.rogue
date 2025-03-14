@@ -188,10 +188,7 @@ class Display [singleton]
       return null
 
     method update( dt:Real )
-      if (@ui)
-        @ui.update( bounds )
-        @ui.request_redraw
-      endIf
+      noAction
 
     method update_size
       Renderer.flush

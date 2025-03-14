@@ -42,12 +42,9 @@ class Window : Display
     method render
       Display = this
       Renderer.on_render_begin( this )
-      AppState.on_draw( &bg )
-      Screen.state.draw( &bg )
-      AppState.on_draw
-      Screen.state.draw
-      AppState.on_draw( &!bg )
-      Screen.state.draw( &!bg )
+      AppState.draw( &bg )
+      AppState.draw
+      AppState.draw( &!bg )
       OverlayLog.draw
       Renderer.on_render_end( this )
 
@@ -55,6 +52,12 @@ class Window : Display
       if (@ui) return @ui
       ui = WarlockUI()
       return @ui
+
+    method update( dt:Real ) [override]
+      if (@ui)
+        @ui.update( bounds )
+        @ui.request_redraw
+      endIf
 endClass
 
 augment UI::Event

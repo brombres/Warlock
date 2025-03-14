@@ -1,0 +1,23 @@
+library Warlock
+
+class DisplayState : WarlockState<<DisplayState>> [singleton]
+  METHODS
+    method dispatch( e:KeyEvent ) [override]
+      e.window.handle( e )
+
+    method dispatch( e:PointerEvent ) [override]
+      e.window.handle( e )
+
+    method dispatch( e:ScrollEvent ) [override]
+      e.window.handle( e )
+
+    method dispatch( e:TextEvent ) [override]
+      e.window.handle( e )
+
+    method dispatch_draw [override]
+      Display.draw
+
+    method dispatch_update( dt:Real ) [override]
+      Display.update( dt )
+
+endClass

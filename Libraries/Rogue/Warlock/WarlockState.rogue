@@ -5,8 +5,6 @@ class WarlockState<<$ExtendedType>> : Rogue::State<<$ExtendedType>>
     actions : Action
 
   METHODS
-    #method draw
-
     method dispatch( e:KeyEvent )
       noAction
 
@@ -18,6 +16,23 @@ class WarlockState<<$ExtendedType>> : Rogue::State<<$ExtendedType>>
 
     method dispatch( e:TextEvent )
       noAction
+
+    method dispatch_draw
+      noAction
+
+    method dispatch_draw( &bg )
+      noAction
+
+    method dispatch_update( dt:Real )
+      noAction
+
+    method draw
+      on_draw
+      dispatch_draw
+
+    method draw( &bg )
+      on_draw( &=bg )
+      dispatch_draw( &=bg )
 
     method handle( e:KeyEvent )
       contingent
@@ -87,4 +102,5 @@ class WarlockState<<$ExtendedType>> : Rogue::State<<$ExtendedType>>
     method update( dt:Real ) [override]
       actions = actions?.updated
       prior.update( dt )
+      dispatch_update( dt )
 endClass
