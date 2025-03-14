@@ -32,9 +32,6 @@ class AssetManager [singleton]
           work_name.print "Assets/"
           if (not name.begins_with("Graphics/"))
             work_name.print "Graphics/"
-            if (not name.begins_with("Fonts/"))
-              work_name.print "Fonts/"
-            endIf
           endIf
         endIf
         work_name.print name
@@ -134,11 +131,31 @@ class AssetManager [singleton]
       asset.font_height = scanner.scan_int
       .consume_ws
       if (.consume_id("variable")) asset.font_width = 0
-      else                                 asset.font_width = scanner.scan_int
+      else                         asset.font_width = scanner.scan_int
       .consume_ws
       asset.font_characters = scanner.scan_string
       .consume_ws( &eols )
+      if (.consume_id("offset"))  asset.font_offset  = .scan_json( scanner ).map_list<<Int>>
+      if (.consume_id("advance")) asset.font_advance = .scan_json( scanner ).map_list<<Int>>
+      if (.consume_id("kerning"))
+        asset.font_kerning = .scan_json( scanner ).map_table<<[Character:[Character:Int]]>>(
+          (key,value,table) => table[key] = value.map_table<<[Character:Int]>>
+        )
+      endIf
+      if (.consume_id("monospace"))
+        .consume_ws( &eols )
+        asset.font_monospace = scanner.scan_int
+      endIf
       return true
+
+    method .scan_json( scanner )->Variant
+      .consume_ws
+      use buffer = StringPool
+        scanner.read_line( buffer )
+        local result = JSON.parse( buffer )
+        .consume_ws( &eols )
+        return result
+      endUse
 
     method .load_frames( asset:AssetInfo )->Logical
       local n = asset.image_count

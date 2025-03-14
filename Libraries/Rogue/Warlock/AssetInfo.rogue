@@ -11,6 +11,10 @@ class AssetInfo
     font_height       : Int
     font_width        : Int  # 0 is variable-width
     font_characters   : String
+    font_offset       : Int[]
+    font_advance      : Int[]
+    font_kerning      : [Character:[Character:Int]]
+    font_monospace    : Int
 
   METHODS
     method init( filepath )

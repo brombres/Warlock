@@ -20,6 +20,7 @@ uses Console/CommandLineParser
 uses Geometry
 uses Graphics
 uses Graphics/FreeType
+uses Math/Best
 
 try
   AssetCompiler.init( System.command_line_arguments )
@@ -96,7 +97,7 @@ class AssetCompiler [singleton]
                   asset.group = ensure<<default_graphics>>
                 case <Sound>, <Music>
                   asset.group = ensure<<default_audio>>
-                case <Binary>
+                case <Binary>, <JSON>
                   asset.group = ensure<<default_data>>
                 others
                   trace

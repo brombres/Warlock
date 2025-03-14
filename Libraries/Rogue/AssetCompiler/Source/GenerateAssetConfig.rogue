@@ -38,7 +38,7 @@ class GenerateAssetConfig : Visitor
       endIf
 
       forEach (filepath in unreferenced)
-        if (filepath.contains("font",&ignore_case))
+        if (filepath.ends_with(".png",&ignore_case) and filepath.contains("font",&ignore_case))
           local file = File( "Assets/$/$"(folder,filepath) )
           local bitmap = Bitmap( file )
           if (bitmap.error)
@@ -51,13 +51,18 @@ class GenerateAssetConfig : Visitor
             writeln_echo "@ $ font height:$ width:fixed"(filepath,bitmap.height)
           endContingent
         else
-          write_echo "@ $"(filepath)
-          which (File(filepath).extension.to_lowercase)
-            case "png", "jpg", "jpeg": writeln_echo " image"
-            case "wav", "ima4":        writeln_echo " sound"
-            case "mp3", "ogg":         writeln_echo " music"
-            others:                    writeln_echo " binary"
-          endWhich
+          if (filepath.ends_with(".font.json",&ignore_case))
+            writeln_echo "- $ font_info"(filepath)
+          else
+            write_echo "@ $"(filepath)
+            which (File(filepath).extension.to_lowercase)
+              case "png", "jpg", "jpeg": writeln_echo " image"
+              case "wav", "ima4":        writeln_echo " sound"
+              case "mp3", "ogg":         writeln_echo " music"
+              case "json":               writeln_echo " json"
+              others:                    writeln_echo " binary"
+            endWhich
+          endIf
         endIf
       endForEach
 

@@ -72,7 +72,6 @@ class CollectAssets( target, suppress_errors=false:Logical ) : TargetVisitor
           if (font_face.error) throw source_attribute.value.cmd.t.error( font_face.error )
 
           local characters = font_face.render( unicode )
-
           if (is_italic)
             forEach (ch in characters)
               local bmp = ch.bitmap
@@ -91,36 +90,52 @@ class CollectAssets( target, suppress_errors=false:Logical ) : TargetVisitor
             endForEach
           endIf
 
+          local monospace_width : Int
           if (is_monospace)
-            local max_w = 0
-            forEach (ch in characters)
-              max_w = max_w.or_larger( ch.bitmap.width )
-            endForEach
-            forEach (ch in characters)
-              local bmp = ch.bitmap
-              if (bmp.width != max_w)
-                local new_bmp = Bitmap( max_w, bmp.height )
-                bmp.blit( new_bmp, XY((max_w-bmp.width)/2,0) )
-                ch.bitmap = new_bmp
-              endIf
-            endForEach
+            local monospacer = Monospacer()
+            monospacer.add( forEach in characters )
+            monospace_width = monospacer.apply
           elseIf (is_monospace_numbers)
-            local max_w = 0
+            local monospacer = Monospacer()
             forEach (ch in characters)
-              if (ch.character == ' ' or ch.character.is_number)
-                max_w = max_w.or_larger( ch.bitmap.width )
-              endIf
+              if (ch.unicode.is_number) monospacer.add( ch )
             endForEach
-            forEach (ch in characters)
-              local bmp = ch.bitmap
-              if (bmp.width != max_w)
-                if (ch.character == ' ' or ch.character.is_number)
-                  local new_bmp = Bitmap( max_w, bmp.height )
-                  bmp.blit( new_bmp, XY((max_w-bmp.width)/2,0) )
-                  ch.bitmap = new_bmp
-                endIf
-              endIf
-            endForEach
+            monospace_width = monospacer.apply
+          endIf
+
+          local character_string = String()
+          character_string.print( (forEach in characters).unicode )
+
+          local font_info = @{
+            type: "FontInfo",
+            font_filepath: filepath
+            characters: character_string,
+            offset:     characters.map<<Variant>>( (ch) => ch.offset_x ),
+            advance:    characters.map<<Variant>>( (ch) => ch.advance_x ),
+            kerning:    font_face.kerning.map<<Variant>>(
+            (prev,next_lookup,table) => table[prev] =
+              next_lookup.map<<Variant>>(
+                (next,kern,table) => table[next] = kern
+              )
+            )
+          }
+
+          if (is_monospace)
+            font_info//monospace = "all"
+            font_info//monospace_width = monospace_width
+          elseIf (is_monospace_numbers)
+            font_info//monospace = "numbers"
+            font_info//monospace_width = monospace_width
+          else
+            font_info//monospace_width = 0
+          endIf
+
+          asset.font_info = font_info
+          local info_file = File(filepath).with_extension( ".font.json" )
+          local json = font_info->JSON( &formatted )
+          if (not info_file.exists or String(info_file) != json)
+            println "Creating font info  $"(info_file)
+            info_file.save( json )
           endIf
 
           local bitmap = pack_varfont_characters( characters )
@@ -177,4 +192,24 @@ class CollectAssets( target, suppress_errors=false:Logical ) : TargetVisitor
     method on_visit_node( cmd:SetTarget )
       prior.on_visit_node( cmd )
       AssetCompiler.targets.add( current_target )
+endClass
+
+class Monospacer
+  PROPERTIES
+    monospace_width : Int
+    .characters     = FreeTypeCharacter[]
+    .max_advance    = Best<<Int>>( $1 > $2 )
+
+  METHODS
+    method add( ch:FreeTypeCharacter )
+      .characters.add( ch )
+      .max_advance.consider( ch.advance_x )
+
+    method apply->Int
+      local monospace_width = .max_advance.value
+      forEach (ch in .characters)
+        ch.offset_x += (monospace_width - ch.advance_x)/2
+        ch.advance_x = monospace_width
+      endForEach
+      return monospace_width
 endClass

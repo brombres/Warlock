@@ -17,6 +17,8 @@ class Font : UI::Font
     error              : String
     spacing_adjustment = 0
     snap               : Logical
+    monospace          : Logical
+    monospace_width    : Int
 
   METHODS
     method init( asset_name, snap=false, &snug )
@@ -27,9 +29,14 @@ class Font : UI::Font
       if (asset)
         internal_height = asset.font_height
         fixed_width     = asset.font_width
+        monospace_width = asset.font_monospace
+
+        local offset  = asset.font_offset
+        local advance = asset.font_advance
+        local kerning = asset.font_kerning
 
         forEach (unicode at i in asset.font_characters)
-          local font_ch = FontCharacter( asset, i, unicode )
+          local font_ch = FontCharacter( asset, i, unicode, offset?[i], advance?[i], kerning?[unicode] )
           if (unicode < 128) ascii_characters[unicode] = font_ch
           character_lookup[unicode] = font_ch
         endForEach
@@ -104,6 +111,7 @@ class Font : UI::Font
     method draw_line( text:String, position:XY  )
       local cursor = (position - Box(measure(text)).at( anchor ).xv) + XY(offset.x*internal_height*scale.x,0)
       if (snap) cursor = cursor.floor
+      local prev_ch : FontCharacter
       forEach (ch in text)
         local font_ch = character( ch )
         if (font_ch)
@@ -112,10 +120,15 @@ class Font : UI::Font
           image.color = color
           #image.shader = shader  # if null, default is used
           #image.render_mode = font.render_mode  # if null, default is used
-          image.position = cursor + font_ch.offset
+          if (prev_ch and prev_ch.kerning)
+            local kern = prev_ch.kerning[ font_ch.unicode ]
+            if (kern) cursor += XY( kern*scale.x, 0 )
+          endIf
+          image.position = cursor + font_ch.offset * scale
           image.opacity = opacity
           image.draw
           cursor += font_ch.advance * scale + XY(spacing_adjustment,0) * scale
+          prev_ch = font_ch
         endIf
       endForEach
 
@@ -183,6 +196,7 @@ class Font : UI::Font
           endIf
         endForEach
       else
+        local prev_ch : FontCharacter
         forEach (index in i1.value..i2.value)
           local unicode = text[index]
           cur_h = line_height
@@ -193,12 +207,18 @@ class Font : UI::Font
             cur_h = 0.0
             prev_advance = 0
             prev_width = 0
+            prev_ch = null
           else
             local ch = character( unicode )
             if (ch)
               prev_advance = ch.advance.x
               prev_width   = ch.size.x
+              if (prev_ch and prev_ch.kerning)
+                local kern = prev_ch.kerning[ ch.unicode ]
+                if (kern) w += kern
+              endIf
               w += prev_advance + spacing_adjustment
+              prev_ch = ch
             endIf
           endIf
         endForEach
@@ -227,11 +247,14 @@ class FontCharacter
     size       : XY
     offset     : XY  # Added to cursor during draw
     advance    : XY  # Added to cursor after drawing
+    kerning    : [Character:Int]
 
   METHODS
-    method init( asset:AssetInfo, image_index:Int, unicode:Character )
+    method init( asset:AssetInfo, image_index:Int, unicode:Character, offset:Int, advance:Int, kerning )
       image = TextureImage( asset, image_index )
       init( unicode, image.size )
+      if (offset)  this.offset  = XY( offset, 0 )
+      if (advance) this.advance = XY( advance, 0 )
 
     method init( unicode, size )
       advance = size.xv

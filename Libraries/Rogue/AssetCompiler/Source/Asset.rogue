@@ -7,28 +7,29 @@ class Asset
   # "  <- Fix string highlighting bug
 
   PROPERTIES
-    filepath          : String
-    rule              : AssetRule
+    filepath            : String
+    rule                : AssetRule
 
-    is_modified       : Logical
-    is_invalid        : Logical
-    is_standalone     : Logical
+    is_modified         : Logical
+    is_invalid          : Logical
+    is_standalone       : Logical
 
-    group             : AssetGroup
-    info              : Variant
-    placement_info    : Variant
+    group               : AssetGroup
+    info                : Variant
+    placement_info      : Variant
 
-    type              = <Unknown>
-    bitmap            : Bitmap
-    placements        = Placement[]
-    image_size        : XY
-    image_split       = XY(1,1)
-    image_mipmaps     : Logical
-    image_patch_count : Int
+    type                = <Unknown>
+    bitmap              : Bitmap
+    placements          = Placement[]
+    image_size          : XY
+    image_split         = XY(1,1)
+    image_mipmaps       : Logical
+    image_patch_count   : Int
 
-    font_characters   : String
-    font_height       : Int
-    font_width        : Int  # -1 for variable, > 0 = fixed
+    font_characters     : String
+    font_info           : Variant
+    font_height         : Int
+    font_width          : Int  # -1 for variable, > 0 = fixed
 
   METHODS
     method init( filepath, rule )
@@ -131,10 +132,12 @@ class Asset
           necessary (info.contains("font_characters"))
           necessary (info.contains("font_height"))
           necessary (info.contains("font_width"))
+          necessary (info.contains("font_info"))
           image_size = XY( info//image_size )
           font_characters = info//font_characters
           font_height = info//font_height
           font_width  = info//font_width
+          font_info   = info//font_info
 
         unsatisfied
           is_modified = true
@@ -173,20 +176,30 @@ class Asset
             if (font_width == -1) --font_height
           endIf
 
+          local info_file = File(filepath).with_extension( ".font.json" )
+          if (info_file.exists)
+            font_info = JSON.load( info_file )
+            info//font_info = font_info
+          endIf
+
           info//font_characters = font_characters
           info//font_width  = font_width
           info//font_height = font_height
 
         endContingent
 
+      elseIf (rule.contains_attribute("font_info"))
+        type = <FontInfo>
       elseIf (rule.contains_attribute("sound"))
         type = <Sound>
       elseIf (rule.contains_attribute("music"))
         type = <Music>
       elseIf (rule.contains_attribute("binary"))
         type = <Binary>
+      elseIf (rule.contains_attribute("json"))
+        type = <JSON>
       else
-        throw rule.t.error( "No type specified in rule. Append one of [image, font, sound, music, binary] or prefix with '-' instead of '$' to exclude."(info//rule[0]) )
+        throw rule.t.error( "No type specified in rule. Append one of [image font json sound music binary] or prefix with '-' instead of '$' to exclude."(info//rule[0]) )
       endIf
 
       if (info//type->GlobalID != type)
@@ -224,6 +237,33 @@ class Asset
         case <Font>
           if (font_width == -1) .create_variable_width_font_placements
           else                  .create_fixed_width_font_placements
+
+          if (not font_info.is_table)
+            font_info = @{
+              type: "FontInfo",
+              font_filepath: filepath,
+              characters:    font_characters,
+              offset:        placements.map<<Variant>>( (p) => 0 ),
+              advance:       placements.map<<Variant>>( (p) => p.size.x->Int ),
+              kerning:       {}
+            }
+            info//font_info = font_info
+          endIf
+
+          # If characters have been manually added to the font strip, supplement font info.
+          font_info//characters = font_characters
+          local n = placements.count - font_info//offset.count
+          loop (n) font_info//offset.add( 0 )
+          forEach (i in font_info//advance.count..<placements.count)
+            font_info//advance.add( placements[i].size.x->Int )
+          endForEach
+
+          local info_file = File(filepath).with_extension( ".font.json" )
+          local json = font_info->JSON( &formatted )
+          if (not info_file.exists or String(info_file) != json)
+            println "Creating font info  $"(info_file)
+            info_file.save( json )
+          endIf
       endWhich
 
     method image_padding->Int?
@@ -477,6 +517,12 @@ class Asset
           else                  manifest.print " $"(font_width)
           manifest.print '' "$"''(font_characters.to_escaped_unicode("\""))
           manifest.println
+          if (font_info.is_table)
+            manifest.println "  offset  $"(font_info//offset)
+            manifest.println "  advance $"(font_info//advance)
+            manifest.println "  kerning $"(font_info//kerning->JSON)
+            manifest.println "  monospace $"(font_info//monospace_width->Int)
+          endIf
           write_placements( manifest )
       endWhich
 
