@@ -42,9 +42,9 @@ class Window : Display
     method render
       Display = this
       Renderer.on_render_begin( this )
-      AppState.draw( &bg )
-      AppState.draw
-      AppState.draw( &!bg )
+      State.draw( &bg )
+      State.draw
+      State.draw( &!bg )
       OverlayLog.draw
       Renderer.on_render_end( this )
 

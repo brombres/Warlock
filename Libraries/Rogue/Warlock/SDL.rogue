@@ -111,7 +111,7 @@ class SDL : Framework [singleton]
                 pointer_event.window = window
                 pointer_event.timestamp = native("event.button.timestamp")->Int
                 Pointer.on( pointer_event )
-                AppState.handle( pointer_event )
+                State.handle( pointer_event )
               endIf
             endBlock
       native
@@ -134,7 +134,7 @@ class SDL : Framework [singleton]
                 pointer_event.window = window
                 pointer_event.timestamp = native("event.button.timestamp")->Int
                 Pointer.on( pointer_event )
-                AppState.handle( pointer_event )
+                State.handle( pointer_event )
               endIf
             endBlock
       native
@@ -149,7 +149,7 @@ class SDL : Framework [singleton]
                 scroll_event.init( XY(x,y) )
                 scroll_event.window = window
                 scroll_event.timestamp = native("event.button.timestamp")->Int
-                AppState.handle( scroll_event )
+                State.handle( scroll_event )
               endIf
             endBlock
       native
@@ -181,14 +181,14 @@ class SDL : Framework [singleton]
                 key_event.window = window
                 key_event.timestamp = native("event.button.timestamp")->Int
                 Keyboard.on( key_event )
-                AppState.handle( key_event )
+                State.handle( key_event )
 
                 if (key_event.is_printable)
                   if (text_event.refcount) text_event = TextEvent()
                   text_event.init( key_event.unicode )
                   text_event.window = window
                   text_event.timestamp = native("event.button.timestamp")->Int
-                  AppState.handle( text_event )
+                  State.handle( text_event )
                 endIf
 
               endIf

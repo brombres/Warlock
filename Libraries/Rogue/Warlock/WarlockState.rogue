@@ -1,6 +1,6 @@
 library Warlock
 
-class WarlockState<<$ExtendedType>> : Rogue::State<<$ExtendedType>>
+class WarlockState<<$ExtendedType,$change_state,$exit_state>> : Rogue::State<<$ExtendedType,$change_state,$exit_state>>
   PROPERTIES
     actions : Action
 
