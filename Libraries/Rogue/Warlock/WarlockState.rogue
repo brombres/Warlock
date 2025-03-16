@@ -17,22 +17,20 @@ class WarlockState<<$ExtendedType,$change_state,$exit_state>> : Rogue::State<<$E
     method dispatch( e:TextEvent )
       noAction
 
-    method dispatch_draw
-      noAction
-
-    method dispatch_draw( &bg )
+    method dispatch_draw( &fg )
       noAction
 
     method dispatch_update( dt:Real )
       noAction
 
-    method draw
-      on_draw
-      dispatch_draw
-
-    method draw( &bg )
-      on_draw( &=bg )
-      dispatch_draw( &=bg )
+    method draw( &fg )
+      if (fg)
+        on_draw_fg
+        dispatch_draw( &fg )
+      else
+        on_draw
+        dispatch_draw( &!fg )
+      endIf
 
     method handle( e:KeyEvent )
       contingent
@@ -85,7 +83,7 @@ class WarlockState<<$ExtendedType,$change_state,$exit_state>> : Rogue::State<<$E
 
     method on_draw
 
-    method on_draw( &bg )
+    method on_draw_fg
 
     method on_render_begin
 

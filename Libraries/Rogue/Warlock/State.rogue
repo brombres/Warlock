@@ -14,10 +14,7 @@ class State : WarlockState<<State,change_state,exit_state>> [singleton]
     method dispatch( e:TextEvent ) [override]
       Screen.handle( e )
 
-    method dispatch_draw [override]
-      Screen.draw
-
-    method dispatch_draw( &bg ) [override]
-      Screen.draw( &=bg )
+    method dispatch_draw( &fg ) [override]
+      Screen.draw( &=fg )
 
 endClass

@@ -39,9 +39,8 @@ augment Entity::Entity2D
           )
         )
 
-        .handle_draw( &bg )
-        .handle_draw
-        .handle_draw( &!bg )
+        .handle_draw( &!fg )
+        .handle_draw( &fg )
       endUse
 
     method draw( bounds:Box )
@@ -49,8 +48,7 @@ augment Entity::Entity2D
       use Display.transform_stack
         .begin_draw
         Display.push_transform( Matrix.transform(XYZ(bounds.position,z),bounds.size/nominal_size) )
-        .handle_draw( &bg )
-        .handle_draw
-        .handle_draw( &!bg )
+        .handle_draw( &!fg )
+        .handle_draw( &fg )
       endUse
 endAugment

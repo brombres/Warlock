@@ -14,8 +14,8 @@ class Screen : WarlockState<<Screen,change_screen,exit_screen>> [singleton]
     method dispatch( e:TextEvent ) [override]
       e.window.handle( e )
 
-    method dispatch_draw [override]
-      Display.draw
+    method dispatch_draw( &fg ) [override]
+      if (not fg) Display.draw
 
     method dispatch_update( dt:Real ) [override]
       Display.update( dt )
