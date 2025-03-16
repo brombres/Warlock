@@ -48,6 +48,8 @@ class Window : Display
       OverlayLog.draw
       Renderer.on_render_end( this )
 
+    method set_ui( @ui )
+
     method ui->UI [override]
       if (@ui) return @ui
       ui = WarlockUI()

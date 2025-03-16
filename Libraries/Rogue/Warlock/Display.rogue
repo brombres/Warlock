@@ -176,6 +176,9 @@ class Display [singleton]
         combined_transform_modified = true
       endIf
 
+    method set_ui( ui:WarlockUI )
+      noAction
+
     method set_view_transform( new_transform:Matrix )
       if (view_transform != new_transform)
         <Display.transform_modified>.signal
