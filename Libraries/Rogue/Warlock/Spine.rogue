@@ -24,8 +24,8 @@ class SpineSprite : Image
       Display.pop_transform
       Display.pop_transform
 
-    method on_update( dt:Real )
-      animation.update( dt )
+    method on_update
+      animation.update( Display.dt )
 endClass
 
 class Spine [essential singleton]

@@ -20,7 +20,7 @@ class WarlockState<<$ExtendedType,$change_state,$exit_state>> : Rogue::State<<$E
     method dispatch_draw( &fg )
       noAction
 
-    method dispatch_update( dt:Real )
+    method dispatch_update
       noAction
 
     method draw( &fg )
@@ -97,8 +97,8 @@ class WarlockState<<$ExtendedType,$change_state,$exit_state>> : Rogue::State<<$E
 
     method on_unhandled( e:TextEvent )
 
-    method update( dt:Real ) [override]
+    method update [override]
       actions = actions?.updated
-      prior.update( dt )
-      dispatch_update( dt )
+      prior.update
+      dispatch_update
 endClass

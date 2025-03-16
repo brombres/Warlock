@@ -54,7 +54,7 @@ class Window : Display
       ui = WarlockUI()
       return @ui
 
-    method update( dt:Real ) [override]
+    method update [override]
       if (@ui)
         @ui.update( bounds )
         @ui.request_redraw

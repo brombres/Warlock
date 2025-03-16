@@ -4,8 +4,15 @@ class Display [singleton]
   AUTO_ID
 
   PROPERTIES
-    pixel_size        : XY  # True size in pixels.
-    size              : XY  # Scaled size.
+    dt                : Real # Interval since last update, in seconds.
+    dt_updater        = Action( Action.INDEFINITE ) subclass
+                          METHODS
+                            method on_update
+                              Display.dt = dt
+                        endSubclass
+
+    pixel_size        : XY   # True size in pixels.
+    size              : XY   # Scaled size.
     scale_to_fit_size : XY?
     density = 1.0 # May be 2 or 3 (etc.) for Retina and other HD displays.
 
@@ -122,6 +129,7 @@ class Display [singleton]
       Display = this
 
     method reset
+      dt_updater.updated
       perspective_center = XY(0.5,0.5)
       view_transform   = Matrix.identity
       transform = Matrix.identity
@@ -190,7 +198,7 @@ class Display [singleton]
     method ui->UI
       return null
 
-    method update( dt:Real )
+    method update
       noAction
 
     method update_size
