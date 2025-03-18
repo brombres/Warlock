@@ -1,6 +1,21 @@
 library Warlock
 
 class Font : UI::Font
+  GLOBAL PROPERTIES
+    fonts = [String:Font]
+
+  GLOBAL METHODS
+    method create( asset_name:String, &snap, &snug )->Font
+      if local font = fonts[asset_name]
+        local result = font.cloned
+        result.reset
+        result.snap = snap
+        if (snug) result.spacing_adjustment = -1
+        return result
+      else
+        return Font( asset_name, &new_instance, &=snap, &=snug )
+      endIf
+
   PROPERTIES
     asset_name         : String
     asset              : AssetInfo
@@ -10,7 +25,7 @@ class Font : UI::Font
     fixed_width        : Int
     ascii_characters   : FontCharacter[]
     character_lookup   : [Character:FontCharacter]
-    anchor             = Anchor.TOP_LEFT : Anchor
+    anchor             = Anchor.CENTER : Anchor
     color              = Color.WHITE : Color
     opacity            = 1.0
 
@@ -21,7 +36,9 @@ class Font : UI::Font
     monospace_width    : Int
 
   METHODS
-    method init( asset_name, snap=false, &snug )
+    method init( asset_name, new_instance:Logical, snap=false, &snug )
+      fonts[asset_name] = this
+
       ascii_characters = Dim<<FontCharacter>>(128)
       character_lookup = [Character:FontCharacter]
 
@@ -61,8 +78,17 @@ class Font : UI::Font
       color              = existing.color
       opacity            = existing.opacity
       error              = existing.error
-      spacing_adjustment = existing.spacing_adjustment
+      spacing_adjustment = 0
       snap               = existing.snap
+
+    method reset
+      scale              = XY(1,1)
+      offset             = XY.zero
+      anchor             = Anchor.CENTER
+      color              = Color.WHITE
+      opacity            = 1.0
+      spacing_adjustment = 0
+      snap               = false
 
     method cloned->ThisType [propagated]
       return ThisType(this)
@@ -127,7 +153,7 @@ class Font : UI::Font
           image.position = cursor + font_ch.offset * scale
           image.opacity = opacity
           image.draw
-          cursor += font_ch.advance * scale + XY(spacing_adjustment,0) * scale
+          cursor += (font_ch.advance + XY(spacing_adjustment,0)) * scale
           prev_ch = font_ch
         endIf
       endForEach

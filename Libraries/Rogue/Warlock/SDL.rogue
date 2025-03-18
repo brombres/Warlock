@@ -139,6 +139,32 @@ class SDL : Framework [singleton]
             endBlock
       native
       @|    break;
+       |  case SDL_EVENT_WINDOW_MOUSE_ENTER:
+            block
+              if local window = Warlock.find_window( &native_id=native("event.button.windowID")->Int )
+                if (pointer_event.refcount) pointer_event = PointerEvent()
+                pointer_event.init( <ENTER> )
+                pointer_event.window = window
+                pointer_event.timestamp = native("event.button.timestamp")->Int
+                Pointer.on( pointer_event )
+                State.handle( pointer_event )
+              endIf
+            endBlock
+      native
+      @|    break;
+       |  case SDL_EVENT_WINDOW_MOUSE_LEAVE:
+            block
+              if local window = Warlock.find_window( &native_id=native("event.button.windowID")->Int )
+                if (pointer_event.refcount) pointer_event = PointerEvent()
+                pointer_event.init( <LEAVE> )
+                pointer_event.window = window
+                pointer_event.timestamp = native("event.button.timestamp")->Int
+                Pointer.on( pointer_event )
+                State.handle( pointer_event )
+              endIf
+            endBlock
+      native
+      @|    break;
        |
        |  case SDL_EVENT_MOUSE_WHEEL:
             block
