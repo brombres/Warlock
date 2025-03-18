@@ -5,6 +5,12 @@ class AppData [singleton]
     data = AppDataValue.table : AppDataValue
 
   METHODS
+    method load( json:String )
+      load( JSON(json).parse )
+
+    method load( variant:Variant )
+      data = variant->AppDataValue
+
     method get( name:String )->AppDataContext
       return AppDataContext( data, name )
 
@@ -38,6 +44,10 @@ class AppData [singleton]
 
     method to->String
       return data->String
+
+    method to->Variant
+      return data->Variant
+
 endClass
 
 class AppDataValue( value:Variant, data:[String:AppDataValue], on_change:GlobalID ) [compound]
@@ -46,13 +56,15 @@ class AppDataValue( value:Variant, data:[String:AppDataValue], on_change:GlobalI
       return AppDataValue( undefined, null, <UNDEFINED> )
 
     method create( value:Variant )->AppDataValue
-      return AppDataValue( value, null, <UNDEFINED> )
+      return create( value, null, <UNDEFINED> )
 
     method create( value:Variant, on_change:GlobalID )->AppDataValue
+      if (value.is_object and value->Object instanceOf ListType)
+      endIf
       return AppDataValue( value, null, on_change )
 
-    method table->AppDataValue
-      return AppDataValue( undefined, [String:AppDataValue], <UNDEFINED> )
+    method table( data=[String:AppDataValue]:[String:AppDataValue] )->AppDataValue
+      return AppDataValue( undefined, data, <UNDEFINED> )
 
   METHODS
     method contains( key:String )->Logical
@@ -85,16 +97,42 @@ class AppDataValue( value:Variant, data:[String:AppDataValue], on_change:GlobalI
     method to->String
       if (data) return data->String
       return value->String
+
+    method to->Variant
+      if (data)
+        local result = @{}
+        forEach (entry in data.entries)
+          result[entry.key] = entry.value->Variant
+        endForEach
+        return result
+      else
+        return value
+      endIf
 endClass
 
 augment Rogue::Variant
   METHODS
     method to->AppDataValue
-      return AppDataValue( this )
+      if (is_table)
+        local data = [String:AppDataValue]
+        forEach (key in keys)
+          data[key] = this[key]
+        endForEach
+        return AppDataValue.table( data )
+      else
+        return AppDataValue( this )
+      endIf
 endAugment
 
 class AppDataContext( context:AppDataValue, key:String ) [compound]
   METHODS
+    method contains( name:String )->Logical
+      if local table = context[key]
+        return table.contains( name )
+      else
+        return false
+      endIf
+
     method get( name:String )->AppDataContext
       if local table = context[key]
         return AppDataContext( table, name )
@@ -139,5 +177,4 @@ class AppDataContext( context:AppDataValue, key:String ) [compound]
         return undefined
       endIf
 endClass
-
 
