@@ -84,7 +84,7 @@ class AppDataValue( value:Variant, data:[String:AppDataValue], on_change:GlobalI
       return value == other.value and data is other.data and on_change == other.on_change
 
     method operator?->Logical
-      return value? or data?
+      return value.exists or data?
 
     method set( key:String, value:AppDataValue )
       if (data)
