@@ -84,7 +84,7 @@ class AppDataValue( value:Variant, data:[String:AppDataValue], on_change:GlobalI
       return value == other.value and data is other.data and on_change == other.on_change
 
     method operator?->Logical
-      return value.exists or data?
+      return value? or data?
 
     method set( key:String, value:AppDataValue )
       if (data)
@@ -145,6 +145,45 @@ class AppDataContext( context:AppDataValue, key:String ) [compound]
     method is_table->Logical
       return context[key].is_table
 
+    method operator?->Logical
+      return context[key]?
+
+    method operator+( value:Variant )->Variant
+      return this->Variant + value
+
+    method operator-()->Variant
+      return -this->Variant
+
+    method operator-( value:Variant )->Variant
+      return this->Variant - value
+
+    method operator*( value:Variant )->Variant
+      return this->Variant * value
+
+    method operator/( value:Variant )->Variant
+      return this->Variant / value
+
+    method operator%( value:Variant )->Variant
+      return this->Variant % value
+
+    method operator^( value:Variant )->Variant
+      return this->Variant ^ value
+
+    method operator&( value:Variant )->Variant
+      return this->Variant & value
+
+    method operator|( value:Variant )->Variant
+      return this->Variant | value
+
+    method operator~( value:Variant )->Variant
+      return this->Variant ~ value
+
+    method operator==( value:Variant )->Logical
+      return this->Variant == value
+
+    method operator<>( value:Variant )->Int
+      return this->Variant <> value
+
     method set( name:String, value:Variant )
       local data = context[key]
       if (data.is_table)
@@ -171,10 +210,8 @@ class AppDataContext( context:AppDataValue, key:String ) [compound]
       return this->AppDataValue->String
 
     method to->Variant
-      if local value = context[key]
-        return value.value
-      else
-        return undefined
-      endIf
+      local value = context[key].value
+      if (value.exists) return value
+      else              return undefined
 endClass
 
