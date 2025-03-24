@@ -114,6 +114,11 @@ scanner
         restart
       endIf
 
+      if (scan('['))
+        literal_list_term
+        produce TERM
+      endIf
+
       scan_string  # will restart if string
     elseIf (not scan([^ \t\n]*))
       create_id_or_keyword
@@ -123,6 +128,16 @@ scanner
 
   scan [^ \t\n]*
   produce TERM
+
+- literal_list_term
+  while (hasAnother and not nextIs('\n'))
+    if (scan('['))
+      literal_list_term
+    else
+      collect( read )
+    endIf
+  endWhile
+  scan ']'
 
 - create_id_or_keyword
   match buffer
@@ -150,14 +165,23 @@ scanner
   scan [0-9]*  # Fills 'buffer' with remaining digits
 
 - scan_string
-  if (not consume('"')) return
-  while (hasAnother and not nextIs('\n'))
-    ch = read
-    if (ch == '"') produce STRING
-    elseIf (ch == '\\' and hasAnother) ch = read  # VisitContent backslash escapes
-    collect ch
-  endWhile
-  syntaxError "Unterminated string."
+  if (consume('"'))
+    while (hasAnother and not nextIs('\n'))
+      ch = read
+      if (ch == '"') produce STRING
+      elseIf (ch == '\\' and hasAnother) ch = read  # VisitContent backslash escapes
+      collect ch
+    endWhile
+    syntaxError "Unterminated string."
+  elseIf (consume("'"))
+    while (hasAnother and not nextIs('\n'))
+      ch = read
+      if (ch == "'") produce STRING
+      elseIf (ch == '\\' and hasAnother) ch = read  # VisitContent backslash escapes
+      collect ch
+    endWhile
+    syntaxError "Unterminated string."
+  endIf
 
 --------------------------------------------------------------------------------
 parser

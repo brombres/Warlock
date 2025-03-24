@@ -68,7 +68,7 @@ class CollectAssets( target, suppress_errors=false:Logical ) : TargetVisitor
           endIf
 
           local search_folders = ["Assets/Fonts"]
-          local font_face = FreeTypeFace( font_name, height )
+          local font_face = FreeTypeFace( font_name, height, search_folders )
           if (font_face.error) throw source_attribute.value.cmd.t.error( font_face.error )
 
           local characters = font_face.render( unicode )

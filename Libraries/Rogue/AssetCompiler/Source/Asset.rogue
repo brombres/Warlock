@@ -283,7 +283,7 @@ class Asset
       if local characters_attribute = rule.find_attribute( "characters" )
         .require_value(
           characters_attribute,
-          "Expected 'characters:ascii' or e.g. 'characters:[32,'0'..'9',65..90]'."
+          ''Expected 'characters:ascii' or e.g. 'characters:[32,'0'..'9',"+-",65..90]'.''
         )
         result = characters_attribute.value.cmd.to_characters
 

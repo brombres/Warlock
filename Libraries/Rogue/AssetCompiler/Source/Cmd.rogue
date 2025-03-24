@@ -11,8 +11,8 @@ class Cmd( t:Token )
     method init( existing:Cmd )
       t = existing.t
 
-    method cloned->ThisType [propagated]
-      return ThisType(this)
+    method cloned->$thisType [propagated]
+      return $thisType(this)
 
     method add( cmd:Cmd )
       throw UnsupportedOperationError()
@@ -244,6 +244,9 @@ class LiteralString : Cmd
     method to->Int:     return value
     method to->Logical: return value?
     method to->String: return value
+
+    method to_characters->String
+      return value
 
 endClass
 
