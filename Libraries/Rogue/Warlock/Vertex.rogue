@@ -1,6 +1,6 @@
 library Warlock
 
-class Vertex( position:XYZ, color:Color, uv=XY(0,0):XY ) [compound]
+class Vertex( position:XYZ, color:Color, uv=XY(0,0):XY, normal=XYZ(0,0,1):XYZ ) [compound]
   METHODS
     method avg( other:Vertex )->Vertex
       return Vertex(

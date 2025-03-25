@@ -47,11 +47,21 @@ class Mesh
       vertices.clear
       indices.clear
 
+    method fill( shader=null:Shader )
+      Renderer.fill( this, shader||Shader.ALPHA_COLOR )
+
     method fill( texture:Texture, shader=null:Shader )
-      Renderer.shader = shader || Shader.ALPHA_TEXTURE
-      Renderer.texture = texture
-      Renderer.draw_triangles
-      Renderer.data.add( this, Renderer.first_vertex )
+      Renderer.fill( this, texture, shader||Shader.ALPHA_TEXTURE )
+      #Renderer.shader = shader || Shader.ALPHA_TEXTURE
+      #Renderer.texture = texture
+      #Renderer.draw_triangles
+      #Renderer.data.add( this, Renderer.first_vertex )
+
+    method translate( delta:XYZ )
+      forEach (v in writer=vertices.rewriter)
+        v.position += delta
+        writer.write( v )
+      endForEach
 
     method reserve( vertex_count:Int, index_count=null:Int?  )
       # Reserves capacity for an additional 'vertex_count' vertices and 'index_count'

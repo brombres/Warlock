@@ -1,0 +1,76 @@
+library Warlock
+
+# Interface for libtess2
+
+nativeHeader @|#include "tesselator.h"
+
+class Tessellator [singleton]
+  PROPERTIES
+    vertex_positions = XY[]
+    triangle_indices = Triangle<<Int>>[]
+
+    native "TESStesselator* tess;"
+
+  METHODS
+    method on_cleanup
+      if (native("$this->tess")->Logical)
+        native @|tessDeleteTess( $this->tess );
+                |$this->tess = 0;
+      endIf
+
+    method tessellate( polygon:XY[] )->Logical
+      # If result is true, tessellated info will be in .vertex_positions and .triangle_indices.
+      if (not native("$this->tess")->Logical)
+        native @|$this->tess = tessNewTess( 0 );
+        if (not native("$this->tess")->Logical)
+          println "Error creating Tessellator."
+          return false
+        endIf
+      endIf
+
+      local success : Logical
+      use real32s = WorkList<<Real32>>
+        real32s.reserve( polygon.count * 2 )
+        forEach (v in polygon)
+          real32s.add( v.x )
+          real32s.add( v.y )
+        endForEach
+
+        native
+        @|tessAddContour( $this->tess, 2, $real32s->as_bytes, sizeof(RogueReal32)*2, $polygon->count );
+         |$success = tessTesselate( $this->tess, TESS_WINDING_NONZERO, TESS_POLYGONS, 3, 2, 0 );
+      endUse
+
+      if (not success)
+       println "Error tessellating polygon."
+       return false
+      endIf
+
+      local vertex_count, triangle_count : Int
+
+      native
+      @|const float* tess_vertices = tessGetVertices( $this->tess );
+       |const int*   tess_indices  = tessGetElements( $this->tess );
+       |$vertex_count   = tessGetVertexCount( $this->tess );
+       |$triangle_count = tessGetElementCount( $this->tess );
+
+      vertex_positions.[clear].reserve( vertex_count )
+      triangle_indices.[clear].reserve( triangle_count )
+
+      forEach (i in 0..<vertex_count*2 step 2)
+        vertex_positions.add( XY(native("tess_vertices[$i]")->Real32, native("tess_vertices[$i+1]")->Real32) )
+      endForEach
+
+      forEach (i in 0..<triangle_count*3 step 3)
+        triangle_indices.add(
+          Triangle<<Int>>(
+            native("tess_indices[$i]")->Int,
+            native("tess_indices[$i+1]")->Int,
+            native("tess_indices[$i+2]")->Int
+          )
+        )
+      endForEach
+
+      return true
+
+endClass

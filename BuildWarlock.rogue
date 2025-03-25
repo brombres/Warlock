@@ -152,7 +152,7 @@ endRoutine
 
 routine rogo_deps [append]
   # SYNTAX: rogo deps [update|rebuild] [<libs>]*
-  # Where <libs> is any combination of: [bgfx bimg bx sdl spine stb]
+  # Where <libs> is any combination of: [bgfx bimg bx sdl spine stb tess]
 
   local args = System.command_line_arguments.cloned
   local rebuild = args.remove( "rebuild" )
@@ -179,7 +179,7 @@ routine deps( args:String[], &update, &rebuild )
   local libs = @{}
   local select_all = false
   loop 2
-    forEach (lib in ["bgfx","bimg","bx","sdl","spine","stb"])
+    forEach (lib in ["bgfx","bimg","bx","sdl","spine","stb","tess"])
       if (select_all or args.contains(lib)) libs[lib] = true
     endForEach
     if (libs.count) escapeLoop
@@ -308,6 +308,23 @@ routine deps( args:String[], &update, &rebuild )
     elseIf (update)
       if (repo.has_remote_changes)
         banner "Updating stb repo"
+        repo.pull( &verbose )
+      endIf
+    endIf
+  endIf
+
+  -------- Libraries/libtess2 --------
+  if (libs//tess)
+    local folder = File("Libraries/libtess2")
+    local repo = GitRepo( "https://github.com/memononen/libtess2.git", folder )
+
+    if (not repo.exists)
+      banner "Cloning libtess2 repo"
+      repo.clone( &verbose )
+
+    elseIf (update)
+      if (repo.has_remote_changes)
+        banner "Updating libtess2 repo"
         repo.pull( &verbose )
       endIf
     endIf

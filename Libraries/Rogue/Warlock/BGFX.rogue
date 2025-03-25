@@ -73,6 +73,7 @@ class BGFX : Renderer [singleton]
        |  .add(bgfx::Attrib::Position,  3, bgfx::AttribType::Float )
        |  .add(bgfx::Attrib::Color0,    4, bgfx::AttribType::Uint8, true)
        |  .add(bgfx::Attrib::TexCoord0, 2, bgfx::AttribType::Float )
+       |  .add(bgfx::Attrib::Normal,    3, bgfx::AttribType::Float )
        |.end();
        |
        |$this->bgfx_vertex_buffer = bgfx::createDynamicVertexBuffer( 6144, vertex_layout, BGFX_BUFFER_ALLOW_RESIZE );
@@ -172,11 +173,14 @@ class BGFX : Renderer [singleton]
        |  WarlockBGFXVertex* dest_data = (WarlockBGFXVertex*)($vertex_data->data);
        |  for (int i=(int)$data->vertices->count; --i>=0; )
        |  {
-       |    dest_data->x = (float) src_data->position.x;
-       |    dest_data->y = (float) src_data->position.y;
-       |    dest_data->z = (float) src_data->position.z;
-       |    dest_data->u = (float) src_data->uv.x;
-       |    dest_data->v = (float) src_data->uv.y;
+       |    dest_data->x  = (float) src_data->position.x;
+       |    dest_data->y  = (float) src_data->position.y;
+       |    dest_data->z  = (float) src_data->position.z;
+       |    dest_data->u  = (float) src_data->uv.x;
+       |    dest_data->v  = (float) src_data->uv.y;
+       |    dest_data->nx = (float) src_data->normal.x;
+       |    dest_data->ny = (float) src_data->normal.y;
+       |    dest_data->nz = (float) src_data->normal.z;
        |
        |    // Swap red and blue while premultiplying R,G,B by A.
        |    int argb = (int)src_data->color.argb;
@@ -318,7 +322,9 @@ class BGFX : Renderer [singleton]
 
 endClass
 
-class BGFXVertex( x:Real32, y:Real32, z:Real32, abgr:Int32, u:Real32, v:Real32 ) [compound]
+class BGFXVertex( x:Real32, y:Real32, z:Real32, abgr:Int32, u:Real32, v:Real32,
+                  nx:Real32, ny:Real32, nz:Real32 ) [compound]
+  # Position, Color, UV, Normal
 endClass
 
 augment ShaderProgram

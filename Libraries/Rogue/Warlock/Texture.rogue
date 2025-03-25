@@ -89,6 +89,23 @@ class Texture
         uv.d = corners[3]
       endUse
 
+    method polygon_mesh( polygon:XY[], mesh=Mesh():Mesh )->Mesh
+      # polygon should contain normalized positions between (0,0) and (1,1).
+      if (Tessellator.tessellate(polygon))
+        local i0 = mesh.indices.count
+        local uv1 = uv.a
+        local uv2 = uv.c
+        local uv_delta = uv2 - uv1
+        forEach (xy in Tessellator.vertex_positions)
+          mesh.add( Vertex(xy, Color.WHITE, xy*uv_delta+uv1) )
+        endForEach
+        forEach (t in Tessellator.triangle_indices)
+          mesh.add( t.a+i0, t.b+i0, t.c+i0 )
+        endForEach
+      endIf
+
+      return mesh
+
     method split( columns:Int, rows:Int )->Texture[]
       local result = Texture[]( columns * rows )
       local sz = size / XY(columns,rows)

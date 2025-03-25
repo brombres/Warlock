@@ -156,6 +156,16 @@ class Renderer [singleton]
         )
       endIf
 
+    method fill( mesh:Mesh, shader=Shader.ALPHA_COLOR )
+      clear_textures
+      draw_triangles
+      data.add( mesh, first_vertex )
+
+    method fill( mesh:Mesh, texture:Texture, shader=Shader.ALPHA_TEXTURE, mipmap_level=-1:Int )
+      set_texture( texture, &=mipmap_level )
+      draw_triangles
+      data.add( mesh, first_vertex )
+
     method .generate_quad( tl:Vertex, tr:Vertex, br:Vertex, bl:Vertex, subdivisions:XY )
       if (subdivisions.x > 0)
         local tc = tl.avg(tr)
