@@ -1,6 +1,6 @@
 library Warlock
 
-class MeshBuilder
+class Mesh
   PROPERTIES
     vertices = Vertex[]
     indices  = Int[]
@@ -23,7 +23,7 @@ class MeshBuilder
     method add( indices:Int[] )
       this.indices.add( indices )
 
-    method add( other:MeshBuilder, first_vertex=0:Int )
+    method add( other:Mesh, first_vertex=0:Int )
       vertices.reserve( other.vertices.count )
       indices.reserve( other.indices.count )
       local i0 = this.vertices.count - first_vertex

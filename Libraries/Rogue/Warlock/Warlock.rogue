@@ -27,7 +27,7 @@ $include Warlock/Image/RenderTargetImage
 $include Warlock/Image/TextureImage
 $include Warlock/Line
 $include Warlock/Log
-$include Warlock/MeshBuilder
+$include Warlock/Mesh
 $include Warlock/OverlayLog
 $include Warlock/ProjectionMode
 $include Warlock/Quad

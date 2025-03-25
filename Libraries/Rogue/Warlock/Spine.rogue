@@ -368,7 +368,7 @@ endClass
 class SpineAnimation
   GLOBAL PROPERTIES
     world_vertex_positions = Real32[]
-    mesh_builder = MeshBuilder()
+    mesh_builder = Mesh()
     animation_lookup = Table<<Int64,WeakReference<<SpineAnimation>>>>()
 
   GLOBAL METHODS

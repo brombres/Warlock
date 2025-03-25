@@ -4,7 +4,7 @@ class Renderer [singleton]
   PROPERTIES
     is_initialized : Logical
     frame          : Int
-    data           = MeshBuilder(6144)
+    data           = Mesh(6144)
     primitive_type = <triangles>
     first_vertex   : Int
     first_index    : Int
