@@ -1,0 +1,55 @@
+library Warlock
+
+class RenderMode
+  GLOBAL PROPERTIES
+    # These are initialized in BGFX.
+    ALPHA_COLOR             : RenderMode
+    ALPHA_COLOR_ADDITIVE    : RenderMode
+    ALPHA_TEXTURE           : RenderMode
+    ALPHA_TEXTURE_ADDITIVE  : RenderMode
+    ALPHA_TEXTURE_NO_MIPMAP : RenderMode
+
+  PROPERTIES
+    shader            : Shader
+    source_blend      = BlendMode.ONE                  : BlendMode
+    destination_blend = BlendMode.INVERSE_SOURCE_ALPHA : BlendMode
+    mipmap_level      = -1   # -1 is automatic
+
+  METHODS
+    method apply
+      noAction  # augmented by specialized Renderer, e.g. BGFX augments to call apply_bgfx
+endClass
+
+class RenderModeAlphaColor : RenderMode [singleton]
+  PROPERTIES
+    shader = Shader.ALPHA_COLOR : Shader
+endClass
+
+
+class RenderModeAlphaColorAdditive : RenderMode [singleton]
+  PROPERTIES
+    shader            = Shader.ALPHA_COLOR : Shader
+    source_blend      = BlendMode.ONE      : BlendMode
+    destination_blend = BlendMode.ONE      : BlendMode
+endClass
+
+
+class RenderModeAlphaTexture : RenderMode [singleton]
+  PROPERTIES
+    shader = Shader.ALPHA_TEXTURE : Shader
+endClass
+
+
+class RenderModeAlphaTextureAdditive : RenderMode [singleton]
+  PROPERTIES
+    shader            = Shader.ALPHA_TEXTURE : Shader
+    source_blend      = BlendMode.ONE : BlendMode
+    destination_blend = BlendMode.ONE : BlendMode
+endClass
+
+
+class RenderModeAlphaTextureNoMipMap : RenderModeAlphaTexture [singleton]
+  PROPERTIES
+    mipmap_level = 0
+endClass
+

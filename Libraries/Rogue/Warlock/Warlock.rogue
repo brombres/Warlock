@@ -30,8 +30,10 @@ $include Warlock/Line
 $include Warlock/Log
 $include Warlock/Mesh
 $include Warlock/OverlayLog
+$include Warlock/PrimitiveType
 $include Warlock/ProjectionMode
 $include Warlock/Quad
+$include Warlock/RenderMode
 $include Warlock/Renderer
 $include Warlock/RenderTargetTexture
 $include Warlock/RendererBatch

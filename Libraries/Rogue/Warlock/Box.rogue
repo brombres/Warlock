@@ -5,21 +5,21 @@ uses Warlock
 
 augment Box
   METHODS
-    method draw( color:Color, shader=Shader.ALPHA_COLOR:Shader, thickness=1.0:Real )
-      Box( position, thickness, size.y ).fill( color, shader )
-      Box( position+XY(size.x-thickness,0), thickness, size.y ).fill( color, shader )
+    method draw( color:Color, render_mode=RenderMode.ALPHA_COLOR:RenderMode, thickness=1.0:Real )
+      Box( position, thickness, size.y ).fill( color, render_mode )
+      Box( position+XY(size.x-thickness,0), thickness, size.y ).fill( color, render_mode )
       if (size.x > thickness*2)
-        Box( position+XY(thickness,0), size.x-thickness*2, thickness ).fill( color, shader )
-        Box( position+XY(thickness,size.y-thickness), size.x-thickness*2, thickness ).fill( color, shader )
+        Box( position+XY(thickness,0), size.x-thickness*2, thickness ).fill( color, render_mode )
+        Box( position+XY(thickness,size.y-thickness), size.x-thickness*2, thickness ).fill( color, render_mode )
       endIf
 
-    method fill( color:Color, shader=Shader.ALPHA_COLOR:Shader )
-      Renderer.fill( this, color, shader )
+    method fill( color:Color, render_mode=RenderMode.ALPHA_COLOR:RenderMode )
+      Renderer.fill( this, color, render_mode )
 
-    method fill( tl:Color, tr:Color, br:Color, bl:Color, shader=Shader.ALPHA_COLOR:Shader )
-      Renderer.fill( this, tl, tr, br, bl, shader )
+    method fill( tl:Color, tr:Color, br:Color, bl:Color, render_mode=RenderMode.ALPHA_COLOR:RenderMode )
+      Renderer.fill( this, tl, tr, br, bl, render_mode )
 
-    method fill( texture:Texture, color=Color.WHITE:Color, shader=Shader.ALPHA_TEXTURE:Shader, mipmap_level=-1:Int )
-      Renderer.fill( this, texture, color, shader, &=mipmap_level )
+    method fill( texture:Texture, color=Color.WHITE:Color, render_mode=RenderMode.ALPHA_TEXTURE:RenderMode )
+      Renderer.fill( this, texture, color, render_mode )
 endAugment
 

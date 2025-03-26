@@ -87,6 +87,12 @@ class BGFX : Renderer [singleton]
       Shader.ALPHA_TEXTURE_ADDITIVE = Shader( "AlphaTexture", BlendMode.ONE, BlendMode.ONE )
       Shader.ALPHA_TEXTURE_LIT      = Shader( "AlphaTextureLit" )
 
+      RenderMode.ALPHA_COLOR             = RenderModeAlphaColor
+      RenderMode.ALPHA_COLOR_ADDITIVE    = RenderModeAlphaColorAdditive
+      RenderMode.ALPHA_TEXTURE           = RenderModeAlphaTexture
+      RenderMode.ALPHA_TEXTURE_ADDITIVE  = RenderModeAlphaTextureAdditive
+      RenderMode.ALPHA_TEXTURE_NO_MIPMAP = RenderModeAlphaTextureNoMipMap
+
       is_initialized = true
 
     method configure_canvas( canvas:Canvas )
@@ -221,22 +227,24 @@ class BGFX : Renderer [singleton]
           set_clip( clip )
         endIf
 
+        local render_mode = batch.render_mode
+
         local transform = batch.transform->Matrix32
         native @|bgfx::setTransform( reinterpret_cast<float*>( &$transform ) );
 
-        local shader = batch.shader
-        shader.uniforms//u_mipmap_level = batch.mipmap_level
+        local shader = render_mode.shader
+        shader.uniforms//u_mipmap_level = batch.render_mode.mipmap_level
 
         local bgfx_state_flags = 0
         native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A);
-        bgfx_state_flags |= shader.blend_flags
+        bgfx_state_flags |= render_mode.blend_flags
         native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_WRITE_Z);
         #native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_CULL_CCW);
         #native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_DEPTH_TEST_LEQUAL);
         native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_DEPTH_TEST_ALWAYS);
         which (batch.primitive_type)
-          case <lines>:  native @|$bgfx_state_flags |= (RogueInt)BGFX_STATE_PT_LINES;
-          case <points>: native @|$bgfx_state_flags |= (RogueInt)BGFX_STATE_PT_POINTS;
+          case PrimitiveType.LINES:     native @|$bgfx_state_flags |= (RogueInt)BGFX_STATE_PT_LINES;
+          case PrimitiveType.POINTS:    native @|$bgfx_state_flags |= (RogueInt)BGFX_STATE_PT_POINTS;
         endWhich
 
         native
@@ -632,3 +640,48 @@ augment Shader
 
 endAugment
 
+augment RenderMode
+  METHODS
+    method apply
+      apply_bgfx
+
+    method apply_bgfx
+
+    method blend_flags->Int
+      local flags = 0
+      local src = 0
+      local dest = 0
+
+      which (source_blend)
+        case ONE
+          native @|$src = (RogueInt) BGFX_STATE_BLEND_ONE;
+        case ZERO
+          native @|$src = (RogueInt) BGFX_STATE_BLEND_ZERO;
+        case SOURCE_ALPHA
+          native @|$src = (RogueInt) BGFX_STATE_BLEND_SRC_ALPHA;
+        case INVERSE_SOURCE_ALPHA
+          native @|$src = (RogueInt) BGFX_STATE_BLEND_INV_SRC_ALPHA;
+        others
+          println "[BGFX] RenderMode.blend_flags unhandled blend mode $."(source_blend)
+      endWhich
+
+      which (destination_blend)
+        case ONE
+          native @|$dest = (RogueInt) BGFX_STATE_BLEND_ONE;
+        case ZERO
+          native @|$dest = (RogueInt) BGFX_STATE_BLEND_ZERO;
+        case SOURCE_ALPHA
+          native @|$dest = (RogueInt) BGFX_STATE_BLEND_SRC_ALPHA;
+        case INVERSE_SOURCE_ALPHA
+          native @|$dest = (RogueInt) BGFX_STATE_BLEND_INV_SRC_ALPHA;
+        others
+          println "[BGFX] RenderMode.blend_flags unhandled blend mode $."(destination_blend)
+      endWhich
+
+      native @|$flags = (RogueInt) BGFX_STATE_BLEND_FUNC(
+              |  (uint64_t)$src,
+              |  (uint64_t)$dest
+              |);
+
+      return flags
+endAugment

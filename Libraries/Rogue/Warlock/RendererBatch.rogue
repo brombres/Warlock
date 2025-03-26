@@ -2,16 +2,15 @@ library Warlock
 
 class RendererBatch(
   display_id:Int,
-  primitive_type:GlobalID,
+  primitive_type:PrimitiveType,
   first_vertex:Int,
   vertex_count:Int,
   first_index:Int,
   index_count:Int,
   transform:Matrix,
-  shader:Shader,
   texture:Texture,   # stage 0 only
   textures:Texture[], # multi-stage texture
   clip:Box?,
-  mipmap_level:Int
+  render_mode:RenderMode
 ) [compound]
 endClass

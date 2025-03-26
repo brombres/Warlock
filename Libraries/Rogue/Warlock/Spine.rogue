@@ -511,19 +511,19 @@ class SpineAnimation
        |  switch (slot->data->blendMode)
        |  {
        |     case SP_BLEND_MODE_NORMAL:
-               Renderer.shader = Shader.ALPHA_TEXTURE
+                Renderer.render_mode = RenderMode.ALPHA_TEXTURE
       native
       @|        break;
        |     case SP_BLEND_MODE_ADDITIVE:
-               Renderer.shader = Shader.ALPHA_TEXTURE_ADDITIVE
+                Renderer.render_mode = RenderMode.ALPHA_TEXTURE_ADDITIVE
       native
       @|        break;
        |     case SP_BLEND_MODE_MULTIPLY:
-               Renderer.shader = Shader.ALPHA_TEXTURE
+                Renderer.render_mode = RenderMode.ALPHA_TEXTURE
       native
       @|        break;
        |     case SP_BLEND_MODE_SCREEN:
-               @trace "TODO: SP_BLEND_MODE_ADDITIVE"
+               @trace "TODO: SP_BLEND_MODE_SCREEN"
                #mesh_builder.shader = ImageShader.TEXTURE_WITH_COLOR_SCREEN
                #mesh_builder.render_mode = RenderMode.ALPHA_IMAGE
       native

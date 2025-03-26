@@ -2,15 +2,6 @@ library Entity
 
 uses Warlock
 
-augment Entity::Entity
-  PROPERTIES
-    mipmap_level = -1
-
-  METHODS
-    method set_mipmap_level( @mipmap_level )
-      noAction
-endAugment
-
 augment Entity::Entity2D
   PROPERTIES
     position : XY

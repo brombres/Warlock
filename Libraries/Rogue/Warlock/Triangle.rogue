@@ -5,15 +5,15 @@ uses Graphics
 
 augment Triangle
   METHODS
-    method draw( color:Color, shader=Shader.ALPHA_COLOR:Shader, thickness=1.0:Real )
-      Line( a, b ).draw( color, shader, thickness )
-      Line( b, c ).draw( color, shader, thickness )
-      Line( c, a ).draw( color, shader, thickness )
+    method draw( color:Color, render_mode=RenderMode.ALPHA_COLOR:RenderMode, thickness=1.0:Real )
+      Line( a, b ).draw( color, render_mode, thickness )
+      Line( b, c ).draw( color, render_mode, thickness )
+      Line( c, a ).draw( color, render_mode, thickness )
 
-    method fill( color:Color, shader=Shader.ALPHA_COLOR:Shader )
-      Renderer.fill( this, color, shader )
+    method fill( color:Color, render_mode=RenderMode.ALPHA_COLOR:RenderMode )
+      Renderer.fill( this, color, render_mode )
 
-    method fill( texture:Texture, color=Color.WHITE:Color, shader=Shader.ALPHA_TEXTURE:Shader, mipmap_level=-1:Int )
-      Renderer.fill( this, texture, color, shader, &=mipmap_level )
+    method fill( texture:Texture, color=Color.WHITE:Color, render_mode=RenderMode.ALPHA_TEXTURE:RenderMode )
+      Renderer.fill( this, texture, color, render_mode )
 endAugment
 

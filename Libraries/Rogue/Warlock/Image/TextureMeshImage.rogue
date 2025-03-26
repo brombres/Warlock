@@ -9,7 +9,7 @@ class TextureMeshImage : TextureImage
       prior.init( texture )
       reset_size( XY(1,1) )
 
-    method init( texture, polygon:XY[] )
+    method init( texture, polygon:XY[], extrude=0.0:Real )
       init( texture, texture.polygon_mesh(polygon) )
       mesh.translate( XY(0.5,0.5) - mesh.centroid  )
 
@@ -18,5 +18,5 @@ class TextureMeshImage : TextureImage
       mesh = existing.mesh
 
     method .draw_entity [override]
-      mesh.fill( texture, shader || Shader.ALPHA_TEXTURE )
+      mesh.fill( texture, render_mode || RenderMode.ALPHA_TEXTURE )
 endClass

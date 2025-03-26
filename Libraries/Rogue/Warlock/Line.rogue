@@ -3,12 +3,12 @@ uses Graphics/Color
 
 augment Geometry::Line
   METHODS
-    method draw( color:Graphics::Color, shader=Shader.ALPHA_COLOR:Warlock::Shader, thickness=1.0:Real )
-      Warlock::Renderer.draw( this, color, shader, thickness )
+    method draw( color:Graphics::Color, render_mode=RenderMode.ALPHA_COLOR:Warlock::RenderMode, thickness=1.0:Real )
+      Warlock::Renderer.draw( this, color, render_mode, thickness )
 endAugment
 
 augment Geometry::Line<<Geometry::XYZ>>
   METHODS
-    method draw( color:Graphics::Color, shader=Shader.ALPHA_COLOR:Warlock::Shader, thickness=1.0:Real )
-      Warlock::Renderer.draw( this, color, shader, thickness )
+    method draw( color:Graphics::Color, render_mode=RenderMode.ALPHA_COLOR:Warlock::RenderMode, thickness=1.0:Real )
+      Warlock::Renderer.draw( this, color, render_mode, thickness )
 endAugment

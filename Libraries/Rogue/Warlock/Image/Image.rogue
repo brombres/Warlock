@@ -26,7 +26,7 @@ class Image : Drawable2D
       Renderer.fill(
         Box(nominal_size),
         color.value,
-        shader||Shader.ALPHA_COLOR,
+        render_mode||RenderMode.ALPHA_COLOR,
         subdivisions
       )
 
@@ -103,8 +103,8 @@ augment Image[]
     method set_scale( scale:XY )
       (forEach in this).scale = scale
 
-    method set_shader( shader:Shader )
-      (forEach in this).shader = shader
+    method set_render_mode( render_mode:RenderMode )
+      (forEach in this).render_mode = render_mode
 
     method set_size( size:XY )
       (forEach in this).size = size
@@ -114,8 +114,5 @@ augment Image[]
 
     method set_subdivisions( subdivisions:XY )
       (forEach in this).subdivisions = subdivisions
-
-    method set_mipmap_level( level:Int )
-      (forEach in this).mipmap_level = level
 
 endAugment

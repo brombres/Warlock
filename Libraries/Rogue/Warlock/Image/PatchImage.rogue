@@ -14,7 +14,7 @@ class PatchImage : Image
     method init( asset_name:String, border_scale=1.0 )
       prior.init
 
-      patches = Image[]( asset_name ).[ anchor=Anchor.TOP_LEFT, mipmap_level=0 ]
+      patches = Image[]( asset_name ).[ anchor=Anchor.TOP_LEFT, render_mode=RenderMode.ALPHA_TEXTURE_NO_MIPMAP ]
       patch_count = patches.count
       if (patch_count < 8 or patch_count > 9)
         println ''PatchImage("$") expects asset to be image list of 8 or 9 images.''(asset_name)
@@ -153,9 +153,6 @@ class PatchImage : Image
         patches[7].draw( Box(x7,y7,w7,h7) )
         if (w8) patches[8].draw( Box(x8,y8,w8,h8) )
       endIf
-
-    method set_mipmap_level( @mipmap_level )
-      if (patches) patches.mipmap_level = mipmap_level
 
     method set_truncate_top( setting:Logical )
       .truncate_top = setting
