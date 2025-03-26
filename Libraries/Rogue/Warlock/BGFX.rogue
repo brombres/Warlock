@@ -85,6 +85,7 @@ class BGFX : Renderer [singleton]
       Shader.ALPHA_TEXTURE = Shader( "AlphaTexture" )
       Shader.ALPHA_COLOR_ADDITIVE   = Shader( "AlphaColor", BlendMode.ONE, BlendMode.ONE )
       Shader.ALPHA_TEXTURE_ADDITIVE = Shader( "AlphaTexture", BlendMode.ONE, BlendMode.ONE )
+      Shader.ALPHA_TEXTURE_LIT      = Shader( "AlphaTextureLit" )
 
       is_initialized = true
 
@@ -403,6 +404,26 @@ augment ShaderProgram
           min_count .= or_larger( (forEach in listing).count )
           listing.discard( $.count > min_count )
         endIf
+
+        contingent
+          sufficient (listing.count <= 2)
+
+          local refined = listing.keeping( $.contains("$-"(filename)) )
+          if (refined.count) listing = refined
+          sufficient (listing.count <= 2)
+
+          refined = listing.keeping( $.contains("$_"(filename)) )
+          if (refined.count) listing = refined
+          sufficient (listing.count <= 2)
+
+          refined = listing.keeping( $.contains("-$"(filename)) )
+          if (refined.count) listing = refined
+          sufficient (listing.count <= 2)
+
+          refined = listing.keeping( $.contains("_$"(filename)) )
+          if (refined.count) listing = refined
+        endContingent
+
         if (listing.count == 2)
           local fs = listing.first
           local vs = listing.last
@@ -412,10 +433,16 @@ augment ShaderProgram
             println "[Warlock] Error loading BGFX shader: $"(filename)
           endIf
           return this
+        elseIf (listing.count > 2)
+          local filenames = listing.modified( File($).filename ).join(",")
+          println "Multiple shaders matching '$': [$]"(filename,filenames)
+        else
+          println "Shader not found: " + filename
         endIf
+      else
+        println "Shader not found: " + filename
       endIf
 
-      println "Shader not found: " + filename
       return this
 
     method exists->Logical

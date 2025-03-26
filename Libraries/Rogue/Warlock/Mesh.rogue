@@ -43,6 +43,11 @@ class Mesh
       this.vertices.add( vertices )
       return index
 
+    method centroid->XY
+      local sum : XYZ
+      sum += vertices[forEach in indices].position
+      return sum / indices.count
+
     method clear
       vertices.clear
       indices.clear

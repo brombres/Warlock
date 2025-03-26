@@ -25,6 +25,7 @@ $include Warlock/Image/ImageInfo
 $include Warlock/Image/PatchImage
 $include Warlock/Image/RenderTargetImage
 $include Warlock/Image/TextureImage
+$include Warlock/Image/TextureMeshImage
 $include Warlock/Line
 $include Warlock/Log
 $include Warlock/Mesh

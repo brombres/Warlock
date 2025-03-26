@@ -52,6 +52,33 @@ augment Image[]
         println "No such image collection: " + asset_name
       endIf
 
+    method anchor_top_left
+      (forEach in this).anchor_top_left
+
+    method anchor_top
+      (forEach in this).anchor_top
+
+    method anchor_top_right
+      (forEach in this).anchor_top_right
+
+    method anchor_left
+      (forEach in this).anchor_left
+
+    method anchor_center
+      (forEach in this).anchor_center
+
+    method anchor_right
+      (forEach in this).anchor_right
+
+    method anchor_bottom_left
+      (forEach in this).anchor_bottom_left
+
+    method anchor_bottom
+      (forEach in this).anchor_bottom
+
+    method anchor_bottom_right
+      (forEach in this).anchor_bottom_right
+
     method reset_size( size:XY )
       (forEach in this).reset_size( size )
 

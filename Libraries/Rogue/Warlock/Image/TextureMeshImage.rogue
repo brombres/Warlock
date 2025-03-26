@@ -1,0 +1,22 @@
+library Warlock
+
+class TextureMeshImage : TextureImage
+  PROPERTIES
+    mesh : Mesh
+
+  METHODS
+    method init( texture, mesh )
+      prior.init( texture )
+      reset_size( XY(1,1) )
+
+    method init( texture, polygon:XY[] )
+      init( texture, texture.polygon_mesh(polygon) )
+      mesh.translate( XY(0.5,0.5) - mesh.centroid  )
+
+    method init( existing:TextureMeshImage )
+      prior.init( existing )
+      mesh = existing.mesh
+
+    method .draw_entity [override]
+      mesh.fill( texture, shader || Shader.ALPHA_TEXTURE )
+endClass

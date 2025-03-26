@@ -6,6 +6,7 @@ class Shader
     ALPHA_TEXTURE          : Shader
     ALPHA_COLOR_ADDITIVE   : Shader
     ALPHA_TEXTURE_ADDITIVE : Shader
+    ALPHA_TEXTURE_LIT      : Shader
 
   PROPERTIES
     program      : ShaderProgram
