@@ -1,0 +1,7 @@
+library Warlock
+
+enum CullingMode
+  NONE
+  CW
+  CCW
+endEnum
