@@ -2,9 +2,9 @@ library Warlock
 
 class Shader
   GLOBAL PROPERTIES
-    ALPHA_COLOR       : Shader
-    ALPHA_TEXTURE     : Shader
-    ALPHA_TEXTURE_LIT : Shader
+    ALPHA_COLOR   : Shader
+    ALPHA_TEXTURE : Shader
+    LIT_TEXTURE   : Shader
 
   PROPERTIES
     program      : ShaderProgram

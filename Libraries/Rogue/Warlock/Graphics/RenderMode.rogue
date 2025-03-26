@@ -2,12 +2,13 @@ library Warlock
 
 class RenderMode
   GLOBAL PROPERTIES
-    # These are initialized in BGFX.
+    # These are initialized in BGFX after shaders have been created.
     ALPHA_COLOR             : RenderMode
     ALPHA_COLOR_ADDITIVE    : RenderMode
     ALPHA_TEXTURE           : RenderMode
     ALPHA_TEXTURE_ADDITIVE  : RenderMode
     ALPHA_TEXTURE_NO_MIPMAP : RenderMode
+    LIT_TEXTURE             : RenderMode
 
   PROPERTIES
     shader            : Shader
@@ -54,3 +55,7 @@ class RenderModeAlphaTextureNoMipMap : RenderModeAlphaTexture [singleton]
     mipmap_level = 0
 endClass
 
+class RenderModeLitTexture : RenderMode [singleton]
+  PROPERTIES
+    shader = Shader.LIT_TEXTURE : Shader
+endClass

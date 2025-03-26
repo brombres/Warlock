@@ -2,7 +2,8 @@ library Warlock
 
 class TextureMeshImage : TextureImage
   PROPERTIES
-    mesh : Mesh
+    mesh        : Mesh
+    render_mode = RenderMode.LIT_TEXTURE : RenderMode
 
   METHODS
     method init( texture, mesh )

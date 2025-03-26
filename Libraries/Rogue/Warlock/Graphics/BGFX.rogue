@@ -83,13 +83,14 @@ class BGFX : Renderer [singleton]
 
       Shader.ALPHA_COLOR   = Shader( "AlphaColor" )
       Shader.ALPHA_TEXTURE = Shader( "AlphaTexture" )
-      Shader.ALPHA_TEXTURE_LIT      = Shader( "AlphaTextureLit" )
+      Shader.LIT_TEXTURE   = Shader( "LitTexture" )
 
       RenderMode.ALPHA_COLOR             = RenderModeAlphaColor
       RenderMode.ALPHA_COLOR_ADDITIVE    = RenderModeAlphaColorAdditive
       RenderMode.ALPHA_TEXTURE           = RenderModeAlphaTexture
       RenderMode.ALPHA_TEXTURE_ADDITIVE  = RenderModeAlphaTextureAdditive
       RenderMode.ALPHA_TEXTURE_NO_MIPMAP = RenderModeAlphaTextureNoMipMap
+      RenderMode.LIT_TEXTURE             = RenderModeLitTexture
 
       is_initialized = true
 
