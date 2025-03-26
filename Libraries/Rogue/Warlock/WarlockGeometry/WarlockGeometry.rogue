@@ -1,3 +1,0 @@
-library Warlock
-
-$include WarlockGeometry/Tessellator

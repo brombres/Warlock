@@ -387,8 +387,8 @@ routine compile_rogue( platform:String, &debug, &rebuild )
   local source_filename = "RogueProgram.$"(which{ is_apple:"mm" || "cpp" })
   if (rebuild or files.any_newer_than(source_folder/source_filename))
     block cmd = "roguec Source/Main.rogue Warlock"
-      cmd .= appending( "Warlock/SDL" )
-      cmd .= appending( "Warlock/BGFX" )
+      cmd .= appending( "Warlock/Framework/SDL" )
+      cmd .= appending( "Warlock/Graphics/BGFX" )
       cmd .= appending( "Warlock/Platform/$.rogue"(platform) )
       if (debug) cmd .= appending( "--debug" )
 

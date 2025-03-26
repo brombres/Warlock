@@ -1,8 +1,5 @@
 library Warlock
 
-$include WarlockUI/ColorFillComponent
-$include WarlockUI/ImageComponent
-
 class WarlockUI : UI
   PROPERTIES
     default_font = SystemFont
