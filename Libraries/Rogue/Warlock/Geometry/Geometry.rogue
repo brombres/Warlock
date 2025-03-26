@@ -1,3 +1,7 @@
 library Warlock
 
-$include Geometry/Tessellator
+$include Warlock/Geometry/Box
+$include Warlock/Geometry/Line
+$include Warlock/Geometry/Quad
+$include Warlock/Geometry/Tessellator
+$include Warlock/Geometry/Triangle

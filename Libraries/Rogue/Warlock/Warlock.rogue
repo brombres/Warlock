@@ -4,50 +4,15 @@ nativeHeader @|#include "WarlockInterface.h"
 
 $include Warlock/Macros
 
-$include Warlock/Data/AppData
-$include Warlock/Data/AssetInfo
-$include Warlock/Data/AssetManager
-$include Warlock/Display/Canvas
-$include Warlock/Display/Display
-$include Warlock/Display/IDManager
-$include Warlock/Display/Window
+$include Warlock/Data
+$include Warlock/Display
 $include Warlock/Framework/Framework
-$include Warlock/Control/Screen
-$include Warlock/Control/State
-$include Warlock/Control/WarlockState
+$include Warlock/Control
 $include Warlock/Entity/Entity
 $include Warlock/Geometry
-$include Warlock/Geometry/Box
-$include Warlock/Geometry/Line
-$include Warlock/Geometry/Quad
-$include Warlock/Geometry/Triangle
-$include Warlock/Graphics/Bitmap
-$include Warlock/Graphics/BitmapIO
-$include Warlock/Graphics/BlendMode
-$include Warlock/Graphics/Drawable2D
-$include Warlock/Graphics/Font
-$include Warlock/Graphics/Image/ColorFillImage
-$include Warlock/Graphics/Image/Image
-$include Warlock/Graphics/Image/ImageInfo
-$include Warlock/Graphics/Image/PatchImage
-$include Warlock/Graphics/Image/RenderTargetImage
-$include Warlock/Graphics/Image/TextureImage
-$include Warlock/Graphics/Image/TextureMeshImage
-$include Warlock/Graphics/Mesh
-$include Warlock/Graphics/PrimitiveType
-$include Warlock/Graphics/ProjectionMode
-$include Warlock/Graphics/RenderMode
-$include Warlock/Graphics/RenderTargetTexture
-$include Warlock/Graphics/Renderer
-$include Warlock/Graphics/RendererBatch
-$include Warlock/Graphics/Shader
-$include Warlock/Graphics/Spine
-$include Warlock/Graphics/SystemFont
-$include Warlock/Graphics/Texture
-$include Warlock/Graphics/Vertex
+$include Warlock/Graphics
 $include Warlock/UI
-$include Warlock/Utility/Log
-$include Warlock/Utility/OverlayLog
+$include Warlock/Utility
 
 uses Control/State [export]
 uses Entity        [export]

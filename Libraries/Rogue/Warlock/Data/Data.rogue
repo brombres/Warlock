@@ -1,0 +1,5 @@
+library Warlock
+
+$include Warlock/Data/AppData
+$include Warlock/Data/AssetInfo
+$include Warlock/Data/AssetManager

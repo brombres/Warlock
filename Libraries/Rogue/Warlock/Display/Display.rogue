@@ -1,5 +1,9 @@
 library Warlock
 
+$include Warlock/Display/Canvas
+$include Warlock/Display/IDManager
+$include Warlock/Display/Window
+
 class Display [singleton]
   AUTO_ID
 

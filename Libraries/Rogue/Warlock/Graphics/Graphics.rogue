@@ -1,0 +1,26 @@
+library Warlock
+
+$include Warlock/Graphics/Bitmap
+$include Warlock/Graphics/BitmapIO
+$include Warlock/Graphics/BlendMode
+$include Warlock/Graphics/Drawable2D
+$include Warlock/Graphics/Font
+$include Warlock/Graphics/Image/ColorFillImage
+$include Warlock/Graphics/Image/Image
+$include Warlock/Graphics/Image/ImageInfo
+$include Warlock/Graphics/Image/PatchImage
+$include Warlock/Graphics/Image/RenderTargetImage
+$include Warlock/Graphics/Image/TextureImage
+$include Warlock/Graphics/Image/TextureMeshImage
+$include Warlock/Graphics/Mesh
+$include Warlock/Graphics/PrimitiveType
+$include Warlock/Graphics/ProjectionMode
+$include Warlock/Graphics/RenderMode
+$include Warlock/Graphics/RenderTargetTexture
+$include Warlock/Graphics/Renderer
+$include Warlock/Graphics/RendererBatch
+$include Warlock/Graphics/Shader
+$include Warlock/Graphics/Spine
+$include Warlock/Graphics/SystemFont
+$include Warlock/Graphics/Texture
+$include Warlock/Graphics/Vertex
