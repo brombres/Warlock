@@ -2,20 +2,16 @@ library Warlock
 
 class Shader
   GLOBAL PROPERTIES
-    ALPHA_COLOR            : Shader
-    ALPHA_TEXTURE          : Shader
-    ALPHA_COLOR_ADDITIVE   : Shader
-    ALPHA_TEXTURE_ADDITIVE : Shader
-    ALPHA_TEXTURE_LIT      : Shader
+    ALPHA_COLOR       : Shader
+    ALPHA_TEXTURE     : Shader
+    ALPHA_TEXTURE_LIT : Shader
 
   PROPERTIES
     program      : ShaderProgram
-    source_blend : BlendMode
-    dest_blend   : BlendMode
     uniforms     : ShaderUniforms
 
   METHODS
-    method init( filename:String, source_blend=BlendMode.ONE, dest_blend=BlendMode.INVERSE_SOURCE_ALPHA )
+    method init( filename:String )
       program = ShaderProgram( filename )
 
     method apply_uniforms

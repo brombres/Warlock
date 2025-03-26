@@ -83,8 +83,6 @@ class BGFX : Renderer [singleton]
 
       Shader.ALPHA_COLOR   = Shader( "AlphaColor" )
       Shader.ALPHA_TEXTURE = Shader( "AlphaTexture" )
-      Shader.ALPHA_COLOR_ADDITIVE   = Shader( "AlphaColor", BlendMode.ONE, BlendMode.ONE )
-      Shader.ALPHA_TEXTURE_ADDITIVE = Shader( "AlphaTexture", BlendMode.ONE, BlendMode.ONE )
       Shader.ALPHA_TEXTURE_LIT      = Shader( "AlphaTextureLit" )
 
       RenderMode.ALPHA_COLOR             = RenderModeAlphaColor
@@ -239,7 +237,14 @@ class BGFX : Renderer [singleton]
         native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A);
         bgfx_state_flags |= render_mode.blend_flags
         native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_WRITE_Z);
-        #native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_CULL_CCW);
+
+        which (render_mode.culling_mode)
+          case CullingMode.CW
+            native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_CULL_CW);
+          case CullingMode.CCW
+            native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_CULL_CCW);
+        endWhich
+
         #native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_DEPTH_TEST_LEQUAL);
         native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_DEPTH_TEST_ALWAYS);
         which (batch.primitive_type)
@@ -597,48 +602,6 @@ augment Window
   METHODS
 endAugment
 
-
-augment Shader
-  METHODS
-    method blend_flags->Int
-      local flags = 0
-      local src = 0
-      local dest = 0
-
-      which (source_blend)
-        case ONE
-          native @|$src = (RogueInt) BGFX_STATE_BLEND_ONE;
-        case ZERO
-          native @|$src = (RogueInt) BGFX_STATE_BLEND_ZERO;
-        case SOURCE_ALPHA
-          native @|$src = (RogueInt) BGFX_STATE_BLEND_SRC_ALPHA;
-        case INVERSE_SOURCE_ALPHA
-          native @|$src = (RogueInt) BGFX_STATE_BLEND_INV_SRC_ALPHA;
-        others
-          println "[BGFX] Shader.blend_flags unhandled blend mode $."(source_blend)
-      endWhich
-
-      which (dest_blend)
-        case ONE
-          native @|$dest = (RogueInt) BGFX_STATE_BLEND_ONE;
-        case ZERO
-          native @|$dest = (RogueInt) BGFX_STATE_BLEND_ZERO;
-        case SOURCE_ALPHA
-          native @|$dest = (RogueInt) BGFX_STATE_BLEND_SRC_ALPHA;
-        case INVERSE_SOURCE_ALPHA
-          native @|$dest = (RogueInt) BGFX_STATE_BLEND_INV_SRC_ALPHA;
-        others
-          println "[BGFX] Shader.blend_flags unhandled blend mode $."(dest_blend)
-      endWhich
-
-      native @|$flags = (RogueInt) BGFX_STATE_BLEND_FUNC(
-              |  (uint64_t)$src,
-              |  (uint64_t)$dest
-              |);
-
-      return flags
-
-endAugment
 
 augment RenderMode
   METHODS

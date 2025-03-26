@@ -14,6 +14,7 @@ class RenderMode
     source_blend      = BlendMode.ONE                  : BlendMode
     destination_blend = BlendMode.INVERSE_SOURCE_ALPHA : BlendMode
     mipmap_level      = -1   # -1 is automatic
+    culling_mode      = CullingMode.NONE : CullingMode
 
   METHODS
     method apply
