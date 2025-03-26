@@ -45,9 +45,9 @@ class TextureImage : Image
         local h_flip = attributes.h_flip
         local v_flip = attributes.v_flip
         local render_mode = render_mode || RenderMode.ALPHA_TEXTURE
-        Renderer.fill( bounds, texture, color, render_mode, &=subdivisions, &=h_flip, &=v_flip )
+        Renderer.draw( bounds, texture, color, render_mode, &=subdivisions, &=h_flip, &=v_flip )
       else
-        Renderer.fill( bounds, color, render_mode||RenderMode.ALPHA_COLOR, &=subdivisions )
+        Renderer.draw( bounds, color, render_mode||RenderMode.ALPHA_COLOR, &=subdivisions )
       endIf
 
 endClass

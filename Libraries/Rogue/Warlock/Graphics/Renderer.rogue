@@ -62,7 +62,7 @@ class Renderer [singleton]
     method draw_triangles
       primitive_type = PrimitiveType.TRIANGLES
 
-    method fill( box:Box, color:Color, render_mode=RenderMode.ALPHA_COLOR, subdivisions=XY(0,0):XY )
+    method draw( box:Box, color:Color, render_mode=RenderMode.ALPHA_COLOR, subdivisions=XY(0,0):XY )
       clear_textures
       draw_triangles
       if (subdivisions.sum == 0)
@@ -87,7 +87,7 @@ class Renderer [singleton]
         )
       endIf
 
-    method fill( box:Box, tl:Color, tr:Color, br:Color, bl:Color,
+    method draw( box:Box, tl:Color, tr:Color, br:Color, bl:Color,
         render_mode=RenderMode.ALPHA_COLOR, subdivisions=XY(0,0):XY )
       clear_textures
       draw_triangles
@@ -113,7 +113,7 @@ class Renderer [singleton]
         )
       endIf
 
-    method fill( box:Box, texture:Texture, color:Color, render_mode=RenderMode.ALPHA_TEXTURE,
+    method draw( box:Box, texture:Texture, color:Color, render_mode=RenderMode.ALPHA_TEXTURE,
         subdivisions=XY(0,0):XY, &h_flip, &v_flip )
       set_texture( texture )
       draw_triangles
@@ -155,12 +155,12 @@ class Renderer [singleton]
         )
       endIf
 
-    method fill( mesh:Mesh, render_mode=RenderMode.ALPHA_COLOR )
+    method draw( mesh:Mesh, render_mode=RenderMode.ALPHA_COLOR )
       clear_textures
       draw_triangles
       data.add( mesh, first_vertex )
 
-    method fill( mesh:Mesh, texture:Texture, render_mode=RenderMode.ALPHA_TEXTURE )
+    method draw( mesh:Mesh, texture:Texture, render_mode=RenderMode.ALPHA_TEXTURE )
       set_texture( texture )
       draw_triangles
       data.add( mesh, first_vertex )
@@ -189,7 +189,7 @@ class Renderer [singleton]
 
       endIf
 
-    method fill( triangle:Triangle, color:Color, render_mode=RenderMode.ALPHA_COLOR )
+    method draw( triangle:Triangle, color:Color, render_mode=RenderMode.ALPHA_COLOR )
       clear_textures
       draw_triangles
       local i0 = data.vertices.count - first_vertex
@@ -198,7 +198,7 @@ class Renderer [singleton]
       data.add Vertex( triangle.c, color )
       data.add( i0, i0+1, i0+2 )
 
-    method fill( triangle:Triangle, texture:Texture, color:Color, render_mode=RenderMode.ALPHA_TEXTURE )
+    method draw( triangle:Triangle, texture:Texture, color:Color, render_mode=RenderMode.ALPHA_TEXTURE )
       set_texture( texture )
       draw_triangles
       local i0 = data.vertices.count - first_vertex

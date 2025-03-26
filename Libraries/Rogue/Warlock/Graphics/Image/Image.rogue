@@ -23,7 +23,7 @@ class Image : Drawable2D
     method fill( color=null:Color? )
       if (not color) color = this.color
 
-      Renderer.fill(
+      Renderer.draw(
         Box(nominal_size),
         color.value,
         render_mode||RenderMode.ALPHA_COLOR,

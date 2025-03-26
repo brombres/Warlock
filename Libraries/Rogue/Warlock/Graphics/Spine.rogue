@@ -624,7 +624,7 @@ class SpineAnimation
                   mesh_builder.add( 2, 3, 0 )
                 endBlock
 
-                mesh_builder.fill( img.texture, &shader=Renderer.shader )
+                mesh_builder.draw( img.texture, &shader=Renderer.shader )
               endIf
             endIf
 
@@ -697,7 +697,7 @@ class SpineAnimation
                  mesh_builder.add( Vertex(pos, color, uv), &auto_index )
                endForEach
 
-               mesh_builder.fill( texture, &shader=Renderer.shader )
+               mesh_builder.draw( texture, &shader=Renderer.shader )
 
       native
       @|       //addVertex(worldVerticesPositions[index], worldVerticesPositions[index + 1],

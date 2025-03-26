@@ -18,5 +18,5 @@ class TextureMeshImage : TextureImage
       mesh = existing.mesh
 
     method .draw_entity [override]
-      mesh.fill( texture, render_mode || RenderMode.ALPHA_TEXTURE )
+      mesh.draw( texture, render_mode || RenderMode.ALPHA_TEXTURE )
 endClass

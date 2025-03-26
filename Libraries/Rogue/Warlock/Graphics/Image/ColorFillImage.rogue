@@ -35,5 +35,5 @@ class ColorGradientImage : ColorFillImage
       local br = bottom_right.with_opacity( opacity )
       local bl = bottom_left.with_opacity( opacity )
       local bounds = Box( nominal_size )
-      Renderer.fill( bounds, tl, tr, br, bl, render_mode||RenderMode.ALPHA_COLOR, &=subdivisions )
+      Renderer.draw( bounds, tl, tr, br, bl, render_mode||RenderMode.ALPHA_COLOR, &=subdivisions )
 endClass

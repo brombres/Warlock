@@ -5,18 +5,16 @@ uses Warlock
 
 augment Quad
   METHODS
-    method draw( color:Color, render_mode=RenderMode.ALPHA_COLOR:RenderMode, thickness=1.0:Int )
-      Line( a, b ).draw( color, render_mode, thickness )
-      Line( b, c ).draw( color, render_mode, thickness )
-      Line( c, d ).draw( color, render_mode, thickness )
-      Line( d, a ).draw( color, render_mode, thickness )
+    method draw( color:Color, render_mode=RenderMode.ALPHA_COLOR:RenderMode, thickness=1.0:Int, &outline )
+      if (outline)
+        Line( a, b ).draw( color, render_mode, thickness )
+        Line( b, c ).draw( color, render_mode, thickness )
+        Line( c, d ).draw( color, render_mode, thickness )
+        Line( d, a ).draw( color, render_mode, thickness )
+      else
+        Triangle( a, b, c ).draw( color, render_mode )
+        Triangle( a, c, d ).draw( color, render_mode )
+      endIf
 
-      #{
-    method fill( color:Color, render_mode=RenderMode.ALPHA_COLOR:RenderMode )
-      Renderer.fill( this, color, render_mode )
-
-    method fill( texture:Texture, color=Color.WHITE:Color, render_mode=RenderMode.ALPHA_TEXTURE:RenderMode )
-      Renderer.fill( this, texture, color, render_mode )
-      }#
 endAugment
 

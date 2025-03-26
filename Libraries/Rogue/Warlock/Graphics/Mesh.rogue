@@ -52,11 +52,11 @@ class Mesh
       vertices.clear
       indices.clear
 
-    method fill( render_mode=null:RenderMode )
-      Renderer.fill( this, render_mode||RenderMode.ALPHA_COLOR )
+    method draw( render_mode=null:RenderMode )
+      Renderer.draw( this, render_mode||RenderMode.ALPHA_COLOR )
 
-    method fill( texture:Texture, render_mode=null:RenderMode )
-      Renderer.fill( this, texture, render_mode||RenderMode.ALPHA_TEXTURE )
+    method draw( texture:Texture, render_mode=null:RenderMode )
+      Renderer.draw( this, texture, render_mode||RenderMode.ALPHA_TEXTURE )
       #Renderer.render_mode = render_mode || RenderMode.ALPHA_TEXTURE
       #Renderer.texture = texture
       #Renderer.draw_triangles
