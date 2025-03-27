@@ -15,7 +15,7 @@ $include Warlock/Graphics/Image/TextureImage
 $include Warlock/Graphics/Image/TextureMeshImage
 $include Warlock/Graphics/Mesh
 $include Warlock/Graphics/PrimitiveType
-$include Warlock/Graphics/ProjectionMode
+$include Warlock/Display/ProjectionMode
 $include Warlock/Graphics/RenderMode
 $include Warlock/Graphics/RenderTargetTexture
 $include Warlock/Graphics/Renderer

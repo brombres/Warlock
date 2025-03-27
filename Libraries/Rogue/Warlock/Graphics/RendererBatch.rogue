@@ -7,7 +7,7 @@ class RendererBatch(
   vertex_count:Int,
   first_index:Int,
   index_count:Int,
-  transform:Matrix,
+  view_projection:Matrix,
   texture:Texture,   # stage 0 only
   textures:Texture[], # multi-stage texture
   clip:Box?,

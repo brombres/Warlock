@@ -16,6 +16,8 @@ class Renderer [singleton]
     display_id     : Int
     swap_index     : Int
 
+    first_untransformed_vertex : Int
+
   METHODS
     method init
       Framework.configure
@@ -25,6 +27,21 @@ class Renderer [singleton]
 
     method activate_window_graphics_context( window:Window )
       print_error
+
+    method apply_object_transform
+      local vertex_count = data.vertices.count
+      if (first_untransformed_vertex == vertex_count) return
+
+      local transform = Display.transform
+      local vertices = data.vertices
+      forEach (i in first_untransformed_vertex..<vertex_count)
+        # TODO: optimize with native C code and a matrix library utilizing SIMD instructions.
+        local v = vertices[i]
+        v.position = (transform * v.position)->XYZ
+        vertices[i] = v
+      endForEach
+
+      first_untransformed_vertex = vertex_count
 
     method clear_textures
       if (textures.is_empty) return
@@ -210,6 +227,9 @@ class Renderer [singleton]
     method flush
       local index_count = data.indices.count
       if (index_count == first_index) return
+
+      apply_object_transform
+
       local vertex_count = data.vertices.count
 
       local batch_texture  : Texture
@@ -238,7 +258,7 @@ class Renderer [singleton]
           vertex_count - first_vertex,
           first_index,
           index_count - first_index,
-          Display.combined_transform,
+          Display.view_projection,
           batch_texture,
           batch_textures,
           clip,
@@ -279,6 +299,7 @@ class Renderer [singleton]
       draw_triangles
       first_vertex = 0
       first_index = 0
+      first_untransformed_vertex = 0
       clear_textures
       render_mode = RenderMode.ALPHA_TEXTURE
 

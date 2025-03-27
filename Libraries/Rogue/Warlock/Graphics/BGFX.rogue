@@ -228,8 +228,8 @@ class BGFX : Renderer [singleton]
 
         local render_mode = batch.render_mode
 
-        local transform = batch.transform->Matrix32
-        native @|bgfx::setTransform( reinterpret_cast<float*>( &$transform ) );
+        local view_projection = batch.view_projection->Matrix32
+        native @|bgfx::setTransform( reinterpret_cast<float*>( &$view_projection ) );
 
         local shader = render_mode.shader
         shader.uniforms//u_mipmap_level = batch.render_mode.mipmap_level

@@ -56,7 +56,8 @@ class Warlock [essential singleton]
     method init
       OverlayLog
       Log.println "Initializing Warlock"
-      <Display.transform_modified>.on_signal( () => Renderer.flush )
+      <Display.modify_view_projection>.on_signal( () => Renderer.flush )
+      <Display.modify_object_transform>.on_signal( () => Renderer.apply_object_transform )
 
     method add_window( window:Window )
       windows.add( window )
