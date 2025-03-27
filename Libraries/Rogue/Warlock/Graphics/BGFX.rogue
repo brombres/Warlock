@@ -246,8 +246,13 @@ class BGFX : Renderer [singleton]
             native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_CULL_CCW);
         endWhich
 
-        #native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_DEPTH_TEST_LEQUAL);
-        native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_DEPTH_TEST_ALWAYS);
+        which (render_mode.depth_test)
+          case DepthTest.LE
+            native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_DEPTH_TEST_LEQUAL);
+          others
+            native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_DEPTH_TEST_ALWAYS);
+        endWhich
+
         which (batch.primitive_type)
           case PrimitiveType.LINES:     native @|$bgfx_state_flags |= (RogueInt)BGFX_STATE_PT_LINES;
           case PrimitiveType.POINTS:    native @|$bgfx_state_flags |= (RogueInt)BGFX_STATE_PT_POINTS;

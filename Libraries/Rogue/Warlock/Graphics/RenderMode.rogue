@@ -17,6 +17,7 @@ class RenderMode
     mipmap_level      = -1   # -1 is automatic
     culling_mode      = CullingMode.NONE : CullingMode
     should_update_normals : Logical
+    depth_test        = DepthTest.DISABLED : DepthTest
 
   METHODS
     method apply
@@ -61,4 +62,5 @@ class RenderModeLitTexture : RenderMode [singleton]
     shader                = Shader.LIT_TEXTURE : Shader
     should_update_normals = true
     culling_mode          = CullingMode.CCW : CullingMode
+    depth_test            = DepthTest.LE    : DepthTest
 endClass

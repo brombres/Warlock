@@ -1,0 +1,6 @@
+library Warlock
+
+enum DepthTest
+  DISABLED
+  LE
+endEnum
