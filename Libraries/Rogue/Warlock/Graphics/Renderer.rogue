@@ -34,10 +34,14 @@ class Renderer [singleton]
 
       local transform = Display.transform
       local vertices = data.vertices
+      local should_update_normals = render_mode.should_update_normals
+      local rotation = Display.rotation
+
       forEach (i in first_untransformed_vertex..<vertex_count)
         # TODO: optimize with native C code and a matrix library utilizing SIMD instructions.
         local v = vertices[i]
         v.position = (transform * v.position)->XYZ
+        if (should_update_normals) v.normal = (rotation * v.normal)->XYZ
         vertices[i] = v
       endForEach
 

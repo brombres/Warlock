@@ -19,21 +19,22 @@ augment Entity::Entity2D
           Display.push_transform(
             Matrix.transform(
               XYZ(position,z),
-              size,
               anchor,
+              size,
               nominal_size,
               attributes.h_flip,
               attributes.v_flip
             )
           )
         else
+          Display.push_rotation( rotation )
           Display.push_transform(
             Matrix.transform(
               XYZ(position,z),
-              size,
               anchor,
-              rotation,
+              size,
               nominal_size,
+              rotation,
               attributes.h_flip,
               attributes.v_flip
             )

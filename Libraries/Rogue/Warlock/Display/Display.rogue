@@ -39,6 +39,8 @@ class Display [singleton]
     transforms            = Matrix[] # object transform stack
     view_projection_modified = true
     world_transform_modified = true
+    rotation              : Quaternion
+    rotation_stack        = Quaternion[]
 
     clip                  : Box?
     clip_stack            = Box?[]
@@ -91,6 +93,14 @@ class Display [singleton]
         clip = clip_stack.remove_last
       endIf
 
+    method push_rotation( q:Quaternion )
+      if (rotation_stack.count)
+        rotation_stack.add( rotation_stack.last * q )
+      else
+        rotation_stack.add( q )
+      endIf
+      set_rotation( rotation_stack.last, &preserve_stack )
+
     method push_transform( m:Matrix )
       if (transforms.count)
         transforms.add( transforms.last * m )
@@ -98,6 +108,13 @@ class Display [singleton]
         transforms.add( m )
       endIf
       set_transform( transforms.last, &preserve_stack )
+
+    method pop_rotation( n=1:Int32 )
+      forEach (1..n.or_smaller(rotation_stack.count))
+        rotation_stack.remove_last
+      endForEach
+      if (rotation_stack.count) set_rotation( rotation_stack.last, &preserve_stack )
+      else                      set_rotation( Quaternion(), &preserve_stack )
 
     method pop_transform( n=1:Int32 )
       forEach (1..n.or_smaller(transforms.count))
@@ -130,6 +147,8 @@ class Display [singleton]
       view_transform   = Matrix.identity
       transform = Matrix.identity
       transforms.clear
+      rotation = Quaternion()
+      rotation_stack.clear
       should_clear_color = false
       update_size
       clear_clip
@@ -156,6 +175,13 @@ class Display [singleton]
       if (projection_mode != new_mode)
         @projection_mode = new_mode
         projection_mode.update
+      endIf
+
+    method set_rotation( new_rotation:Matrix, &preserve_stack )
+      if (not preserve_stack) rotation_stack.clear
+      if (rotation != new_rotation)
+        <Display.modify_object_transform>.signal
+        @rotation = new_rotation
       endIf
 
     method set_transform( new_transform:Matrix, &preserve_stack )
@@ -228,13 +254,17 @@ class Display [singleton]
 
 endClass
 
-class TransformStackState( original_stack_count:Int ) [compound]
+class TransformStackState( original_transform_count:Int, original_rotation_count:Int ) [compound]
   METHODS
     method on_use->this [mutating]
-      original_stack_count = Display.transforms.count
+      original_transform_count = Display.transforms.count
+      original_rotation_count = Display.rotation_stack.count
       return this
 
     method on_end_use( state:TransformStackState )
-      local n = Display.transforms.count - state.original_stack_count
+      local n = Display.transforms.count - state.original_transform_count
       if (n) Display.pop_transform( n )
+
+      n = Display.rotation_stack.count - state.original_rotation_count
+      if (n) Display.pop_rotation( n )
 endClass
