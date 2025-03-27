@@ -43,7 +43,7 @@ class Mesh
       this.vertices.add( vertices )
       return index
 
-    method centroid->XY
+    method centroid->XYZ
       local sum : XYZ
       sum += vertices[forEach in indices].position
       return sum / indices.count
@@ -61,6 +61,19 @@ class Mesh
       #Renderer.texture = texture
       #Renderer.draw_triangles
       #Renderer.data.add( this, Renderer.first_vertex )
+
+    method extrude
+
+    method flip_triangles
+      # Assumes that every three indices is a triangle.  Converts
+      # each (A,B,C) -> (A,C,B) and flips all normals.
+      if (indices.count % 3 == 0)
+        forEach (i of indices step 3)
+          indices.swap( i+1, i+2 )
+        endForEach
+      endIf
+
+      vertices.modify( (v) => v.normal = -v.normal; return v )
 
     method translate( delta:XYZ )
       forEach (v in writer=vertices.rewriter)

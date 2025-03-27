@@ -60,4 +60,5 @@ class RenderModeLitTexture : RenderMode [singleton]
   PROPERTIES
     shader                = Shader.LIT_TEXTURE : Shader
     should_update_normals = true
+    culling_mode          = CullingMode.CCW : CullingMode
 endClass

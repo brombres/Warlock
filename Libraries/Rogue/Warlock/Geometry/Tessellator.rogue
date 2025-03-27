@@ -9,6 +9,12 @@ class Tessellator [singleton]
     vertex_positions = XY[]
     triangle_indices = Triangle<<Int>>[]
 
+    vertex_indices   = Int[]
+    # vertex_indices has the same number of elements as vertex_positions.
+    # If an element [index] is >= 0, the corresponding vertex matches the
+    # position of the original polygon at [index]. The corresponding vertex
+    # of an index '-1' does not appear in the original polygon point list.
+
     native "TESStesselator* tess;"
 
   METHODS
@@ -50,15 +56,22 @@ class Tessellator [singleton]
 
       native
       @|const float* tess_vertices = tessGetVertices( $this->tess );
+       |const int*   tess_vindices = tessGetVertexIndices( $this->tess );
        |const int*   tess_indices  = tessGetElements( $this->tess );
        |$vertex_count   = tessGetVertexCount( $this->tess );
        |$triangle_count = tessGetElementCount( $this->tess );
 
       vertex_positions.[clear].reserve( vertex_count )
+      vertex_indices.[clear].reserve( vertex_count )
       triangle_indices.[clear].reserve( triangle_count )
 
       forEach (i in 0..<vertex_count*2 step 2)
         vertex_positions.add( XY(native("tess_vertices[$i]")->Real32, native("tess_vertices[$i+1]")->Real32) )
+      endForEach
+
+      forEach (i in 0..<vertex_count)
+        local index = native("(RogueInt)tess_vindices[$i]")->Int
+        vertex_indices.add( index )
       endForEach
 
       forEach (i in 0..<triangle_count*3 step 3)
