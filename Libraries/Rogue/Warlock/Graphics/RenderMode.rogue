@@ -16,8 +16,9 @@ class RenderMode
     destination_blend = BlendMode.INVERSE_SOURCE_ALPHA : BlendMode
     mipmap_level      = -1   # -1 is automatic
     culling_mode      = CullingMode.NONE : CullingMode
-    should_update_normals : Logical
     depth_test        = DepthTest.DISABLED : DepthTest
+    write_z           : Logical
+    should_update_normals : Logical
 
   METHODS
     method apply
