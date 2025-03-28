@@ -188,14 +188,14 @@ class Renderer [singleton]
 
     method .generate_quad( tl:Vertex, tr:Vertex, br:Vertex, bl:Vertex, subdivisions:XY )
       if (subdivisions.x > 0)
-        local tc = tl.avg(tr)
-        local bc = bl.avg(br)
+        local tc = tl.average(tr)
+        local bc = bl.average(br)
         .generate_quad( tl, tc, bc, bl, subdivisions-XY(1,0) )
         .generate_quad( tc, tr, br, bc, subdivisions-XY(1,0) )
 
       elseIf (subdivisions.y > 0)
-        local cl = tl.avg(bl)
-        local cr = tr.avg(br)
+        local cl = tl.average(bl)
+        local cr = tr.average(br)
         .generate_quad( tl, tr, cr, cl, subdivisions-XY(0,1) )
         .generate_quad( cl, cr, br, bl, subdivisions-XY(0,1) )
 
