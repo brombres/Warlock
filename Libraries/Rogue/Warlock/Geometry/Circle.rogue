@@ -1,0 +1,48 @@
+uses Graphics
+uses Geometry
+
+augment Geometry::Circle
+  METHODS
+    method draw( color:Color, render_mode=RenderMode.ALPHA_COLOR:RenderMode,
+        thickness=1:Real, segments=(1.0/4.0):Real, &outline )
+      # Draws an outline of the given circle in the given color.
+      #
+      # Parameters
+      #   color
+      #     The color to draw the circle in.
+      #
+      #   segments [default: (1.0/4.0)]
+      #     If whole - the number of segments
+      #     If fractional -  segments *= circumference (1/8 is a rougher circle than 1/4)
+      #
+      if (radius <= 0) return
+
+      if (segments < 1.0)
+        local circ = radius * 2 * pi
+        segments = (circ * segments).floor
+      endIf
+
+      local angle_step = pi * 2 / segments
+      if (angle_step > pi/8) angle_step = pi/8
+      local first = at(Radians(0))
+      local pt1 = first
+
+      if (outline)
+        forEach (angle in angle_step..2*pi step angle_step)
+          local pt2 = at(Radians(angle))
+          Line(pt1,pt2).draw( color, &=render_mode, &=thickness )
+          pt1 = pt2
+        endForEach
+
+        Line(pt1,first).draw( color, &=render_mode, &=thickness )
+      else
+        forEach (angle in angle_step..2*pi step angle_step)
+          local pt2 = at(Radians(angle))
+          Triangle(pt1,pt2,position).draw( color, &=render_mode )
+          pt1 = pt2
+        endForEach
+
+        Triangle(pt1,first,position).draw( color, &=render_mode )
+      endIf
+endAugment
+

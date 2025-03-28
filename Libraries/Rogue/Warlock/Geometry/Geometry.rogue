@@ -1,6 +1,7 @@
 library Warlock
 
 $include Warlock/Geometry/Box
+$include Warlock/Geometry/Circle
 $include Warlock/Geometry/Line
 $include Warlock/Geometry/Quad
 $include Warlock/Geometry/Tessellator
