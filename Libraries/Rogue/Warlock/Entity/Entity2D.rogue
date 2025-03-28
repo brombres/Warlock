@@ -22,6 +22,7 @@ augment Entity::Entity2D
               anchor,
               size,
               nominal_size,
+              scale_z,
               attributes.h_flip,
               attributes.v_flip
             )
@@ -34,6 +35,7 @@ augment Entity::Entity2D
               anchor,
               size,
               nominal_size,
+              scale_z,
               rotation,
               attributes.h_flip,
               attributes.v_flip
