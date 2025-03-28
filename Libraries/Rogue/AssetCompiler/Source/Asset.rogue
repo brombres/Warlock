@@ -65,6 +65,7 @@ class Asset
           necessary (info.contains("image_mipmaps"))
           necessary (info.contains("image_patch_count"))
           image_size = XY( info//image_size )
+          necessary (image_size != XY.zero)
           image_split = XY( info//image_split )
           image_mipmaps = info//image_mipmaps->Logical
           image_patch_count = info//image_patch_count->Int
@@ -134,6 +135,7 @@ class Asset
           necessary (info.contains("font_width"))
           necessary (info.contains("font_info"))
           image_size = XY( info//image_size )
+          necessary (image_size != XY.zero)
           font_characters = info//font_characters
           font_height = info//font_height
           font_width  = info//font_width
