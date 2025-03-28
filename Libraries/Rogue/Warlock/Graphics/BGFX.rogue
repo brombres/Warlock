@@ -247,8 +247,18 @@ class BGFX : Renderer [singleton]
         endWhich
 
         which (render_mode.depth_test)
+          case DepthTest.NE
+            native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_DEPTH_TEST_NOTEQUAL);
+          case DepthTest.LT
+            native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_DEPTH_TEST_LESS);
           case DepthTest.LE
             native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_DEPTH_TEST_LEQUAL);
+          case DepthTest.EQ
+            native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_DEPTH_TEST_EQUAL);
+          case DepthTest.GE
+            native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_DEPTH_TEST_GEQUAL);
+          case DepthTest.GT
+            native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_DEPTH_TEST_GREATER);
           others
             native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_DEPTH_TEST_ALWAYS);
         endWhich

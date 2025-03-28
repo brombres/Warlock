@@ -2,5 +2,10 @@ library Warlock
 
 enum DepthTest
   DISABLED
+  NE
+  LT
   LE
+  EQ
+  GE
+  GT
 endEnum
