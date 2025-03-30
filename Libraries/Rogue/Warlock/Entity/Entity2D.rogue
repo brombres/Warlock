@@ -15,33 +15,7 @@ augment Entity::Entity2D
       use Display.transform_stack
         .begin_draw
 
-        if (rotation.is_identity)
-          Display.push_transform(
-            Matrix.transform(
-              XYZ(position,z),
-              anchor,
-              size,
-              nominal_size,
-              scale_z,
-              attributes.h_flip,
-              attributes.v_flip
-            )
-          )
-        else
-          Display.push_rotation( rotation )
-          Display.push_transform(
-            Matrix.transform(
-              XYZ(position,z),
-              anchor,
-              size,
-              nominal_size,
-              scale_z,
-              rotation,
-              attributes.h_flip,
-              attributes.v_flip
-            )
-          )
-        endIf
+        .push_transform
 
         .handle_draw( &!fg )
         .handle_draw( &fg )
@@ -55,4 +29,41 @@ augment Entity::Entity2D
         .handle_draw( &!fg )
         .handle_draw( &fg )
       endUse
+
+    method .push_transform
+      if (rotation.is_identity)
+        Display.push_transform(
+          Matrix.transform(
+            XYZ(position,z),
+            anchor,
+            size,
+            nominal_size,
+            scale_z,
+            attributes.h_flip,
+            attributes.v_flip
+          )
+        )
+      else
+        Display.push_rotation( rotation )
+        Display.push_transform(
+          Matrix.transform(
+            XYZ(position,z),
+            anchor,
+            size,
+            nominal_size,
+            scale_z,
+            rotation,
+            attributes.h_flip,
+            attributes.v_flip
+          )
+        )
+      endIf
+
+    method .pop_transform
+      if (rotation.is_identity)
+        Display.pop_transform
+      else
+        Display.pop_transform
+        Display.pop_rotation
+      endIf
 endAugment

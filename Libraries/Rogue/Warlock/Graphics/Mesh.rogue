@@ -64,7 +64,7 @@ class Mesh
 
     method extrude
 
-    method flip_triangles
+    method flip_triangle_facing
       # Assumes that every three indices is a triangle.  Converts
       # each (A,B,C) -> (A,C,B) and flips all normals.
       if (indices.count % 3 == 0)
@@ -74,6 +74,9 @@ class Mesh
       endIf
 
       vertices.modify( (v) => v.normal = -v.normal; return v )
+
+    method set_color( color:Color )
+      vertices.modify( (v) => v.color = color; return v )
 
     method translate( delta:XYZ )
       forEach (v in writer=vertices.rewriter)
