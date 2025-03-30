@@ -94,23 +94,23 @@ class BGFX : Renderer [singleton]
 
       is_initialized = true
 
-    method configure_canvas( canvas:Canvas )
-      local image   = canvas.image
+    method configure_render_target( render_target:RenderTarget )
+      local image   = render_target.image
       local texture = image.texture
 
       native
-      @|bgfx::setViewFrameBuffer( $canvas->id, $image->bgfx_frame_buffer );
+      @|bgfx::setViewFrameBuffer( $render_target->id, $image->bgfx_frame_buffer );
        |
        |bgfx::setViewRect(
-       |  $canvas->id,
+       |  $render_target->id,
        |  0, 0,
        |  static_cast<uint16_t>($texture->size.x),
        |  static_cast<uint16_t>($texture->size.y)
        |);
        |
-       |bgfx::setViewClear( $canvas->id, BGFX_CLEAR_COLOR|BGFX_CLEAR_DEPTH, 0xffffffff, 1.0f, 0 );
+       |bgfx::setViewClear( $render_target->id, BGFX_CLEAR_COLOR|BGFX_CLEAR_DEPTH, 0xffffffff, 1.0f, 0 );
        |
-       |bgfx::touch( $canvas->id );
+       |bgfx::touch( $render_target->id );
 
     method configure_render_target_image( image:RenderTargetImage )
       local color_texture = image.color_texture
@@ -126,27 +126,30 @@ class BGFX : Renderer [singleton]
 
       native @|bgfx::touch( $window->id );
 
-    method on_render_begin( canvas:Canvas ) [override]
-      prior.on_render_begin( canvas )
+    method on_render_begin( render_target:RenderTarget ) [override]
+      prior.on_render_begin( render_target )
 
-      if local render_target_image = canvas.image
-        native @|bgfx::setViewFrameBuffer( $canvas->id, $render_target_image->bgfx_frame_buffer );
+      if local render_target_image = render_target.image
+        native @|bgfx::setViewFrameBuffer( $render_target->id, $render_target_image->bgfx_frame_buffer );
       endIf
 
-      activate_display_graphics_context( canvas )
+      activate_display_graphics_context( render_target )
 
     method on_render_begin( window:Window )
       prior.on_render_begin( window )
       activate_window_graphics_context( window )
 
-    method on_render_end( canvas:Canvas ) [override]
-      prior.on_render_end( canvas )
+    method on_render_end( render_target:RenderTarget ) [override]
+      prior.on_render_end( render_target )
       block
         local clear_flags = 0
         native @|$clear_flags |= BGFX_CLEAR_DEPTH;
-        if (canvas.should_clear_color) native @|$clear_flags |= BGFX_CLEAR_COLOR;
+        if (render_target.should_clear_color)
+          native @|$clear_flags |= BGFX_CLEAR_COLOR;
+                  |bgfx::touch( $display_id );
+        endIf
 
-        local clear_color = canvas.clear_color.rgba
+        local clear_color = render_target.clear_color.rgba
         native @|bgfx::setViewClear( $display_id, (uint16_t)$clear_flags, (uint32_t)$clear_color );
       endBlock
 

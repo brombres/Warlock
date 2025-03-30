@@ -6,26 +6,9 @@ class RenderTargetImage : TextureImage
 
   METHODS
     method init( size:XY, &round_down )
-      # Creates a texture canvas (offscreen buffer / render target).
-      # Rounds the width and height either up (default) or down (&round_down)
-      # to the nearest power of 2.
-      #
-      # Some use cases such as drawing a 2D shadow layer do not need a 1:1
-      # pixel match with the main display and can round down their size to
-      # conserve memory.
-      #
-      # The initial size determines the resolution of the offscreen buffer
-      # but can be changed after initialization.
       init( size.x, size.y, &=round_down )
 
     method init( width:Int, height:Int, &round_down )
-      # Creates a texture canvas (offscreen texture / render target).
-      # Rounds the width and height either up (default) or down (&round_down)
-      # to the nearest power of 2.
-      #
-      # Some use cases such as drawing a 2D shadow layer do not need a 1:1
-      # pixel match with the main display and can round down their size to
-      # conserve memory.
       local wp2 = width.to_power_of_2
       local hp2 = height.to_power_of_2
       local subset_w = width

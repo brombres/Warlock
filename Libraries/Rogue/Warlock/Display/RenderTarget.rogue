@@ -1,6 +1,6 @@
 library Warlock
 
-class Canvas : Display
+class RenderTarget : Display
   PROPERTIES
     previous_display : Display
     image            : RenderTargetImage
@@ -8,7 +8,8 @@ class Canvas : Display
 
   METHODS
     method init( pixel_size, round_down=false )
-      # Creates a texture canvas (offscreen buffer / render target).
+      # Creates an offscreen render target.
+      #
       # Rounds the width and height either up (default) or down (&round_down)
       # to the nearest power of 2.
       #
@@ -21,7 +22,8 @@ class Canvas : Display
       noAction
 
     method init( width:Int, height:Int, &round_down )
-      # Creates a texture canvas (offscreen texture / render target).
+      # Creates an offscreen render target.
+      #
       # Rounds the width and height either up (default) or down (&round_down)
       # to the nearest power of 2.
       #
@@ -38,7 +40,7 @@ class Canvas : Display
       if (@image) return
       image = RenderTargetImage( pixel_size.x, pixel_size.y, &=round_down )
       pixel_size = @image.texture.size  # may have been adjusted
-      Renderer.configure_canvas( this )
+      Renderer.configure_render_target( this )
 
     method begin_render [override]
       prepare
@@ -53,11 +55,11 @@ class Canvas : Display
       Renderer.on_render_end( this )
       Display = previous_display
 
-    method on_use->Canvas
+    method on_use->RenderTarget
       begin_render
       return this
 
-    method on_end_use( canvas:Canvas )
+    method on_end_use( render_target:RenderTarget )
       end_render
 
 endClass

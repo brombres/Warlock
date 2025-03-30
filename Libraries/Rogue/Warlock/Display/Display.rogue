@@ -1,6 +1,6 @@
 library Warlock
 
-$include Warlock/Display/Canvas
+$include Warlock/Display/RenderTarget
 $include Warlock/Display/IDManager
 $include Warlock/Display/Window
 
@@ -25,6 +25,7 @@ class Display [singleton]
     pixel_size        : XY   # True size in pixels.
     size              : XY   # Scaled size.
     scale_to_fit_size : XY?
+    fixed_size        : XY?
     density = 1.0 # May be 2 or 3 (etc.) for Retina and other HD displays.
 
     projection_mode = ProjectionMode2DX : ProjectionMode
@@ -166,6 +167,7 @@ class Display [singleton]
       return bounds
 
     method scale_to_fit( scale_to_fit_size )
+      if (scale_to_fit_size) @fixed_size = null
       update_size
 
     method set_clip( new_clip:Box? )
@@ -173,6 +175,10 @@ class Display [singleton]
         Renderer.flush
         @clip = new_clip
       endIf
+
+    method set_fixed_size( @fixed_size )
+      if (fixed_size) @scale_to_fit_size = null
+      update_size
 
     method set_perspective_center( new_center:XY )
       if (perspective_center != new_center)
@@ -214,6 +220,13 @@ class Display [singleton]
         view_projection_modified = true
       endIf
 
+    method set_size( new_size:XY )
+      if (size == new_size) return
+
+      Renderer.flush
+      @size = new_size
+      projection_mode.update
+
     method set_ui( ui:WarlockUI )
       noAction
 
@@ -235,9 +248,11 @@ class Display [singleton]
       Renderer.flush
       if local fit_size = scale_to_fit_size
         local scale = (fit_size / pixel_size).min
-        size = (pixel_size * scale).floor
+        @size = (pixel_size * scale).floor
+      elseIf local sz = fixed_size
+        @size = sz
       else
-        size = pixel_size
+        @size = pixel_size
       endIf
       projection_mode.update
 

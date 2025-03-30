@@ -52,7 +52,7 @@ class Renderer [singleton]
       flush
       textures.clear
 
-    method configure_canvas( canvas:Canvas )
+    method configure_render_target( render_target:RenderTarget )
       print_error
 
     method configure_render_target_image( image:RenderTargetImage )
@@ -273,8 +273,8 @@ class Renderer [singleton]
       first_vertex = vertex_count
       first_index  = index_count
 
-    method on_render_begin( canvas:Canvas )
-      display_id = canvas.id
+    method on_render_begin( render_target:RenderTarget )
+      display_id = render_target.id
       draw_triangles
       render_mode = RenderMode.ALPHA_TEXTURE
       clear_textures
@@ -285,7 +285,7 @@ class Renderer [singleton]
       reset
       display_id = window.id
 
-    method on_render_end( canvas:Canvas )
+    method on_render_end( render_target:RenderTarget )
       flush
 
     method on_render_end( window:Window )
