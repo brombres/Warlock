@@ -245,15 +245,6 @@ class Renderer [singleton]
         others: batch_textures = ObjectPool<<Texture[]>>.on_use.[ add(textures) ]
       endWhich
 
-      local clip = Display.clip
-      if (clip)
-        local world_transform = Display.world_transform
-        local scale = (Display.pixel_size / Display.size).x
-        local pos  = (world_transform*clip.value.position).xy * scale
-        local size = (world_transform*clip.value.size).xy * scale
-        clip = Box( pos, size ).floor
-      endIf
-
       render_queue.add(
         RendererBatch(
           display_id,
@@ -265,7 +256,7 @@ class Renderer [singleton]
           Display.view_projection,
           batch_texture,
           batch_textures,
-          clip,
+          Display.clip,
           render_mode
         )
       )
