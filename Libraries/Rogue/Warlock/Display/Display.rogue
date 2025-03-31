@@ -96,13 +96,10 @@ class Display [singleton]
       return size.y
 
     method pop_clip( n=1:Int )
-      #if (n >= 1 and n >= clip_stack.count)
-      #  clip_stack.discard_last( n - 1 )
-      #  clip = clip_stack.remove_last
-      #endIf
-Log.println "1 pop_clip"
-      clip = clip_stack.remove_last
-Log.println "2 pop_clip: " + clip
+      if (n >= 1 and n >= clip_stack.count)
+        clip_stack.discard_last( n - 1 )
+        clip = clip_stack.remove_last
+      endIf
 
     method push_rotation( q:Quaternion )
       if (rotation_stack.count)
@@ -147,9 +144,7 @@ Log.println "2 pop_clip: " + clip
         endIf
       endIf
 
-Log.println "1 set to " + new_clip
       clip = new_clip
-Log.println "2 set to " + new_clip
 
     method render
       Display = this
