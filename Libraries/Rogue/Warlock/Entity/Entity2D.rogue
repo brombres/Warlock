@@ -15,7 +15,7 @@ augment Entity::Entity2D
       use Display.transform_stack
         .begin_draw
 
-        .push_transform
+        .push_transform( position )
 
         .handle_draw( &!fg )
         .handle_draw( &fg )
@@ -25,12 +25,15 @@ augment Entity::Entity2D
       if (attributes.hidden) return
       use Display.transform_stack
         .begin_draw
-        Display.push_transform( Matrix.transform(XYZ(bounds.position,z),bounds.size/nominal_size) )
+        Display.push_transform(
+          Matrix.translate( XYZ(bounds.position,z) ) *
+          Matrix.scale( bounds.size/nominal_size )
+        )
         .handle_draw( &!fg )
         .handle_draw( &fg )
       endUse
 
-    method .push_transform
+    method .push_transform( position:XY )
       if (rotation.is_identity)
         Display.push_transform(
           Matrix.transform(
@@ -38,9 +41,7 @@ augment Entity::Entity2D
             anchor,
             size,
             nominal_size,
-            scale_z,
-            attributes.h_flip,
-            attributes.v_flip
+            scale_z
           )
         )
       else
@@ -52,9 +53,7 @@ augment Entity::Entity2D
             size,
             nominal_size,
             scale_z,
-            rotation,
-            attributes.h_flip,
-            attributes.v_flip
+            rotation
           )
         )
       endIf
