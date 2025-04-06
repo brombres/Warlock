@@ -89,6 +89,7 @@ class BGFX : Renderer [singleton]
       RenderMode.ALPHA_COLOR_ADDITIVE    = RenderModeAlphaColorAdditive
       RenderMode.ALPHA_TEXTURE           = RenderModeAlphaTexture
       RenderMode.ALPHA_TEXTURE_ADDITIVE  = RenderModeAlphaTextureAdditive
+      RenderMode.ALPHA_TEXTURE_SCREEN    = RenderModeAlphaTextureScreen
       RenderMode.ALPHA_TEXTURE_NO_MIPMAP = RenderModeAlphaTextureNoMipMap
       RenderMode.LIT_TEXTURE             = RenderModeLitTexture
 
@@ -646,6 +647,8 @@ augment RenderMode
           native @|$src = (RogueInt) BGFX_STATE_BLEND_SRC_ALPHA;
         case INVERSE_SOURCE_ALPHA
           native @|$src = (RogueInt) BGFX_STATE_BLEND_INV_SRC_ALPHA;
+        case INVERSE_SOURCE_COLOR
+          native @|$src = (RogueInt) BGFX_STATE_BLEND_INV_SRC_COLOR;
         others
           println "[BGFX] RenderMode.blend_flags unhandled blend mode $."(source_blend)
       endWhich
@@ -659,6 +662,8 @@ augment RenderMode
           native @|$dest = (RogueInt) BGFX_STATE_BLEND_SRC_ALPHA;
         case INVERSE_SOURCE_ALPHA
           native @|$dest = (RogueInt) BGFX_STATE_BLEND_INV_SRC_ALPHA;
+        case INVERSE_SOURCE_COLOR
+          native @|$dest = (RogueInt) BGFX_STATE_BLEND_INV_SRC_COLOR;
         others
           println "[BGFX] RenderMode.blend_flags unhandled blend mode $."(destination_blend)
       endWhich
