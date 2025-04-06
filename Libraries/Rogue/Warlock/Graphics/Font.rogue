@@ -35,6 +35,8 @@ class Font : UI::Font
     monospace          : Logical
     monospace_width    : Int
 
+    render_mode        : RenderMode
+
   METHODS
     method init( asset_name, new_instance:Logical, snap=false, &snug )
       fonts[asset_name] = this
@@ -144,8 +146,7 @@ class Font : UI::Font
           local image = font_ch.image
           image.size = font_ch.size * scale
           image.color = color
-          #image.shader = shader  # if null, default is used
-          #image.render_mode = font.render_mode  # if null, default is used
+          image.render_mode = render_mode
           if (prev_ch and prev_ch.kerning)
             local kern = prev_ch.kerning[ font_ch.unicode ]
             if (kern) cursor += XY( kern*scale.x, 0 )
