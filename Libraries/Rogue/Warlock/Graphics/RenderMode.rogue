@@ -4,9 +4,9 @@ class RenderMode
   GLOBAL PROPERTIES
     # These are initialized in BGFX after shaders have been created.
     ALPHA_COLOR             : RenderMode
-    ALPHA_COLOR_ADDITIVE    : RenderMode
+    ALPHA_COLOR_ADD    : RenderMode
     ALPHA_TEXTURE           : RenderMode
-    ALPHA_TEXTURE_ADDITIVE  : RenderMode
+    ALPHA_TEXTURE_ADD  : RenderMode
     ALPHA_TEXTURE_SCREEN    : RenderMode
     ALPHA_TEXTURE_NO_MIPMAP : RenderMode
     LIT_TEXTURE             : RenderMode
@@ -48,7 +48,7 @@ class RenderModeAlphaColor : RenderMode [singleton]
 endClass
 
 
-class RenderModeAlphaColorAdditive : RenderMode [singleton]
+class RenderModeAlphaColorAdd : RenderMode [singleton]
   PROPERTIES
     shader            = Shader.ALPHA_COLOR : Shader
     source_blend      = BlendMode.ONE      : BlendMode
@@ -63,7 +63,7 @@ class RenderModeAlphaTexture : RenderMode [singleton]
 endClass
 
 
-class RenderModeAlphaTextureAdditive : RenderMode [singleton]
+class RenderModeAlphaTextureAdd : RenderMode [singleton]
   PROPERTIES
     shader            = Shader.ALPHA_TEXTURE : Shader
     source_blend      = BlendMode.ONE : BlendMode

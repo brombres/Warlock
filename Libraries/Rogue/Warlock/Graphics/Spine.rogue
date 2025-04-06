@@ -514,8 +514,8 @@ class SpineAnimation
                 Renderer.render_mode = RenderMode.ALPHA_TEXTURE
       native
       @|        break;
-       |     case SP_BLEND_MODE_ADDITIVE:
-                Renderer.render_mode = RenderMode.ALPHA_TEXTURE_ADDITIVE
+       |     case SP_BLEND_MODE_ADD:
+                Renderer.render_mode = RenderMode.ALPHA_TEXTURE_ADD
       native
       @|        break;
        |     case SP_BLEND_MODE_MULTIPLY:
