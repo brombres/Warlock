@@ -269,10 +269,10 @@ class Asset
       endWhich
 
     method image_padding->Int?
-      if local padding_attribute = rule.find_attribute( "padding" )
+      if local padding_attribute = rule.find_attribute( "atlas_padding" )
         .require_value(
           padding_attribute,
-          "Expected 'padding:<pixels-per-side>' e.g. 'padding:4'."
+          "Expected 'atlas_padding:<pixels-per-side>' e.g. 'atlas_padding:4'."
         )
         return padding_attribute.value.cmd->Int
       endIf

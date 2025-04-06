@@ -133,11 +133,12 @@ scanner
   while (hasAnother and not nextIs('\n'))
     if (scan('['))
       literal_list_term
+    elseIf (scan(']'))
+      return
     else
       collect( read )
     endIf
   endWhile
-  scan ']'
 
 - create_id_or_keyword
   match buffer

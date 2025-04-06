@@ -9,7 +9,7 @@ class AssetGroup
     pages       : AtlasPage[]
     attributes  : AttributeList
     is_modified : Logical
-    padding     = 8
+    atlas_padding     = 8
 
   METHODS
     #{
@@ -54,7 +54,7 @@ class AssetGroup
     method process
       which (assets.first.type)
         case <Image>, <Font>
-          pages = ImagePacker( this ).[padding=padding].pack( assets )
+          pages = ImagePacker( this ).[atlas_padding=atlas_padding].pack( assets )
           (forEach in assets).update_placement_info
         case <Binary>
           local output_folder = "Build/$"(AssetCompiler.platform)
@@ -117,8 +117,8 @@ class AssetGroup
       GroupIDManager.mark_id_used( id )
 
     method set_attributes( @attributes )
-      if local attr = attributes.find( "padding" )
-        padding = attr.value->Int
+      if local attr = attributes.find( "atlas_padding" )
+        atlas_padding = attr.value->Int
       endIf
 
     method to->String

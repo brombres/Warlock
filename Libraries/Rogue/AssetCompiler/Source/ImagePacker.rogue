@@ -6,7 +6,7 @@ class ImagePacker
     placements = Placement[]
     pages      = AtlasPage[]
     max_size   = XY(4096)
-    padding    = 8  # Edges of each texture are extruded this many pixels to prevent
+    atlas_padding    = 8  # Edges of each texture are extruded this many pixels to prevent
                     # color artifacts.
 
   METHODS
@@ -98,26 +98,26 @@ class ImagePacker
       else                                       return null
 
     method .perform_layout( page:AtlasPage, bounds:Box )->Logical
-      # Find the largest asset we can place (including 16-pixel padding around
+      # Find the largest asset we can place (including 16-pixel atlas_padding around
       # the edge), delete it from the list, and then recursively place any
       # remaining placements we can.
       if (bounds.size.x <= 0 or bounds.size.y <= 0) return false
 
       forEach (placement in placements)
-        local padding = which{ placement.asset.image_padding || this.padding }
-        local padding_left   = which{ bounds.position.x==0:0     || padding }
-        local padding_top    = which{ bounds.position.y==0:0     || padding }
-        local padding_right  = which{ bounds.bottom_right.x==page.size.x:0 || padding }
-        local padding_bottom = which{ bounds.bottom_right.y==page.size.y:0 || padding }
+        local atlas_padding = which{ placement.asset.image_padding || this.atlas_padding }
+        local padding_left   = which{ bounds.position.x==0:0     || atlas_padding }
+        local padding_top    = which{ bounds.position.y==0:0     || atlas_padding }
+        local padding_right  = which{ bounds.bottom_right.x==page.size.x:0 || atlas_padding }
+        local padding_bottom = which{ bounds.bottom_right.y==page.size.y:0 || atlas_padding }
         local available_w = bounds.size.x - (padding_left + padding_right)
         local available_h = bounds.size.y - (padding_top + padding_bottom)
 
         if (placement.size.x <= available_w and placement.size.y <= available_h)
           if (padding_right == 0)
-            padding_right = (available_w - placement.size.x).or_smaller( padding )
+            padding_right = (available_w - placement.size.x).or_smaller( atlas_padding )
           endIf
           if (padding_bottom == 0)
-            padding_bottom = (available_h - placement.size.y).or_smaller( padding )
+            padding_bottom = (available_h - placement.size.y).or_smaller( atlas_padding )
           endIf
           local placed_w = padding_left + placement.size.x + padding_right
           local placed_h = padding_top + placement.size.y + padding_bottom

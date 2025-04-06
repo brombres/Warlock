@@ -39,6 +39,11 @@ class CollectAssets( target, suppress_errors=false:Logical ) : TargetVisitor
             endIf
           endIf
 
+          local padding = 0
+          if local padding_attribute = rule.find_attribute("character_padding")
+            padding = padding_attribute.value.cmd->Int
+          endIf
+
           local unicode = asset.parse_characters
 
           local is_italic = false
@@ -72,6 +77,15 @@ class CollectAssets( target, suppress_errors=false:Logical ) : TargetVisitor
           if (font_face.error) throw source_attribute.value.cmd.t.error( font_face.error )
 
           local characters = font_face.render( unicode )
+
+          if (padding)
+            forEach (ch in characters)
+              local bmp = ch.bitmap
+              bmp.crop( -padding )
+              ch.advance_x += padding * 2
+            endForEach
+          endIf
+
           if (is_italic)
             forEach (ch in characters)
               local bmp = ch.bitmap

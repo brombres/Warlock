@@ -27,7 +27,7 @@ class Placement
         work_bitmap = Bitmap( padding_left+size.x+padding_right, padding_top+size.y+padding_bottom, Color.YELLOW )
         bitmap.blit( work_bitmap, XY(padding_left,padding_top) )
 
-        # Extrude edges into padding area
+        # Extrude edges into atlas_padding area
         if (padding_left)
           local left_edge = Box( padding_left, padding_top, 1, size.y )
           forEach (dx in 0..<padding_left)
