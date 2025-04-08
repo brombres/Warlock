@@ -9,6 +9,9 @@ $requireRogue "2.34.3"
 uses Utility/GitRepo
 uses Utility/VersionNumber
 
+#$ LIBRARIES(macOS) = sox
+#$ LIBRARIES(Linux) = sox
+
 #$ LINK_LIBS            = true
    # Link the following in when compiling this Build.rogue
 
@@ -152,7 +155,7 @@ endRoutine
 
 routine rogo_deps [append]
   # SYNTAX: rogo deps [update|rebuild] [<libs>]*
-  # Where <libs> is any combination of: [bgfx bimg bx sdl spine stb tess]
+  # Where <libs> is any combination of: [bgfx bimg bx miniaudio sdl spine stb tess]
 
   local args = System.command_line_arguments.cloned
   local rebuild = args.remove( "rebuild" )
@@ -179,7 +182,7 @@ routine deps( args:String[], &update, &rebuild )
   local libs = @{}
   local select_all = false
   loop 2
-    forEach (lib in ["bgfx","bimg","bx","sdl","spine","stb","tess"])
+    forEach (lib in ["bgfx","bimg","bx","miniaudio","sdl","spine","stb","tess"])
       if (select_all or args.contains(lib)) libs[lib] = true
     endForEach
     if (libs.count) escapeLoop
@@ -325,6 +328,23 @@ routine deps( args:String[], &update, &rebuild )
     elseIf (update)
       if (repo.has_remote_changes)
         banner "Updating libtess2 repo"
+        repo.pull( &verbose )
+      endIf
+    endIf
+  endIf
+
+  -------- Libraries/miniaudio --------
+  if (libs//miniaudio)
+    local folder = File("Libraries/miniaudio")
+    local repo = GitRepo( "https://github.com/mackron/miniaudio.git", folder )
+
+    if (not repo.exists)
+      banner "Cloning miniaudio repo"
+      repo.clone( &verbose )
+
+    elseIf (update)
+      if (repo.has_remote_changes)
+        banner "Updating miniaudio repo"
         repo.pull( &verbose )
       endIf
     endIf

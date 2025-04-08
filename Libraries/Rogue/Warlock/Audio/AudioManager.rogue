@@ -1,0 +1,36 @@
+library Warlock
+
+class AudioManager [singleton]
+  NATIVE
+    nativeHeader @|#include "miniaudio.h"
+
+  PROPERTIES
+    is_configured  : Logical
+    is_initialized : Logical
+    native "ma_engine engine;"
+
+  METHODS
+    method on_cleanup
+      if (is_initialized)
+        is_initialized = false
+        native @|ma_engine_uninit( &$this->engine );
+      endIf
+
+    method configure
+      if (is_configured) return
+      is_configured = true
+
+      local success : Logical
+
+      native
+      @|ma_result result = ma_engine_init(NULL, &$this->engine);
+       |$success = (result == MA_SUCCESS);
+
+      if (not success)
+        println "Error initializing miniaudio"
+        return
+      endIf
+
+      is_initialized = true
+
+endClass

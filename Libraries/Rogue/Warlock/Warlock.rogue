@@ -4,6 +4,7 @@ nativeHeader @|#include "WarlockInterface.h"
 
 $include Warlock/Macros
 
+$include Warlock/Audio
 $include Warlock/Data
 $include Warlock/Display
 $include Warlock/Framework/Framework
@@ -67,6 +68,14 @@ class Warlock [essential singleton]
       if (filepath) return File( filepath )
       else          return null
 
+    method find_audio_file( file:File )->File?
+      if (not file.filepath.begins_with("Assets/Audio/"))
+        if (file.filepath.begins_with("Audio/")) file = "Assets"/file
+        else                                     file = "Assets/Audio"/file
+      endIf
+
+      return find_asset( file.filepath )
+
     method find_data_file( file:File )->File?
       if (not file.filepath.begins_with("Assets/Data/"))
         if (file.filepath.begins_with("Data/")) file = "Assets"/file
@@ -96,6 +105,7 @@ class Warlock [essential singleton]
 
     method on_configure
       AssetManager.load
+      AudioManager.configure
 
       if (windows.is_empty)
         Window( "Warlock", 1280, 720 )

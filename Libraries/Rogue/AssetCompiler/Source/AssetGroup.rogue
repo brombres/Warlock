@@ -56,6 +56,24 @@ class AssetGroup
         case <Image>, <Font>
           pages = ImagePacker( this ).[atlas_padding=atlas_padding].pack( assets )
           (forEach in assets).update_placement_info
+
+        case <Sound>, <Music>
+          local output_folder = "Build/$"(AssetCompiler.platform)
+          forEach (asset in assets)
+
+            local output_filepath = asset.filepath
+            if (not output_filepath.begins_with("Assets/Audio/"))
+              output_filepath .= after_first( '/' )
+              output_filepath .= after_first( '/' )
+              output_filepath = "Assets/Audio" / output_filepath
+            endIf
+            output_filepath = output_folder/output_filepath
+
+            if (File(asset.filepath).is_newer_than(File(output_filepath)))
+              File( asset.filepath ).copy_to( File(output_filepath), &verbose )
+            endIf
+          endForEach
+
         case <Binary>
           local output_folder = "Build/$"(AssetCompiler.platform)
           forEach (asset in assets)

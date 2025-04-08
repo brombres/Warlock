@@ -55,12 +55,21 @@ class GenerateAssetConfig : Visitor
             writeln_echo "- $ font_info"(filepath)
           else
             write_echo "@ $"(filepath)
-            which (File(filepath).extension.to_lowercase)
-              case "png", "jpg", "jpeg": writeln_echo " image"
-              case "wav", "ima4":        writeln_echo " sound"
-              case "mp3", "ogg":         writeln_echo " music"
-              case "json":               writeln_echo " json"
-              others:                    writeln_echo " binary"
+            local filepath_lc = filepath.to_lowercase
+            which (File(filepath_lc).extension)
+              case "png", "jpg", "jpeg"
+                writeln_echo " image"
+              case "wav"
+                if (filepath_lc.contains("music")) writeln_echo " music"
+                else                               writeln_echo " sound"
+              case "ima4"
+                writeln_echo " sound"
+              case "mp3", "ogg"
+                writeln_echo " music"
+              case "json"
+                writeln_echo " json"
+              others
+                writeln_echo " binary"
             endWhich
           endIf
         endIf

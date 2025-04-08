@@ -70,7 +70,7 @@ class AssetCompiler [singleton]
 
     method init( platform )
       load_asc( &suppress_errors )
-      # Once to add new files to AssetConfig.asc.
+      # Once to add any new files to AssetConfig.asc.
 
       load_asc
       # Second time to process those new files while loading.
