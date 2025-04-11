@@ -496,6 +496,7 @@ class Asset
         case <Image>
           manifest.print ''"$"''(filepath)
           manifest.print " image"
+          manifest.print " $ $" (image_size.x->Int,image_size.y->Int)
           if (image_split.product > 1)
             manifest.print " frames "
             manifest.print image_split.product->Int

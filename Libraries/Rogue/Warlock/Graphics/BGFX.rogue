@@ -495,7 +495,7 @@ augment Texture
       native @|$this->bgfx_texture = BGFX_INVALID_HANDLE;
 
   METHODS
-    method set( bitmap:Bitmap, &mipmaps=true )
+    method set( bitmap:Bitmap, &mipmaps=true, &wrap )
       local is_cloned = false
       if (not bitmap.is_power_of_2 or not bitmap.is_premultiplied_alpha)
         is_cloned = true
@@ -544,12 +544,15 @@ augment Texture
       endIf
 
       native
-      @|$this->bgfx_texture = bgfx::createTexture2D(
+      @|uint32_t sampler_flags = BGFX_SAMPLER_MIN_ANISOTROPIC | BGFX_SAMPLER_MAG_ANISOTROPIC;
+       |if ( !$wrap ) sampler_flags |= BGFX_SAMPLER_UVW_CLAMP;
+       |
+       |$this->bgfx_texture = bgfx::createTexture2D(
        |  static_cast<uint16_t>($size.x), static_cast<uint16_t>($size.y),
        |  $mipmaps,
        |  1,
        |  bgfx::TextureFormat::RGBA8,
-       |  BGFX_SAMPLER_UVW_CLAMP | BGFX_SAMPLER_MIN_ANISOTROPIC | BGFX_SAMPLER_MAG_ANISOTROPIC,
+       |  sampler_flags,
        |  bgfx::copy( $mipmap_pixels->as_bytes, (uint32_t) ($mipmap_pixels->count*4) )
        |);
 
@@ -609,8 +612,7 @@ augment RenderTargetTexture
        |  false,  // no mip-maps
        |  1,
        |  format,
-       |  BGFX_TEXTURE_RT |
-       |    BGFX_SAMPLER_UVW_CLAMP | BGFX_SAMPLER_MIN_ANISOTROPIC | BGFX_SAMPLER_MAG_ANISOTROPIC
+       |  BGFX_TEXTURE_RT | BGFX_SAMPLER_MIN_ANISOTROPIC | BGFX_SAMPLER_MAG_ANISOTROPIC
        |);
 
 endAugment

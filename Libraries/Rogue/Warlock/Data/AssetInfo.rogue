@@ -6,6 +6,7 @@ class AssetInfo
     type              : GlobalID
     images            : ImageInfo[]
     frame_count       = 1
+    image_size        : XY
     image_mipmaps     : Logical
     image_patch_count : Int
     font_height       : Int

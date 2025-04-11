@@ -174,13 +174,17 @@ class AssetManager [singleton]
         .consume_ws
         local h = scanner.scan_int
         .consume_ws( &eols )
-        asset.images.add( ImageInfo(i, Box(x,y,w,h)) )
+        asset.images.add( ImageInfo(i, Box(x,y,w,h), &wrap=(XY(w,h)==asset.image_size)) )
       endLoop
 
       return true
 
     method .load_image( asset:AssetInfo )->Logical
       asset.type = <Image>
+      .consume_ws
+      asset.image_size.x = scanner.scan_int
+      .consume_ws
+      asset.image_size.y = scanner.scan_int
       .consume_ws
       if (.consume_id("patch")) asset.image_patch_count = scanner.scan_int
       .consume_ws
