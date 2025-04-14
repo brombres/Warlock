@@ -28,6 +28,7 @@ uses Utility/VersionNumber
 
 uses Graphics
 uses Graphics/BitmapIO
+uses Utility/GitIgnorePatcher
 
 augment Build
   PROPERTIES
@@ -168,6 +169,8 @@ routine deps( args:String[], &update, &rebuild )
     banner "ERROR: Rogo should not be run directly in the Warlock library folder."
     System.exit 1
   endIf
+
+  update_gitignore
 
   ensure_folder( File("Assets/Audio") )
   ensure_folder( File("Assets/Data") )
@@ -350,6 +353,12 @@ routine deps( args:String[], &update, &rebuild )
     endIf
   endIf
 
+endRoutine
+
+routine update_gitignore
+  local patcher = GitIgnorePatcher( File(".gitignore") )
+  patcher.add( "# Xcode", "xcuserdata" )
+  patcher.save( &verbose )
 endRoutine
 
 routine create_default_asset_config

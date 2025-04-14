@@ -53,66 +53,66 @@ augment Image[]
       endIf
 
     method anchor_top_left
-      (forEach in this).anchor_top_left
+      (forEach as Image in this).anchor_top_left
 
     method anchor_top
-      (forEach in this).anchor_top
+      (forEach as Image in this).anchor_top
 
     method anchor_top_right
-      (forEach in this).anchor_top_right
+      (forEach as Image in this).anchor_top_right
 
     method anchor_left
-      (forEach in this).anchor_left
+      (forEach as Image in this).anchor_left
 
     method anchor_center
-      (forEach in this).anchor_center
+      (forEach as Image in this).anchor_center
 
     method anchor_right
-      (forEach in this).anchor_right
+      (forEach as Image in this).anchor_right
 
     method anchor_bottom_left
-      (forEach in this).anchor_bottom_left
+      (forEach as Image in this).anchor_bottom_left
 
     method anchor_bottom
-      (forEach in this).anchor_bottom
+      (forEach as Image in this).anchor_bottom
 
     method anchor_bottom_right
-      (forEach in this).anchor_bottom_right
+      (forEach as Image in this).anchor_bottom_right
 
     method reset_size( size:XY )
-      (forEach in this).reset_size( size )
+      (forEach as Image in this).reset_size( size )
 
     method set_anchor( anchor:Anchor )
-      (forEach in this).anchor = anchor
+      (forEach as Image in this).anchor = anchor
 
     method set_color( color:Color )
-      (forEach in this).color = color
+      (forEach as Image in this).color = color
 
     method set_nominal_size( nominal_size:XY )
-      (forEach in this).nominal_size = nominal_size
+      (forEach as Image in this).nominal_size = nominal_size
 
     method set_opacity( opacity:Real )
-      (forEach in this).opacity = opacity
+      (forEach as Image in this).opacity = opacity
 
     method set_position( position:XY )
-      (forEach in this).position = position
+      (forEach as Image in this).position = position
 
     method set_scale( scale:Real )
-      (forEach in this).scale = scale
+      (forEach as Image in this).scale = scale
 
     method set_scale( scale:XY )
-      (forEach in this).scale = scale
+      (forEach as Image in this).scale = scale
 
     method set_render_mode( render_mode:RenderMode )
-      (forEach in this).render_mode = render_mode
+      (forEach as Image in this).render_mode = render_mode
 
     method set_size( size:XY )
-      (forEach in this).size = size
+      (forEach as Image in this).size = size
 
     method set_size( size:XY, scale:XY )
-      (forEach in this).set_size( size, scale )
+      (forEach as Image in this).set_size( size, scale )
 
     method set_subdivisions( subdivisions:XY )
-      (forEach in this).subdivisions = subdivisions
+      (forEach as Image in this).subdivisions = subdivisions
 
 endAugment
