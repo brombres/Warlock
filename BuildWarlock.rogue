@@ -357,7 +357,13 @@ endRoutine
 
 routine update_gitignore
   local patcher = GitIgnorePatcher( File(".gitignore") )
-  patcher.add( "# Xcode", "xcuserdata" )
+
+  patcher.add( "Warlock", ["/Assets/Staging","/Libraries"] )
+  patcher.add( "Rogo", [".rogo","Local.rogo","BuildLocal.rogue","/Build"] )
+  patcher.add( "Mac", ".DS_Store" )
+  patcher.add( "Vim", ["*.swo","*.swp","*~"] )
+  patcher.add( "Xcode", "xcuserdata" )
+
   patcher.save( &verbose )
 endRoutine
 
