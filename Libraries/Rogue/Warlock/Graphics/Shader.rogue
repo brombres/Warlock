@@ -61,7 +61,7 @@ class ShaderUniforms : [String:XYZW]
       set( name, XYZW(value,0,0,0) )
 
     method set( name:String, value:XY )
-      set( name, XYZW(value,0,0,0) )
+      set( name, XYZW(value,0,0) )
 
     method set( name:String, value:XYZ )
       set( name, XYZW(value,0,0,0) )

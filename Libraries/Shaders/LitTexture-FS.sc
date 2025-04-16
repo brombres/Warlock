@@ -2,9 +2,9 @@ $input v_color0, v_texcoord0, v_normal
 
 #include <bgfx_shader.sh>
 
-uniform vec4 u_mipmap_level;
+SAMPLER2D(s_texture,0);
 
-SAMPLER2D(s_texColor,0);
+uniform vec4 u_texture_size;
 
 void main()
 {
@@ -14,9 +14,12 @@ void main()
 
   vec3 ambient  = vec3(0.4226,0.4226,0.4226);
   vec3 lighting = vec3( light_factor, light_factor, light_factor ) + ambient;
-  vec4 texColor;
-  if (u_mipmap_level.x == -1) texColor = texture2D( s_texColor, v_texcoord0 ); // Sample the texture w/auto-mipmap LOD
-  else texColor = texture2DLod( s_texColor, v_texcoord0, u_mipmap_level.x ); // Sample the texture @specified LOD
+
+  vec2 dx = dFdx( v_texcoord0 * u_texture_size.xy );
+  vec2 dy = dFdy( v_texcoord0 * u_texture_size.xy );
+  float mip_level = log2( max(length(dx), length(dy)) );
+  vec4 texColor = texture2DLod( s_texture, v_texcoord0, mip_level );
+
   texColor *= v_color0;
   gl_FragColor = vec4(texColor.rgb * lighting, texColor.a);
 }
