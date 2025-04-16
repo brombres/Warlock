@@ -11,6 +11,7 @@ $include GenerateAssetConfig
 $include GroupIDManager
 $include Manifest
 $include ImagePacker
+$include PatchSplitter
 $include Placement
 $include TargetVisitor
 

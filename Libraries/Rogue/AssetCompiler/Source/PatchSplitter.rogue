@@ -1,0 +1,84 @@
+library AssetCompiler
+
+class PatchSplitter
+  PROPERTIES
+    placements  = Box[]
+    patch_count : XY
+
+  METHODS
+    method init( bitmap:Bitmap, &top_only )
+      local widths = patch_widths( bitmap, &=top_only )
+
+      if (top_only)
+        local tile_h = bitmap.height - 1
+        local x = 0
+        forEach (tile_w in widths)
+          placements.add( Box(x,1,tile_w,tile_h) )
+          x += tile_w
+        endForEach
+        patch_count = XY( widths.count, 1 )
+
+      else
+        local heights = patch_heights( bitmap )
+        local y = 1
+        forEach (tile_h in heights)
+          local x = 1
+          forEach (tile_w in widths)
+            placements.add( Box(x,y,tile_w,tile_h) )
+            x += tile_w
+          endForEach
+          y += tile_h
+        endForEach
+        patch_count = XY( widths.count, heights.count )
+
+      endIf
+
+    method patch_widths( bitmap:Bitmap, &top_only )->Int[]
+      # Patch widths
+      local i1 = 0
+      local i2 = bitmap.width - 1
+      if (not top_only) ++i1; --i2
+
+      local pixels = bitmap.pixels
+      local cur = pixels[i1]
+      ++i1
+      local w = 1
+      local widths = [1]
+
+      forEach (i in i1..i2)
+        local next = pixels[i]
+        if (next != cur)
+          ++w
+          cur = next
+          widths.add( 1 )
+        else
+          ++widths.last
+        endIf
+      endForEach
+
+      return widths
+
+    method patch_heights( bitmap:Bitmap )->Int[]
+      # Patch heights
+      local h = 1
+      local heights = [1]
+      local stride = bitmap.width
+
+      local pixels = bitmap.pixels
+      local cur = pixels[stride]
+      local pos = stride * 2
+      loop (bitmap.height - 3)
+        local next = pixels[pos]
+        pos += stride
+        if (next != cur)
+          ++h
+          cur = next
+          heights.add( 1 )
+        else
+          ++heights.last
+        endIf
+      endLoop
+
+      return heights
+
+endClass

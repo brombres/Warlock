@@ -186,8 +186,14 @@ class AssetManager [singleton]
       .consume_ws
       asset.image_size.y = scanner.scan_int
       .consume_ws
-      if (.consume_id("patch")) asset.image_patch_count = scanner.scan_int
-      .consume_ws
+      if (.consume_id("patch"))
+        asset.image_patch_count = scanner.scan_int
+        .consume_ws
+        asset.image_patch_split.x = scanner.scan_int
+        .consume_ws
+        asset.image_patch_split.y = scanner.scan_int
+        .consume_ws
+      endIf
       if (.consume_id("frames")) asset.frame_count = scanner.scan_int
       .consume_ws
       if (.consume_id("mipmaps"))

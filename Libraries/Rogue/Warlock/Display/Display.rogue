@@ -101,6 +101,34 @@ class Display [singleton]
         clip = clip_stack.remove_last
       endIf
 
+    method push_clip( new_clip:Box? )->PushedClip
+      # Usage:
+      #   Display.push_clip( bounds )
+      #   ...
+      #   Display.pop_clip
+      #
+      # OR
+      #
+      #   use Display.push_clip( bounds )
+      #     ...
+      #   endUse
+      clip_stack.add( clip )
+      local result = PushedClip( new_clip )
+
+      if (new_clip)
+        if (clip)
+          new_clip = clip.value & new_clip.value
+          if (not new_clip)
+            # No interesection, but don't use 'null' as that means "no clip".
+            new_clip = Box(0,0,0,0)
+          endIf
+        endIf
+      endIf
+
+      clip = new_clip
+
+      return result
+
     method push_rotation( q:Quaternion )
       if (rotation_stack.count)
         rotation_stack.add( rotation_stack.last * q )
@@ -130,21 +158,6 @@ class Display [singleton]
       endForEach
       if (transforms.count) set_transform( transforms.last, &preserve_stack )
       else                  set_transform( Matrix.identity, &preserve_stack )
-
-    method push_clip( new_clip:Box? )
-      clip_stack.add( clip )
-
-      if (new_clip)
-        if (clip)
-          new_clip = clip.value & new_clip.value
-          if (not new_clip)
-            # No interesection, but don't use 'null' as that means "no clip".
-            new_clip = Box(0,0,0,0)
-          endIf
-        endIf
-      endIf
-
-      clip = new_clip
 
     method render
       Display = this
@@ -300,4 +313,14 @@ class TransformStackState( original_transform_count:Int, original_rotation_count
 
       n = Display.rotation_stack.count - state.original_rotation_count
       if (n) Display.pop_rotation( n )
+endClass
+
+class PushedClip( clip:Box? ) [compound]
+  METHODS
+    method on_use->this
+      return this
+
+    method on_end_use( pushed_clip:PushedClip )
+      Display.pop_clip
+
 endClass
