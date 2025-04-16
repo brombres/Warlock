@@ -202,6 +202,51 @@ class PatchImage : Image
     method set_truncate_right( setting:Logical )
       .truncate_right = setting
 
+    method stretch_tile_horizontal_edges( stretch_limit=1.5:Real )
+      if local p1 = patches[1]->(as TextureImage)
+        if (p1 not instanceOf StretchTileImage)
+          patches[1] = StretchTileImage(p1.asset,p1.image_index).[ horizontal_only(stretch_limit) ]
+        endIf
+      endIf
+
+      if local p7 = patches[7]->(as TextureImage)
+        if (p7 not instanceOf StretchTileImage)
+          patches[7] = StretchTileImage(p7.asset,p7.image_index).[ horizontal_only(stretch_limit) ]
+        endIf
+      endIf
+
+    method stretch_tile_middle( stretch_limit=1.5:Real, &h, &v )
+      if local p4 = patches[1]->(as TextureImage)
+        if (p4 not instanceOf StretchTileImage)
+          local image = StretchTileImage( p1.asset, p1.image_index )
+          if (h xor v)
+            if (h) image.horizontal_only( stretch_limit )
+            else   image.vertical_only( stretch_limit )
+          else
+            image.stretch_limit = stretch_limit
+          endIf
+          patches[4] = image
+        endIf
+      else
+        if (patch_count == 3)
+          if (patches[1])     stretch_tile_horizontal_edges
+          elseIf (patches[3]) stretch_tile_vertical_edges
+        endIf
+      endIf
+
+    method stretch_tile_vertical_edges( stretch_limit=1.5:Real )
+      if local p3 = patches[3]->(as TextureImage)
+        if (p3 not instanceOf StretchTileImage)
+          patches[3] = StretchTileImage(p3.asset,p3.image_index).[ vertical_only(stretch_limit) ]
+        endIf
+      endIf
+
+      if local p5 = patches[5]->(as TextureImage)
+        if (p5 not instanceOf StretchTileImage)
+          patches[5] = StretchTileImage(p5.asset,p5.image_index).[ vertical_only(stretch_limit) ]
+        endIf
+      endIf
+
     method truncate_top
       .truncate_top = true
 

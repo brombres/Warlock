@@ -23,15 +23,19 @@ augment Entity::Entity2D
 
     method draw( bounds:Box )
       if (attributes.hidden) return
-      use Display.transform_stack
-        .begin_draw
-        Display.push_transform(
-          Matrix.translate( XYZ(bounds.position,z) ) *
-          Matrix.scale( bounds.size/nominal_size )
-        )
-        .handle_draw( &!fg )
-        .handle_draw( &fg )
-      endUse
+
+      local scale = bounds.size / nominal_size
+      temporarily this.scale = scale
+        use Display.transform_stack
+          .begin_draw
+          Display.push_transform(
+            Matrix.translate( XYZ(bounds.position,z) ) *
+            Matrix.scale( scale )
+          )
+          .handle_draw( &!fg )
+          .handle_draw( &fg )
+        endUse
+      endTemporarily
 
     method .push_transform( position:XY )
       if (rotation.is_identity)

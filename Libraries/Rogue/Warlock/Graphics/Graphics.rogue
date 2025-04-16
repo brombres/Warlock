@@ -12,6 +12,7 @@ $include Warlock/Graphics/Image/Image
 $include Warlock/Graphics/Image/ImageInfo
 $include Warlock/Graphics/Image/PatchImage
 $include Warlock/Graphics/Image/RenderTargetImage
+$include Warlock/Graphics/Image/StretchTileImage
 $include Warlock/Graphics/Image/TextureImage
 $include Warlock/Graphics/Image/TextureMeshImage
 $include Warlock/Graphics/Mesh
