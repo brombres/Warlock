@@ -1,8 +1,8 @@
 library Warlock
 
-class StretchTileImage : TextureImage
+class StretchtiledImage : TextureImage
   PROPERTIES
-    stretch_limit = XY(1.5,1.5)
+    stretch_limit = XY(1.0,1.0)
 
   METHODS
     method init( texture )
@@ -14,11 +14,11 @@ class StretchTileImage : TextureImage
     method init( asset, image_index )
       prior.init( asset, image_index )
 
-    method init( existing:StretchTileImage )
+    method init( existing:StretchtiledImage )
       prior.init( existing )
       stretch_limit  = existing.stretch_limit
 
-    method horizontal_only( stretch_limit=1.5:Real )
+    method horizontal_tiling_only( stretch_limit=1.0:Real )
       this.stretch_limit = XY( stretch_limit.clamped_low(1.0), 0 )
 
     method load [override]
@@ -37,7 +37,7 @@ class StretchTileImage : TextureImage
       endIf
       return @texture
 
-    method vertical_only( stretch_limit=1.5:Real )
+    method vertical_tiling_only( stretch_limit=1.0:Real )
       this.stretch_limit = XY( 0, stretch_limit.clamped_low(1.0) )
 
     method .draw_entity [override]

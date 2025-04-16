@@ -202,26 +202,52 @@ class PatchImage : Image
     method set_truncate_right( setting:Logical )
       .truncate_right = setting
 
-    method stretch_tile_horizontal_edges( stretch_limit=1.5:Real )
-      if local p1 = patches[1]->(as TextureImage)
-        if (p1 not instanceOf StretchTileImage)
-          patches[1] = StretchTileImage(p1.asset,p1.image_index).[ horizontal_only(stretch_limit) ]
+    method stretchtiled( stretch_limit=1.0:Real )
+      stretchtiled_edges
+      stretchtiled_middle
+
+    method stretchtiled_edges( stretch_limit=1.0:Real, &h, &v )
+      if (h == v)
+        h = true
+        v = true
+      endIf
+
+      if (h)
+        if local p1 = patches[1]->(as TextureImage)
+          if (p1 not instanceOf StretchtiledImage)
+            patches[1] = StretchtiledImage(p1.asset,p1.image_index).[ horizontal_tiling_only(stretch_limit) ]
+          endIf
+        endIf
+
+        if local p7 = patches[7]->(as TextureImage)
+          if (p7 not instanceOf StretchtiledImage)
+            patches[7] = StretchtiledImage(p7.asset,p7.image_index).[ horizontal_tiling_only(stretch_limit) ]
+          endIf
         endIf
       endIf
 
-      if local p7 = patches[7]->(as TextureImage)
-        if (p7 not instanceOf StretchTileImage)
-          patches[7] = StretchTileImage(p7.asset,p7.image_index).[ horizontal_only(stretch_limit) ]
+      if (v)
+        if local p3 = patches[3]->(as TextureImage)
+          if (p3 not instanceOf StretchtiledImage)
+            patches[3] = StretchtiledImage(p3.asset,p3.image_index).[ vertical_tiling_only(stretch_limit) ]
+          endIf
         endIf
+
+        if local p5 = patches[5]->(as TextureImage)
+          if (p5 not instanceOf StretchtiledImage)
+            patches[5] = StretchtiledImage(p5.asset,p5.image_index).[ vertical_tiling_only(stretch_limit) ]
+          endIf
+        endIf
+
       endIf
 
-    method stretch_tile_middle( stretch_limit=1.5:Real, &h, &v )
+    method stretchtiled_middle( stretch_limit=1.0:Real, &h, &v )
       if local p4 = patches[1]->(as TextureImage)
-        if (p4 not instanceOf StretchTileImage)
-          local image = StretchTileImage( p1.asset, p1.image_index )
+        if (p4 not instanceOf StretchtiledImage)
+          local image = StretchtiledImage( p4.asset, p4.image_index )
           if (h xor v)
-            if (h) image.horizontal_only( stretch_limit )
-            else   image.vertical_only( stretch_limit )
+            if (h) image.horizontal_tiling_only( stretch_limit )
+            else   image.vertical_tiling_only( stretch_limit )
           else
             image.stretch_limit = stretch_limit
           endIf
@@ -229,21 +255,8 @@ class PatchImage : Image
         endIf
       else
         if (patch_count == 3)
-          if (patches[1])     stretch_tile_horizontal_edges
-          elseIf (patches[3]) stretch_tile_vertical_edges
-        endIf
-      endIf
-
-    method stretch_tile_vertical_edges( stretch_limit=1.5:Real )
-      if local p3 = patches[3]->(as TextureImage)
-        if (p3 not instanceOf StretchTileImage)
-          patches[3] = StretchTileImage(p3.asset,p3.image_index).[ vertical_only(stretch_limit) ]
-        endIf
-      endIf
-
-      if local p5 = patches[5]->(as TextureImage)
-        if (p5 not instanceOf StretchTileImage)
-          patches[5] = StretchTileImage(p5.asset,p5.image_index).[ vertical_only(stretch_limit) ]
+          if (patches[1])     stretchtiled_edges( stretch_limit, &h )
+          elseIf (patches[3]) stretchtiled_edges( stretch_limit, &v )
         endIf
       endIf
 
