@@ -46,8 +46,7 @@ class StretchtiledImage : TextureImage
         local bounds = Box( nominal_size )
         local h_flip = attributes.h_flip
         local v_flip = attributes.v_flip
-        #local render_mode = render_mode || RenderMode.ALPHA_TEXTURE_NO_MIPMAP
-        local render_mode = render_mode || RenderMode.ALPHA_TEXTURE #_NO_MIPMAP
+        local render_mode = render_mode || RenderMode.ALPHA_TEXTURE
         localize size
         local tile_count = (size / nominal_size).floor
         if (stretch_limit.x)

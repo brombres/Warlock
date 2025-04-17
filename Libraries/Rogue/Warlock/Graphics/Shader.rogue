@@ -15,7 +15,7 @@ class Shader
       program = ShaderProgram( filename )
 
     method apply_uniforms
-      program.uniforms = uniforms
+      program.uniforms = @uniforms
       program.apply_uniforms
 
     method load

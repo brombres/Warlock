@@ -90,7 +90,6 @@ class BGFX : Renderer [singleton]
       RenderMode.ALPHA_TEXTURE           = RenderModeAlphaTexture
       RenderMode.ALPHA_TEXTURE_ADD  = RenderModeAlphaTextureAdd
       RenderMode.ALPHA_TEXTURE_SCREEN    = RenderModeAlphaTextureScreen
-      RenderMode.ALPHA_TEXTURE_NO_MIPMAP = RenderModeAlphaTextureNoMipMap
       RenderMode.LIT_TEXTURE             = RenderModeLitTexture
 
       is_initialized = true
@@ -236,16 +235,7 @@ class BGFX : Renderer [singleton]
         native @|bgfx::setTransform( reinterpret_cast<float*>( &$view_projection ) );
 
         local shader = render_mode.shader
-        #if local first_texture = batch.texture || batch.textures?.first
-        #  #shader.uniforms//u_mipmap_level = batch.render_mode.mipmap_level
-        #  shader.uniforms//texture_size = first_texture.size
-        #endIf
-        #shader.uniforms//u_mipmap_level = batch.render_mode.mipmap_level
-        shader.uniforms//u_mipmap_level = -1
-        if local first_texture = batch.texture || batch.textures?.first
-          #shader.uniforms//u_mipmap_level = batch.render_mode.mipmap_level
-          shader.uniforms//texture_size = first_texture.size
-        endIf
+        #shader.uniforms//u_x = y
 
         local bgfx_state_flags = 0
         native @|$bgfx_state_flags |= (RogueInt)(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A);
@@ -414,12 +404,12 @@ augment ShaderProgram
        |$this->bgfx_program = BGFX_INVALID_HANDLE;
 
     method apply_uniforms
+      load
+
       local uniforms = @uniforms
       if (not uniforms or uniforms.is_empty) return
 
       if (uniforms.count > 8) println "Warlock Shader exceeds maximum of 8 uniforms."
-
-      load
 
       local i = 0
       forEach (value at name in uniforms)

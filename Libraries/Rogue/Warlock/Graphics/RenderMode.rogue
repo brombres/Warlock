@@ -8,14 +8,12 @@ class RenderMode
     ALPHA_TEXTURE           : RenderMode
     ALPHA_TEXTURE_ADD  : RenderMode
     ALPHA_TEXTURE_SCREEN    : RenderMode
-    ALPHA_TEXTURE_NO_MIPMAP : RenderMode
     LIT_TEXTURE             : RenderMode
 
   PROPERTIES
     shader            : Shader
     source_blend      = BlendMode.ONE                  : BlendMode
     destination_blend = BlendMode.INVERSE_SOURCE_ALPHA : BlendMode
-    mipmap_level      = -1   # -1 is automatic
     culling_mode      = CullingMode.NONE : CullingMode
     depth_test        = DepthTest.DISABLED : DepthTest
     write_z           : Logical
@@ -28,7 +26,6 @@ class RenderMode
       shader                = existing.shader
       source_blend          = existing.source_blend
       destination_blend     = existing.destination_blend
-      mipmap_level          = existing.mipmap_level
       culling_mode          = existing.culling_mode
       depth_test            = existing.depth_test
       write_z               = existing.write_z
@@ -77,11 +74,6 @@ class RenderModeAlphaTextureScreen : RenderMode [singleton]
     destination_blend = BlendMode.INVERSE_SOURCE_COLOR : BlendMode
 endClass
 
-
-class RenderModeAlphaTextureNoMipMap : RenderModeAlphaTexture [singleton]
-  PROPERTIES
-    mipmap_level = 0
-endClass
 
 class RenderModeLitTexture : RenderMode [singleton]
   PROPERTIES
