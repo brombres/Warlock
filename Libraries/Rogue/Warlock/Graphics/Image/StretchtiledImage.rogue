@@ -1,29 +1,29 @@
 library Warlock
 
-class StretchtiledImage : TextureImage
+class StretchtiledImage : Image
   PROPERTIES
+    image         : Image
     stretch_limit = XY(1.0,1.0)
 
   METHODS
-    method init( texture )
-      prior.init( texture )
+    method init( image )
+
+    method init( texture:Texture )
+      image = TextureImage( texture )
 
     method init( asset_name:String )
-      prior.init( asset_name )
-
-    method init( asset, image_index )
-      prior.init( asset, image_index )
+      image = TextureImage( asset_name )
 
     method init( existing:StretchtiledImage )
       prior.init( existing )
+      image          = existing.image
       stretch_limit  = existing.stretch_limit
 
     method horizontal_tiling_only( stretch_limit=1.0:Real )
       this.stretch_limit = XY( stretch_limit.clamped_low(1.0), 0 )
 
     method load [override]
-      # Ensures image is fully loaded.
-      texture  # will load if necessary
+      image.load
 
     method set_stretch_limit( @stretch_limit )
 
@@ -31,42 +31,32 @@ class StretchtiledImage : TextureImage
       set_stretch_limit( XY(stretch_limit,stretch_limit) )
 
     method texture->Texture [override]
-      if (not @texture and asset)
-        texture = asset.images[image_index].texture( &mipmaps )
-        # actually loads texture if necessary
-      endIf
-      return @texture
+      return image.texture
 
     method vertical_tiling_only( stretch_limit=1.0:Real )
       this.stretch_limit = XY( 0, stretch_limit.clamped_low(1.0) )
 
     method .draw_entity [override]
-      if (texture)
-        local color = color.with_opacity( opacity )
-        local bounds = Box( nominal_size )
-        local h_flip = attributes.h_flip
-        local v_flip = attributes.v_flip
-        local render_mode = render_mode || RenderMode.ALPHA_TEXTURE
-        localize size
-        local tile_count = (size / nominal_size).floor
-        if (stretch_limit.x)
-          if (tile_count.x * nominal_size.x * stretch_limit.x < size.x) ++tile_count.x
-        else
-          tile_count.x = 1
-        endIf
-        if (stretch_limit.y)
-          if (tile_count.y * nominal_size.y * stretch_limit.y < size.y) ++tile_count.y
-        else
-          tile_count.y = 1
-        endIf
-        forEach (j in 0..<tile_count.y->Int)
-          forEach (i in 0..<tile_count.x->Int)
-            Renderer.draw(
-              bounds.cell(XY(i,j),tile_count),
-              texture, color, render_mode, &=subdivisions, &=h_flip, &=v_flip
-            )
-          endForEach
-        endForEach
+      local bounds = Box( nominal_size )
+      local h_flip = attributes.h_flip
+      local v_flip = attributes.v_flip
+      local render_mode = render_mode || RenderMode.ALPHA_TEXTURE
+      localize size
+      local tile_count = (size / image.nominal_size).floor
+      if (stretch_limit.x)
+        if (tile_count.x * image.nominal_size.x * stretch_limit.x < size.x) ++tile_count.x
+      else
+        tile_count.x = 1
       endIf
+      if (stretch_limit.y)
+        if (tile_count.y * image.nominal_size.y * stretch_limit.y < size.y) ++tile_count.y
+      else
+        tile_count.y = 1
+      endIf
+      forEach (j in 0..<tile_count.y->Int)
+        forEach (i in 0..<tile_count.x->Int)
+          image.draw( bounds.cell( XY(i,j), tile_count ) )
+        endForEach
+      endForEach
 
 endClass

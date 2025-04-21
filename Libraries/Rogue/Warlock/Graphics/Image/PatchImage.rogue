@@ -215,13 +215,13 @@ class PatchImage : Image
       if (h)
         if local p1 = patches[1]->(as TextureImage)
           if (p1 not instanceOf StretchtiledImage)
-            patches[1] = StretchtiledImage(p1.asset,p1.image_index).[ horizontal_tiling_only(stretch_limit) ]
+            patches[1] = StretchtiledImage(p1).[ horizontal_tiling_only(stretch_limit) ]
           endIf
         endIf
 
         if local p7 = patches[7]->(as TextureImage)
           if (p7 not instanceOf StretchtiledImage)
-            patches[7] = StretchtiledImage(p7.asset,p7.image_index).[ horizontal_tiling_only(stretch_limit) ]
+            patches[7] = StretchtiledImage(p7).[ horizontal_tiling_only(stretch_limit) ]
           endIf
         endIf
       endIf
@@ -229,13 +229,13 @@ class PatchImage : Image
       if (v)
         if local p3 = patches[3]->(as TextureImage)
           if (p3 not instanceOf StretchtiledImage)
-            patches[3] = StretchtiledImage(p3.asset,p3.image_index).[ vertical_tiling_only(stretch_limit) ]
+            patches[3] = StretchtiledImage(p3).[ vertical_tiling_only(stretch_limit) ]
           endIf
         endIf
 
         if local p5 = patches[5]->(as TextureImage)
           if (p5 not instanceOf StretchtiledImage)
-            patches[5] = StretchtiledImage(p5.asset,p5.image_index).[ vertical_tiling_only(stretch_limit) ]
+            patches[5] = StretchtiledImage(p5).[ vertical_tiling_only(stretch_limit) ]
           endIf
         endIf
 
@@ -244,7 +244,7 @@ class PatchImage : Image
     method stretchtiled_middle( stretch_limit=1.0:Real, &h, &v )
       if local p4 = patches[1]->(as TextureImage)
         if (p4 not instanceOf StretchtiledImage)
-          local image = StretchtiledImage( p4.asset, p4.image_index )
+          local image = StretchtiledImage( p4 )
           if (h xor v)
             if (h) image.horizontal_tiling_only( stretch_limit )
             else   image.vertical_tiling_only( stretch_limit )
