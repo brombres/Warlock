@@ -42,14 +42,15 @@ class StretchtiledImage : Image
       local v_flip = attributes.v_flip
       local render_mode = render_mode || RenderMode.ALPHA_TEXTURE
       localize size
-      local tile_count = (size / image.nominal_size).floor
+      local nominal_size = image.nominal_size.scaled_to_fit( size )
+      local tile_count = (size / nominal_size).floor
       if (stretch_limit.x)
-        if (tile_count.x * image.nominal_size.x * stretch_limit.x < size.x) ++tile_count.x
+        if (tile_count.x * nominal_size.x * stretch_limit.x < size.x) ++tile_count.x
       else
         tile_count.x = 1
       endIf
       if (stretch_limit.y)
-        if (tile_count.y * image.nominal_size.y * stretch_limit.y < size.y) ++tile_count.y
+        if (tile_count.y * nominal_size.y * stretch_limit.y < size.y) ++tile_count.y
       else
         tile_count.y = 1
       endIf

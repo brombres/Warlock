@@ -213,45 +213,47 @@ class PatchImage : Image
       endIf
 
       if (h)
-        if local p1 = patches[1]->(as TextureImage)
+        if local p1 = patches[1]->(as Image)
           if (p1 not instanceOf StretchtiledImage)
-            patches[1] = StretchtiledImage(p1).[ horizontal_tiling_only(stretch_limit) ]
+            patches[1] = StretchtiledImage( p1 )
           endIf
+          patches[1]->(as StretchtiledImage).[ horizontal_tiling_only(stretch_limit) ]
         endIf
 
-        if local p7 = patches[7]->(as TextureImage)
+        if local p7 = patches[7]->(as Image)
           if (p7 not instanceOf StretchtiledImage)
-            patches[7] = StretchtiledImage(p7).[ horizontal_tiling_only(stretch_limit) ]
+            patches[7] = StretchtiledImage( p7 )
           endIf
+          patches[7]->(as StretchtiledImage).[ horizontal_tiling_only(stretch_limit) ]
         endIf
       endIf
 
       if (v)
-        if local p3 = patches[3]->(as TextureImage)
+        if local p3 = patches[3]->(as Image)
           if (p3 not instanceOf StretchtiledImage)
-            patches[3] = StretchtiledImage(p3).[ vertical_tiling_only(stretch_limit) ]
+            patches[3] = StretchtiledImage( p3 )
           endIf
+          patches[3]->(as StretchtiledImage).[ vertical_tiling_only(stretch_limit) ]
         endIf
 
-        if local p5 = patches[5]->(as TextureImage)
+        if local p5 = patches[5]->(as Image)
           if (p5 not instanceOf StretchtiledImage)
-            patches[5] = StretchtiledImage(p5).[ vertical_tiling_only(stretch_limit) ]
+            patches[5] = StretchtiledImage( p5 )
           endIf
+          patches[5]->(as StretchtiledImage).[ vertical_tiling_only(stretch_limit) ]
         endIf
 
       endIf
 
     method stretchtiled_middle( stretch_limit=1.0:Real, &h, &v )
-      if local p4 = patches[1]->(as TextureImage)
-        if (p4 not instanceOf StretchtiledImage)
-          local image = StretchtiledImage( p4 )
-          if (h xor v)
-            if (h) image.horizontal_tiling_only( stretch_limit )
-            else   image.vertical_tiling_only( stretch_limit )
-          else
-            image.stretch_limit = stretch_limit
-          endIf
-          patches[4] = image
+      if local p4 = patches[4]->(as Image)
+        if (p4 not instanceOf StretchtiledImage) patches[4] = StretchtiledImage( p4 )
+        local image = patches[4]->(as StretchtiledImage)
+        if (h xor v)
+          if (h) image.horizontal_tiling_only( stretch_limit )
+          else   image.vertical_tiling_only( stretch_limit )
+        else
+          image.stretch_limit = stretch_limit
         endIf
       else
         if (patch_count == 3)
