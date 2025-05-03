@@ -1,0 +1,32 @@
+library Warlock
+
+class ImageFrames : Image
+  PROPERTIES
+    frame  : Int
+    frames : Image[]
+
+  METHODS
+    method init
+      ensure<<frames>>
+
+    method init( frames )
+
+    method current_frame->Image
+      return frames[frame]
+
+    method set_opacity( opacity:Real )
+      @opacity = opacity
+      (forEach in frames).opacity = opacity
+
+    method set_color( color:Color )
+      @color = color
+      (forEach in frames).color = color
+
+    method texture->Texture
+      return frames[frame].texture
+
+    method set_render_mode( render_mode:RenderMode )
+      @render_mode = render_mode
+      (forEach in frames).render_mode = render_mode
+
+endClass

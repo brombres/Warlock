@@ -9,6 +9,7 @@ $include Warlock/Graphics/Drawable2D
 $include Warlock/Graphics/Font
 $include Warlock/Graphics/Image/ColorFillImage
 $include Warlock/Graphics/Image/Image
+$include Warlock/Graphics/Image/ImageFrames
 $include Warlock/Graphics/Image/ImageInfo
 $include Warlock/Graphics/Image/PatchImage
 $include Warlock/Graphics/Image/RenderTargetImage

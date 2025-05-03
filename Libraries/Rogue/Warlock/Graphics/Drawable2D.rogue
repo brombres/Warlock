@@ -10,4 +10,8 @@ class Drawable2D : Entity2D
       prior.init( existing )
       color  = existing.color
       render_mode = existing.render_mode
+
+    method set_color( @color )
+
+    method set_render_mode( @render_mode )
 endClass

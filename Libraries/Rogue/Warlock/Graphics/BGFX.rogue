@@ -222,12 +222,8 @@ class BGFX : Renderer [singleton]
        |  bgfx::makeRef( $index_data->data, (uint32_t)($data->indices->count * sizeof(uint16_t)) )
        |);
 
-      local clip : Box?
       forEach (batch in render_queue)
-        if (clip != batch.clip)
-          clip = batch.clip
-          set_clip( clip )
-        endIf
+        set_clip( batch.clip )
 
         local render_mode = batch.render_mode
 
