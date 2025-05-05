@@ -58,7 +58,10 @@ class GenerateAssetConfig : Visitor
             local filepath_lc = filepath.to_lowercase
             which (File(filepath_lc).extension)
               case "png", "jpg", "jpeg"
-                writeln_echo " image"
+                write_echo " image"
+                if (filepath_lc.contains(".9."))     write_echo " patch:9"
+                elseIf (filepath_lc.contains(".8.")) write_echo " patch:8"
+                writeln_echo
               case "wav"
                 if (filepath_lc.contains("music")) writeln_echo " music"
                 else                               writeln_echo " sound"
