@@ -27,4 +27,5 @@ $include Warlock/Graphics/Shader
 $include Warlock/Graphics/Spine
 $include Warlock/Graphics/SystemFont
 $include Warlock/Graphics/Texture
+$include Warlock/Graphics/TextStyle
 $include Warlock/Graphics/Vertex

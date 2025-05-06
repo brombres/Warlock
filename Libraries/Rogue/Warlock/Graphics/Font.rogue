@@ -111,7 +111,8 @@ class Font : UI::Font
       endIf
 
       temporarily scale = XY(scale_x,scale_y)
-        draw( text.value, bounds )
+        if (text.style) text.style.draw( this, text, bounds )
+        else            draw( text.value, bounds )
       endTemporarily
 
     method draw( text:String, position:XY  )
