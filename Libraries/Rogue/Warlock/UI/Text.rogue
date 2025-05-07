@@ -1,0 +1,34 @@
+library UI
+uses Warlock
+
+augment UI::Text
+  PROPERTIES
+    app_data_key : AppDataKey
+
+  METHODS
+    method init( app_data_key )
+      value = AppData[app_data_key]
+
+    method init( app_data_id:GlobalID )
+      # e.g. <AppData.health>
+      init( AppDataKey(app_data_id) )
+
+    method app_data_needs_update->Logical
+      if (app_data_key)
+        local new_value = AppData[ app_data_key ] || ""
+        return (new_value != value)
+      endIf
+      return false
+
+    method on_layout [insert]
+      on_update_app_data
+
+    method on_update [override]
+      if (app_data_needs_update) request_layout
+      prior.on_update
+
+    method on_update_app_data
+      if (app_data_key)
+        value = AppData[ app_data_key ]
+      endIf
+endAugment

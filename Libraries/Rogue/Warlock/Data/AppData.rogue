@@ -14,6 +14,15 @@ class AppData [singleton]
     method get( name:String )->AppDataContext
       return AppDataContext( data, name )
 
+    method get( key:AppDataKey )->AppDataContext
+      # key.path: e.g. '<AppData.x.y>'
+      local parts = key.path.split('.')
+      if (parts.count and parts[0] == "AppData") parts.remove_first
+      if (parts.is_empty) return undefined
+      local context = get( parts.remove_first )
+      forEach (part in parts) context = context[part]
+      return context
+
     method set( name:String, value:Variant )
       if (data.contains(name))
         local existing = data[name]
@@ -24,12 +33,22 @@ class AppData [singleton]
       endIf
       signal_change( data[name].on_change, value )
 
+    method set( key:AppDataKey, value:Variant )
+      local parts = key.path.split('.')
+      if (parts.count and parts[0] == "AppData") parts.remove_first
+      if (parts.is_empty) return
+      if (parts.count == 1)
+        set( parts.first, value )
+      else
+        local last = parts.remove_last
+        local context = get( parts.remove_first )
+        forEach (part in parts) context = context[part]
+        context.set( last, value )
+      endIf
+
     method on_change( id:GlobalID, callback:Function(Variant) )
-      local parts = id->String.clipped(1,1).split('.').[ remove_first ]
-      local context = get( parts.remove_first )
-      forEach (part in parts)
-        context = context[part]
-      endForEach
+      # id: e.g. 'AppData.x.y'
+      local context = get( AppDataKey(id) )
 
       id.on_signal( callback )
 
@@ -50,6 +69,18 @@ class AppData [singleton]
 
 endClass
 
+class AppDataKey( path="":String ) [compound]
+  # path: e.g. "health"
+  GLOBAL METHODS
+    method create( id:GlobalID )->AppDataKey
+      # id: e.g. <AppData.health>
+      return AppDataKey( id->String.clipped(1,1) )
+
+  METHODS
+    method operator?->Logical
+      return path and path.count
+endClass
+
 class AppDataValue( value:Variant, data:[String:AppDataValue], on_change:GlobalID ) [compound]
   GLOBAL METHODS
     method create->AppDataValue
@@ -59,8 +90,8 @@ class AppDataValue( value:Variant, data:[String:AppDataValue], on_change:GlobalI
       return create( value, null, <UNDEFINED> )
 
     method create( value:Variant, on_change:GlobalID )->AppDataValue
-      if (value.is_object and value->Object instanceOf ListType)
-      endIf
+      #if (value.is_object and value->Object instanceOf ListType)
+      #endIf
       return AppDataValue( value, null, on_change )
 
     method table( data=[String:AppDataValue]:[String:AppDataValue] )->AppDataValue

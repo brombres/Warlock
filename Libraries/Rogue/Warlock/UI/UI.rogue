@@ -3,4 +3,5 @@ library Warlock
 $include Warlock/UI/ColorFillComponent
 $include Warlock/UI/ImageComponent
 $include Warlock/UI/WarlockUI
+$include Warlock/UI/Text
 
