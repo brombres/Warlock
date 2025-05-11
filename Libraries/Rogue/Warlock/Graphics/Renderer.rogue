@@ -181,7 +181,7 @@ class Renderer [singleton]
     method draw( box:Box, texture_bounds:Box, texture:Texture, color=Color.WHITE:Color,
         render_mode=RenderMode.ALPHA_TEXTURE, subdivisions=XY(0,0):XY, &h_flip, &v_flip )
       # Draws a textured box as a texture fill, where the specified texture corners (in pixels)
-      # are mapped ot the display position of the box corners.
+      # are mapped to the display position of the box corners.
       set_texture( texture )
       draw_triangles
 
@@ -191,7 +191,7 @@ class Renderer [singleton]
       local du  = texture.uv.b - texture.uv.a
       local dv  = texture.uv.c - texture.uv.b
 
-      local uv_a = texture.uv.a * texture_offset
+      local uv_a = texture.uv.a + texture_offset
       local uv_b = uv_a + du * texture_size
       local uv_c = uv_b + dv * texture_size
       local uv_d = uv_a + dv * texture_size

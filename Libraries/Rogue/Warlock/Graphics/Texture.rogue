@@ -46,7 +46,7 @@ class Texture
         subset = Box( existing.size )
       endIf
 
-      source = existing.source || existing
+      source = existing.source
       size = subset.value.size
 
       local source_size = source.size
@@ -115,6 +115,10 @@ class Texture
         endForEach
       endForEach
       return result
+
+    method source->Texture
+      if (@source) return @source
+      return this
 
     method subset( bounds:Box )->Texture
       # Bounds should be in texel (pixel) coordinates
