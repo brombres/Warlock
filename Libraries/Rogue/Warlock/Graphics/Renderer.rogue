@@ -108,7 +108,7 @@ class Renderer [singleton]
         )
       endIf
 
-    method draw( box:Box, tl:Color, tr:Color, br:Color, bl:Color,
+    method draw( box:Box, colors:Quad<<Color>>,
         render_mode=RenderMode.ALPHA_COLOR, subdivisions=XY(0,0):XY )
       clear_textures
       draw_triangles
@@ -118,24 +118,31 @@ class Renderer [singleton]
         local b = box.top_right
         local c = box.bottom_right
         local d = box.bottom_left
-        data.add Vertex( a, tl )
-        data.add Vertex( b, tr )
-        data.add Vertex( c, br )
-        data.add Vertex( d, bl )
+        data.add Vertex( a, colors.a )
+        data.add Vertex( b, colors.b )
+        data.add Vertex( c, colors.c )
+        data.add Vertex( d, colors.d )
         data.add( i0, i0+1, i0+2 )
         data.add( i0, i0+2, i0+3 )
       else
         .generate_quad(
-          Vertex( box.position, tl ),
-          Vertex( box.top_right, tr ),
-          Vertex( box.bottom_right, br ),
-          Vertex( box.bottom_left, bl ),
+          Vertex( box.position, colors.a ),
+          Vertex( box.top_right, colors.b ),
+          Vertex( box.bottom_right, colors.c ),
+          Vertex( box.bottom_left, colors.d ),
           subdivisions
         )
       endIf
 
-    method draw( box:Box, texture:Texture, color:Color, render_mode=RenderMode.ALPHA_TEXTURE,
-        subdivisions=XY(0,0):XY, &h_flip, &v_flip )
+    method draw( box:Box, texture:Texture, color:Color,
+        render_mode=RenderMode.ALPHA_TEXTURE, subdivisions=XY(0,0):XY, &h_flip, &v_flip )
+      # Draws a textured box as an image, where the texture corners are mapped to the
+      # display position of the box corners.
+      local colors = Quad<<Color>>( color, color, color, color )
+      draw( box, texture, colors, render_mode, subdivisions, &=h_flip, &=v_flip )
+
+    method draw( box:Box, texture:Texture, colors:Quad<<Color>>,
+        render_mode=RenderMode.ALPHA_TEXTURE, subdivisions=XY(0,0):XY, &h_flip, &v_flip )
       # Draws a textured box as an image, where the texture corners are mapped to the
       # display position of the box corners.
       set_texture( texture )
@@ -162,23 +169,31 @@ class Renderer [singleton]
         local b = box.top_right
         local c = box.bottom_right
         local d = box.bottom_left
-        data.add Vertex( a, color, uv_a )
-        data.add Vertex( b, color, uv_b )
-        data.add Vertex( c, color, uv_c )
-        data.add Vertex( d, color, uv_d )
+        data.add Vertex( a, colors.a, uv_a )
+        data.add Vertex( b, colors.b, uv_b )
+        data.add Vertex( c, colors.c, uv_c )
+        data.add Vertex( d, colors.d, uv_d )
         data.add( i0, i0+1, i0+2 )
         data.add( i0, i0+2, i0+3 )
       else
         .generate_quad(
-          Vertex( box.position, color,     uv_a ),
-          Vertex( box.top_right, color,    uv_b ),
-          Vertex( box.bottom_right, color, uv_c ),
-          Vertex( box.bottom_left, color,  uv_d ),
+          Vertex( box.position,     colors.a, uv_a ),
+          Vertex( box.top_right,    colors.b, uv_b ),
+          Vertex( box.bottom_right, colors.c, uv_c ),
+          Vertex( box.bottom_left,  colors.d, uv_d ),
           subdivisions
         )
       endIf
 
     method draw( box:Box, texture_bounds:Box, texture:Texture, color=Color.WHITE:Color,
+        render_mode=RenderMode.ALPHA_TEXTURE, subdivisions=XY(0,0):XY, &h_flip, &v_flip )
+      draw(
+        box, texture_bounds, texture,
+        Quad<<Color>>(color,color,color,color),
+        render_mode, subdivisions, &=h_flip, &=v_flip
+      )
+
+    method draw( box:Box, texture_bounds:Box, texture:Texture, colors:Quad<<Color>>,
         render_mode=RenderMode.ALPHA_TEXTURE, subdivisions=XY(0,0):XY, &h_flip, &v_flip )
       # Draws a textured box as a texture fill, where the specified texture corners (in pixels)
       # are mapped to the display position of the box corners.
@@ -212,18 +227,18 @@ class Renderer [singleton]
         local b = box.top_right
         local c = box.bottom_right
         local d = box.bottom_left
-        data.add Vertex( a, color, uv_a )
-        data.add Vertex( b, color, uv_b )
-        data.add Vertex( c, color, uv_c )
-        data.add Vertex( d, color, uv_d )
+        data.add Vertex( a, colors.a, uv_a )
+        data.add Vertex( b, colors.b, uv_b )
+        data.add Vertex( c, colors.c, uv_c )
+        data.add Vertex( d, colors.d, uv_d )
         data.add( i0, i0+1, i0+2 )
         data.add( i0, i0+2, i0+3 )
       else
         .generate_quad(
-          Vertex( box.position, color,     uv_a ),
-          Vertex( box.top_right, color,    uv_b ),
-          Vertex( box.bottom_right, color, uv_c ),
-          Vertex( box.bottom_left, color,  uv_d ),
+          Vertex( box.position,     colors.a, uv_a ),
+          Vertex( box.top_right,    colors.b, uv_b ),
+          Vertex( box.bottom_right, colors.c, uv_c ),
+          Vertex( box.bottom_left,  colors.d, uv_d ),
           subdivisions
         )
       endIf

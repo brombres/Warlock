@@ -2,17 +2,19 @@ library Warlock
 
 class TextureImage : Image
   PROPERTIES
-    texture     : Texture
-    image_index : Int
+    texture          : Texture
+    original_texture : Texture
+    image_index      : Int
+    colors           : Quad<<Color>>?
 
   METHODS
     method init( texture )
       nominal_size = texture.size
-      size = nominal_size
+      scale = 1.0
 
     method init( asset, image_index )
       nominal_size = asset.images[image_index].bounds.size
-      size         = nominal_size
+      scale = 1.0
 
     method init( asset_name:String )
       local asset = AssetManager.find_image( asset_name )
@@ -27,9 +29,25 @@ class TextureImage : Image
       texture     = existing.texture
       image_index = existing.image_index
 
+    method crop( proportional_subset:Box )
+      if (not original_texture)
+        original_texture = texture
+        texture = Texture( original_texture )
+      endIf
+
+      texture.init( original_texture, proportional_subset )
+
     method load [override]
       # Ensures image is fully loaded.
       texture  # will load if necessary
+
+    method reset_crop
+      if (original_texture)
+        texture.init( original_texture )
+        # else texture is already original texture
+      endIf
+      nominal_size = texture.size
+      scale = 1.0
 
     method texture->Texture [override]
       if (not @texture and asset)
@@ -39,14 +57,36 @@ class TextureImage : Image
       return @texture
 
     method .draw_entity [override]
-      local color = color.with_opacity( opacity )
+      local color  : Color
+      local colors : Quad<<Color>>
+
+      if (this.colors)
+        colors = Quad<<Color>>(
+          this.colors.value.a.with_opacity( opacity ),
+          this.colors.value.b.with_opacity( opacity ),
+          this.colors.value.c.with_opacity( opacity ),
+          this.colors.value.d.with_opacity( opacity )
+        )
+      else
+        color = this.color.with_opacity( opacity )
+      endIf
+
       local bounds = Box( nominal_size )
       if (texture)
         local h_flip = attributes.h_flip
         local v_flip = attributes.v_flip
         local render_mode = render_mode || RenderMode.ALPHA_TEXTURE
-        Renderer.draw( bounds, texture, color, render_mode, &=subdivisions, &=h_flip, &=v_flip )
+        if (this.colors)
+          Renderer.draw( bounds, texture, colors, render_mode, &=subdivisions, &=h_flip, &=v_flip )
+        else
+          Renderer.draw( bounds, texture, color, render_mode, &=subdivisions, &=h_flip, &=v_flip )
+        endIf
       else
+        if (this.colors)
+          Renderer.draw( bounds, colors, render_mode||RenderMode.ALPHA_COLOR, &=subdivisions )
+        else
+          Renderer.draw( bounds, color, render_mode||RenderMode.ALPHA_COLOR, &=subdivisions )
+        endIf
         Renderer.draw( bounds, color, render_mode||RenderMode.ALPHA_COLOR, &=subdivisions )
       endIf
 

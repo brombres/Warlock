@@ -17,8 +17,8 @@ augment Box
         Renderer.draw( this, color, render_mode )
       endIf
 
-    method draw( tl:Color, tr:Color, br:Color, bl:Color, render_mode=RenderMode.ALPHA_COLOR:RenderMode )
-      Renderer.draw( this, tl, tr, br, bl, render_mode )
+    method draw( colors:Quad<<Color>>, render_mode=RenderMode.ALPHA_COLOR:RenderMode )
+      Renderer.draw( this, colors, render_mode )
 
     method draw( texture:Texture, color=Color.WHITE:Color, render_mode=RenderMode.ALPHA_TEXTURE:RenderMode )
       Renderer.draw( this, texture, color, render_mode )
