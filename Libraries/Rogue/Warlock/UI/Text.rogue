@@ -7,7 +7,8 @@ augment UI::Text
 
   METHODS
     method init( app_data_key )
-      value = AppData[app_data_key]
+      value = String()
+      on_update_app_data
 
     method init( app_data_id:GlobalID )
       # e.g. <AppData.health>
@@ -29,6 +30,7 @@ augment UI::Text
 
     method on_update_app_data
       if (app_data_key)
-        value = AppData[ app_data_key ]
+        value.clear
+        value.print( AppData[app_data_key] )
       endIf
 endAugment
