@@ -126,13 +126,18 @@ class CollectAssets( target, suppress_errors=false:Logical ) : TargetVisitor
             characters: character_string,
             offset:     characters.map<<Variant>>( (ch) => ch.offset_x ),
             advance:    characters.map<<Variant>>( (ch) => ch.advance_x ),
-            kerning:    font_face.kerning.map<<Variant>>(
-            (prev,next_lookup,table) => table[prev] =
-              next_lookup.map<<Variant>>(
-                (next,kern,table) => table[next] = kern
-              )
-            )
+            kerning:    {}
           }
+
+          if (font_face.kerning)
+            font_info//kerning =
+              font_face.kerning.map<<Variant>>(
+                (prev,next_lookup,table) => table[prev] =
+                  next_lookup.map<<Variant>>(
+                    (next,kern,table) => table[next] = kern
+                  )
+              )
+          endIf
 
           if (is_monospace)
             font_info//monospace = "all"

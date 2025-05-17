@@ -3,6 +3,7 @@ library Warlock
 class Drawable2D : Entity2D
   PROPERTIES
     color       = Color.WHITE : Color
+    colors      : Quad<<Color>>?
     render_mode : RenderMode
 
   METHODS
@@ -12,6 +13,7 @@ class Drawable2D : Entity2D
       render_mode = existing.render_mode
 
     method set_color( @color )
+      colors = null
 
     method set_render_mode( @render_mode )
 endClass

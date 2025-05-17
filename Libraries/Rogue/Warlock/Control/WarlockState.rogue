@@ -25,9 +25,19 @@ class WarlockState<<$ExtendedType,$change_state,$exit_state>> : Rogue::State<<$E
 
     method draw( &fg )
       if (fg)
-        on_draw_fg
         dispatch_draw( &fg )
+        on_draw_fg
+        local cur = actions
+        while (cur)
+          cur.on_draw_fg
+          cur .= concurrent_state
+        endWhile
       else
+        local cur = actions
+        while (cur)
+          cur.on_draw
+          cur .= concurrent_state
+        endWhile
         on_draw
         dispatch_draw( &!fg )
       endIf

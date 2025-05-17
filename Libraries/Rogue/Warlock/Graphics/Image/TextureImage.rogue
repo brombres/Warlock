@@ -5,7 +5,6 @@ class TextureImage : Image
     texture          : Texture
     original_texture : Texture
     image_index      : Int
-    colors           : Quad<<Color>>?
 
   METHODS
     method init( texture )

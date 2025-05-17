@@ -119,7 +119,7 @@ scanner
         produce TERM
       endIf
 
-      scan_string  # will restart if string
+      scan_string_term  # will restart if string
     elseIf (not scan([^ \t\n]*))
       create_id_or_keyword
       restart
@@ -180,6 +180,25 @@ scanner
       if (ch == "'") produce STRING
       elseIf (ch == '\\' and hasAnother) ch = read  # VisitContent backslash escapes
       collect ch
+    endWhile
+    syntaxError "Unterminated string."
+  endIf
+
+- scan_string_term
+  if (scan('"'))
+    while (hasAnother and not nextIs('\n'))
+      if (scan('"')) produce TERM
+      ch = read
+      collect ch
+      if (ch == '\\' and hasAnother) collect read
+    endWhile
+    syntaxError "Unterminated string."
+  elseIf (scan("'"))
+    while (hasAnother and not nextIs('\n'))
+      if (scan("'")) produce TERM
+      ch = read
+      collect ch
+      if (ch == '\\' and hasAnother) collect read
     endWhile
     syntaxError "Unterminated string."
   endIf

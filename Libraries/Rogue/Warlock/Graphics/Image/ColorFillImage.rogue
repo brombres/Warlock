@@ -12,6 +12,9 @@ class ColorFillImage : Image
   METHODS
     method init( color )
 
+    method init( size:XY, color=Color.WHITE:Color )
+      prior.init( size, color )
+
     method .draw_entity [override]
       fill
 

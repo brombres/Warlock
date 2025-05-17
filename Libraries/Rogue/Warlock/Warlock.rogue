@@ -48,10 +48,11 @@ class Warlock [essential singleton]
       return true  # keep running
 
   PROPERTIES
-    configured     : Logical
-    windows        = Window[]
-    textures       = [File:Texture]
-    frames         : Int
+    configured : Logical
+    windows    = Window[]
+    textures   = [File:Texture]
+    frames     : Int
+    actions    : Action
 
   METHODS
     method init
@@ -113,6 +114,8 @@ class Warlock [essential singleton]
 
     method render
       (forEach in windows).begin_render
+
+      if (actions) actions .= updated
 
       State = State.updated || State()
       Screen = Screen.updated || Screen()

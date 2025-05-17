@@ -4,7 +4,6 @@ class PatchImage : Image
   PROPERTIES
     border_scale     = 1.0
     patch_count      : Int
-    patch_split      : XY
     patches          : Image[]
     .truncate_top    : Logical
     .truncate_left   : Logical
@@ -25,7 +24,7 @@ class PatchImage : Image
           others: split = XY(3,3)
         endWhich
       endIf
-      patch_split = split.value.floor
+      local patch_split = split.value.floor
 
       if (patch_count != 3 and patch_count < 8 and patch_count > 9)
         println ''PatchImage("$") expects asset to be an image list of 3, 8, or 9 images.''(asset_name)
@@ -40,7 +39,7 @@ class PatchImage : Image
       endIf
 
       if (patch_split == XY(1,3))
-        if (not .ensure_patch_count(asset_name,3)) return
+        if (not .ensure_patch_count(asset_name,3,patch_split)) return
         local a = patches[0]
         local b = patches[1]
         local c = patches[2]
@@ -49,13 +48,39 @@ class PatchImage : Image
         patches[3] = b
         patches[6] = c
       elseIf (patch_split == XY(3,1))
-        if (not .ensure_patch_count(asset_name,3)) return
+        if (not .ensure_patch_count(asset_name,3,patch_split)) return
         patches.expand_to_count( 9 )
       elseIf (patch_count == 8)
         patches.insert( null->(as Image), 4 )
       endIf
 
-    method .ensure_patch_count( asset_name:String, n:Int )->Logical
+    method init( patches, &h, &v )
+      if (patches.count == 8) patches = patches.cloned
+      patches.anchor = Anchor.TOP_LEFT
+
+      patch_count = patches.count
+
+      if (patches.count == 3)
+        if (v)
+          local a = patches[0]
+          local b = patches[1]
+          local c = patches[2]
+          patches.dim( 9 )
+          patches[0] = a
+          patches[3] = b
+          patches[6] = c
+        else
+          patches.expand_to_count( 9 )
+        endIf
+      elseIf (patch_count == 8)
+        patches.insert( null->(as Image), 4 )
+      elseIf (patch_count != 9)
+        println ''PatchImage expects an image list of 3, 8, or 9 images (supplied list has $).'' ...
+          ("# image".pluralized(patches.count))
+        patches = null
+      endIf
+
+    method .ensure_patch_count( asset_name:String, n:Int, patch_split:XY )->Logical
       if (patches.count == n) return true
       println ''PatchImage("$") requires a list of $ for a split of ($,$).''
         (asset_name, "# image".pluralized(n), patch_split.x->Int, patch_split.y->Int)
