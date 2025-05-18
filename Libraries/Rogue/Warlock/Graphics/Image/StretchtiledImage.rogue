@@ -14,8 +14,8 @@ class StretchtiledImage : Image
     method init( asset_name:String )
       image = TextureImage( asset_name )
 
-    method init( existing:StretchtiledImage )
-      prior.init( existing )
+    method init_clone( existing:StretchtiledImage )
+      prior.init_clone( existing )
       image          = existing.image
       stretch_limit  = existing.stretch_limit
 

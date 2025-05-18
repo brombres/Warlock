@@ -14,8 +14,8 @@ class Image : Drawable2D
     method init( size=XY(1,1):XY, color=Color(0) )
       reset_size( size )
 
-    method init( existing:Image )
-      prior.init( existing )
+    method init_clone( existing:Image )
+      prior.init_clone( existing )
       asset        = existing.asset
       opacity      = existing.opacity
       subdivisions = existing.subdivisions

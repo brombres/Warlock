@@ -13,8 +13,8 @@ class TextureMeshImage : TextureImage
     method init( texture, polygon:XY[] )
       init( texture, texture.polygon_mesh(polygon) )
 
-    method init( existing:TextureMeshImage )
-      prior.init( existing )
+    method init_clone( existing:TextureMeshImage )
+      prior.init_clone( existing )
       mesh = existing.mesh
 
     method .draw_entity [override]

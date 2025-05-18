@@ -7,8 +7,8 @@ class Drawable2D : Entity2D
     render_mode : RenderMode
 
   METHODS
-    method init( existing:Drawable2D )
-      prior.init( existing )
+    method init_clone( existing:Drawable2D )
+      prior.init_clone( existing )
       color  = existing.color
       render_mode = existing.render_mode
 
