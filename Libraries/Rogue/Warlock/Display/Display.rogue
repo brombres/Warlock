@@ -26,7 +26,8 @@ class Display [singleton]
     size              : XY   # Scaled size.
     scale_to_fit_size : XY?
     fixed_size        : XY?
-    density = 1.0 # May be 2 or 3 (etc.) for Retina and other HD displays.
+    density           = 1.0  # May be 2 or 3 (etc.) for Retina and other HD displays.
+    magnitude         : Real # Same as size.magnitude (use to avoid sqrt with every access to size.magnitude)
 
     projection_mode = ProjectionMode2DX : ProjectionMode
 
@@ -276,6 +277,7 @@ class Display [singleton]
       else
         @size = pixel_size
       endIf
+      magnitude = size.magnitude
       projection_mode.update
 
     method view_projection->Matrix

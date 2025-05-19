@@ -1,0 +1,22 @@
+augment Geometry::BezierCurve
+  METHODS
+    method draw( color:Color, render_mode=RenderMode.ALPHA_COLOR:RenderMode, thickness=1:Real )
+      local prev : XY
+      forEach (point at index in this->XY[])
+        if (index > 0)
+          Line( prev, point ).draw( color, render_mode, thickness )
+        endIf
+        prev = point
+      endForEach
+
+    method transform( m:Matrix )->this
+      forEach (point at index in control_points)
+        control_points[ index ] = m * point
+      endForEach
+      is_modified = true
+      return this
+
+    method transformed( m:Matrix )->this
+      return cloned.transform( m )
+endAugment
+
