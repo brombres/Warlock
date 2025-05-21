@@ -72,6 +72,8 @@ class Renderer [singleton]
         data.add Vertex( line.a, color )
         data.add Vertex( line.b, color )
         data.add( i0, i0+1 )
+      else
+        trace "thickness != 1 is not yet supported"
       endIf
 
     method draw_lines
@@ -252,6 +254,75 @@ class Renderer [singleton]
       set_texture( texture )
       draw_triangles
       data.add( mesh, first_vertex )
+
+    method draw( quad:Quad, color:Color,
+        render_mode=RenderMode.ALPHA_COLOR, subdivisions=XY(0,0):XY )
+      draw( quad, Quad<<Color>>(color,color,color,color), render_mode, subdivisions )
+
+    method draw( quad:Quad, colors:Quad<<Color>>,
+        render_mode=RenderMode.ALPHA_COLOR, subdivisions=XY(0,0):XY )
+      clear_textures
+      draw_triangles
+      if (subdivisions.sum == 0)
+        local i0 = data.vertices.count - first_vertex
+        data.add Vertex( quad.a, colors.a )
+        data.add Vertex( quad.b, colors.b )
+        data.add Vertex( quad.c, colors.c )
+        data.add Vertex( quad.d, colors.d )
+        data.add( i0, i0+1, i0+2 )
+        data.add( i0, i0+2, i0+3 )
+      else
+        .generate_quad(
+          Vertex( quad.a, colors.a ),
+          Vertex( quad.b, colors.b ),
+          Vertex( quad.c, colors.c ),
+          Vertex( quad.d, colors.d ),
+          subdivisions
+        )
+      endIf
+
+    method draw( quad:Quad, texture:Texture, color:Color,
+        render_mode=RenderMode.ALPHA_TEXTURE, subdivisions=XY(0,0):XY, &h_flip, &v_flip )
+      local colors = Quad<<Color>>( color, color, color, color )
+      draw( quad, texture, colors, render_mode, subdivisions, &=h_flip, &=v_flip )
+
+    method draw( quad:Quad, texture:Texture, colors:Quad<<Color>>,
+        render_mode=RenderMode.ALPHA_TEXTURE, subdivisions=XY(0,0):XY, &h_flip, &v_flip )
+      set_texture( texture )
+      draw_triangles
+
+      local uv_a = texture.uv.a
+      local uv_b = texture.uv.b
+      local uv_c = texture.uv.c
+      local uv_d = texture.uv.d
+
+      if (h_flip)
+        swapValues( uv_a, uv_b )
+        swapValues( uv_c, uv_d )
+      endIf
+
+      if (v_flip)
+        swapValues( uv_a, uv_d )
+        swapValues( uv_b, uv_c )
+      endIf
+
+      if (subdivisions.sum == 0)
+        local i0 = data.vertices.count - first_vertex
+        data.add Vertex( quad.a, colors.a, uv_a )
+        data.add Vertex( quad.b, colors.b, uv_b )
+        data.add Vertex( quad.c, colors.c, uv_c )
+        data.add Vertex( quad.d, colors.d, uv_d )
+        data.add( i0, i0+1, i0+2 )
+        data.add( i0, i0+2, i0+3 )
+      else
+        .generate_quad(
+          Vertex( quad.a colors.a, uv_a ),
+          Vertex( quad.b colors.b, uv_b ),
+          Vertex( quad.c colors.c, uv_c ),
+          Vertex( quad.d colors.d, uv_d ),
+          subdivisions
+        )
+      endIf
 
     method .generate_quad( tl:Vertex, tr:Vertex, br:Vertex, bl:Vertex, subdivisions:XY )
       if (subdivisions.x > 0)

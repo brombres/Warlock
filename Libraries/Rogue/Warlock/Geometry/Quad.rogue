@@ -12,9 +12,11 @@ augment Quad
         Line( c, d ).draw( color, render_mode, thickness )
         Line( d, a ).draw( color, render_mode, thickness )
       else
-        Triangle( a, b, c ).draw( color, render_mode )
-        Triangle( a, c, d ).draw( color, render_mode )
+        Renderer.draw( this, color, render_mode )
       endIf
+
+    method draw( color:Color, texture:Texture, render_mode=RenderMode.ALPHA_TEXTURE:RenderMode )
+      Renderer.draw( this, texture, color, render_mode )
 
 endAugment
 

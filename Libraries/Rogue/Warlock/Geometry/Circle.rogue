@@ -18,8 +18,8 @@ augment Geometry::Circle
       if (radius <= 0) return
 
       if (segments < 1.0)
-        local circ = radius * 2 * pi
-        segments = (circ * segments).floor
+        local circumference = radius * 2 * pi
+        segments = (circumference * segments).floor
       endIf
 
       local angle_step = pi * 2 / segments
