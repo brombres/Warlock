@@ -589,8 +589,8 @@ augment RenderTargetTexture
   METHODS
     method init( size:XY, type:GlobalID )->RenderTargetTexture
       # Type should be RenderTargetTexture.COLOR or RenderTargetTexture.DEPTH.
-      local w = size.x->Int.to_power_of_2  # should be power of 2 already
-      local h = size.y->Int.to_power_of_2
+      local w = size.x->Int
+      local h = size.y->Int
       this.size = XY( w, h )
       uv = Quad( XY(0,0), XY(1,0), XY(1,1), XY(0,1) )
 

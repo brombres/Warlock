@@ -5,29 +5,11 @@ class RenderTargetImage : TextureImage
     depth_texture : Texture
 
   METHODS
-    method init( size:XY, &round_down )
-      init( size.x, size.y, &=round_down )
+    method init( size:XY, &power_of_2, &round_down )
+      init( size.x, size.y, &=power_of_2, &=round_down )
 
-    method init( width:Int, height:Int, &round_down )
-      local wp2 = width.to_power_of_2
-      local hp2 = height.to_power_of_2
-      local subset_w = width
-      local subset_h = height
-      if (round_down)
-        if (width  < wp2) wp2 /= 2; subset_w /= 2
-        if (height < hp2) hp2 /= 2; subset_h /= 2
-      endIf
-
-      texture = RenderTargetTexture( XY(wp2,hp2), RenderTargetTexture.COLOR )
-      depth_texture = RenderTargetTexture( XY(wp2,hp2), RenderTargetTexture.DEPTH )
-      if (wp2 != subset_w or hp2 != subset_h)
-        texture = Texture( texture, Box(subset_w,subset_h) )
-        depth_texture = Texture( depth_texture, Box(subset_w,subset_h) )
-      endIf
-
-      nominal_size = XY( width, height )
-
-      Renderer.configure_render_target_image( this )
+    method init( width:Int, height:Int, &power_of_2, &round_down )
+      update_size( width, height, &=power_of_2, &=round_down )
 
     method color_texture->RenderTargetTexture
       local result = texture
@@ -41,4 +23,52 @@ class RenderTargetImage : TextureImage
 
     method texture->Texture
       return @texture
+
+    method update_size( width:Int, height:Int, &power_of_2, &round_down )->Logical
+      local wp2 = width
+      local hp2 = height
+      local subset_w = width
+      local subset_h = height
+
+      if (power_of_2)
+        wp2 .= to_power_of_2
+        hp2 .= to_power_of_2
+
+        if (round_down)
+          if (width  < wp2) wp2 /= 2; subset_w = wp2
+          if (height < hp2) hp2 /= 2; subset_h = hp2
+        endIf
+      endIf
+
+      nominal_size = XY( width, height )
+
+      contingent
+        necessary (@texture)
+
+        local source = @texture.source
+        if (wp2 == source.size.x and hp2 == source.size.y) return false # no change
+
+        sufficient (wp2 <= source.size.x and hp2 <= source.size.y)
+
+        necessary (false)
+
+      satisfied
+        # Use a different subset of existing textures.
+        texture = Texture( @texture.source, Box(subset_w,subset_h) )
+        depth_texture = Texture( depth_texture.source, Box(subset_w,subset_h) )
+        return false  # No additional configuration required.
+
+      unsatisfied
+        texture = RenderTargetTexture( XY(wp2,hp2), RenderTargetTexture.COLOR )
+        depth_texture = RenderTargetTexture( XY(wp2,hp2), RenderTargetTexture.DEPTH )
+        if (wp2 != subset_w or hp2 != subset_h)
+          texture = Texture( texture, Box(subset_w,subset_h) )
+          depth_texture = Texture( depth_texture, Box(subset_w,subset_h) )
+        endIf
+
+        Renderer.configure_render_target_image( this )
+        return true  # texture and depth texture need configuring
+
+      endContingent
+
 endClass
