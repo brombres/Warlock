@@ -39,6 +39,8 @@ extern "C" {
 void RogueInterface_configure( int argc, char* argv[] );
 void RogueInterface_launch();
 
+void RogueInterface_check_gc();
+
 //void WarlockInterface_create_window( int id, RogueString* title );
 
 //NSData* RogueInterface_post_messages( const unsigned char* data, int count );

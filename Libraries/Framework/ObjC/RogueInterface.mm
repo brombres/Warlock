@@ -29,3 +29,8 @@ void RogueInterface_launch()
   Rogue_configure( RogueInterface_argc, RogueInterface_argv );
   Rogue_launch();
 }
+
+void RogueInterface_check_gc()
+{
+  Rogue_check_gc();
+}
