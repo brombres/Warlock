@@ -3,3 +3,4 @@ library Warlock
 $include Warlock/Control/Screen
 $include Warlock/Control/State
 $include Warlock/Control/WarlockState
+$include Warlock/Control/WarlockUpdateLogic

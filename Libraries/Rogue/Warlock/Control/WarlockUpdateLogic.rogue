@@ -1,0 +1,57 @@
+library Warlock
+
+class WarlockUpdateLogic
+  METHODS
+    method update_and_render
+      on_update_and_render_begin
+      update
+      render
+      on_update_and_render_end
+
+    method on_update_and_render_begin
+      OverlayLog.update
+      begin_render( forEach in Warlock.windows )
+
+    method update
+      on_update_begin
+      on_update
+      on_update_end
+
+    method on_update_begin
+
+    method on_update
+      if (Warlock.actions) Warlock.actions .= updated
+
+      State = State.updated || State()
+      Screen = Screen.updated || Screen()
+
+    method on_update_end
+
+    method render
+      on_render_begin
+      on_render
+      on_render_end
+
+    method on_render_begin
+      State.on_render_begin
+
+    method on_render
+      render( forEach in Warlock.windows )
+
+    method on_render_end
+      State.on_render_end
+      end_render( forEach in Warlock.windows )
+
+    method begin_render( window:Window )
+      window.begin_render
+
+    method render( window:Window )
+      window.render
+
+    method end_render( window:Window )
+      window.end_render
+
+    method on_update_and_render_end
+      ++Warlock.frames
+
+endClass

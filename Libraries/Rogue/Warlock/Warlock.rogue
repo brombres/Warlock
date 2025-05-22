@@ -39,20 +39,17 @@ class Warlock [essential singleton]
 
       return keep_running
 
-
     method update->Logical [api]
-      OverlayLog.update
-      Warlock.render
-      ++Warlock.frames
-
+      Warlock.update_logic.update_and_render
       return true  # keep running
 
   PROPERTIES
-    configured : Logical
-    windows    = Window[]
-    textures   = [File:Texture]
-    frames     : Int
-    actions    : Action
+    configured   : Logical
+    windows      = Window[]
+    textures     = [File:Texture]
+    frames       : Int
+    actions      : Action
+    update_logic = WarlockUpdateLogic()
 
   METHODS
     method init
@@ -111,19 +108,5 @@ class Warlock [essential singleton]
       if (windows.is_empty)
         Window( "Warlock", 1280, 720 )
       endIf
-
-    method render
-      (forEach in windows).begin_render
-
-      if (actions) actions .= updated
-
-      State = State.updated || State()
-      Screen = Screen.updated || Screen()
-
-      State.on_render_begin
-      (forEach in windows).render
-
-      State.on_render_end
-      (forEach in windows).end_render
 
 endClass
