@@ -49,11 +49,11 @@ class RenderTarget : Display
       Display = this
       reset
 
-      Renderer.on_render_begin( this )
+      Renderer.on_begin_render( this )
       prior.render
 
     method end_render [override]
-      Renderer.on_render_end( this )
+      Renderer.on_end_render( this )
       Display = previous_display
 
     method on_use->RenderTarget

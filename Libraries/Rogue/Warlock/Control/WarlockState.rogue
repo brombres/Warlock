@@ -95,9 +95,9 @@ class WarlockState<<$ExtendedType,$change_state,$exit_state>> : Rogue::State<<$E
 
     method on_draw_fg
 
-    method on_render_begin
+    method on_begin_render
 
-    method on_render_end
+    method on_end_render
 
     method on_unhandled( e:KeyEvent )
 

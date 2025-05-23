@@ -1,0 +1,26 @@
+library Warlock
+
+class OffscreenBuffer : Component
+  PROPERTIES
+    render_target : RenderTarget
+
+  METHODS
+    method draw( buffer:Image )
+      buffer.draw( Display.bounds )
+
+    method on_clear
+      Display.clear( Color(0) )
+
+    method on_begin_update [override]
+      ensure<<render_target>>( Display.size )
+
+    method on_begin_draw [override]
+      render_target.update_size( Display.size )
+      render_target.on_use
+
+      on_clear
+
+    method on_end_draw [override]
+      render_target.on_end_use( render_target )
+      draw( render_target.image )
+endClass

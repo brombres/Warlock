@@ -18,9 +18,9 @@ class WarlockController
       update
       end_update
 
-      begin_render
-      render
-      end_render
+      begin_draw
+      draw
+      end_draw
 
       end_tick
 
@@ -41,24 +41,25 @@ class WarlockController
 
     method end_update
 
-    method begin_render
-      State.on_render_begin
+    method begin_draw
+      State.on_begin_render
 
-    method render
-      render( forEach in Warlock.windows )
+    method draw
+      handle_render( forEach in Warlock.windows )
 
-    method end_render
-      State.on_render_end
+    method end_draw
+      State.on_end_render
 
-    method render( window:Window )
+    method handle_render( window:Window )
+      Window = window
       begin_render( window )
-      on_render( window )
+      render( window )
       end_render( window )
 
     method begin_render( window:Window )
       window.begin_render
 
-    method on_render( window:Window )
+    method render( window:Window )
       window.render
 
     method end_render( window:Window )

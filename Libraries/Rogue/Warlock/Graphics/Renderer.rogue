@@ -402,22 +402,22 @@ class Renderer [singleton]
       first_vertex = vertex_count
       first_index  = index_count
 
-    method on_render_begin( render_target:RenderTarget )
+    method on_begin_render( render_target:RenderTarget )
       display_id = render_target.id
       draw_triangles
       render_mode = RenderMode.ALPHA_TEXTURE
       clear_textures
 
-    method on_render_begin( window:Window )
+    method on_begin_render( window:Window )
       ++swap_index
       if (swap_index > 2) swap_index = 0
       reset
       display_id = window.id
 
-    method on_render_end( render_target:RenderTarget )
+    method on_end_render( render_target:RenderTarget )
       flush
 
-    method on_render_end( window:Window )
+    method on_end_render( window:Window )
       flush
       ++frame
 

@@ -128,8 +128,8 @@ class BGFX : Renderer [singleton]
 
       native @|bgfx::touch( $window->id );
 
-    method on_render_begin( render_target:RenderTarget ) [override]
-      prior.on_render_begin( render_target )
+    method on_begin_render( render_target:RenderTarget ) [override]
+      prior.on_begin_render( render_target )
 
       if local render_target_image = render_target.image
         native @|bgfx::setViewFrameBuffer( $render_target->id, $render_target_image->bgfx_frame_buffer );
@@ -137,12 +137,12 @@ class BGFX : Renderer [singleton]
 
       activate_display_graphics_context( render_target )
 
-    method on_render_begin( window:Window )
-      prior.on_render_begin( window )
+    method on_begin_render( window:Window )
+      prior.on_begin_render( window )
       activate_window_graphics_context( window )
 
-    method on_render_end( render_target:RenderTarget ) [override]
-      prior.on_render_end( render_target )
+    method on_end_render( render_target:RenderTarget ) [override]
+      prior.on_end_render( render_target )
       block
         local clear_flags = 0
         native @|$clear_flags |= BGFX_CLEAR_DEPTH;
@@ -155,8 +155,8 @@ class BGFX : Renderer [singleton]
         native @|bgfx::setViewClear( $display_id, (uint16_t)$clear_flags, (uint32_t)$clear_color );
       endBlock
 
-    method on_render_end( window:Window ) [override]
-      prior.on_render_end( window )
+    method on_end_render( window:Window ) [override]
+      prior.on_end_render( window )
 
       block
         local clear_flags = 0

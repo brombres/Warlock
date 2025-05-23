@@ -1,11 +1,12 @@
 library Warlock
 
-class Window : Display
+class Window : Display [singleton]
   PROPERTIES
     title  : String
 
   METHODS
     method init( title, width:Int, height:Int )
+      Window = this
       pixel_size = XY(width,height)
       if (Framework.create_window(this))
         Warlock.add_window( this )
@@ -14,9 +15,10 @@ class Window : Display
 
     method begin_render [override]
       prior.begin_render
-      Renderer.on_render_begin( this )
+      Renderer.on_begin_render( this )
 
     method begin_tick [override]
+      Window = this
       Framework.update_window_size( this )
       prior.begin_tick
 
@@ -27,7 +29,7 @@ class Window : Display
     method end_render [override]
       prior.end_render
       if (Warlock.windows.count and Warlock.windows.first is this) OverlayLog.draw
-      Renderer.on_render_end( this )
+      Renderer.on_end_render( this )
 
     method handle( e:KeyEvent )
       if (@ui) @ui.handle( e )
