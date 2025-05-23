@@ -2,6 +2,15 @@ library Warlock
 
 class WarlockController
   METHODS
+    method configure
+      AssetManager.load
+      AudioManager.configure
+
+      if (Warlock.windows.is_empty) create_default_window
+
+    method create_default_window
+      Window( Warlock.app_name, 1280, 720 )
+
     method tick
       on_tick_begin
       update
@@ -10,7 +19,7 @@ class WarlockController
 
     method on_tick_begin
       OverlayLog.update
-      begin_render( forEach in Warlock.windows )
+      on_tick_begin( forEach in Warlock.windows )
 
     method update
       on_update_begin
@@ -40,18 +49,29 @@ class WarlockController
 
     method on_render_end
       State.on_render_end
-      end_render( forEach in Warlock.windows )
 
-    method begin_render( window:Window )
-      window.begin_render
+    method on_tick_begin( window:Window )
+      window.begin_tick
 
     method render( window:Window )
+      on_render_begin( window )
+      on_render( window )
+      on_render_end( window )
+
+    method on_render_begin( window:Window )
+      window.begin_render
+
+    method on_render( window:Window )
       window.render
 
-    method end_render( window:Window )
+    method on_render_end( window:Window )
       window.end_render
+
+    method on_tick_end( window:Window )
+      window.end_tick
 
     method on_tick_end
       ++Warlock.frames
+      on_tick_end( forEach in Warlock.windows )
 
 endClass

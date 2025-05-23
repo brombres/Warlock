@@ -12,6 +12,9 @@ class Display [singleton]
   PROPERTIES
     dt                : Real # Interval since last update, in seconds.
     delta_ticks       : Int  # 60ths of a second since last update
+
+    ui                : WarlockUI
+
     update_timer      = UpdateTimer()
 
     #{
@@ -69,6 +72,9 @@ class Display [singleton]
 
     method begin_render
       Display = this
+
+    method begin_tick
+      Display = this
       reset
 
     method bounds->Box
@@ -88,10 +94,15 @@ class Display [singleton]
       clip = null
 
     method draw
-      noAction
+      if (@ui)
+        @ui.draw
+      endIf
 
     method end_render
       Display = this
+
+    method end_tick
+      noAction
 
     method height->Real
       return size.y
@@ -250,9 +261,6 @@ class Display [singleton]
       @size = new_size
       projection_mode.update
 
-    method set_ui( ui:WarlockUI )
-      noAction
-
     method set_view_transform( new_transform:Matrix )
       if (view_transform != new_transform)
         <Display.modify_view_projection>.signal
@@ -262,10 +270,16 @@ class Display [singleton]
       endIf
 
     method ui->UI
-      return null
+      if (@ui) return @ui
+      ui = WarlockUI()
+      return @ui
+
 
     method update
-      noAction
+      if (@ui)
+        @ui.update( bounds )
+        @ui.request_redraw
+      endIf
 
     method update_size
       Renderer.flush

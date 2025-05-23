@@ -3,7 +3,6 @@ library Warlock
 class Window : Display
   PROPERTIES
     title  : String
-    ui     : WarlockUI
 
   METHODS
     method init( title, width:Int, height:Int )
@@ -13,16 +12,22 @@ class Window : Display
         Renderer.configure_window( this )
       endIf
 
-    method begin_render
-      Framework.update_window_size( this )
+    method begin_render [override]
       prior.begin_render
+      Renderer.on_render_begin( this )
+
+    method begin_tick [override]
+      Framework.update_window_size( this )
+      prior.begin_tick
 
     method close
       Warlock.windows.remove( this )
       Framework.close_window( this )
 
-    method draw [override]
-      if (@ui) @ui.draw
+    method end_render [override]
+      prior.end_render
+      if (Warlock.windows.count and Warlock.windows.first is this) OverlayLog.draw
+      Renderer.on_render_end( this )
 
     method handle( e:KeyEvent )
       if (@ui) @ui.handle( e )
@@ -40,25 +45,9 @@ class Window : Display
       noAction  # defined by extended Platform, e.g. SDL
 
     method render
-      Display = this
-      Renderer.on_render_begin( this )
       State.draw( &!fg )
       State.draw( &fg )
-      OverlayLog.draw
-      Renderer.on_render_end( this )
 
-    method set_ui( @ui )
-
-    method ui->UI [override]
-      if (@ui) return @ui
-      ui = WarlockUI()
-      return @ui
-
-    method update [override]
-      if (@ui)
-        @ui.update( bounds )
-        @ui.request_redraw
-      endIf
 endClass
 
 augment UI::Event

@@ -26,7 +26,7 @@ uses Utility/Timer [export]
 class Warlock [essential singleton]
   GLOBAL METHODS
     method configure [api]
-      Warlock.on_configure
+      Warlock.controller.configure
 
     method handle_event->Logical [api]
       local keep_running = Framework.handle_native_event
@@ -44,11 +44,11 @@ class Warlock [essential singleton]
       return true  # keep running
 
   PROPERTIES
-    configured   : Logical
-    windows      = Window[]
-    textures     = [File:Texture]
-    frames       : Int
-    actions      : Action
+    app_name   = "Warlock"
+    windows    = Window[]
+    textures   = [File:Texture]
+    frames     : Int
+    actions    : Action
     controller = WarlockController()
 
   METHODS
@@ -102,10 +102,10 @@ class Warlock [essential singleton]
       else          return null
 
     method on_configure
-      AssetManager.load
-      AudioManager.configure
+      controller.configure
 
       if (windows.is_empty)
+        controller.create_default_window
         Window( "Warlock", 1280, 720 )
       endIf
 
