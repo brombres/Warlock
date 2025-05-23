@@ -12,66 +12,63 @@ class WarlockController
       Window( Warlock.app_name, 1280, 720 )
 
     method tick
-      on_tick_begin
-      update
-      render
-      on_tick_end
+      begin_tick
 
-    method on_tick_begin
+      begin_update
+      update
+      end_update
+
+      begin_render
+      render
+      end_render
+
+      end_tick
+
+    method begin_tick
       OverlayLog.update
-      on_tick_begin( forEach in Warlock.windows )
+      begin_tick( forEach in Warlock.windows )
+
+    method begin_tick( window:Window )
+      window.begin_tick
+
+    method begin_update
 
     method update
-      on_update_begin
-      on_update
-      on_update_end
-
-    method on_update_begin
-
-    method on_update
       if (Warlock.actions) Warlock.actions .= updated
 
       State = State.updated || State()
       Screen = Screen.updated || Screen()
 
-    method on_update_end
+    method end_update
 
-    method render
-      on_render_begin
-      on_render
-      on_render_end
-
-    method on_render_begin
+    method begin_render
       State.on_render_begin
 
-    method on_render
+    method render
       render( forEach in Warlock.windows )
 
-    method on_render_end
+    method end_render
       State.on_render_end
 
-    method on_tick_begin( window:Window )
-      window.begin_tick
-
     method render( window:Window )
-      on_render_begin( window )
+      begin_render( window )
       on_render( window )
-      on_render_end( window )
+      end_render( window )
 
-    method on_render_begin( window:Window )
+    method begin_render( window:Window )
       window.begin_render
 
     method on_render( window:Window )
       window.render
 
-    method on_render_end( window:Window )
+    method end_render( window:Window )
       window.end_render
 
-    method on_tick_end( window:Window )
+    method end_tick( window:Window )
       window.end_tick
 
-    method on_tick_end
+    method end_tick
       ++Warlock.frames
-      on_tick_end( forEach in Warlock.windows )
+      end_tick( forEach in Warlock.windows )
 
 endClass
