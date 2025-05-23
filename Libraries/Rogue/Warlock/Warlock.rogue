@@ -39,8 +39,8 @@ class Warlock [essential singleton]
 
       return keep_running
 
-    method update->Logical [api]
-      Warlock.update_logic.update_and_render
+    method tick->Logical [api]
+      Warlock.controller.tick
       return true  # keep running
 
   PROPERTIES
@@ -49,7 +49,7 @@ class Warlock [essential singleton]
     textures     = [File:Texture]
     frames       : Int
     actions      : Action
-    update_logic = WarlockUpdateLogic()
+    controller = WarlockController()
 
   METHODS
     method init

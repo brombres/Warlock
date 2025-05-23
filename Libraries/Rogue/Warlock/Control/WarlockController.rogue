@@ -1,14 +1,14 @@
 library Warlock
 
-class WarlockUpdateLogic
+class WarlockController
   METHODS
-    method update_and_render
-      on_update_and_render_begin
+    method tick
+      on_tick_begin
       update
       render
-      on_update_and_render_end
+      on_tick_end
 
-    method on_update_and_render_begin
+    method on_tick_begin
       OverlayLog.update
       begin_render( forEach in Warlock.windows )
 
@@ -51,7 +51,7 @@ class WarlockUpdateLogic
     method end_render( window:Window )
       window.end_render
 
-    method on_update_and_render_end
+    method on_tick_end
       ++Warlock.frames
 
 endClass
