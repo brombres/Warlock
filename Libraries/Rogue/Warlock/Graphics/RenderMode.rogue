@@ -37,6 +37,9 @@ class RenderMode
 
     method cloned->ThisType [propagated]
       return ThisType( this )
+
+    method uniforms->ShaderUniforms
+      return shader.uniforms
 endClass
 
 class RenderModeAlphaColor : RenderMode [singleton]
