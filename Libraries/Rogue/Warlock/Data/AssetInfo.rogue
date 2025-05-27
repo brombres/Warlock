@@ -10,6 +10,7 @@ class AssetInfo
     image_mipmaps     : Logical
     image_patch_count : Int
     image_patch_split : XY
+    texture_wrap      : Logical
     font_height       : Int
     font_width        : Int  # 0 is variable-width
     font_characters   : String

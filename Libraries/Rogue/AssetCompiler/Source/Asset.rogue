@@ -25,6 +25,7 @@ class Asset
     image_split         = XY(1,1)
     image_mipmaps       : Logical
     image_patch_count   : Int
+    texture_wrap        : Logical
 
     font_characters     : String
     font_info           : Variant
@@ -64,17 +65,20 @@ class Asset
           necessary (info.contains("image_split"))
           necessary (info.contains("image_mipmaps"))
           necessary (info.contains("image_patch_count"))
+          necessary (info.contains("texture_wrap"))
           image_size = XY( info//image_size )
           necessary (image_size != XY.zero)
           image_split = XY( info//image_split )
           image_mipmaps = info//image_mipmaps->Logical
           image_patch_count = info//image_patch_count->Int
+          texture_wrap = info//texture_wrap->Logical
         unsatisfied
           is_modified = true
           info//image_size = bitmap.size
           image_size = bitmap.size
           image_mipmaps = true
           image_patch_count = 0
+          texture_wrap = false
 
           if local split_attribute = rule.find_attribute( "split" )
             .require_value(
@@ -87,8 +91,15 @@ class Asset
             endIf
             image_split = XY( parts[0]->Int, parts[1]->Int )
           endIf
-
           info//image_split = image_split
+
+          if local wrap_attribute = rule.find_attribute( "wrap" )
+            texture_wrap = true
+            if (not is_standalone)
+              throw rule.t.error( "Only 'standalone' images can have the texture 'wrap' attribute." )
+            endIf
+          endIf
+          info//texture_wrap = texture_wrap
 
           block
             if local mipmaps_attribute = rule.find_attribute( "mipmaps" )
@@ -393,6 +404,7 @@ class Asset
           if (not image_mipmaps)
             manifest.print " mipmaps false"
           endIf
+          if (texture_wrap) manifest.print " wrap true"
           manifest.println
           write_placements( manifest )
         case <Font>
