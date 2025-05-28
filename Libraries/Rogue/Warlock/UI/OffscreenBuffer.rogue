@@ -16,11 +16,19 @@ class OffscreenBuffer : Component
 
     method on_begin_draw [override]
       render_target.update_size( Display.size )
-      render_target.on_use
 
-      on_clear
+      if (use_offscreen_buffer)
+        render_target.on_use
+        on_clear
+      endIf
 
     method on_end_draw [override]
-      render_target.on_end_use( render_target )
-      draw( render_target.image )
+      if (use_offscreen_buffer)
+        render_target.on_end_use( render_target )
+        draw( render_target.image )
+      endIf
+
+    method use_offscreen_buffer->Logical
+      return true
+
 endClass
