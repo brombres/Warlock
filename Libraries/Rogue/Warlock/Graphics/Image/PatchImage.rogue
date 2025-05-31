@@ -215,6 +215,30 @@ class PatchImage : Image
         if (w8) patches[8]?.draw( Box(x8,y8,w8,h8) )
       endIf
 
+    method set_color( color:Color )
+      @color = color
+      if (patches)
+        (forEach as Image in patches).color = color
+      endIf
+
+    method set_colors( colors:Quad<<Color>> )
+      @colors = colors
+      if (patches)
+        (forEach as Image in patches).colors = colors
+      endIf
+
+    method set_opacity( opacity:Real )
+      @opacity = opacity
+      if (patches)
+        (forEach as Image in patches).opacity = opacity
+      endIf
+
+    method set_render_mode( render_mode:RenderMode )
+      @render_mode = render_mode
+      if (patches)
+        (forEach as Image in patches).render_mode = render_mode
+      endIf
+
     method set_truncate_top( setting:Logical )
       .truncate_top = setting
 

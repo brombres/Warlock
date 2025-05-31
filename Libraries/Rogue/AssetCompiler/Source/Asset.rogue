@@ -125,11 +125,13 @@ class Asset
               local setting = patch_attribute.value?.value
               if (setting)
                 image_patch_count = setting->Int
-                if (image_patch_count < 8 or image_patch_count > 9)
-                  throw rule.t.error( "Expected 'patch:8', 'patch:9', or 'patch' (implies 'patch:9')." )
+                if (image_patch_count != 3 and image_patch_count != 8 and image_patch_count != 9)
+                  throw rule.t.error( "Expected 'patch:3', 'patch:8', 'patch:9', or 'patch' (implies 'patch:9')." )
                 endIf
 
                 which (image_patch_count)
+                  case 3
+                    image_split = XY(3,1)
                   case 8, 9
                     image_split = XY(3,3)
                 endWhich
@@ -359,8 +361,17 @@ class Asset
     method .create_patch_placements
       if (image_size.x == 0) return
 
-      local splitter = PatchSplitter( bitmap )
-      if (image_patch_count == 8) splitter.placements.remove_at( 4 )
+      local top_only = (image_patch_count==3)
+      local splitter = PatchSplitter( bitmap, &=top_only )
+      if (image_patch_count == 8 and splitter.placements.count == 9) splitter.placements.remove_at( 4 )
+
+      if (splitter.placements.count != image_patch_count and top_only)
+        splitter = PatchSplitter( bitmap )
+      endIf
+
+      if (splitter.placements.count != image_patch_count)
+        throw rule.t.error( "Patch guides are incorrectly defined - expected $ patches, parsed $ patches."(image_patch_count,splitter.placements.count) )
+      endIf
 
       placements.add( Placement(this, (forEach in splitter.placements)) )
 

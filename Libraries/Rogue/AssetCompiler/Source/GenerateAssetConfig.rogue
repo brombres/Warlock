@@ -61,6 +61,7 @@ class GenerateAssetConfig : Visitor
                 write_echo " image"
                 if (filepath_lc.contains(".9."))     write_echo " patch:9"
                 elseIf (filepath_lc.contains(".8.")) write_echo " patch:8"
+                elseIf (filepath_lc.contains(".3.")) write_echo " patch:3"
                 writeln_echo
               case "wav"
                 if (filepath_lc.contains("music")) writeln_echo " music"
