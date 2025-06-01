@@ -232,8 +232,14 @@ class AppDataContext( context:AppDataValue, key:String ) [compound]
     method to->AppDataValue
       return context[key]
 
+    method to->Box
+      return this->Variant->Box
+
     method to->Int
       return this->Variant->Int
+
+    method to->Logical
+      return this->Variant->Logical
 
     method to->Real
       return this->Variant->Real
@@ -245,5 +251,8 @@ class AppDataContext( context:AppDataValue, key:String ) [compound]
       local value = context[key].value
       if (value.exists) return value
       else              return undefined
+
+    method to->XY
+      return this->Variant->XY
 endClass
 
