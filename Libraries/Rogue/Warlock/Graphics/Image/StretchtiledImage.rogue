@@ -2,6 +2,7 @@ library Warlock
 
 class StretchtiledImage : Image
   PROPERTIES
+    color         = Color.WHITE
     image         : Image
     stretch_limit = XY(1.0,1.0)
 
@@ -24,6 +25,22 @@ class StretchtiledImage : Image
 
     method load [override]
       image.load
+
+    method set_color( color:Color )
+      @color = color
+      if (image) image.color = color
+
+    method set_colors( colors:Quad<<Color>> )
+      @colors = colors
+      if (image) image.colors = colors
+
+    method set_opacity( opacity:Real )
+      @opacity = opacity
+      if (image) image.opacity = opacity
+
+    method set_render_mode( render_mode:RenderMode )
+      @render_mode = render_mode
+      if (image) image.render_mode = render_mode
 
     method set_stretch_limit( @stretch_limit )
 
