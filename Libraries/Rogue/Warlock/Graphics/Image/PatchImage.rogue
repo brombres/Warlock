@@ -2,7 +2,6 @@ library Warlock
 
 class PatchImage : Image
   PROPERTIES
-    color            = Color.WHITE
     border_scale     = 1.0
     patch_count      : Int
     patches          : Image[]

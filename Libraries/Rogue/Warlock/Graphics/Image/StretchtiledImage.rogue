@@ -2,7 +2,6 @@ library Warlock
 
 class StretchtiledImage : Image
   PROPERTIES
-    color         = Color.WHITE
     image         : Image
     stretch_limit = XY(1.0,1.0)
 
