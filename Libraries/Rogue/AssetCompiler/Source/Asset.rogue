@@ -164,6 +164,9 @@ class Asset
           font_width  = info//font_width
           font_info   = info//font_info
 
+          local info_file = File(filepath).with_extension( ".font.json" )
+          necessary (info_file.exists and font_info == JSON.load(info_file))
+
         unsatisfied
           is_modified = true
 
@@ -202,9 +205,9 @@ class Asset
           endIf
 
           local info_file = File(filepath).with_extension( ".font.json" )
-          if (info_file.exists)
-            font_info = JSON.load( info_file )
-            info//font_info = font_info
+          if (not info_file.exists)
+            font_info = undefined
+            info//font_info = undefined
           endIf
 
           info//font_characters = font_characters
@@ -257,6 +260,7 @@ class Asset
             endForEach
           endIf
         case <Font>
+          placements.clear
           if (font_width == -1) .create_variable_width_font_placements
           else                  .create_fixed_width_font_placements
 
@@ -272,9 +276,16 @@ class Asset
             info//font_info = font_info
           endIf
 
-          # If characters have been manually added to the font strip, supplement font info.
+          # If characters have been manually added to or removed from the font strip, adjust font info.
           font_info//characters = font_characters
           local n = placements.count - font_info//offset.count
+
+          while (n < 0)
+            font_info//offset.remove_last
+            font_info//advance.remove_last
+            ++n
+          endWhile
+
           loop (n) font_info//offset.add( 0 )
           forEach (i in font_info//advance.count..<placements.count)
             font_info//advance.add( placements[i].size.x->Int )
@@ -283,7 +294,7 @@ class Asset
           local info_file = File(filepath).with_extension( ".font.json" )
           local json = font_info->JSON( &formatted )
           if (not info_file.exists or String(info_file) != json)
-            println "Creating font info  $"(info_file)
+            println "Creating font info $"(info_file)
             info_file.save( json )
           endIf
       endWhich
