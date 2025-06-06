@@ -416,10 +416,16 @@ endRoutine
 routine compile_rogue( platform:String, &debug, &rebuild )
   local files = Files( ".", "Libraries/Warlock/Libraries/Rogue/**.rogue" )
   files.add( "Source/**.rogue" )
+
   local source_folder = File("Build/$/Source"(platform)).[create_folder]
 
   local is_apple = (platform == "macOS" or platform == "iOS")
   local source_filename = "RogueProgram.$"(which{ is_apple:"mm" || "cpp" })
+
+System.run("cd ~/Projects/Rogue && rogo libs") # FIXME
+local stdlib = Files( "~/Projects/Rogue/Source/Libraries", "**.rogue" ) # FIXME
+if (stdlib.any_newer_than(source_folder/source_filename)) rebuild = true #FIXME
+
   if (rebuild or files.any_newer_than(source_folder/source_filename))
     block cmd = "roguec Source/Main.rogue Warlock"
       cmd .= appending( "Warlock/Framework/SDL" )
