@@ -104,9 +104,4 @@ class Warlock [essential singleton]
     method on_configure
       controller.configure
 
-      if (windows.is_empty)
-        controller.create_default_window
-        Window( "Warlock", 1280, 720 )
-      endIf
-
 endClass
