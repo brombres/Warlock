@@ -102,18 +102,40 @@ class Font : UI::Font
 
     method draw( text:Text )
       local bounds = text.display_bounds
-      local scale_x = scale.x
-      local scale_y = scale.y
-      if (text.shrink_to_fit_text_x or text.shrink_to_fit_text_y)
-        local text_size = measure( text.value )
-        if (text.shrink_to_fit_text_x and text_size.x > bounds.size.x) scale_x *= bounds.size.x / text_size.x
-        if (text.shrink_to_fit_text_y and text_size.y > bounds.size.y) scale_y *= bounds.size.y / text_size.y
-      endIf
+      localize scale
+      if (bounds.size.product != 0 and scale.product != 0)
+        if (text.scaling_mode.x != ScalingMode.NONE or text.scaling_mode.y != ScalingMode.NONE)
+          local text_size = measure( text.value )
+          local aspect_fit_size = text_size.scaled_to_fit( bounds.size )
+          if (text.scaling_mode.x == ScalingMode.ASPECT_FIT)
+            if (text.scaling_mode.y == ScalingMode.ASPECT_FIT)
+              text_size /= scale
+              scale *= aspect_fit_size / text_size
+              text_size *= scale
+            else
+              text_size /= scale
+              scale *= aspect_fit_size.x / text_size.x
+              text_size *= scale
+            endIf
+          elseIf (text.scaling_mode.y == ScalingMode.ASPECT_FIT)
+            text_size /= scale
+            scale *= aspect_fit_size.y / text_size.y
+            text_size *= scale
+          endIf
 
-      temporarily scale = XY(scale_x,scale_y)
-        if (text.style) text.style.draw( this, text, bounds )
-        else            draw( text.value, bounds )
-      endTemporarily
+          if (text.scaling_mode.x == ScalingMode.SHRINK_TO_FIT and text_size.x > bounds.size.x)
+            scale.x *= bounds.size.x / text_size.x
+          endIf
+          if (text.scaling_mode.x == ScalingMode.SHRINK_TO_FIT  and text_size.y > bounds.size.y)
+            scale.y *= bounds.size.y / text_size.y
+          endIf
+        endIf
+
+        temporarily this.scale = scale
+          if (text.style) text.style.draw( this, text, bounds )
+          else            draw( text.value, bounds )
+        endTemporarily
+      endIf
 
     method draw( text:String, position:XY  )
       load
