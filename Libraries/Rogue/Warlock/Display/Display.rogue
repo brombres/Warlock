@@ -107,6 +107,12 @@ class Display [singleton]
     method height->Real
       return size.y
 
+    method is_portrait->Logical
+      return size.x < size.y
+
+    method is_landscape->Logical
+      return size.x >= size.y
+
     method pop_clip( n=1:Int )
       if (n >= 1 and n >= clip_stack.count)
         clip_stack.discard_last( n - 1 )
