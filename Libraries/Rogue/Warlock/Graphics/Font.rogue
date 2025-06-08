@@ -131,7 +131,7 @@ class Font : UI::Font
           endIf
         endIf
 
-        temporarily this.scale = scale
+        temporarily this.scale = scale, anchor = Anchor.TOP_LEFT
           if (text.style) text.style.draw( this, text, bounds )
           else            draw( text.value, bounds )
         endTemporarily

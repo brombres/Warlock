@@ -44,6 +44,11 @@ class CollectAssets( target, suppress_errors=false:Logical ) : TargetVisitor
             padding = padding_attribute.value.cmd->Int
           endIf
 
+          local include_empty_space = false
+          if local padding_attribute = rule.find_attribute("include_empty_space")
+            include_empty_space = true
+          endIf
+
           local unicode = asset.parse_characters
 
           local is_italic = false
@@ -115,6 +120,15 @@ class CollectAssets( target, suppress_errors=false:Logical ) : TargetVisitor
               if (ch.unicode.is_number) monospacer.add( ch )
             endForEach
             monospace_width = monospacer.apply
+          endIf
+
+          if (include_empty_space)
+            forEach (ch in characters)
+              local expand_left = ch.offset_x.clamped_low( 0 )
+              local expand_right = (ch.advance_x - (expand_left + ch.bitmap.width)).clamped_low( 0 )
+              ch.bitmap.expand( expand_left, 0, expand_right, 0 )
+              ch.offset_x = 0
+            endForEach
           endIf
 
           local character_string = String()
