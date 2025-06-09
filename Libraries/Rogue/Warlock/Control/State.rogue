@@ -1,20 +1,20 @@
 library Warlock
 
-class State : WarlockState<<State,change_state,exit_state>> [singleton]
+class State : Rogue::ProgressState<<State,change_state,exit_state>>, WarlockState [singleton]
   METHODS
-    method dispatch( e:KeyEvent ) [override]
+    method dispatch( e:KeyEvent )
       Screen.handle( e )
 
-    method dispatch( e:PointerEvent ) [override]
+    method dispatch( e:PointerEvent )
       Screen.handle( e )
 
-    method dispatch( e:ScrollEvent ) [override]
+    method dispatch( e:ScrollEvent )
       Screen.handle( e )
 
-    method dispatch( e:TextEvent ) [override]
+    method dispatch( e:TextEvent )
       Screen.handle( e )
 
-    method dispatch_draw( &fg ) [override]
+    method dispatch_draw( &fg )
       Screen.draw( &=fg )
 
 endClass
