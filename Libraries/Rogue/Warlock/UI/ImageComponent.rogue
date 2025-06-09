@@ -2,7 +2,9 @@ library Warlock
 
 class ImageComponent : Component
   PROPERTIES
-    image : Image
+    image             : Image
+    dropshadow_color  = Color( 0x66000000 )
+    dropshadow_offset : XY   # proportional to smallest dimension of Display.magnitude
 
   METHODS
     method init( image, &aspect_fit )
@@ -34,7 +36,15 @@ class ImageComponent : Component
 
     method .draw_entity [override]
       if (opacity)
+        localize display_bounds
+
         temporarily image.opacity = opacity
+          if (dropshadow_offset != XY(0,0))
+            temporarily image.color = dropshadow_color
+              image.draw( display_bounds + dropshadow_offset * Display.magnitude )
+            endTemporarily
+          endIf
+
           image.draw( display_bounds )
         endTemporarily
       endIf
