@@ -11,7 +11,7 @@ augment Entity::Entity2D
       draw( position )
 
     method draw( position:XY )
-      if (attributes.hidden) return
+      if (attributes.invisible) return
       use Display.transform_stack
         .begin_draw
 
@@ -22,7 +22,7 @@ augment Entity::Entity2D
       endUse
 
     method draw( bounds:Box )
-      if (attributes.hidden) return
+      if (attributes.invisible) return
 
       local scale = bounds.size / nominal_size
       temporarily this.scale = scale

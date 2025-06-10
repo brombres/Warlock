@@ -132,8 +132,10 @@ class Font : UI::Font
         endIf
 
         temporarily this.scale = scale, anchor = Anchor.TOP_LEFT
-          if (text.style) text.style.draw( this, text, bounds )
-          else            draw( text.value, bounds )
+          temporarily opacity = opacity * text.opacity
+            if (text.style) text.style.draw( this, text, bounds )
+            else            draw( text.value, bounds )
+          endTemporarily
         endTemporarily
       endIf
 
