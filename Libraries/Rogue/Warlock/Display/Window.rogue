@@ -2,7 +2,8 @@ library Warlock
 
 class Window : Display [singleton]
   PROPERTIES
-    title  : String
+    title      : String
+    ui_manager : UI
 
   METHODS
     method init( title, width:Int, height:Int )
@@ -25,6 +26,9 @@ class Window : Display [singleton]
     method close
       Warlock.windows.remove( this )
       Framework.close_window( this )
+
+    method draw [override]
+      @ui_manager?.draw
 
     method end_render [override]
       prior.end_render
@@ -50,6 +54,38 @@ class Window : Display [singleton]
       State.draw( &!fg )
       State.draw( &fg )
 
+    method set_ui( new_ui:Component ) [override]
+      if (@ui) ui_manager.remove( @ui )
+      @ui = new_ui
+      ui_manager.insert( new_ui )
+
+    method ui_manager->UI [override]
+      if (@ui_manager) return @ui_manager
+      ui_manager = UI()
+      return ui_manager
+
+    method update [override]
+      if (@ui_manager)
+        ui_manager.update( bounds )
+        ui_manager.request_redraw
+      endIf
+
+    method update_ui_layering [override]
+      if (@ui_manager)
+        contingent
+          local cur = @ui_manager.first_child
+          if (@ui)        necessary (@ui is cur);        cur = cur?.next
+          if (Screen.@ui) necessary (Screen.@ui is cur); cur = cur?.next
+          if (State.@ui)  necessary (State.@ui is cur);  cur = cur?.next
+          necessary (cur is null)
+        unsatisfied
+          # Rebuild UI layering
+          @ui_manager.clear
+          if (@ui) @ui_manager.add( @ui )
+          if (Screen.@ui) @ui_manager.add( Screen.@ui )
+          if (State.@ui) @ui_manager.add( State.@ui )
+        endContingent
+      endIf
 endClass
 
 augment UI::Event

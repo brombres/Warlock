@@ -13,7 +13,6 @@ class Display [singleton]
     dt                : Real # Interval since last update, in seconds.
     delta_ticks       : Int  # 60ths of a second since last update
 
-    ui_manager        : UI
     ui                : Component
 
     update_timer      = UpdateTimer()
@@ -95,7 +94,7 @@ class Display [singleton]
       clip = null
 
     method draw
-      @ui_manager?.draw
+      noAction
 
     method end_render
       Display = this
@@ -177,21 +176,7 @@ class Display [singleton]
       else                  set_transform( Matrix.identity, &preserve_stack )
 
     method update_ui_layering
-      if (@ui_manager)
-        contingent
-          local cur = @ui_manager.first_child
-          if (@ui)        necessary (@ui is cur);        cur = cur?.next
-          if (Screen.@ui) necessary (Screen.@ui is cur); cur = cur?.next
-          if (State.@ui)  necessary (State.@ui is cur);  cur = cur?.next
-          necessary (cur is null)
-        unsatisfied
-          # Rebuild UI layering
-          @ui_manager.clear
-          if (@ui) @ui_manager.add( @ui )
-          if (Screen.@ui) @ui_manager.add( Screen.@ui )
-          if (State.@ui) @ui_manager.add( State.@ui )
-        endContingent
-      endIf
+      Window.update_ui_layering
 
     method render
       Display = this
@@ -284,9 +269,7 @@ class Display [singleton]
       projection_mode.update
 
     method set_ui( new_ui:Component )
-      if (@ui) ui_manager.remove( @ui )
-      @ui = new_ui
-      ui_manager.insert( new_ui )
+      Window.set_ui( new_ui )
 
     method set_view_transform( new_transform:Matrix )
       if (view_transform != new_transform)
@@ -302,15 +285,10 @@ class Display [singleton]
       return @ui
 
     method ui_manager->UI
-      if (@ui_manager) return @ui_manager
-      ui_manager = UI()
-      return ui_manager
+      return Window.ui_manager
 
     method update
-      if (@ui_manager)
-        ui_manager.update( bounds )
-        ui_manager.request_redraw
-      endIf
+      noAction
 
     method update_size
       Renderer.flush
