@@ -111,4 +111,5 @@ class WarlockState [aspect]
       actions = actions?.updated
       prior.update
       dispatch_update
+
 endClass

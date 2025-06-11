@@ -1,10 +1,10 @@
 library Warlock
 
-class WarlockUI : UI
-  PROPERTIES
-    default_font = SystemFont
-
+augment UI::UI
   METHODS
-    #method default_font->UI::Font
-    #return
-endClass
+    method font->Font [replace]
+      if (@font) return @font
+      if (default_font) return default_font
+      return SystemFont
+endAugment
+

@@ -2,43 +2,43 @@ library Warlock
 
 class Screen : Rogue::State<<Screen,change_screen,exit_screen>>, WarlockState [singleton]
   PROPERTIES
-    ui : WarlockUI
+    ui : Component
 
   METHODS
     method dispatch( e:KeyEvent )
       e.window.handle( e )
-      if (@ui) @ui.handle( e )
 
     method dispatch( e:PointerEvent )
       e.window.handle( e )
-      if (@ui) @ui.handle( e )
 
     method dispatch( e:ScrollEvent )
       e.window.handle( e )
-      if (@ui) @ui.handle( e )
 
     method dispatch( e:TextEvent )
       e.window.handle( e )
-      if (@ui) @ui.handle( e )
 
     method dispatch_draw( &fg )
       if (not fg)
         Display.draw
-        if (@ui)
-          @ui.draw
-        endIf
       endIf
 
     method dispatch_update
       Display.update
-      if (@ui)
-        @ui.update( Display.bounds )
-        @ui.request_redraw
-      endIf
 
-    method ui->UI
+    method set_ui( new_ui:Component )
+      local existing_ui = @ui?
+      @ui = new_ui
+      Display.update_ui_layering
+
+    method start [override]
+      # Internal use
+      Screen = this
+      Display.update_ui_layering
+      prior.start
+
+    method ui->Component
       if (@ui) return @ui
-      ui = WarlockUI()
+      ui = Component()
       return @ui
 
 endClass

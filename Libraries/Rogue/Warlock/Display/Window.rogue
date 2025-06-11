@@ -32,16 +32,16 @@ class Window : Display [singleton]
       Renderer.on_end_render( this )
 
     method handle( e:KeyEvent )
-      if (@ui) @ui.handle( e )
+      if (@ui_manager) @ui_manager.handle( e )
 
     method handle( e:PointerEvent )
-      if (@ui) @ui.handle( e )
+      if (@ui_manager) @ui_manager.handle( e )
 
     method handle( e:ScrollEvent )
-      if (@ui) @ui.handle( e )
+      if (@ui_manager) @ui_manager.handle( e )
 
     method handle( e:TextEvent )
-      if (@ui) @ui.handle( e )
+      if (@ui_manager) @ui_manager.handle( e )
 
     method native_id->Int
       noAction  # defined by extended Platform, e.g. SDL
