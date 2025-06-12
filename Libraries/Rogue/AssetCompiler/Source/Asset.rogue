@@ -151,6 +151,13 @@ class Asset
       elseIf (rule.contains_attribute("font"))
         type = <Font>
         contingent
+          local old_font_info   = info//font_info
+          local info_file = File(filepath).with_extension( ".font.json" )
+          necessary (info_file.exists)
+          font_info = JSON.load(info_file)
+          info//font_info = font_info
+          necessary (font_info == old_font_info)
+
           necessary (not is_modified)
           necessary (info.contains("image_size"))
           necessary (info.contains("font_characters"))
@@ -162,10 +169,6 @@ class Asset
           font_characters = info//font_characters
           font_height = info//font_height
           font_width  = info//font_width
-          font_info   = info//font_info
-
-          local info_file = File(filepath).with_extension( ".font.json" )
-          necessary (info_file.exists and font_info == JSON.load(info_file))
 
         unsatisfied
           is_modified = true
