@@ -71,6 +71,8 @@ class Window : Display [singleton]
       endIf
 
     method update_ui_layering [override]
+      if (@ui or Screen.@ui or State.@ui) ui_manager  # ensure created
+
       if (@ui_manager)
         contingent
           local cur = @ui_manager.first_child
