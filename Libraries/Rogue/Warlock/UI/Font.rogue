@@ -25,6 +25,7 @@ class Font : UI::Font
     fixed_width        : Int
     ascii_characters   : FontCharacter[]
     character_lookup   : [Character:FontCharacter]
+
     anchor             = Anchor.CENTER : Anchor
     color              = Color.WHITE : Color
     opacity            = 1.0
@@ -144,7 +145,7 @@ class Font : UI::Font
       position = position - Box(measure(text)).at( anchor ).yv + XY(0,offset.y*internal_height*scale.y)
 
       if (text.contains('\n'))
-        local h = internal_height * scale.y
+        local h = internal_height * scale.y * line_spacing
         use buffer = StringPool
           forEach (ch in text)
             if (ch == '\n')
@@ -214,7 +215,7 @@ class Font : UI::Font
     method measure( text:String, i1=null:Int?, i2=null:Int? )->XY
       if (error) return XY.zero
 
-      local line_height = height
+      local line_height = internal_height * scale.y
       if (snap) line_height = line_height.floor
 
       local max_w = 0.0
@@ -233,7 +234,7 @@ class Font : UI::Font
           cur_h = line_height
           if (unicode == '\n')
             w = 0.0
-            h += cur_h
+            h += cur_h * line_spacing
             cur_h = 0.0
           else
             w += fixed_width + spacing_adjustment
@@ -247,7 +248,7 @@ class Font : UI::Font
           cur_h = line_height
           if (unicode == '\n')
             w = 0.0
-            h += cur_h
+            h += cur_h * line_spacing
             cur_h = 0.0
             prev_ch = null
           else
