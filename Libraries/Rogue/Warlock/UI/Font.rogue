@@ -133,7 +133,7 @@ class Font : UI::Font
 
         temporarily this.scale = scale, anchor = Anchor.TOP_LEFT
           temporarily opacity = opacity * text.opacity
-            if (text.style) text.style.draw( this, text, bounds )
+            if (text.text_style) text.text_style.draw( this, text, bounds )
             else            draw( text.value, bounds )
           endTemporarily
         endTemporarily
