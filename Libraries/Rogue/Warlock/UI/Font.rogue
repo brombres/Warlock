@@ -227,24 +227,17 @@ class Font : UI::Font
       if (i2) i2 = i2.value.clamped(i1.value,max_i2)
       else    i2 = max_i2
 
-      local prev_advance : Int
-      local prev_width   : Int
-
       if (fixed_width)
         forEach (index in i1.value..i2.value)
           local unicode = text[index]
           cur_h = line_height
           if (unicode == '\n')
-            max_w = max_w.or_larger( (w-prev_advance)+prev_width )
             w = 0.0
             h += cur_h
             cur_h = 0.0
-            prev_advance = 0
-            prev_width = 0
           else
-            prev_advance = fixed_width
-            prev_width   = fixed_width
-            w += prev_advance + spacing_adjustment
+            w += fixed_width + spacing_adjustment
+            max_w .= or_larger( w )
           endIf
         endForEach
       else
@@ -253,30 +246,25 @@ class Font : UI::Font
           local unicode = text[index]
           cur_h = line_height
           if (unicode == '\n')
-            max_w = max_w.or_larger( (w-prev_advance)+prev_width )
             w = 0.0
             h += cur_h
             cur_h = 0.0
-            prev_advance = 0
-            prev_width = 0
             prev_ch = null
           else
             local ch = character( unicode )
             if (ch)
-              prev_advance = ch.advance.x
-              prev_width   = ch.size.x
               if (prev_ch and prev_ch.kerning)
                 local kern = prev_ch.kerning[ ch.unicode ]
                 if (kern) w += kern
               endIf
-              w += prev_advance + spacing_adjustment
+              w += ch.advance.x + spacing_adjustment
+              max_w .= or_larger( w )
               prev_ch = ch
             endIf
           endIf
         endForEach
       endIf
 
-      max_w = max_w.or_larger( (w-prev_advance)+prev_width )
       h += cur_h
 
       return XY( max_w*scale.x, h )
