@@ -96,6 +96,33 @@ class Font : UI::Font
     method cloned->ThisType [propagated]
       return ThisType(this)
 
+    method anchor_top_left
+      anchor = Anchor.TOP_LEFT
+
+    method anchor_top
+      anchor = Anchor.TOP
+
+    method anchor_top_right
+      anchor = Anchor.TOP_RIGHT
+
+    method anchor_left
+      anchor = Anchor.LEFT
+
+    method anchor_center
+      anchor = Anchor.CENTER
+
+    method anchor_right
+      anchor = Anchor.RIGHT
+
+    method anchor_bottom_left
+      anchor = Anchor.BOTTOM_LEFT
+
+    method anchor_bottom
+      anchor = Anchor.BOTTOM
+
+    method anchor_bottom_right
+      anchor = Anchor.BOTTOM_RIGHT
+
     method character( unicode:Character )->FontCharacter
       if (error) return null
       if (unicode <= 127) return ascii_characters[ unicode ]
@@ -105,37 +132,43 @@ class Font : UI::Font
       local bounds = text.display_bounds
       localize scale
       if (bounds.size.product != 0 and scale.product != 0)
+        local text_size = measure( text.value )
+
         if (text.scaling_mode.x != ScalingMode.NONE or text.scaling_mode.y != ScalingMode.NONE)
-          local text_size = measure( text.value )
           local aspect_fit_size = text_size.scaled_to_fit( bounds.size )
           if (text.scaling_mode.x == ScalingMode.ASPECT_FIT)
             if (text.scaling_mode.y == ScalingMode.ASPECT_FIT)
+              local k = aspect_fit_size / text_size
               text_size /= scale
-              scale *= aspect_fit_size / text_size
+              scale *= k
               text_size *= scale
             else
+              local k = aspect_fit_size.x / text_size.x
               text_size /= scale
-              scale *= aspect_fit_size.x / text_size.x
+              scale *= k
               text_size *= scale
             endIf
           elseIf (text.scaling_mode.y == ScalingMode.ASPECT_FIT)
+            local k = aspect_fit_size.y / text_size.y
             text_size /= scale
-            scale *= aspect_fit_size.y / text_size.y
+            scale *= k
             text_size *= scale
           endIf
 
           if (text.scaling_mode.x == ScalingMode.SHRINK_TO_FIT and text_size.x > bounds.size.x)
             scale.x *= bounds.size.x / text_size.x
           endIf
-          if (text.scaling_mode.x == ScalingMode.SHRINK_TO_FIT  and text_size.y > bounds.size.y)
+          if (text.scaling_mode.y == ScalingMode.SHRINK_TO_FIT  and text_size.y > bounds.size.y)
             scale.y *= bounds.size.y / text_size.y
           endIf
         endIf
 
+        bounds = Box( Box(text_size).positioned_within( bounds, text.content_alignment ).position, text_size )
+
         temporarily this.scale = scale, anchor = Anchor.TOP_LEFT
           temporarily opacity = opacity * text.opacity
             if (text.text_style) text.text_style.draw( this, text, bounds )
-            else            draw( text.value, bounds )
+            else                 draw( text.value, bounds )
           endTemporarily
         endTemporarily
       endIf
