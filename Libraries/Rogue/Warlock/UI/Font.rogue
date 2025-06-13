@@ -135,20 +135,22 @@ class Font : UI::Font
         local text_size = measure( text.value )
 
         if (text.scaling_mode.x != ScalingMode.NONE or text.scaling_mode.y != ScalingMode.NONE)
-          local aspect_fit_size = text_size.scaled_to_fit( bounds.size )
           if (text.scaling_mode.x == ScalingMode.ASPECT_FIT)
             if (text.scaling_mode.y == ScalingMode.ASPECT_FIT)
+              local aspect_fit_size = text_size.scaled_to_fit( bounds.size )
               local k = aspect_fit_size / text_size
               text_size /= scale
               scale *= k
               text_size *= scale
             else
+              local aspect_fit_size = text_size.scaled_to_width( bounds.size.x )
               local k = aspect_fit_size.x / text_size.x
               text_size /= scale
               scale *= k
               text_size *= scale
             endIf
           elseIf (text.scaling_mode.y == ScalingMode.ASPECT_FIT)
+            local aspect_fit_size = text_size.scaled_to_height( bounds.size.y )
             local k = aspect_fit_size.y / text_size.y
             text_size /= scale
             scale *= k
@@ -156,10 +158,16 @@ class Font : UI::Font
           endIf
 
           if (text.scaling_mode.x == ScalingMode.SHRINK_TO_FIT and text_size.x > bounds.size.x)
-            scale.x *= bounds.size.x / text_size.x
+            local k = bounds.size.x / text_size.x
+            text_size /= scale
+            scale.x *= k
+            text_size *= scale
           endIf
           if (text.scaling_mode.y == ScalingMode.SHRINK_TO_FIT  and text_size.y > bounds.size.y)
-            scale.y *= bounds.size.y / text_size.y
+            text_size /= scale
+            local k = bounds.size.y / text_size.y
+            scale.y *= k
+            text_size *= scale
           endIf
         endIf
 
