@@ -33,7 +33,7 @@ class AppData [singleton]
       endIf
       signal_change( data[name].on_change, value )
 
-    method set( key:AppDataKey, value:Variant )
+    method set( key:AppDataKey, value:Variant ) [preferred]
       local parts = key.path.split('.')
       if (parts.count and parts[0] == "AppData") parts.remove_first
       if (parts.is_empty) return
