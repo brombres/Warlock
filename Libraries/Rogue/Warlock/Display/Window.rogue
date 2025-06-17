@@ -2,8 +2,7 @@ library Warlock
 
 class Window : Display [singleton]
   PROPERTIES
-    title      : String
-    ui : UI
+    title : String
 
   METHODS
     method init( title, width:Int, height:Int )
@@ -54,40 +53,12 @@ class Window : Display [singleton]
       State.draw( &!fg )
       State.draw( &fg )
 
-    method set_ui_layer( new_ui_layer:Component ) [override]
-      if (@ui_layer) ui.remove( @ui_layer )
-      @ui_layer = new_ui_layer
-      ui.insert( new_ui_layer )
-
-    method ui->UI [override]
-      if (@ui) return @ui
-      ui = UI()
-      return ui
-
     method update [override]
       if (@ui)
         ui.update( bounds )
         ui.request_redraw
       endIf
 
-    method update_ui_layering [override]
-      if (@ui_layer or Screen.@ui_layer or State.@ui_layer) ui  # ensure created
-
-      if (@ui)
-        contingent
-          local cur = @ui.first_child
-          if (@ui_layer)        necessary (@ui_layer is cur);        cur = cur?.next
-          if (Screen.@ui_layer) necessary (Screen.@ui_layer is cur); cur = cur?.next
-          if (State.@ui_layer)  necessary (State.@ui_layer is cur);  cur = cur?.next
-          necessary (cur is null)
-        unsatisfied
-          # Rebuild UI layering
-          @ui.clear
-          if (@ui_layer) @ui.add( @ui_layer )
-          if (Screen.@ui_layer) @ui.add( Screen.@ui_layer )
-          if (State.@ui_layer) @ui.add( State.@ui_layer )
-        endContingent
-      endIf
 endClass
 
 augment UI::Event

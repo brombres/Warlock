@@ -3,6 +3,7 @@ library Warlock
 class WarlockState [aspect]
   PROPERTIES
     actions : Action
+    ui      : UI
 
   METHODS
     method dispatch( e:KeyEvent )
@@ -38,12 +39,26 @@ class WarlockState [aspect]
           cur.on_draw
           cur .= concurrent_state
         endWhile
+
         on_draw
+
         dispatch_draw( &!fg )
+
+        on_draw_ui
+
+        if (@ui) ui.draw
       endIf
 
     method handle( e:KeyEvent )
       contingent
+        on_intercept( e )
+        necessary (not e.is_consumed)
+
+        if (@ui)
+          @ui.handle( e )
+          necessary (not e.is_consumed)
+        endIf
+
         on( e )
         necessary (not e.is_consumed)
 
@@ -55,6 +70,14 @@ class WarlockState [aspect]
 
     method handle( e:PointerEvent )
       contingent
+        on_intercept( e )
+        necessary (not e.is_consumed)
+
+        if (@ui)
+          @ui.handle( e )
+          necessary (not e.is_consumed)
+        endIf
+
         on( e )
         necessary (not e.is_consumed)
 
@@ -66,6 +89,17 @@ class WarlockState [aspect]
 
     method handle( e:ScrollEvent )
       contingent
+        on_intercept( e )
+        necessary (not e.is_consumed)
+
+        if (@ui)
+          @ui.handle( e )
+          necessary (not e.is_consumed)
+        endIf
+
+        on( e )
+        necessary (not e.is_consumed)
+
         dispatch( e )
         necessary (not e.is_consumed)
 
@@ -74,6 +108,14 @@ class WarlockState [aspect]
 
     method handle( e:TextEvent )
       contingent
+        on_intercept( e )
+        necessary (not e.is_consumed)
+
+        if (@ui)
+          @ui.handle( e )
+          necessary (not e.is_consumed)
+        endIf
+
         on( e )
         necessary (not e.is_consumed)
 
@@ -95,9 +137,19 @@ class WarlockState [aspect]
 
     method on_draw_fg
 
+    method on_draw_ui
+
     method on_begin_render
 
     method on_end_render
+
+    method on_intercept( e:KeyEvent )
+
+    method on_intercept( e:PointerEvent )
+
+    method on_intercept( e:ScrollEvent )
+
+    method on_intercept( e:TextEvent )
 
     method on_unhandled( e:KeyEvent )
 
@@ -107,9 +159,15 @@ class WarlockState [aspect]
 
     method on_unhandled( e:TextEvent )
 
+    method ui->UI
+      if (@ui) return @ui
+      ui = UI()
+      return @ui
+
     method update [override]
       actions = actions?.updated
       prior.update
+      if (@ui) @ui.update( Display.bounds )
       dispatch_update
 
 endClass

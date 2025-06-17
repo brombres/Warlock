@@ -13,7 +13,7 @@ class Display [singleton]
     dt                : Real # Interval since last update, in seconds.
     delta_ticks       : Int  # 60ths of a second since last update
 
-    ui_layer                : Component
+    ui                : UI
 
     update_timer      = UpdateTimer()
 
@@ -175,9 +175,6 @@ class Display [singleton]
       if (transforms.count) set_transform( transforms.last, &preserve_stack )
       else                  set_transform( Matrix.identity, &preserve_stack )
 
-    method update_ui_layering
-      Window.update_ui_layering
-
     method render
       Display = this
 
@@ -268,9 +265,6 @@ class Display [singleton]
       @size = new_size
       projection_mode.update
 
-    method set_ui_layer( new_ui_layer:Component )
-      Window.set_ui_layer( new_ui_layer )
-
     method set_view_transform( new_transform:Matrix )
       if (view_transform != new_transform)
         <Display.modify_view_projection>.signal
@@ -279,13 +273,10 @@ class Display [singleton]
         world_transform_modified = true
       endIf
 
-    method ui_layer->Component
-      if (@ui_layer) return @ui_layer
-      ui_layer = Component()
-      return @ui_layer
-
     method ui->UI
-      return Window.ui
+      if (@ui) return @ui
+      ui = UI()
+      return @ui
 
     method update
       noAction

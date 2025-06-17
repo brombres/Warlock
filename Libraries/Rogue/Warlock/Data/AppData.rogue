@@ -77,8 +77,35 @@ class AppDataKey( path="":String ) [compound]
       return AppDataKey( id->String.clipped(1,1) )
 
   METHODS
+    method get->Variant
+      return AppData.get( this )->Variant
+
     method operator?->Logical
       return path and path.count
+
+    method set( value:Variant )
+      AppData.set( this, value )
+
+    method to->Box
+      return get->Box
+
+    method to->Int
+      return get->Int
+
+    method to->Logical
+      return get->Logical
+
+    method to->Real
+      return get->Real
+
+    method to->String
+      return get->String
+
+    method to->Variant
+      return get->Variant
+
+    method to->XY
+      return get->XY
 endClass
 
 class AppDataValue( value:Variant, data:[String:AppDataValue], on_change:GlobalID ) [compound]
