@@ -2,7 +2,7 @@ library Warlock
 
 class State : Rogue::ProgressState<<State,change_state,exit_state>>, WarlockState [singleton]
   PROPERTIES
-    ui : Component
+    ui_layer : Component
 
   METHODS
     method dispatch( e:KeyEvent )
@@ -21,14 +21,14 @@ class State : Rogue::ProgressState<<State,change_state,exit_state>>, WarlockStat
       Screen.draw( &=fg )
 
       if (not fg)
-        if (@ui)
-          @ui.draw
+        if (@ui_layer)
+          @ui_layer.draw
         endIf
       endIf
 
-    method set_ui( new_ui:Component )
-      local existing_ui = @ui?
-      @ui = new_ui
+    method set_ui_layer( new_ui_layer:Component )
+      local existing_ui = @ui_layer?
+      @ui_layer = new_ui_layer
       Display.update_ui_layering
 
     method start [override]
@@ -37,9 +37,9 @@ class State : Rogue::ProgressState<<State,change_state,exit_state>>, WarlockStat
       Display.update_ui_layering
       prior.start
 
-    method ui->Component
-      if (@ui) return @ui
-      ui = Component()
-      return @ui
+    method ui_layer->Component
+      if (@ui_layer) return @ui_layer
+      ui_layer = Component()
+      return @ui_layer
 
 endClass

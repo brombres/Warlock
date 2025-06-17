@@ -54,10 +54,10 @@ class Window : Display [singleton]
       State.draw( &!fg )
       State.draw( &fg )
 
-    method set_ui( new_ui:Component ) [override]
-      if (@ui) ui_manager.remove( @ui )
-      @ui = new_ui
-      ui_manager.insert( new_ui )
+    method set_ui_layer( new_ui_layer:Component ) [override]
+      if (@ui_layer) ui_manager.remove( @ui_layer )
+      @ui_layer = new_ui_layer
+      ui_manager.insert( new_ui_layer )
 
     method ui_manager->UI [override]
       if (@ui_manager) return @ui_manager
@@ -71,21 +71,21 @@ class Window : Display [singleton]
       endIf
 
     method update_ui_layering [override]
-      if (@ui or Screen.@ui or State.@ui) ui_manager  # ensure created
+      if (@ui_layer or Screen.@ui_layer or State.@ui_layer) ui_manager  # ensure created
 
       if (@ui_manager)
         contingent
           local cur = @ui_manager.first_child
-          if (@ui)        necessary (@ui is cur);        cur = cur?.next
-          if (Screen.@ui) necessary (Screen.@ui is cur); cur = cur?.next
-          if (State.@ui)  necessary (State.@ui is cur);  cur = cur?.next
+          if (@ui_layer)        necessary (@ui_layer is cur);        cur = cur?.next
+          if (Screen.@ui_layer) necessary (Screen.@ui_layer is cur); cur = cur?.next
+          if (State.@ui_layer)  necessary (State.@ui_layer is cur);  cur = cur?.next
           necessary (cur is null)
         unsatisfied
           # Rebuild UI layering
           @ui_manager.clear
-          if (@ui) @ui_manager.add( @ui )
-          if (Screen.@ui) @ui_manager.add( Screen.@ui )
-          if (State.@ui) @ui_manager.add( State.@ui )
+          if (@ui_layer) @ui_manager.add( @ui_layer )
+          if (Screen.@ui_layer) @ui_manager.add( Screen.@ui_layer )
+          if (State.@ui_layer) @ui_manager.add( State.@ui_layer )
         endContingent
       endIf
 endClass

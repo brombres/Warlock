@@ -13,7 +13,7 @@ class Display [singleton]
     dt                : Real # Interval since last update, in seconds.
     delta_ticks       : Int  # 60ths of a second since last update
 
-    ui                : Component
+    ui_layer                : Component
 
     update_timer      = UpdateTimer()
 
@@ -268,8 +268,8 @@ class Display [singleton]
       @size = new_size
       projection_mode.update
 
-    method set_ui( new_ui:Component )
-      Window.set_ui( new_ui )
+    method set_ui_layer( new_ui_layer:Component )
+      Window.set_ui_layer( new_ui_layer )
 
     method set_view_transform( new_transform:Matrix )
       if (view_transform != new_transform)
@@ -279,10 +279,10 @@ class Display [singleton]
         world_transform_modified = true
       endIf
 
-    method ui->Component
-      if (@ui) return @ui
-      ui = Component()
-      return @ui
+    method ui_layer->Component
+      if (@ui_layer) return @ui_layer
+      ui_layer = Component()
+      return @ui_layer
 
     method ui_manager->UI
       return Window.ui_manager
