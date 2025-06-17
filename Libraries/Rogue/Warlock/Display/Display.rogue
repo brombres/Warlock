@@ -284,8 +284,8 @@ class Display [singleton]
       ui_layer = Component()
       return @ui_layer
 
-    method ui_manager->UI
-      return Window.ui_manager
+    method ui->UI
+      return Window.ui
 
     method update
       noAction
