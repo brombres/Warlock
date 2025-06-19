@@ -77,6 +77,9 @@ class AppDataKey( path="":String ) [compound]
       return AppDataKey( id->String.clipped(1,1) )
 
   METHODS
+    method description->String
+      return path
+
     method get->Variant
       return AppData.get( this )->Variant
 

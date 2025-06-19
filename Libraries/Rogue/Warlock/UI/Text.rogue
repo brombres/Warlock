@@ -21,11 +21,12 @@ augment UI::Text
       endIf
       return false
 
-    method on_begin_layout [insert]
+    method on_begin_layout_internal [insert]
       on_update_app_data
 
     method on_update [override]
       if (app_data_needs_update)
+        on_update_app_data
         request_layout
       endIf
       prior.on_update
