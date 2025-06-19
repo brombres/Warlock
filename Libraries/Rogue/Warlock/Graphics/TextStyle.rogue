@@ -1,6 +1,7 @@
 library UI
 #uses Warlock
 
+#{
 augment UI::TextStyle
   METHODS
     method draw( font:UI::Font, text:Text, bounds:Box ) [replace]
@@ -10,3 +11,4 @@ augment UI::TextStyle
       font.draw( text, bounds )
 endAugment
 
+}#

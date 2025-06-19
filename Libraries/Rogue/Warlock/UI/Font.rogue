@@ -1,6 +1,6 @@
 library Warlock
 
-class Font : UI::Font
+augment UI::Font
   GLOBAL PROPERTIES
     fonts = [String:Font]
 
@@ -13,7 +13,7 @@ class Font : UI::Font
         if (snug) result.spacing_adjustment = -1
         return result
       else
-        return Font( asset_name, &new_instance, &=snap, &=snug )
+        return new<<Font>>.[ init_instance(asset_name, &=snap, &=snug) ]
       endIf
 
   PROPERTIES
@@ -39,7 +39,7 @@ class Font : UI::Font
     render_mode        : RenderMode
 
   METHODS
-    method init( asset_name, new_instance:Logical, snap=false, &snug )
+    method init_instance( asset_name, snap=false, &snug )
       fonts[asset_name] = this
 
       ascii_characters = Dim<<FontCharacter>>(128)
@@ -67,8 +67,7 @@ class Font : UI::Font
 
       if (snug) spacing_adjustment = -1
 
-    method init( existing:Font )
-      prior.init( existing )
+    method init_clone( existing:Font ) [insert]
       asset_name         = existing.asset_name
       asset              = existing.asset
       internal_height    = existing.internal_height
@@ -92,9 +91,6 @@ class Font : UI::Font
       opacity            = 1.0
       spacing_adjustment = 0
       snap               = false
-
-    method cloned->ThisType [propagated]
-      return ThisType(this)
 
     method anchor_top_left
       anchor = Anchor.TOP_LEFT
@@ -319,7 +315,7 @@ class Font : UI::Font
 
     method set_scale( @scale )
 
-endClass
+endAugment
 
 class FontCharacter
   PROPERTIES
