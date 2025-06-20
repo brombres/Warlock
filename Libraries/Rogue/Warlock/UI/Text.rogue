@@ -3,7 +3,7 @@ uses Warlock
 
 augment UI::Text
   PROPERTIES
-    app_data_key : AppDataKey
+    app_data_key : VariantEntry
 
   METHODS
     method init( app_data_key )
@@ -12,11 +12,11 @@ augment UI::Text
 
     method init( app_data_id:GlobalID )
       # e.g. <AppData.health>
-      init( AppDataKey(app_data_id) )
+      init( Warlock::AppDataValue(app_data_id) )
 
     method app_data_needs_update->Logical
       if (app_data_key)
-        local new_value = AppData[ app_data_key ] || ""
+        local new_value = app_data_key->String || ""
         return (new_value != value)
       endIf
       return false

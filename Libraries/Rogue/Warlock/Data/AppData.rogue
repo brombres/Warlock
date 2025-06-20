@@ -2,287 +2,49 @@ library Warlock
 
 class AppData [singleton]
   PROPERTIES
-    data = AppDataValue.table : AppDataValue
+    data = @{}
 
   METHODS
+    method disconnect_on_change( key:String )
+      data.disconnect_on_change( key )
+
+    method disconnect_on_change( path:GlobalID )
+      data.disconnect_on_change( path )
+
+    method get( key:String )->Variant
+      return data[key]
+
     method load( json:String )
-      load( JSON(json).parse )
+      data = JSON( json ).parse_table || @{}
 
-    method load( variant:Variant )
-      data = variant->AppDataValue
+    method on_change( key:String, signal:SignalID )
+      data.on_change( key, signal )
 
-    method get( name:String )->AppDataContext
-      return AppDataContext( data, name )
+    method on_change( key:String, global_id:GlobalID )
+      data.on_change( key, global_id )
 
-    method get( key:AppDataKey )->AppDataContext
-      # key.path: e.g. '<AppData.x.y>'
-      local parts = key.path.split('.')
-      if (parts.count and parts[0] == "AppData") parts.remove_first
-      if (parts.is_empty) return undefined
-      local context = get( parts.remove_first )
-      forEach (part in parts) context = context[part]
-      return context
+    method on_change( path:GlobalID, signal:SignalID )
+      data.on_change( path, signal )
 
-    method set( name:String, value:Variant )
-      if (data.contains(name))
-        local existing = data[name]
-        existing.value = value
-        data[name] = existing
-      else
-        data[name] = value
-      endIf
-      signal_change( data[name].on_change, value )
+    method on_change( path:GlobalID, global_id:GlobalID )
+      data.on_change( path, global_id )
 
-    method set( key:AppDataKey, value:Variant ) [preferred]
-      local parts = key.path.split('.')
-      if (parts.count and parts[0] == "AppData") parts.remove_first
-      if (parts.is_empty) return
-      if (parts.count == 1)
-        set( parts.first, value )
-      else
-        local last = parts.remove_last
-        local context = get( parts.remove_first )
-        forEach (part in parts) context = context[part]
-        context.set( last, value )
-      endIf
-
-    method on_change( id:GlobalID, callback:Function(Variant) )
-      # id: e.g. 'AppData.x.y'
-      local context = get( AppDataKey(id) )
-
-      id.on_signal( callback )
-
-      local value = context.context[context.key]
-      value.on_change = id
-      context.context[context.key] = value
-
-    method signal_change( signal_id:GlobalID, value:Variant )
-      if (signal_id != <UNDEFINED>)
-        signal_id.signal( value )
-      endIf
+    method set( key:String, value:Variant )
+      data[key] = value
 
     method to->String
       return data->String
 
     method to->Variant
-      return data->Variant
+      return data
 
 endClass
 
-class AppDataKey( path="":String ) [compound]
-  # path: e.g. "health"
-  GLOBAL METHODS
-    method create( id:GlobalID )->AppDataKey
-      # id: e.g. <AppData.health>
-      return AppDataKey( id->String.clipped(1,1) )
-
-  METHODS
-    method description->String
-      return path
-
-    method get->Variant
-      return AppData.get( this )->Variant
-
-    method operator?->Logical
-      return path and path.count
-
-    method set( value:Variant )
-      AppData.set( this, value )
-
-    method to->Box
-      return get->Box
-
-    method to->Int
-      return get->Int
-
-    method to->Logical
-      return get->Logical
-
-    method to->Real
-      return get->Real
-
-    method to->String
-      return get->String
-
-    method to->Variant
-      return get->Variant
-
-    method to->XY
-      return get->XY
-endClass
-
-class AppDataValue( value:Variant, data:[String:AppDataValue], on_change:GlobalID ) [compound]
-  GLOBAL METHODS
-    method create->AppDataValue
-      return AppDataValue( undefined, null, <UNDEFINED> )
-
-    method create( value:Variant )->AppDataValue
-      return create( value, null, <UNDEFINED> )
-
-    method create( value:Variant, on_change:GlobalID )->AppDataValue
-      #if (value.is_object and value->Object instanceOf ListType)
-      #endIf
-      return AppDataValue( value, null, on_change )
-
-    method table( data=[String:AppDataValue]:[String:AppDataValue] )->AppDataValue
-      return AppDataValue( undefined, data, <UNDEFINED> )
-
-  METHODS
-    method contains( key:String )->Logical
-      if (data) return data.contains( key )
-      return false
-
-    method get( key:String )->AppDataValue
-      if (data)
-        return data[key]
-      endIf
-      return AppDataValue()
-
-    method is_table->Logical
-      return data?
-
-    method operator==( other:AppDataValue )->Logical
-      local result = value == other.value and data is other.data and on_change == other.on_change
-      return result
-
-    method operator?->Logical
-      return value? or data?
-
-    method set( key:String, value:AppDataValue )
-      if (data)
-        if (data[key] != value)
-          data[key] = value
-          AppData.signal_change( data[key].on_change, value.value )
-        endIf
-      endIf
-
-    method to->String
-      if (data) return data->String
-      return value->String
-
-    method to->Variant
-      if (data)
-        local result = @{}
-        forEach (entry in data.entries)
-          result[entry.key] = entry.value->Variant
-        endForEach
-        return result
-      else
-        return value
-      endIf
-endClass
-
-augment Rogue::Variant
-  METHODS
-    method to->AppDataValue
-      if (is_table)
-        local data = [String:AppDataValue]
-        forEach (key in keys)
-          data[key] = this[key]
-        endForEach
-        return AppDataValue.table( data )
-      else
-        return AppDataValue( this )
-      endIf
-endAugment
-
-class AppDataContext( context:AppDataValue, key:String ) [compound]
-  METHODS
-    method contains( name:String )->Logical
-      if local table = context[key]
-        return table.contains( name )
-      else
-        return false
-      endIf
-
-    method get( name:String )->AppDataContext
-      if local table = context[key]
-        return AppDataContext( table, name )
-      else
-        local table = AppDataValue.table
-        context[key] = table
-        return AppDataContext( table, name )
-      endIf
-
-    method is_table->Logical
-      return context[key].is_table
-
-    method operator?->Logical
-      return context[key]?
-
-    method operator+( value:Variant )->Variant
-      return this->Variant + value
-
-    method operator-()->Variant
-      return -this->Variant
-
-    method operator-( value:Variant )->Variant
-      return this->Variant - value
-
-    method operator*( value:Variant )->Variant
-      return this->Variant * value
-
-    method operator/( value:Variant )->Variant
-      return this->Variant / value
-
-    method operator%( value:Variant )->Variant
-      return this->Variant % value
-
-    method operator^( value:Variant )->Variant
-      return this->Variant ^ value
-
-    method operator&( value:Variant )->Variant
-      return this->Variant & value
-
-    method operator|( value:Variant )->Variant
-      return this->Variant | value
-
-    method operator~( value:Variant )->Variant
-      return this->Variant ~ value
-
-    method operator==( value:Variant )->Logical
-      return this->Variant == value
-
-    method operator<>( value:Variant )->Int
-      return this->Variant <> value
-
-    method set( name:String, value:Variant )
-      local data = context[key]
-      if (data.is_table)
-        local existing = data[name]
-        existing.value = value
-        data[name] = existing
-        return
-      endIf
-
-      local table = AppDataValue.table
-      table[name] = value
-      context[key] = table
-
-    method to->AppDataValue
-      return context[key]
-
-    method to->Box
-      return this->Variant->Box
-
-    method to->Int
-      return this->Variant->Int
-
-    method to->Logical
-      return this->Variant->Logical
-
-    method to->Real
-      return this->Variant->Real
-
-    method to->String
-      return this->AppDataValue->String
-
-    method to->Variant
-      local value = context[key].value
-      if (value.exists) return value
-      else              return undefined
-
-    method to->XY
-      return this->Variant->XY
-endClass
+routine AppDataValue( path:GlobalID )->VariantEntry
+  if (path.name.begins_with("<AppData."))
+    return AppData.data.entry( "<" + path.name.after_first("<AppData.") )
+  else
+    return AppData.data.entry( path )
+  endIf
+endRoutine
 
