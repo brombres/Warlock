@@ -51,7 +51,7 @@ class WarlockState [aspect]
 
     method handle( e:KeyEvent )
       contingent
-        on_intercept( e )
+        on( e )
         necessary (not e.is_consumed)
 
         if (@ui)
@@ -59,7 +59,7 @@ class WarlockState [aspect]
           necessary (not e.is_consumed)
         endIf
 
-        on( e )
+        on_unhandled_ui( e )
         necessary (not e.is_consumed)
 
         dispatch( e )
@@ -70,7 +70,7 @@ class WarlockState [aspect]
 
     method handle( e:PointerEvent )
       contingent
-        on_intercept( e )
+        on( e )
         necessary (not e.is_consumed)
 
         if (@ui)
@@ -78,7 +78,7 @@ class WarlockState [aspect]
           necessary (not e.is_consumed)
         endIf
 
-        on( e )
+        on_unhandled_ui( e )
         necessary (not e.is_consumed)
 
         dispatch( e )
@@ -89,7 +89,7 @@ class WarlockState [aspect]
 
     method handle( e:ScrollEvent )
       contingent
-        on_intercept( e )
+        on( e )
         necessary (not e.is_consumed)
 
         if (@ui)
@@ -97,7 +97,7 @@ class WarlockState [aspect]
           necessary (not e.is_consumed)
         endIf
 
-        on( e )
+        on_unhandled_ui( e )
         necessary (not e.is_consumed)
 
         dispatch( e )
@@ -108,7 +108,7 @@ class WarlockState [aspect]
 
     method handle( e:TextEvent )
       contingent
-        on_intercept( e )
+        on( e )
         necessary (not e.is_consumed)
 
         if (@ui)
@@ -116,7 +116,7 @@ class WarlockState [aspect]
           necessary (not e.is_consumed)
         endIf
 
-        on( e )
+        on_unhandled_ui( e )
         necessary (not e.is_consumed)
 
         dispatch( e )
@@ -143,14 +143,6 @@ class WarlockState [aspect]
 
     method on_end_render
 
-    method on_intercept( e:KeyEvent )
-
-    method on_intercept( e:PointerEvent )
-
-    method on_intercept( e:ScrollEvent )
-
-    method on_intercept( e:TextEvent )
-
     method on_unhandled( e:KeyEvent )
 
     method on_unhandled( e:PointerEvent )
@@ -158,6 +150,14 @@ class WarlockState [aspect]
     method on_unhandled( e:ScrollEvent )
 
     method on_unhandled( e:TextEvent )
+
+    method on_unhandled_ui( e:KeyEvent )
+
+    method on_unhandled_ui( e:PointerEvent )
+
+    method on_unhandled_ui( e:ScrollEvent )
+
+    method on_unhandled_ui( e:TextEvent )
 
     method ui->UI
       if (@ui) return @ui
