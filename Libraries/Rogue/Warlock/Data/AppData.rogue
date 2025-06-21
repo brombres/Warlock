@@ -48,3 +48,9 @@ routine AppDataValue( path:GlobalID )->VariantEntry
   endIf
 endRoutine
 
+augment Rogue::GlobalID
+  METHODS
+    method to->VariantEntryID
+      return AppDataValue( this ).id
+endAugment
+
