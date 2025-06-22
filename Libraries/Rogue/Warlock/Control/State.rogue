@@ -14,8 +14,8 @@ class State : Rogue::ProgressState<<State,change_state,exit_state>>, WarlockStat
     method dispatch( e:TextEvent )
       Screen.handle( e )
 
-    method dispatch_find( id:GlobalID, arg=undefined:Variant )->Variant
-      return Screen.find( id, arg )
+    method dispatch_find( id:GlobalID, arg=undefined:Variant, &up )->Variant
+      if (not up) return Screen.find( id, arg )
 
     method dispatch_draw( &fg )
       Screen.draw( &=fg )
@@ -26,7 +26,7 @@ class State : Rogue::ProgressState<<State,change_state,exit_state>>, WarlockStat
         endIf
       endIf
 
-    method dispatch_notify( id:GlobalID, arg=undefined:Variant )
-      Screen.notify( id, arg )
+    method dispatch_notify( id:GlobalID, arg=undefined:Variant, &up )
+      if (not up) Screen.notify( id, arg )
 
 endClass

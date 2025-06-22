@@ -19,11 +19,13 @@ class Screen : Rogue::State<<Screen,change_screen,exit_screen>>, WarlockState [s
         Display.draw
       endIf
 
-    method dispatch_find( id:GlobalID, arg=undefined:Variant )->Variant
-      return Display.find( id, arg )
+    method dispatch_find( id:GlobalID, arg=undefined:Variant, &up )->Variant
+      if (up) return Screen.find( id, arg, &up )
+      else    return Display.find( id, arg )
 
-    method dispatch_notify( id:GlobalID, arg=undefined:Variant )
-      Display.notify( id, arg )
+    method dispatch_notify( id:GlobalID, arg=undefined:Variant, &up )
+      if (up) Screen.notify( id, arg, &up )
+      else    Display.notify( id, arg )
 
     method dispatch_update
       Display.update

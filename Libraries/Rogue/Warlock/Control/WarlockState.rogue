@@ -21,10 +21,10 @@ class WarlockState [aspect]
     method dispatch_draw( &fg )
       noAction
 
-    method dispatch_find( id:GlobalID, arg=undefined:Variant )->Variant
+    method dispatch_find( id:GlobalID, arg=undefined:Variant, &up )->Variant
       return undefined
 
-    method dispatch_notify( id:GlobalID, arg=undefined:Variant )
+    method dispatch_notify( id:GlobalID, arg=undefined:Variant, &up )
       noAction
 
     method dispatch_update
@@ -55,14 +55,17 @@ class WarlockState [aspect]
         if (@ui) ui.draw
       endIf
 
-    method find( id:GlobalID, arg=undefined:Variant )->Variant
+    method find( id:GlobalID, arg=undefined:Variant, &up )->Variant
       if (@ui)
         if local result = @ui.find( id, arg )
           return result
         endIf
       endIf
 
-      return dispatch_find( id, arg )
+      return dispatch_find( id, arg, &=up )
+
+    method get( id:GlobalID, arg=undefined:Variant )->Variant
+      return undefined
 
     method handle( e:KeyEvent )
       contingent
@@ -140,10 +143,19 @@ class WarlockState [aspect]
         on_unhandled( e )
       endContingent
 
-    method notify( id:GlobalID, arg=undefined:Variant )
+    method handle_find_up( id:GlobalID, arg:Variant )->Variant
+      local result = get( id, arg )
+      if (result.exists) return result
+      return dispatch_find( id, arg, &up )
+
+    method handle_notify_up( id:GlobalID, arg:Variant )
+      on_notify( id, arg )
+      dispatch_notify( id, arg, &up )
+
+    method notify( id:GlobalID, arg=undefined:Variant, &up )
       on_notify( id, arg )
       if (@ui) @ui.notify( id, arg )
-      dispatch_notify( id, arg )
+      dispatch_notify( id, arg, &=up )
 
     method on( e:KeyEvent )
 
@@ -181,6 +193,12 @@ class WarlockState [aspect]
     method on_unhandled_ui( e:ScrollEvent )
 
     method on_unhandled_ui( e:TextEvent )
+
+    method set_ui( @ui )
+      if (@ui)
+        @ui.find_handler   = (this=>handle_find_up)
+        @ui.notify_handler = (this=>handle_notify_up)
+      endIf
 
     method ui->UI
       if (@ui) return @ui
