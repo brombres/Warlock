@@ -102,6 +102,14 @@ class Display [singleton]
     method end_tick
       noAction
 
+    method find( id:GlobalID, arg=undefined:Variant )->Variant
+      if (@ui)
+        if local result = @ui.find( id, arg )
+          return result
+        endIf
+      endIf
+      return undefined
+
     method height->Real
       return size.y
 
@@ -110,6 +118,9 @@ class Display [singleton]
 
     method is_landscape->Logical
       return size.x >= size.y
+
+    method notify( id:GlobalID, arg=undefined:Variant )
+      if (@ui) @ui.notify( id, arg )
 
     method pop_clip( n=1:Int )
       if (n >= 1 and n >= clip_stack.count)

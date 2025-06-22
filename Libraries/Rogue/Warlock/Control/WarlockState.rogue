@@ -21,6 +21,12 @@ class WarlockState [aspect]
     method dispatch_draw( &fg )
       noAction
 
+    method dispatch_find( id:GlobalID, arg=undefined:Variant )->Variant
+      return undefined
+
+    method dispatch_notify( id:GlobalID, arg=undefined:Variant )
+      noAction
+
     method dispatch_update
       noAction
 
@@ -48,6 +54,15 @@ class WarlockState [aspect]
 
         if (@ui) ui.draw
       endIf
+
+    method find( id:GlobalID, arg=undefined:Variant )->Variant
+      if (@ui)
+        if local result = @ui.find( id, arg )
+          return result
+        endIf
+      endIf
+
+      return dispatch_find( id, arg )
 
     method handle( e:KeyEvent )
       contingent
@@ -125,6 +140,11 @@ class WarlockState [aspect]
         on_unhandled( e )
       endContingent
 
+    method notify( id:GlobalID, arg=undefined:Variant )
+      on_notify( id, arg )
+      if (@ui) @ui.notify( id, arg )
+      dispatch_notify( id, arg )
+
     method on( e:KeyEvent )
 
     method on( e:PointerEvent )
@@ -142,6 +162,9 @@ class WarlockState [aspect]
     method on_begin_render
 
     method on_end_render
+
+    method on_notify( id:GlobalID, arg:Variant )
+      noAction
 
     method on_unhandled( e:KeyEvent )
 
