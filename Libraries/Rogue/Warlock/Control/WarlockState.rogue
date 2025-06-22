@@ -24,9 +24,6 @@ class WarlockState [aspect]
     method dispatch_find( id:GlobalID, arg=undefined:Variant, &up )->Variant
       return undefined
 
-    method dispatch_notify( id:GlobalID, arg=undefined:Variant, &up )
-      noAction
-
     method dispatch_update
       noAction
 
@@ -148,15 +145,6 @@ class WarlockState [aspect]
       if (result.exists) return result
       return dispatch_find( id, arg, &up )
 
-    method handle_notify_up( id:GlobalID, arg:Variant )
-      on_notify( id, arg )
-      dispatch_notify( id, arg, &up )
-
-    method notify( id:GlobalID, arg=undefined:Variant, &up )
-      on_notify( id, arg )
-      if (@ui) @ui.notify( id, arg )
-      dispatch_notify( id, arg, &=up )
-
     method on( e:KeyEvent )
 
     method on( e:PointerEvent )
@@ -174,9 +162,6 @@ class WarlockState [aspect]
     method on_begin_render
 
     method on_end_render
-
-    method on_notify( id:GlobalID, arg:Variant )
-      noAction
 
     method on_unhandled( e:KeyEvent )
 
@@ -197,7 +182,6 @@ class WarlockState [aspect]
     method set_ui( @ui )
       if (@ui)
         @ui.find_handler   = (this=>handle_find_up)
-        @ui.notify_handler = (this=>handle_notify_up)
       endIf
 
     method ui->UI

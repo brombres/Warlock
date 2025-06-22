@@ -23,10 +23,6 @@ class Screen : Rogue::State<<Screen,change_screen,exit_screen>>, WarlockState [s
       if (up) return Screen.find( id, arg, &up )
       else    return Display.find( id, arg )
 
-    method dispatch_notify( id:GlobalID, arg=undefined:Variant, &up )
-      if (up) Screen.notify( id, arg, &up )
-      else    Display.notify( id, arg )
-
     method dispatch_update
       Display.update
 

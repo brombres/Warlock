@@ -26,7 +26,4 @@ class State : Rogue::ProgressState<<State,change_state,exit_state>>, WarlockStat
         endIf
       endIf
 
-    method dispatch_notify( id:GlobalID, arg=undefined:Variant, &up )
-      if (not up) Screen.notify( id, arg )
-
 endClass
