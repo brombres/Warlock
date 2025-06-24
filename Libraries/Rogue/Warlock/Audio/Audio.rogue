@@ -1,4 +1,5 @@
 library Warlock
 
 $include Audio/AudioManager
+$include Audio/Music
 $include Audio/Sound

@@ -1,0 +1,23 @@
+library Warlock
+
+class Music : Sound
+  PROPERTIES
+    is_music   = true
+    is_looping = true
+
+  METHODS
+    method play
+      if (not AudioManager.configure) return
+
+      if (AudioManager.active_music.contains(this))
+        if (not is_playing) prior.play
+      else
+        if (not is_concurrent)
+          (forEach in AudioManager.active_music).stop
+          AudioManager.active_music.clear
+        endIf
+        AudioManager.active_music.add( this )
+        prior.play
+      endIf
+
+endClass

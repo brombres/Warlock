@@ -5,6 +5,8 @@ class AudioManager [singleton]
     nativeHeader @|#include "miniaudio.h"
 
   PROPERTIES
+    active_music = Music[]
+
     is_configured  : Logical
     is_initialized : Logical
     native "ma_engine engine;"
@@ -16,8 +18,8 @@ class AudioManager [singleton]
         native @|ma_engine_uninit( &$this->engine );
       endIf
 
-    method configure
-      if (is_configured) return
+    method configure->Logical
+      if (is_configured) return is_initialized
       is_configured = true
 
       local success : Logical
@@ -28,7 +30,7 @@ class AudioManager [singleton]
 
       if (not success)
         println "Error initializing miniaudio"
-        return
+        return false
       endIf
 
       is_initialized = true

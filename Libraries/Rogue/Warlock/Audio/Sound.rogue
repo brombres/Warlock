@@ -5,33 +5,63 @@ class Sound
     filepath       : String
     is_initialized : Logical
     is_prepared    : Logical
+    is_music       : Logical
+    is_looping     : Logical
+    is_concurrent  : Logical
     native "ma_sound sound;"
 
   METHODS
     method init( filepath )
       noAction
 
+    method concurrent
+      is_concurrent = true
+
+    method is_playing->Logical
+      if (not is_initialized) return false
+      local result : Logical
+      native @|$result = (RogueLogical) ma_sound_is_playing( &$this->sound );
+      return result
+
+    method load
+      prepare
+
+    method looping
+      is_looping = true
+
     method on_cleanup
       if (is_initialized)
         is_initialized = false
         native @|ma_sound_uninit( &$this->sound );
       endIf
+      is_prepared = false
 
-    method play( &looping )
-      prepare
+    method once
+      is_looping = false
+
+    method set_is_looping( setting:Logical )
+      if (is_looping == setting) return
+      @is_looping = setting
+      if (is_playing) native @|ma_sound_set_looping( &$this->sound, $is_looping );
+
+    method pause
       if (is_initialized)
+        native @|ma_sound_stop( &$this->sound );
+      endIf
+
+    method play
+      if (prepare)
         native
-        @|ma_sound_set_looping( &$this->sound, $looping );
+        @|ma_sound_set_looping( &$this->sound, $is_looping );
          |ma_sound_start( &$this->sound );
       endIf
 
-    method prepare
-      if (is_prepared) return
+    method prepare->Logical
+      if (is_prepared) return is_initialized
       is_prepared = true
-      if (is_initialized) return
 
       local manager = AudioManager
-      manager.configure
+      if (not manager.configure) return false
 
       if local file = Warlock.find_audio_file( filepath )
         native
@@ -46,5 +76,13 @@ class Sound
          |$is_initialized = (result == MA_SUCCESS);
       else
         println "Audio file not found: " + filepath
+      endIf
+
+      return is_initialized
+
+    method stop
+      if (is_initialized)
+        native @|ma_sound_stop( &$this->sound );
+                |ma_sound_seek_to_pcm_frame( &$this->sound, 0 );
       endIf
 endClass
