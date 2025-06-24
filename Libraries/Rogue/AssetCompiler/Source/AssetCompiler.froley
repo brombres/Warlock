@@ -289,6 +289,7 @@ parser
 - filepath_term_or_id
   on TERM -> LiteralString(value=content)
   on IDENTIFIER -> LiteralString(value=content)
+  on STRING -> LiteralString(value=content)
   syntaxError "Filepath expected."
 
 - attribute_value_term

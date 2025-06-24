@@ -54,7 +54,7 @@ class GenerateAssetConfig : Visitor
           if (filepath.ends_with(".font.json",&ignore_case))
             writeln_echo "- $ font_info"(filepath)
           else
-            write_echo "@ $"(filepath)
+            write_echo ''@ "$"''(filepath.replacing('"',"\\\""))
             local filepath_lc = filepath.to_lowercase
             which (File(filepath_lc).extension)
               case "png", "jpg", "jpeg"

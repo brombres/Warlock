@@ -451,7 +451,7 @@ class Asset
 
     method write_placements( manifest:Manifest )
       forEach (placement in placement_info)
-        manifest.print "  $"(AssetCompiler.textures[placement//atlas_filepath])
+        manifest.print "  $"(AssetCompiler.textures[placement//atlas_filepath].value - 1)
         manifest.print " $ $"(placement//position//x,placement//position//y)
         manifest.print " $ $"(placement//size//x,placement//size//y)
         manifest.println
