@@ -1,0 +1,50 @@
+library Warlock
+
+class Sound
+  PROPERTIES
+    filepath       : String
+    is_initialized : Logical
+    is_prepared    : Logical
+    native "ma_sound sound;"
+
+  METHODS
+    method init( filepath )
+      noAction
+
+    method on_cleanup
+      if (is_initialized)
+        is_initialized = false
+        native @|ma_sound_uninit( &$this->sound );
+      endIf
+
+    method play( &looping )
+      prepare
+      if (is_initialized)
+        native
+        @|ma_sound_set_looping( &$this->sound, $looping );
+         |ma_sound_start( &$this->sound );
+      endIf
+
+    method prepare
+      if (is_prepared) return
+      is_prepared = true
+      if (is_initialized) return
+
+      local manager = AudioManager
+      manager.configure
+
+      if local file = Warlock.find_audio_file( filepath )
+        native
+        @|ma_result result = ma_sound_init_from_file(
+         |  &$manager->engine,
+         |  $file.filepath->data->as_utf8,
+         |  0,
+         |  NULL,
+         |  NULL,
+         |  &$this->sound
+         |);
+         |$is_initialized = (result == MA_SUCCESS);
+      else
+        println "Audio file not found: " + filepath
+      endIf
+endClass
