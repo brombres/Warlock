@@ -68,12 +68,16 @@ class Sound
         @|ma_result result = ma_sound_init_from_file(
          |  &$manager->engine,
          |  $file.filepath->data->as_utf8,
-         |  0,
+         |  MA_SOUND_FLAG_NO_PITCH | MA_SOUND_FLAG_NO_SPATIALIZATION,
          |  NULL,
          |  NULL,
          |  &$this->sound
          |);
          |$is_initialized = (result == MA_SUCCESS);
+
+        if (not is_initialized)
+          println "Unable to decode audio file: " + filepath
+        endIf
       else
         println "Audio file not found: " + filepath
       endIf

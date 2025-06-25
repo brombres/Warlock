@@ -216,7 +216,9 @@ class CollectAssets( target, suppress_errors=false:Logical ) : TargetVisitor
         endIf
       elseIf (rule instanceOf ExistingAssetRule)
         if (not suppress_errors)
-          throw rule.t.error( "File not found '$'."(filepath) )
+          ConsoleStyle.set<<FG_LIGHT_YELLOW>>
+          println "[WARNING] File '$' not found (AssetConfig.asc line $)."(filepath,rule.t.line)
+          ConsoleStyle.set<<FG_DEFAULT>>
         endIf
       elseIf (rule instanceOf GenerateAssetRule)
         generate_asset( filepath, rule )
