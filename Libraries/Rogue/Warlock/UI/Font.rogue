@@ -37,6 +37,7 @@ augment UI::Font
     monospace_width    : Int
 
     render_mode        : RenderMode
+    is_loaded          : Logical
 
   METHODS
     method init_instance( asset_name, snap=false, &snug )
@@ -200,6 +201,7 @@ augment UI::Font
       endIf
 
     method draw_line( text:String, position:XY  )
+      load
       local cursor = (position - Box(measure(text)).at( anchor ).xv) + XY(offset.x*internal_height*scale.x,0)
       if (snap) cursor = cursor.floor
       local prev_ch : FontCharacter
@@ -226,7 +228,12 @@ augment UI::Font
       return internal_height * scale.y
 
     method load
-      noAction
+      if (is_loaded) return
+      is_loaded = true
+
+      forEach (font_ch in character_lookup)
+        font_ch.image.load
+      endForEach
 
     method measure( ch:Character )->XY
       local h = internal_height * scale.y

@@ -5,6 +5,8 @@ class AudioManager [singleton]
     nativeHeader @|#include "miniaudio.h"
 
   PROPERTIES
+    actions      : Action
+
     active_music = Music[]
 
     is_configured  : Logical
@@ -35,4 +37,19 @@ class AudioManager [singleton]
 
       is_initialized = true
 
+    method fade_out_music( duration=1.0:Real, &concurrent )
+      local fade_actions : Action
+      forEach (music in AudioManager.active_music)
+        fade_actions |= Action( () => music.fade_out(duration,concurrent) )
+      endForEach
+      actions += fade_actions
+
+    method pause_music
+      (forEach in AudioManager.active_music).pause
+
+    method stop_music
+      (forEach in AudioManager.active_music).stop
+
+    method update
+      if (actions) actions = actions.updated
 endClass

@@ -7,7 +7,8 @@ class Sound
     is_prepared    : Logical
     is_music       : Logical
     is_looping     : Logical
-    is_concurrent  : Logical
+    is_concurrent  : Logical  # only has an effect for Music
+    normal_volume  = 1.0
     native "ma_sound sound;"
 
   METHODS
@@ -16,6 +17,24 @@ class Sound
 
     method concurrent
       is_concurrent = true
+
+    method crossfade( duration=1.0:Real, target_volume=1.0:Real )
+      # Only has an effect for Music
+      noAction
+
+    method fade_in( duration=1.0:Real, target_volume=1.0:Real, &concurrent )
+      volume = 0
+      local action = Action( (p) => this.volume = target_volume * p, &=duration )
+      if (concurrent) AudioManager.actions |= action
+      else            AudioManager.actions += action
+      play( &concurrent )
+
+    method fade_out( duration=1.0:Real, &concurrent )
+      local initial_volume = volume
+      local action = Action( (p) => this.volume = initial_volume * (1.0 - p), &=duration ) +
+                     Action( () => this.stop )
+      if (concurrent) AudioManager.actions |= action
+      else            AudioManager.actions += action
 
     method is_playing->Logical
       if (not is_initialized) return false
@@ -39,18 +58,18 @@ class Sound
     method once
       is_looping = false
 
-    method set_is_looping( setting:Logical )
-      if (is_looping == setting) return
-      @is_looping = setting
-      if (is_playing) native @|ma_sound_set_looping( &$this->sound, $is_looping );
-
     method pause
       if (is_initialized)
         native @|ma_sound_stop( &$this->sound );
       endIf
 
     method play
+      play( &concurrent=is_concurrent )
+
+    method play( concurrent:Logical )
+      # concurrent flag is ignored here but is utilized in Music override
       if (prepare)
+        volume = normal_volume
         native
         @|ma_sound_set_looping( &$this->sound, $is_looping );
          |ma_sound_start( &$this->sound );
@@ -84,9 +103,30 @@ class Sound
 
       return is_initialized
 
+    method set_is_looping( setting:Logical )
+      if (is_looping == setting) return
+      @is_looping = setting
+      if (is_playing) native @|ma_sound_set_looping( &$this->sound, $is_looping );
+
+    method set_normal_volume( @normal_volume )
+      volume = normal_volume
+
+    method set_volume( p:Real )
+      if (is_initialized)
+        native @|ma_sound_set_volume( &$this->sound, (float)$p );
+      endIf
+
     method stop
       if (is_initialized)
         native @|ma_sound_stop( &$this->sound );
                 |ma_sound_seek_to_pcm_frame( &$this->sound, 0 );
       endIf
+
+    method volume->Real
+      local result : Real
+      if (is_initialized)
+        native @|$result = ma_sound_get_volume( &$this->sound );
+      endIf
+      return result
+
 endClass

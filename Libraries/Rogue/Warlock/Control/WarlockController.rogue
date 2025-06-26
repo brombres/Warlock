@@ -14,6 +14,8 @@ class WarlockController
     method tick
       begin_tick
 
+      update_audio
+
       begin_update
       update
       end_update
@@ -30,6 +32,9 @@ class WarlockController
 
     method begin_tick( window:Window )
       window.begin_tick
+
+    method update_audio
+      AudioManager.update
 
     method begin_update
 
