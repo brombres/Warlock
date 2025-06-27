@@ -45,10 +45,10 @@ class AudioManager [singleton]
       actions += fade_actions
 
     method pause_music
-      (forEach in AudioManager.active_music).pause
+      (forEach in AudioManager.active_music step -1).pause
 
     method stop_music
-      (forEach in AudioManager.active_music).stop
+      (forEach in AudioManager.active_music step -1).stop
 
     method update
       if (actions) actions = actions.updated

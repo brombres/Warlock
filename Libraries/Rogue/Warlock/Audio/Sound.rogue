@@ -79,7 +79,6 @@ class Sound
     method play( concurrent:Logical )
       # concurrent flag is ignored here but is utilized in Music override
       if (prepare)
-position = duration - 3
         volume = normal_volume
         native
         @|ma_sound_set_looping( &$this->sound, $is_looping );

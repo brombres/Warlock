@@ -26,7 +26,7 @@ class Music : Sound
         if (not is_playing) prior.play( &=concurrent )
       else
         if (not concurrent)
-          (forEach in AudioManager.active_music).stop
+          (forEach in AudioManager.active_music step -1).stop
           AudioManager.active_music.clear
         endIf
         AudioManager.active_music.add( this )
