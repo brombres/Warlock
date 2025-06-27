@@ -22,6 +22,16 @@ class Sound
       # Only has an effect for Music
       noAction
 
+    method duration->Real
+      local seconds : Real
+      if (is_initialized)
+        native
+        @|float seconds;
+         |ma_sound_get_length_in_seconds( &$this->sound, &seconds );
+         |$seconds = seconds;
+      endIf
+      return seconds
+
     method fade_in( duration=1.0:Real, target_volume=1.0:Real, &concurrent )
       volume = 0
       local action = Action( (p) => this.volume = target_volume * p, &=duration )
@@ -69,11 +79,22 @@ class Sound
     method play( concurrent:Logical )
       # concurrent flag is ignored here but is utilized in Music override
       if (prepare)
+position = duration - 3
         volume = normal_volume
         native
         @|ma_sound_set_looping( &$this->sound, $is_looping );
          |ma_sound_start( &$this->sound );
       endIf
+
+    method position->Real
+      local seconds : Real
+      if (is_initialized)
+        native
+        @|float seconds;
+         |ma_sound_get_cursor_in_seconds( &$this->sound, &seconds );
+         |$seconds = seconds;
+      endIf
+      return seconds
 
     method prepare->Logical
       if (is_prepared) return is_initialized
@@ -110,6 +131,12 @@ class Sound
 
     method set_normal_volume( @normal_volume )
       volume = normal_volume
+
+    method set_position( seconds:Real )
+      if (is_initialized)
+        native
+        @|ma_sound_seek_to_second( &$this->sound, (float)$seconds );
+      endIf
 
     method set_volume( p:Real )
       if (is_initialized)
