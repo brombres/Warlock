@@ -11,9 +11,13 @@ class Sound
     normal_volume  = 1.0
     native "ma_sound sound;"
 
+    next_in_pool   : Sound
+
   METHODS
-    method init( filepath )
-      noAction
+    method init( filepath, pool_count=1:Int )
+      if (pool_count > 1)
+        next_in_pool = Sound( filepath, pool_count - 1 )
+      endIf
 
     method concurrent
       is_concurrent = true
@@ -76,13 +80,17 @@ class Sound
     method play
       play( &concurrent=is_concurrent )
 
-    method play( concurrent:Logical )
+    method play( &concurrent )
       # concurrent flag is ignored here but is utilized in Music override
       if (prepare)
-        volume = normal_volume
-        native
-        @|ma_sound_set_looping( &$this->sound, $is_looping );
-         |ma_sound_start( &$this->sound );
+        if (is_playing)
+          next_in_pool?.play( &=concurrent )
+        else
+          volume = normal_volume
+          native
+          @|ma_sound_set_looping( &$this->sound, $is_looping );
+           |ma_sound_start( &$this->sound );
+        endIf
       endIf
 
     method position->Real

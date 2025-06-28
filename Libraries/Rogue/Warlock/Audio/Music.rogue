@@ -6,6 +6,11 @@ class Music : Sound
     is_looping = true
 
   METHODS
+    method init( filepath, pool_count=1:Int )
+      if (pool_count > 1)
+        next_in_pool = Music( filepath, pool_count - 1 )
+      endIf
+
     method crossfade( duration=1.0:Real )
       # Fades all other active music out and this music in over the specified duration
       local actions : Action
@@ -23,7 +28,11 @@ class Music : Sound
       if (not AudioManager.configure) return
 
       if (AudioManager.active_music.contains(this))
-        if (not is_playing) prior.play( &=concurrent )
+        if (is_playing)
+          next_in_pool?.play( &=concurrent )
+        else
+          prior.play( &=concurrent )
+        endIf
       else
         if (not concurrent)
           (forEach in AudioManager.active_music step -1).stop
