@@ -67,13 +67,12 @@ class GenerateAssetConfig : Visitor
                 elseIf (filepath_lc.contains(".8.")) write_echo " patch:8"
                 elseIf (filepath_lc.contains(".3.")) write_echo " patch:3"
                 writeln_echo
-              case "wav", "flac", "aiff"
+              case "wav", "flac", "aiff", "ima4"
                 if (filepath_lc.contains("music")) writeln_echo " music"
                 else                               writeln_echo " sound"
-              case "ima4"
-                writeln_echo " sound"
               case "mp3", "ogg"
-                writeln_echo " music"
+                if (filepath_lc.contains("sound")) writeln_echo " sound"
+                else                               writeln_echo " music"
               case "json"
                 writeln_echo " json"
               others
