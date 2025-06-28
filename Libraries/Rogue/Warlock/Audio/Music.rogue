@@ -6,13 +6,13 @@ class Music : Sound
     is_looping = true
 
   METHODS
-    method crossfade( duration=1.0:Real, target_volume=1.0:Real )
+    method crossfade( duration=1.0:Real )
       # Fades all other active music out and this music in over the specified duration
       local actions : Action
       forEach (music in AudioManager.active_music)
         actions |= Action( () => music.fade_out(duration,&concurrent) )
       endForEach
-      actions |= Action( () => this.fade_in(duration,target_volume,&concurrent) )
+      actions |= Action( () => this.fade_in(duration,&concurrent) )
       AudioManager.actions += actions
 
     method pause [override]

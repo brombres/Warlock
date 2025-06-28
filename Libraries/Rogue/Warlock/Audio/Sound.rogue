@@ -18,7 +18,7 @@ class Sound
     method concurrent
       is_concurrent = true
 
-    method crossfade( duration=1.0:Real, target_volume=1.0:Real )
+    method crossfade( duration=1.0:Real )
       # Only has an effect for Music
       noAction
 
@@ -32,9 +32,9 @@ class Sound
       endIf
       return seconds
 
-    method fade_in( duration=1.0:Real, target_volume=1.0:Real, &concurrent )
+    method fade_in( duration=1.0:Real, &concurrent )
       volume = 0
-      local action = Action( (p) => this.volume = target_volume * p, &=duration )
+      local action = Action( (p) => this.volume = normal_volume * p, &=duration )
       if (concurrent) AudioManager.actions |= action
       else            AudioManager.actions += action
       play( &concurrent )
