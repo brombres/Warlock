@@ -138,6 +138,7 @@ class Sound
 
     method set_normal_volume( @normal_volume )
       volume = normal_volume
+      next_in_pool?.set_normal_volume( normal_volume )
 
     method set_position( seconds:Real )
       if (is_initialized)
