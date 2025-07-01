@@ -1,0 +1,60 @@
+library Warlock
+
+class AudioCollection [aspect]
+  METHODS
+    method concurrent
+      (forEach in this).concurrent
+
+    method crossfade( duration=1.0:Real )
+      (forEach in this).crossfade( duration )
+
+    method duration->Real
+      local total_duration = 0.0
+      total_duration += (forEach in this).duration
+      return total_duration
+
+    method fade_in( duration=1.0:Real, &concurrent )
+      (forEach in this).fade_in( duration, &=concurrent )
+
+    method fade_out( duration=1.0:Real, &concurrent )
+      (forEach in this).fade_out( duration, &=concurrent )
+
+    method is_playing->Logical
+      if ((forEach in this).is_playing) return true
+      return false
+
+    method load
+      (forEach in this).load
+
+    method looping
+      (forEach in this).looping
+
+    method once
+      (forEach in this).once
+
+    method pause
+      (forEach in this).pause
+
+    method play
+      (forEach in this).play
+
+    method play( &concurrent )
+      (forEach in this).play( &=concurrent )
+
+    method set_is_looping( setting:Logical )
+      (forEach in this).is_looping = setting
+
+    method set_normal_volume( normal_volume:Real )
+      (forEach in this).normal_volume = normal_volume
+
+    method set_position( seconds:Real )
+      (forEach in this).position = seconds
+
+    method set_volume( volume:Real )
+      (forEach in this).volume = volume
+
+    method stop
+      (forEach in this).stop
+
+endClass
+

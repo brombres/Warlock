@@ -1,5 +1,9 @@
 library Warlock
 
+$include Audio/AudioCollection
 $include Audio/AudioManager
 $include Audio/Music
 $include Audio/Sound
+
+augment Sound[] : AudioCollection;
+augment Music[] : AudioCollection;
