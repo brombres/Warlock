@@ -51,7 +51,7 @@ class Sound
       else            AudioManager.actions += action
 
     method first_idle->Sound
-      if (is_playing or not is_prepared)
+      if (is_playing or not load)
         if (next_in_pool) return next_in_pool.first_idle
         else              return null
       else
@@ -64,8 +64,8 @@ class Sound
       native @|$result = (RogueLogical) ma_sound_is_playing( &$this->sound );
       return result
 
-    method load
-      prepare
+    method load->Logical
+      return prepare
 
     method looping
       is_looping = true
@@ -129,7 +129,6 @@ class Sound
          |  &$this->sound
          |);
          |$is_prepared = (result == MA_SUCCESS);
-
          if (not is_prepared)
           println "Unable to decode audio file: " + filepath
         endIf

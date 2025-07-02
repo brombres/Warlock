@@ -44,9 +44,9 @@ class AudioCollection [aspect]
       (forEach in this).pause
 
     method play
-      (forEach in this).play
+      play( &!concurrent )
 
-    method play( &concurrent )
+    method play( concurrent:Logical )
       (forEach in this).play( &=concurrent )
 
     method set_is_looping( setting:Logical )

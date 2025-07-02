@@ -4,6 +4,7 @@ $include Audio/AudioCollection
 $include Audio/AudioManager
 $include Audio/Music
 $include Audio/Sound
+$include Audio/SoundVariants
 
 augment Sound[] : AudioCollection;
 augment Music[] : AudioCollection;

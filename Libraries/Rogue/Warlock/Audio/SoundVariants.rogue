@@ -1,0 +1,58 @@
+library Warlock
+
+class SoundVariants : Sound[]
+  # Plays alternating variations of a sound. Sounds are played in a random order
+  # with two constraints: 1) if there are N sounds, then after N .play calls, all
+  # different sounds will have been played once, and 2) the same sound is never
+  # played twice in a row as long as there are 2 or more sounds total.
+  PROPERTIES
+    play_order    = Int[]
+    is_sequential : Logical
+
+  METHODS
+    method init( filepattern:String, sequence:RangeUpTo<<Int>>, pool_count=1:Int )
+      # pool_count is per sound.
+      #
+      # Example
+      #
+      #   SoundVariants( "Damage-##.wav", 1, 3 )
+      #
+      # loads Damage-01.wav, Damage-02.wav, and Damage-03.wav
+      add( filepattern, sequence, pool_count )
+
+    method add( filepattern:String, sequence:RangeUpTo<<Int>>, pool_count=1:Int )
+      local before = filepattern.before_first( '#' )
+      local after  = filepattern.after_last( '#' )
+      local format = "0$"(filepattern.count - (before.count+after.count))
+      forEach (n in sequence)
+        add( Sound( "$$$"(before,n.format(format),after), pool_count ) )
+      endForEach
+
+    method cycles
+      # Cycle through sounds in order on each .play() call instead of
+      # randomizing the order.
+      is_sequential = true
+
+    method play( &concurrent ) [override]
+      if (play_order.count <= 1)
+        play_order.add( forEach in 0..<this.count )
+        if (not is_sequential)
+          if (play_order.count == this.count)
+            play_order.shuffle
+          else
+            local i = play_order.remove_first
+            play_order.remove( i )
+            play_order.shuffle
+            play_order.insert( i )
+          endIf
+        endIf
+      endIf
+
+      loop (this.count)
+        local i = play_order.remove_first
+        if local sound = this[i].first_idle
+          sound.play
+          escapeLoop
+        endIf
+      endLoop
+endClass
