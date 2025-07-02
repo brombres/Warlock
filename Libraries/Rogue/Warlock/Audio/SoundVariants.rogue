@@ -33,7 +33,7 @@ class SoundVariants : Sound[]
       # randomizing the order.
       is_sequential = true
 
-    method play( &concurrent ) [override]
+    method next->Sound
       if (play_order.count <= 1)
         play_order.add( forEach in 0..<this.count )
         if (not is_sequential)
@@ -51,8 +51,14 @@ class SoundVariants : Sound[]
       loop (this.count)
         local i = play_order.remove_first
         if local sound = this[i].first_idle
-          sound.play
-          escapeLoop
+          return sound
         endIf
       endLoop
+
+      return null
+
+    method play( &concurrent ) [override]
+      if local sound = next
+        sound.play( &=concurrent )
+      endIf
 endClass
