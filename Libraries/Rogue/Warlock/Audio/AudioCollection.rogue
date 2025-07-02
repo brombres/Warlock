@@ -19,6 +19,14 @@ class AudioCollection [aspect]
     method fade_out( duration=1.0:Real, &concurrent )
       (forEach in this).fade_out( duration, &=concurrent )
 
+    method first_idle->Sound
+      forEach (sound in this)
+        if local result = sound.first_idle
+          return result
+        endIf
+      endForEach
+      return null
+
     method is_playing->Logical
       if ((forEach in this).is_playing) return true
       return false

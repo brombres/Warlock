@@ -3,8 +3,8 @@ library Warlock
 class Sound
   PROPERTIES
     filepath       : String
-    is_initialized : Logical
     is_prepared    : Logical
+    is_configured  : Logical
     is_music       : Logical
     is_looping     : Logical
     is_concurrent  : Logical  # only has an effect for Music
@@ -28,7 +28,7 @@ class Sound
 
     method duration->Real
       local seconds : Real
-      if (is_initialized)
+      if (is_prepared)
         native
         @|float seconds;
          |ma_sound_get_length_in_seconds( &$this->sound, &seconds );
@@ -50,8 +50,16 @@ class Sound
       if (concurrent) AudioManager.actions |= action
       else            AudioManager.actions += action
 
+    method first_idle->Sound
+      if (is_playing or not is_prepared)
+        if (next_in_pool) return next_in_pool.first_idle
+        else              return null
+      else
+        return this
+      endIf
+
     method is_playing->Logical
-      if (not is_initialized) return false
+      if (not is_prepared) return false
       local result : Logical
       native @|$result = (RogueLogical) ma_sound_is_playing( &$this->sound );
       return result
@@ -63,17 +71,17 @@ class Sound
       is_looping = true
 
     method on_cleanup
-      if (is_initialized)
-        is_initialized = false
+      if (is_prepared)
+        is_prepared = false
         native @|ma_sound_uninit( &$this->sound );
       endIf
-      is_prepared = false
+      is_configured = false
 
     method once
       is_looping = false
 
     method pause
-      if (is_initialized)
+      if (is_prepared)
         native @|ma_sound_stop( &$this->sound );
       endIf
 
@@ -95,7 +103,7 @@ class Sound
 
     method position->Real
       local seconds : Real
-      if (is_initialized)
+      if (is_prepared)
         native
         @|float seconds;
          |ma_sound_get_cursor_in_seconds( &$this->sound, &seconds );
@@ -104,8 +112,8 @@ class Sound
       return seconds
 
     method prepare->Logical
-      if (is_prepared) return is_initialized
-      is_prepared = true
+      if (is_configured) return is_prepared
+      is_configured = true
 
       local manager = AudioManager
       if (not manager.configure) return false
@@ -120,16 +128,16 @@ class Sound
          |  NULL,
          |  &$this->sound
          |);
-         |$is_initialized = (result == MA_SUCCESS);
+         |$is_prepared = (result == MA_SUCCESS);
 
-        if (not is_initialized)
+         if (not is_prepared)
           println "Unable to decode audio file: " + filepath
         endIf
       else
         println "Audio file not found: " + filepath
       endIf
 
-      return is_initialized
+      return is_prepared
 
     method set_is_looping( setting:Logical )
       if (is_looping == setting) return
@@ -141,25 +149,25 @@ class Sound
       next_in_pool?.set_normal_volume( normal_volume )
 
     method set_position( seconds:Real )
-      if (is_initialized)
+      if (is_prepared)
         native
         @|ma_sound_seek_to_second( &$this->sound, (float)$seconds );
       endIf
 
     method set_volume( p:Real )
-      if (is_initialized)
+      if (is_prepared)
         native @|ma_sound_set_volume( &$this->sound, (float)$p );
       endIf
 
     method stop
-      if (is_initialized)
+      if (is_prepared)
         native @|ma_sound_stop( &$this->sound );
                 |ma_sound_seek_to_pcm_frame( &$this->sound, 0 );
       endIf
 
     method volume->Real
       local result : Real
-      if (is_initialized)
+      if (is_prepared)
         native @|$result = ma_sound_get_volume( &$this->sound );
       endIf
       return result
