@@ -69,7 +69,7 @@ class AssetGroup
             endIf
             output_filepath = output_folder/output_filepath
 
-            if (File(asset.filepath).is_newer_than(File(output_filepath)))
+            if (File(asset.filepath).is_different_than(File(output_filepath)))
               File( asset.filepath ).copy_to( File(output_filepath), &verbose )
             endIf
           endForEach
@@ -86,7 +86,7 @@ class AssetGroup
             endIf
             output_filepath = output_folder/output_filepath
 
-            if (File(asset.filepath).is_newer_than(File(output_filepath)))
+            if (File(asset.filepath).is_different_than(File(output_filepath)))
               File( asset.filepath ).copy_to( File(output_filepath), &verbose )
             endIf
           endForEach
@@ -113,7 +113,7 @@ class AssetGroup
           local output_folder = "Build/$"(AssetCompiler.platform)
           forEach (asset in assets)
             local output_filepath = output_folder/asset.filepath
-            if (File(asset.filepath).is_newer_than(File(output_filepath)))
+            if (File(asset.filepath).is_different_than(File(output_filepath)))
               return true
             endIf
           endForEach

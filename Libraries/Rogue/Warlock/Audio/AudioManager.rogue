@@ -37,10 +37,10 @@ class AudioManager [singleton]
 
       is_prepared = true
 
-    method fade_out_music( duration=1.0:Real, &concurrent )
+    method fade_out_music( duration=1.0:Real )
       local fade_actions : Action
       forEach (music in AudioManager.active_music)
-        fade_actions |= Action( () => music.fade_out(duration,concurrent) )
+        fade_actions |= Action( () => music.fade_out(duration) )
       endForEach
       actions += fade_actions
 

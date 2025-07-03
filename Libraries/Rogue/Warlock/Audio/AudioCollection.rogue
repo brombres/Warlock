@@ -13,11 +13,11 @@ class AudioCollection [aspect]
       total_duration += (forEach in this).duration
       return total_duration
 
-    method fade_in( duration=1.0:Real, &concurrent )
-      (forEach in this).fade_in( duration, &=concurrent )
+    method fade_in( duration=1.0:Real )
+      (forEach in this).fade_in( duration )
 
-    method fade_out( duration=1.0:Real, &concurrent )
-      (forEach in this).fade_out( duration, &=concurrent )
+    method fade_out( duration=1.0:Real )
+      (forEach in this).fade_out( duration )
 
     method first_idle->Sound
       forEach (sound in this)

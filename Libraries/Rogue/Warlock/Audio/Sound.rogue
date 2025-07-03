@@ -36,19 +36,17 @@ class Sound
       endIf
       return seconds
 
-    method fade_in( duration=1.0:Real, &concurrent )
+    method fade_in( duration=1.0:Real )
       volume = 0
       local action = Action( (p) => this.volume = normal_volume * p, &=duration )
-      if (concurrent) AudioManager.actions |= action
-      else            AudioManager.actions += action
+      AudioManager.actions |= action
       play( &concurrent )
 
-    method fade_out( duration=1.0:Real, &concurrent )
+    method fade_out( duration=1.0:Real )
       local initial_volume = volume
       local action = Action( (p) => this.volume = initial_volume * (1.0 - p), &=duration ) +
                      Action( () => this.stop )
-      if (concurrent) AudioManager.actions |= action
-      else            AudioManager.actions += action
+      AudioManager.actions |= action
 
     method first_idle->Sound
       if (is_playing or not load)
