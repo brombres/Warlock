@@ -8,7 +8,7 @@ class Sound
     is_music       : Logical
     is_looping     : Logical
     is_concurrent  : Logical  # only has an effect for Music
-    normal_volume  = 1.0
+    volume         = 1.0
     native "ma_sound sound;"
 
     next_in_pool   : Sound
@@ -37,14 +37,14 @@ class Sound
       return seconds
 
     method fade_in( duration=1.0:Real )
-      volume = 0
-      local action = Action( (p) => this.volume = normal_volume * p, &=duration )
+      current_volume = 0
+      local action = Action( (p) => this.current_volume = volume * p, &=duration )
       AudioManager.actions |= action
       play( &concurrent )
 
     method fade_out( duration=1.0:Real )
-      local initial_volume = volume
-      local action = Action( (p) => this.volume = initial_volume * (1.0 - p), &=duration ) +
+      local initial_volume = current_volume
+      local action = Action( (p) => this.current_volume = initial_volume * (1.0 - p), &=duration ) +
                      Action( () => this.stop )
       AudioManager.actions |= action
 
@@ -92,7 +92,7 @@ class Sound
         if (is_playing)
           next_in_pool?.play( &=concurrent )
         else
-          volume = normal_volume
+          current_volume = volume
           native
           @|ma_sound_set_looping( &$this->sound, $is_looping );
            |ma_sound_start( &$this->sound );
@@ -141,9 +141,9 @@ class Sound
       @is_looping = setting
       if (is_playing) native @|ma_sound_set_looping( &$this->sound, $is_looping );
 
-    method set_normal_volume( @normal_volume )
-      volume = normal_volume
-      next_in_pool?.set_normal_volume( normal_volume )
+    method set_volume( @volume )
+      current_volume = volume
+      next_in_pool?.set_volume( volume )
 
     method set_position( seconds:Real )
       if (is_prepared)
@@ -151,7 +151,7 @@ class Sound
         @|ma_sound_seek_to_second( &$this->sound, (float)$seconds );
       endIf
 
-    method set_volume( p:Real )
+    method set_current_volume( p:Real )
       if (is_prepared)
         native @|ma_sound_set_volume( &$this->sound, (float)$p );
       endIf
@@ -162,7 +162,7 @@ class Sound
                 |ma_sound_seek_to_pcm_frame( &$this->sound, 0 );
       endIf
 
-    method volume->Real
+    method current_volume->Real
       local result : Real
       if (is_prepared)
         native @|$result = ma_sound_get_volume( &$this->sound );

@@ -49,11 +49,11 @@ class AudioCollection [aspect]
     method play( concurrent:Logical )
       (forEach in this).play( &=concurrent )
 
+    method set_current_volume( current_volume:Real )
+      (forEach in this).current_volume = current_volume
+
     method set_is_looping( setting:Logical )
       (forEach in this).is_looping = setting
-
-    method set_normal_volume( normal_volume:Real )
-      (forEach in this).normal_volume = normal_volume
 
     method set_position( seconds:Real )
       (forEach in this).position = seconds
