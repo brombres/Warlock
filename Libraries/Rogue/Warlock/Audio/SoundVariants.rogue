@@ -67,4 +67,5 @@ class SoundVariants : Sound[]
       if local sound = next
         sound.play( &=concurrent )
       endIf
+
 endClass
