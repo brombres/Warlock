@@ -21,12 +21,18 @@ class SoundVariants : Sound[]
       add( filepattern, sequence, pool_count )
 
     method add( filepattern:String, sequence:RangeUpTo<<Int>>, pool_count=1:Int )
-      local before = filepattern.before_first( '#' )
-      local after  = filepattern.after_last( '#' )
-      local format = "0$"(filepattern.count - (before.count+after.count))
-      forEach (n in sequence)
-        add( Sound( "$$$"(before,n.format(format),after), pool_count ) )
-      endForEach
+      if (filepattern.contains('#'))
+        local before = filepattern.before_first( '#' )
+        local after  = filepattern.after_last( '#' )
+        local format = "0$"(filepattern.count - (before.count+after.count))
+        forEach (n in sequence)
+          add( Sound( "$$$"(before,n.format(format),after), pool_count ) )
+        endForEach
+      else
+        loop (sequence.count)
+          add( Sound(filepattern, pool_count) )
+        endLoop
+      endIf
 
     method cycles
       # Cycle through sounds in order on each .play() call instead of
