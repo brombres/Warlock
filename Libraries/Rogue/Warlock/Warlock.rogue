@@ -24,9 +24,6 @@ uses UI            [export]
 uses Utility/Timer [export]
 
 class Warlock [essential singleton]
-  GLOBAL PROPERTIES
-    launch_state = State()
-
   GLOBAL METHODS
     method configure [api]
       Warlock.controller.configure
@@ -50,7 +47,6 @@ class Warlock [essential singleton]
       return true  # keep running
 
   PROPERTIES
-    app_name   = "Warlock"
     windows    = Window[]
     textures   = [File:Texture]
     frames     : Int
@@ -66,6 +62,30 @@ class Warlock [essential singleton]
 
     method add_window( window:Window )
       windows.add( window )
+
+    method application_data_folder->File
+      if (System.is_apple)
+        return Apple.application_data_folder
+      else
+        println "TODO: defined Warlock.application_data_folder() for $"(System.os)
+        return File( "~" )
+      endIf
+
+    method cache_folder->File
+      if (System.is_apple)
+        return Apple.cache_folder
+      else
+        println "TODO: defined Warlock.cache_folder() for $"(System.os)
+        return File( "~" )
+      endIf
+
+    method user_data_folder->File
+      if (System.is_apple)
+        return Apple.user_data_folder
+      else
+        println "TODO: defined Warlock.user_data_folder() for $"(System.os)
+        return File( "~" )
+      endIf
 
     method find_asset( name:String )->File?
       local filepath = native("WarlockInterface_find_asset($name)")->String
