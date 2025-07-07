@@ -2,10 +2,12 @@ library Warlock
 
 class Window : Display [singleton]
   PROPERTIES
-    title : String
+    title  : String
+    screen = Screen()
+    state  : State
 
   METHODS
-    method init( title, width:Int, height:Int )
+    method init( title, width:Int, height:Int, state=State() )
       Window = this
       pixel_size = XY(width,height)
       if (Framework.create_window(this))
@@ -15,12 +17,20 @@ class Window : Display [singleton]
 
     method begin_render [override]
       prior.begin_render
+      state.on_begin_render
+      screen.on_begin_render
       Renderer.on_begin_render( this )
 
     method begin_tick [override]
       Window = this
       Framework.update_window_size( this )
       prior.begin_tick
+
+    method change_screen( new_screen:Screen )
+      screen.change_screen( new_screen )
+
+    method change_state( new_state:State )
+      state.change_state( new_state )
 
     method close
       Warlock.windows.remove( this )
@@ -31,6 +41,10 @@ class Window : Display [singleton]
 
     method end_render [override]
       prior.end_render
+
+      state.on_end_render
+      screen.on_end_render
+
       if (Warlock.windows.count and Warlock.windows.first is this) OverlayLog.draw
       Renderer.on_end_render( this )
 
@@ -50,8 +64,8 @@ class Window : Display [singleton]
       noAction  # defined by extended Platform, e.g. SDL
 
     method render
-      State.draw( &!fg )
-      State.draw( &fg )
+      state.draw( &!fg )
+      state.draw( &fg )
 
     method update [override]
       if (@ui)

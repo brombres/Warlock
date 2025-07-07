@@ -1,6 +1,6 @@
 library Warlock
 
-class Screen : Rogue::State<<Screen,change_screen,exit_screen>>, WarlockState [singleton]
+class Screen : Rogue::State<<Screen,change_screen,exit_screen>>, WarlockState
   METHODS
     method dispatch( e:KeyEvent )
       e.window.handle( e )

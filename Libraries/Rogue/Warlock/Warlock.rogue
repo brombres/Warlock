@@ -24,6 +24,9 @@ uses UI            [export]
 uses Utility/Timer [export]
 
 class Warlock [essential singleton]
+  GLOBAL PROPERTIES
+    launch_state = State()
+
   GLOBAL METHODS
     method configure [api]
       Warlock.controller.configure

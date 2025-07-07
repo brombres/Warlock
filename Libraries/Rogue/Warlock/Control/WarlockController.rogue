@@ -9,12 +9,27 @@ class WarlockController
       if (Warlock.windows.is_empty) create_default_window
 
     method create_default_window
-      Window( Warlock.app_name, 1280, 720 )
+      Window( Warlock.app_name, 1280, 720, Warlock.launch_state )
 
     method tick
       begin_tick
 
+      forEach (window in Warlock.windows)
+        tick( window )
+      endForEach
+
+      end_tick
+
+    method begin_tick
+      OverlayLog.update
       update_audio
+      if (Warlock.actions) Warlock.actions .= updated
+
+    method update_audio
+      AudioManager.update
+
+    method tick( window:Window )
+      window.begin_tick  # includes setting singleton 'Window = window'
 
       begin_update
       update
@@ -24,58 +39,30 @@ class WarlockController
       draw
       end_draw
 
-      end_tick
-
-    method begin_tick
-      OverlayLog.update
-      begin_tick( forEach in Warlock.windows )
-
-    method begin_tick( window:Window )
-      window.begin_tick
-
-    method update_audio
-      AudioManager.update
+      window.end_tick
 
     method begin_update
+      noAction
 
     method update
-      if (Warlock.actions) Warlock.actions .= updated
-
-      State = State.updated || State()
-      Screen = Screen.updated || Screen()
+      # Update the current window state and screen
+      Window.state = Window.state.updated || State()
+      Window.screen = Window.screen.updated || Screen()
 
     method end_update
+      noAction
 
     method begin_draw
-      State.on_begin_render
+      Window.begin_render
 
     method draw
-      handle_render( forEach in Warlock.windows )
+      Window.render
 
     method end_draw
-      State.on_end_render
-
-    method handle_render( window:Window )
-      Window = window
-      begin_render( window )
-      render( window )
-      end_render( window )
-
-    method begin_render( window:Window )
-      window.begin_render
-
-    method render( window:Window )
-      window.render
-
-    method end_render( window:Window )
-      window.end_render
-
-    method end_tick( window:Window )
-      window.end_tick
+      Window.end_render
 
     method end_tick
       ++Warlock.frames
-      end_tick( forEach in Warlock.windows )
 
     method on_app_exit
 

@@ -102,6 +102,7 @@ class SDL : Framework [singleton]
        |  case SDL_EVENT_MOUSE_MOTION:
             block
               if local window = Warlock.find_window( &native_id=native("event.button.windowID")->Int )
+                Window = window
                 local x = native("event.motion.x")->Int * window.density
                 local y = native("event.motion.y")->Int * window.density
                 local delta : XY
@@ -113,7 +114,7 @@ class SDL : Framework [singleton]
                 pointer_event.window = window
                 pointer_event.timestamp = native("event.button.timestamp")->Int
                 Pointer.on( pointer_event )
-                State.handle( pointer_event )
+                Window.state.handle( pointer_event )
               endIf
             endBlock
       native
@@ -122,6 +123,7 @@ class SDL : Framework [singleton]
        |  case SDL_EVENT_MOUSE_BUTTON_UP:
             block
               if local window = Warlock.find_window( &native_id=native("event.button.windowID")->Int )
+                Window = window
                 local x = native("event.button.x")->Int * window.density
                 local y = native("event.button.y")->Int * window.density
                 local delta : XY
@@ -136,7 +138,7 @@ class SDL : Framework [singleton]
                 pointer_event.window = window
                 pointer_event.timestamp = native("event.button.timestamp")->Int
                 Pointer.on( pointer_event )
-                State.handle( pointer_event )
+                Window.state.handle( pointer_event )
               endIf
             endBlock
       native
@@ -144,12 +146,13 @@ class SDL : Framework [singleton]
        |  case SDL_EVENT_WINDOW_MOUSE_ENTER:
             block
               if local window = Warlock.find_window( &native_id=native("event.button.windowID")->Int )
+                Window = window
                 if (pointer_event.refcount) pointer_event = PointerEvent()
                 pointer_event.init( <ENTER> )
                 pointer_event.window = window
                 pointer_event.timestamp = native("event.button.timestamp")->Int
                 Pointer.on( pointer_event )
-                State.handle( pointer_event )
+                Window.state.handle( pointer_event )
               endIf
             endBlock
       native
@@ -157,12 +160,13 @@ class SDL : Framework [singleton]
        |  case SDL_EVENT_WINDOW_MOUSE_LEAVE:
             block
               if local window = Warlock.find_window( &native_id=native("event.button.windowID")->Int )
+                Window = window
                 if (pointer_event.refcount) pointer_event = PointerEvent()
                 pointer_event.init( <LEAVE> )
                 pointer_event.window = window
                 pointer_event.timestamp = native("event.button.timestamp")->Int
                 Pointer.on( pointer_event )
-                State.handle( pointer_event )
+                Window.state.handle( pointer_event )
               endIf
             endBlock
       native
@@ -171,13 +175,14 @@ class SDL : Framework [singleton]
        |  case SDL_EVENT_MOUSE_WHEEL:
             block
               if local window = Warlock.find_window( &native_id=native("event.wheel.windowID")->Int )
+                Window = window
                 local x = native("event.wheel.x")->Int * window.density
                 local y = -native("event.wheel.y")->Int * window.density
                 if (scroll_event.refcount) scroll_event = ScrollEvent()
                 scroll_event.init( XY(x,y) )
                 scroll_event.window = window
                 scroll_event.timestamp = native("event.button.timestamp")->Int
-                State.handle( scroll_event )
+                Window.state.handle( scroll_event )
               endIf
             endBlock
       native
@@ -185,6 +190,7 @@ class SDL : Framework [singleton]
        |  case SDL_EVENT_KEY_UP:
             block
               if local window = Warlock.find_window( &native_id=native("event.key.windowID")->Int )
+                Window = window
                 local scancode  = native("event.key.scancode")->Int
                 local mods      = native("event.key.mod")->Int
                 local is_repeat = native("event.key.repeat")->Logical
@@ -209,14 +215,14 @@ class SDL : Framework [singleton]
                 key_event.window = window
                 key_event.timestamp = native("event.button.timestamp")->Int
                 Keyboard.on( key_event )
-                State.handle( key_event )
+                Window.state.handle( key_event )
 
                 if (key_event.is_printable)
                   if (text_event.refcount) text_event = TextEvent()
                   text_event.init( key_event.unicode )
                   text_event.window = window
                   text_event.timestamp = native("event.button.timestamp")->Int
-                  State.handle( text_event )
+                  Window.state.handle( text_event )
                 endIf
 
               endIf
@@ -226,6 +232,7 @@ class SDL : Framework [singleton]
        |  case SDL_EVENT_WINDOW_FOCUS_GAINED:
             block
               if local window = Warlock.find_window( &native_id=native("event.button.windowID")->Int )
+                Window = window
                 Warlock.controller.on_focus_gained( window )
               endIf
             endBlock
@@ -234,6 +241,7 @@ class SDL : Framework [singleton]
        |  case SDL_EVENT_WINDOW_FOCUS_LOST:
             block
               if local window = Warlock.find_window( &native_id=native("event.button.windowID")->Int )
+                Window = window
                 Warlock.controller.on_focus_lost( window )
               endIf
             endBlock
