@@ -51,6 +51,9 @@ class AudioManager [singleton]
     method pause_music
       (forEach in AudioManager.active_music step -1).pause
 
+    method resume_music
+      (forEach in AudioManager.active_music step -1).play
+
     method stop_music
       (forEach in AudioManager.active_music step -1).stop
 

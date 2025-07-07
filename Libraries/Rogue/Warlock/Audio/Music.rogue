@@ -20,10 +20,6 @@ class Music : Sound
       actions |= Action( () => this.fade_in(duration) )
       AudioManager.actions += actions
 
-    method pause [override]
-      prior.pause
-      AudioManager.active_music.remove( this )
-
     method play( concurrent:Logical ) [override]
       if (not AudioManager.configure) return
 
