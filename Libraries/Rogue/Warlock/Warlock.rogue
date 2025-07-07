@@ -28,6 +28,9 @@ class Warlock [essential singleton]
     method configure [api]
       Warlock.controller.configure
 
+    method handle_dock_icon_click [api]
+      Warlock.controller.on_dock_icon_clicked
+
     method handle_event->Logical [api]
       local keep_running = Framework.handle_native_event
 

@@ -77,4 +77,25 @@ class WarlockController
       ++Warlock.frames
       end_tick( forEach in Warlock.windows )
 
+    method on_app_exit
+
+    method on_app_pause
+      # Only happens on iOS & Android
+
+    method on_app_resume
+      # Only happens on iOS & Android
+
+    method on_dock_icon_clicked
+      # Only happens on macOS
+
+    method on_focus_gained
+
+    method on_focus_gained( window:Window )
+      on_focus_gained
+
+    method on_focus_lost
+
+    method on_focus_lost( window:Window )
+      on_focus_lost
+
 endClass

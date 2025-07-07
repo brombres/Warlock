@@ -95,7 +95,9 @@ class SDL : Framework [singleton]
        |switch (event.type)
        |{
        |  case SDL_EVENT_QUIT:
-       |    $keep_running = false;
+            Warlock.controller.on_app_exit
+      native
+      @|    $keep_running = false;
        |    break;
        |  case SDL_EVENT_MOUSE_MOTION:
             block
@@ -218,6 +220,34 @@ class SDL : Framework [singleton]
                 endIf
 
               endIf
+            endBlock
+      native
+      @|    break;
+       |  case SDL_EVENT_WINDOW_FOCUS_GAINED:
+            block
+              if local window = Warlock.find_window( &native_id=native("event.button.windowID")->Int )
+                Warlock.controller.on_focus_gained( window )
+              endIf
+            endBlock
+      native
+      @|    break;
+       |  case SDL_EVENT_WINDOW_FOCUS_LOST:
+            block
+              if local window = Warlock.find_window( &native_id=native("event.button.windowID")->Int )
+                Warlock.controller.on_focus_lost( window )
+              endIf
+            endBlock
+      native
+      @|    break;
+       |  case SDL_EVENT_WILL_ENTER_BACKGROUND:
+            block
+              Warlock.controller.on_app_pause
+            endBlock
+      native
+      @|    break;
+       |  case SDL_EVENT_WILL_ENTER_FOREGROUND:
+            block
+              Warlock.controller.on_app_resume
             endBlock
       native
       @|    break;
