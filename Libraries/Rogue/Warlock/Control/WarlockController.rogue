@@ -36,6 +36,10 @@ class WarlockController
 
     method tick( window:Window )
       window.begin_tick  # includes setting singleton 'Window = window'
+      if (window.size != window.old_size)
+        on_resize( window )
+        window.old_size = window.size
+      endIf
 
       begin_update
       update
@@ -46,6 +50,12 @@ class WarlockController
       end_draw
 
       window.end_tick
+
+    method on_resize
+      noAction
+
+    method on_resize( window:Window )
+      on_resize
 
     method begin_update
       noAction

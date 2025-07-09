@@ -2,9 +2,10 @@ library Warlock
 
 class Window : Display [singleton]
   PROPERTIES
-    title  : String
-    screen = Screen()
-    state  : State
+    title    : String
+    screen   = Screen()
+    state    : State
+    old_size : XY  # used to detect size changes in WarlockController.tick(Window)
 
   METHODS
     method init( title, width:Int, height:Int, state=State() )
