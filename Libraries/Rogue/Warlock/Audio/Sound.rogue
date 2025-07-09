@@ -44,12 +44,14 @@ class Sound
       return seconds
 
     method fade_in( duration=1.0:Real )
+Log.println "fade_in $"(this) #FIXME
       current_volume = 0
       local action = Action( (p) => this.current_volume = volume * p, &=duration )
       AudioManager.actions |= action
       play( &concurrent )
 
     method fade_out( duration=1.0:Real )
+Log.println "fade_out $"(this) #FIXME
       local initial_volume = current_volume
       local action = Action( (p) => this.current_volume = initial_volume * (1.0 - p), &=duration ) +
                      Action( () => this.stop )
@@ -95,6 +97,7 @@ class Sound
 
     method play( &concurrent )
       # concurrent flag is ignored here but is utilized in Music override
+if (this instanceOf Music) Log.println "play $"(this) #FIXME
       if (prepare)
         if (is_playing)
           next_in_pool?.play( &=concurrent )
@@ -153,13 +156,13 @@ class Sound
       next_in_pool?.set_volume( volume )
 
     method set_position( seconds:Real )
-      if (is_prepared)
+      if (prepare)
         native
         @|ma_sound_seek_to_second( &$this->sound, (float)$seconds );
       endIf
 
     method set_current_volume( p:Real )
-      if (is_prepared)
+      if (prepare)
         native @|ma_sound_set_volume( &$this->sound, (float)$p );
       endIf
 
