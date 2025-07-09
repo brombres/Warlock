@@ -384,7 +384,6 @@ routine rogo_debug
 endRoutine
 
 routine rogo_build( &rebuild )
-  #rogo_build_debug( &=rebuild )
   build( System.os, &=rebuild )
 endRoutine
 
@@ -394,13 +393,7 @@ endRoutine
 
 routine rogo_macos
   # SYNTAX: rogo macos [rebuild|release]
-  local args = System.command_line_arguments
-  #local debug   = args.contains("debug") or not args.contains("release")
-  local debug   = args.contains("debug")
-  local rebuild = args.contains("rebuild")
-  #execute "cd ~/Projects/Rogue && rogo libs"
-  #rebuild = true
-  build( "macOS", &=debug, &=rebuild )
+  build( "macOS" )
 endRoutine
 
 routine rogo_build_debug( &rebuild )
@@ -408,6 +401,10 @@ routine rogo_build_debug( &rebuild )
 endRoutine
 
 routine build( platform:String, &debug, &rebuild )
+  local args = System.command_line_arguments
+  if (not debug)   debug = args.contains("debug")
+  if (not rebuild) rebuild = args.contains("rebuild")
+
   deps( System.command_line_arguments )
   compile_rogue( platform, &=debug, &=rebuild )
   compile_assets( platform )

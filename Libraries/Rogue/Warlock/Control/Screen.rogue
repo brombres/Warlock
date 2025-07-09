@@ -1,7 +1,10 @@
 library Warlock
 
-class Screen : Rogue::State<<Screen,change_screen,exit_screen>>, WarlockState
+class Screen : Rogue::ActiveState<<Screen,change_screen,exit_screen>>, WarlockState
   METHODS
+    method change_state( new_state:State )
+      Window.state.change_state( new_state )
+
     method dispatch( e:KeyEvent )
       e.window.handle( e )
 

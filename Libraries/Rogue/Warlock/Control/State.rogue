@@ -2,6 +2,9 @@ library Warlock
 
 class State : Rogue::ProgressState<<State,change_state,exit_state>>, WarlockState
   METHODS
+    method change_screen( new_screen:Screen )
+      Window.screen.change_screen( new_screen )
+
     method dispatch( e:KeyEvent )
       Window.screen.handle( e )
 

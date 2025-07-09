@@ -144,7 +144,7 @@ class WarlockController
       on_save_state
       local folder = Warlock.application_data_folder / app_name
       folder.create_folder
-      save( AppData.data->JSON, folder/"SaveState.bin" )
+      save( AppData.data->JSON(&formatted), folder/"SaveState.bin" )
 
 
 endClass
