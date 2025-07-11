@@ -152,7 +152,7 @@ if (this instanceOf Music) Log.println "play $"(this) #FIXME
       if (is_playing) native @|ma_sound_set_looping( &$this->sound, $is_looping );
 
     method set_volume( @volume )
-      current_volume = volume
+      if (is_prepared) current_volume = volume
       next_in_pool?.set_volume( volume )
 
     method set_position( seconds:Real )

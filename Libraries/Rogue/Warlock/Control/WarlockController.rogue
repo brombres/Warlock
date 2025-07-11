@@ -10,12 +10,12 @@ class WarlockController
       AssetManager.load
       AudioManager.configure
 
-      if (Warlock.windows.is_empty) create_default_window
+      if (Warlock.windows.is_empty) create_default_window( launch_state )
       restore_state
       on_launch
 
-    method create_default_window
-      Window( app_name, 1280, 720, launch_state )
+    method create_default_window( initial_state:State )
+      Window( app_name, 1280, 720, initial_state )
 
     method tick
       begin_tick
