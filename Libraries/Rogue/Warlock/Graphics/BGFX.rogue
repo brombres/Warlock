@@ -614,6 +614,10 @@ augment RenderTargetTexture
        |  BGFX_TEXTURE_RT | BGFX_SAMPLER_MIN_ANISOTROPIC | BGFX_SAMPLER_MAG_ANISOTROPIC
        |);
 
+      # Mipmap generation - mipmaps not available until next frame
+      # BGFX_TEXTURE_BLIT_DST | BGFX_TEXTURE_MIP_AUTOGEN
+      # bgfx::generateMipMaps(myTextureHandle);
+
 endAugment
 
 

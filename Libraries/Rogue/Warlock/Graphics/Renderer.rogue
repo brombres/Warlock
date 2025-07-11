@@ -171,6 +171,7 @@ class Renderer [singleton]
         local b = box.top_right
         local c = box.bottom_right
         local d = box.bottom_left
+
         data.add Vertex( a, colors.a, uv_a )
         data.add Vertex( b, colors.b, uv_b )
         data.add Vertex( c, colors.c, uv_c )

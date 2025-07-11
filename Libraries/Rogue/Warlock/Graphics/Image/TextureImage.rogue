@@ -70,23 +70,22 @@ class TextureImage : Image
         color = this.color.with_opacity( opacity )
       endIf
 
-      local bounds = Box( nominal_size )
       if (texture)
         local h_flip = attributes.h_flip
         local v_flip = attributes.v_flip
         local render_mode = render_mode || RenderMode.ALPHA_TEXTURE
         if (this.colors)
-          Renderer.draw( bounds, texture, colors, render_mode, &=subdivisions, &=h_flip, &=v_flip )
+          Renderer.draw( display_bounds, texture, colors, render_mode, &=subdivisions, &=h_flip, &=v_flip )
         else
-          Renderer.draw( bounds, texture, color, render_mode, &=subdivisions, &=h_flip, &=v_flip )
+          Renderer.draw( display_bounds, texture, color, render_mode, &=subdivisions, &=h_flip, &=v_flip )
         endIf
       else
         if (this.colors)
-          Renderer.draw( bounds, colors, render_mode||RenderMode.ALPHA_COLOR, &=subdivisions )
+          Renderer.draw( display_bounds, colors, render_mode||RenderMode.ALPHA_COLOR, &=subdivisions )
         else
-          Renderer.draw( bounds, color, render_mode||RenderMode.ALPHA_COLOR, &=subdivisions )
+          Renderer.draw( display_bounds, color, render_mode||RenderMode.ALPHA_COLOR, &=subdivisions )
         endIf
-        Renderer.draw( bounds, color, render_mode||RenderMode.ALPHA_COLOR, &=subdivisions )
+        Renderer.draw( display_bounds, color, render_mode||RenderMode.ALPHA_COLOR, &=subdivisions )
       endIf
 
 endClass

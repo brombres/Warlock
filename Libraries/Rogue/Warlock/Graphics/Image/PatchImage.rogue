@@ -100,31 +100,32 @@ class PatchImage : Image
       endTemporarily
 
     method .draw_entity [override]
-      local size = nominal_size
+      local size = display_bounds.size
+
       local w_col_1 = patches[0]?.size.x * border_scale
       local w_col_3 = patches[2]?.size.x * border_scale
       local h_row_1 = patches[0]?.size.y * border_scale
       local h_row_3 = patches[6]?.size.y * border_scale
 
-      if (w_col_1 + w_col_3 > nominal_size.x or h_row_1 + h_row_3 > nominal_size.y)
-        local scale = (nominal_size.x / (w_col_1+w_col_3)).or_smaller( nominal_size.y / (h_row_1+h_row_3) )
+      if (w_col_1 + w_col_3 > size.x or h_row_1 + h_row_3 > size.y)
+        local scale = (size.x / (w_col_1+w_col_3)).or_smaller( size.y / (h_row_1+h_row_3) )
         w_col_1 *= scale
         w_col_3 *= scale
         h_row_1 *= scale
         h_row_3 *= scale
       endIf
 
-      local w_col_2 = nominal_size.x - (w_col_1 + w_col_3)
-      local h_row_2 = nominal_size.y - (h_row_1 + h_row_3)
+      local w_col_2 = size.x - (w_col_1 + w_col_3)
+      local h_row_2 = size.y - (h_row_1 + h_row_3)
 
-      local x0 = 0
-      local x1 = w_col_1
-      local x2 = w_col_1 + w_col_2
-      local x3 = 0
-      local x4 = w_col_1
+      local x0 = display_bounds.position.x
+      local x1 = x0 + w_col_1
+      local x2 = x0 + w_col_1 + w_col_2
+      local x3 = x0
+      local x4 = x0 + w_col_1
       local x5 = x2
-      local x6 = 0
-      local x7 = w_col_1
+      local x6 = x0
+      local x7 = x0 + w_col_1
       local x8 = x2
 
       local w0 = w_col_1
@@ -137,13 +138,13 @@ class PatchImage : Image
       local w7 = w_col_2
       local w8 = w_col_3
 
-      local y0 = 0
-      local y1 = 0
-      local y2 = 0
-      local y3 = h_row_1
-      local y4 = h_row_1
-      local y5 = h_row_1
-      local y6 = h_row_1 + h_row_2
+      local y0 = display_bounds.position.y
+      local y1 = y0
+      local y2 = y0
+      local y3 = y0 + h_row_1
+      local y4 = y0 + h_row_1
+      local y5 = y0 + h_row_1
+      local y6 = y0 + h_row_1 + h_row_2
       local y7 = y6
       local y8 = y6
 

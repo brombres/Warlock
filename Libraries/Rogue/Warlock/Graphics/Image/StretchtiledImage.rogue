@@ -53,7 +53,6 @@ class StretchtiledImage : Image
       this.stretch_limit = XY( 0, stretch_limit.clamped_low(1.0) )
 
     method .draw_entity [override]
-      local bounds = Box( nominal_size )
       local h_flip = attributes.h_flip
       local v_flip = attributes.v_flip
       local render_mode = render_mode || RenderMode.ALPHA_TEXTURE
@@ -72,7 +71,7 @@ class StretchtiledImage : Image
       endIf
       forEach (j in 0..<tile_count.y->Int)
         forEach (i in 0..<tile_count.x->Int)
-          image.draw( bounds.cell( XY(i,j), tile_count ) )
+          image.draw( display_bounds.cell( XY(i,j), tile_count ) )
         endForEach
       endForEach
 

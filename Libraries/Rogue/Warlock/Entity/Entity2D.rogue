@@ -4,7 +4,8 @@ uses Warlock
 
 augment Entity::Entity2D
   PROPERTIES
-    position : XY
+    position       : XY
+    display_bounds : Box  # internal use; changes with every draw call
 
   METHODS
     method draw
@@ -21,9 +22,14 @@ augment Entity::Entity2D
         .handle_draw( &fg )
       endUse
 
-    method draw( bounds:Box )
+    method draw( display_bounds )
       if (attributes.invisible) return
 
+      .begin_draw
+      .handle_draw( &!fg )
+      .handle_draw( &fg )
+
+      #{
       local scale = bounds.size / nominal_size
       temporarily this.scale = scale
         use Display.transform_stack
@@ -36,6 +42,7 @@ augment Entity::Entity2D
           .handle_draw( &fg )
         endUse
       endTemporarily
+      }#
 
     method .push_transform( position:XY )
       if (rotation.is_identity)
@@ -61,6 +68,8 @@ augment Entity::Entity2D
           )
         )
       endIf
+
+      display_bounds = Box( nominal_size )
 
     method .pop_transform
       if (rotation.is_identity)
