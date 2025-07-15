@@ -17,14 +17,6 @@ class Display [singleton]
 
     update_timer      = UpdateTimer()
 
-    #{
-    dt_updater        = Action( Action.INDEFINITE ) subclass
-                          METHODS
-                            method on_update
-                              Display.dt = dt
-                        endSubclass
-    }#
-
     pixel_size        : XY   # True size in pixels.
     size              : XY   # Scaled size.
     scale_to_fit_size : XY?
@@ -190,7 +182,6 @@ class Display [singleton]
       Display = this
 
     method reset
-      #dt_updater.updated
       (dt,delta_ticks) = update_timer.update
 
       perspective_center = XY(0.5,0.5)
