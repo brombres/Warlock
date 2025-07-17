@@ -148,61 +148,6 @@ bool handle_events()
   return true;
 }
 
-
-// Vertex structure
-struct PosColorVertex {
-    float x, y, z;
-    uint32_t abgr;
-    static void init() {
-        ms_layout.begin()
-            .add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
-            .add(bgfx::Attrib::Color0, 4, bgfx::AttribType::Uint8, true)
-            .end();
-    }
-    static bgfx::VertexLayout ms_layout;
-};
-
-bgfx::VertexLayout PosColorVertex::ms_layout;
-
-// Vertex data
-static PosColorVertex vertices[] = {
-    {-0.5f, -0.5f, 0.0f, 0xff0000ff},
-    { 0.5f, -0.5f, 0.0f, 0xff00ff00},
-    { 0.0f,  0.5f, 0.0f, 0xffff0000},
-};
-
-// Index data
-static const uint16_t indices[] = {
-    0, 1, 2,
-};
-
-void init_bgfx(SDL_Window* window) {
-/*
-    // Get SDL window size
-    int windowWidth, windowHeight;
-    SDL_GetWindowSize(window, &windowWidth, &windowHeight);
-
-    // Initialize bgfx
-    bgfx::Init init;
-    init.type = bgfx::RendererType::Count; // Automatically choose renderer
-    init.resolution.width = static_cast<uint32_t>(windowWidth);
-    init.resolution.height = static_cast<uint32_t>(windowHeight);
-    init.resolution.reset = BGFX_RESET_VSYNC;
-
-    // Set the platform data for bgfx
-    bgfx::PlatformData pd{};
-    pd.nwh = SDL_GetWindowFromID(SDL_GetWindowID(window));
-    init.platformData = pd;
-
-    bgfx::init(init);
-    bgfx::reset(windowWidth, windowHeight, BGFX_RESET_VSYNC);
-
-    // Setup view
-    bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x303030ff);
-    bgfx::setViewRect(0, 0, 0, static_cast<uint16_t>(windowWidth), static_cast<uint16_t>(windowHeight));
-*/
-}
-
 int main(int argc, char* argv[]) {
     // Initialize SDL
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
@@ -223,82 +168,8 @@ int main(int argc, char* argv[]) {
         return -1;
     }
 
-/*
-    // Initialize bgfx
-    init_bgfx(window);
-
-    // Initialize vertex layout
-    PosColorVertex::init();
-
-    // Create vertex buffer
-    bgfx::VertexBufferHandle vbh = bgfx::createVertexBuffer(
-        bgfx::makeRef(vertices, sizeof(vertices)),
-        PosColorVertex::ms_layout
-    );
-
-    // Create index buffer
-    bgfx::IndexBufferHandle ibh = bgfx::createIndexBuffer(
-        bgfx::makeRef(indices, sizeof(indices))
-    );
-
-    // Load shaders (replace with your own shaders)
-    bgfx::ShaderHandle vs = bgfx::createShader(bgfx::makeRef(vs_code, sizeof(vs_code)));
-    bgfx::ShaderHandle fs = bgfx::createShader(bgfx::makeRef(fs_code, sizeof(fs_code)));
-    bgfx::ProgramHandle program = bgfx::createProgram(vs, fs, true);
-
-    // Main loop
-    bool running = true;
-    SDL_Event event;
-    while (running) {
-        while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT) {
-                running = false;
-            }
-        }
-
-        // Set view transform
-        float view[16];
-        float proj[16];
-        bx::mtxIdentity(view);
-        bx::mtxOrtho(proj, -1.0f, 1.0f, -1.0f, 1.0f, 0.0f, 100.0f, 0.0f, bgfx::getCaps()->homogeneousDepth);
-        bgfx::setViewTransform(0, view, proj);
-
-        // Submit triangle
-        bgfx::setVertexBuffer(0, vbh);
-        bgfx::setIndexBuffer(ibh);
-        bgfx::submit(0, program);
-
-        // Frame
-        bgfx::frame();
-    }
-
-    // Cleanup
-    bgfx::destroy(vbh);
-    bgfx::destroy(ibh);
-    bgfx::destroy(program);
-    bgfx::shutdown();
-*/
-
     SDL_DestroyWindow(window);
     SDL_Quit();
     return 0;
 }
 
-//int main(int argc, char *argv[])
-//{
-/*
-  Balefire balefire( new FrameworkSDLVulkan() );
-  WarlockEventHandler event_handler;
-  balefire.event_handler = &event_handler;
-
-  RogueInterface_configure( argc, argv );
-  RogueInterface_launch();
-
-  while (balefire.handle_events()) balefire.render();
-*/
-  //while (handle_events()) {}
-
-
-  //SDL_Quit();
-  //return 0;
-//}

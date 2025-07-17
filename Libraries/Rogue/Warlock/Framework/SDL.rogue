@@ -17,20 +17,24 @@ class SDL : Framework [singleton]
     @|bool WarlockSDL_event_filter( void* data, SDL_Event* event )
      |{
      |  //if (event->type == SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED)
-     |  if (event->type == SDL_EVENT_WINDOW_RESIZED)
+     |  int is_window_moved = (event->type == SDL_EVENT_WINDOW_MOVED);
+     |  if (event->type == SDL_EVENT_WINDOW_RESIZED || is_window_moved)
      |  {
-     |    WarlockSDL__on_window_resized__RogueInt( event->window.windowID );
+     |    WarlockSDL__on_window_resized__RogueInt_RogueLogical(
+     |      event->window.windowID,
+     |      (RogueLogical)is_window_moved
+     |    );
      |  }
      |
      |  return true;
      |}
 
   GLOBAL METHODS
-    method on_window_resized( window_id:Int ) [api]
+    method on_window_resized( window_id:Int, &clear ) [api]
       forEach (window in Warlock.windows)
         if (native("SDL_GetWindowID($window->sdl_window) == $window_id")->Logical)
           SDL.update_window_size( window )
-          Renderer.on_window_resized( window )
+          Renderer.on_window_resized( window, &=clear )
           return
         endIf
       endForEach
@@ -265,6 +269,8 @@ class SDL : Framework [singleton]
       return keep_running
 
     method update_window_size( window:Window )
+      #local old_pixel_size = window.pixel_size
+
       native
       @|int w, h;
        |SDL_GetWindowSizeInPixels( $window->sdl_window, &w, &h );
@@ -272,6 +278,10 @@ class SDL : Framework [singleton]
        |$window->pixel_size.y = h;
        |$window->density = SDL_GetWindowPixelDensity( $window->sdl_window );
       window.update_size
+
+      #if (window.pixel_size != old_pixel_size)
+      #  Renderer.on_window_resized( window )
+      #endIf
 
   GLOBAL METHODS
     method .sdl_scancode_to_keycode( scancode:Int )->Keycode

@@ -14,6 +14,8 @@ class BGFX : Renderer [singleton]
     native @|bgfx::DynamicIndexBufferHandle  bgfx_index_buffer;
     native @|bgfx::UniformHandle bgfx_uniform_texColor;
 
+    auto_clear_while_resizing : Logical
+
   METHODS
     method init
       Renderer = this
@@ -52,6 +54,7 @@ class BGFX : Renderer [singleton]
        |init.resolution.width = w;
        |init.resolution.height = h;
        |init.resolution.reset = BGFX_RESET_VSYNC;
+       |init.debug = false;
        |
        |bgfx::PlatformData platform_data{};
        |#if defined(ROGUE_PLATFORM_APPLE)
@@ -163,7 +166,10 @@ class BGFX : Renderer [singleton]
       block
         local clear_flags = 0
         native @|$clear_flags |= BGFX_CLEAR_DEPTH;
-        if (Display.should_clear_color) native @|$clear_flags |= BGFX_CLEAR_COLOR;
+        if (Display.should_clear_color or auto_clear_while_resizing)
+          if (Display.should_clear_color) auto_clear_while_resizing = false
+          native @|$clear_flags |= BGFX_CLEAR_COLOR;
+        endIf
 
         local clear_color = Display.clear_color.rgba
         native @|bgfx::setViewClear( $display_id, (uint16_t)$clear_flags, (uint32_t)$clear_color );
@@ -306,15 +312,15 @@ class BGFX : Renderer [singleton]
       first_index = 0
       first_vertex = 0
 
-    method on_window_resized( window:Window ) [override]
+    method on_window_resized( window:Window, &clear ) [override]
       if (is_initialized)
         local size = window.pixel_size
         activate_window_graphics_context( window )
 
+        render_pending_frames( &=clear )
+
         native
         @|bgfx::reset( $size.x, $size.y, BGFX_RESET_VSYNC );
-
-        render_pending_frames
 
         native
         @|bgfx::setViewRect(
@@ -325,13 +331,24 @@ class BGFX : Renderer [singleton]
          |);
       endIf
 
-    method render_pending_frames
+    method render_pending_frames( &clear )
       if (is_initialized)
+        clear = clear or auto_clear_while_resizing
+        if (clear) auto_clear_while_resizing = true
+
         native
         @|const bgfx::Stats* stats = bgfx::getStats();
          |int n = stats->numDraw;
          |if ( !n ) n = 1;
-         |for (int i=n; --i>=0; ) bgfx::frame();
+         |for (int i=n; --i>=0; )
+         |{
+         |  if ($clear)
+         |  {
+         |    bgfx::setViewClear( $display_id, BGFX_CLEAR_COLOR|BGFX_CLEAR_DEPTH, 0x000000FF, 1.0f, 0 );
+         |    bgfx::touch( $display_id );
+         |  }
+         |  bgfx::frame();
+         |}
       endIf
 
     method set_clip( clip:Box? ) [override]

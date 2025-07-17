@@ -422,7 +422,7 @@ class Renderer [singleton]
       flush
       ++frame
 
-    method on_window_resized( window:Window )
+    method on_window_resized( window:Window, &clear )
       noAction
 
     method print_error
