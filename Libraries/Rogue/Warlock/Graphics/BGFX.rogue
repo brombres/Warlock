@@ -150,14 +150,14 @@ class BGFX : Renderer [singleton]
       prior.on_end_render( render_target )
       block
         local clear_flags = 0
-        native @|$clear_flags |= BGFX_CLEAR_DEPTH;
-        if (render_target.should_clear_color)
-          native @|$clear_flags |= BGFX_CLEAR_COLOR;
-                  |bgfx::touch( $display_id );
-        endIf
-
         local clear_color = render_target.clear_color.rgba
-        native @|bgfx::setViewClear( $display_id, (uint16_t)$clear_flags, (uint32_t)$clear_color );
+        native @|$clear_flags |= BGFX_CLEAR_DEPTH | BGFX_CLEAR_COLOR;
+
+        if (not render_target.should_clear_color) clear_color = 0->Int32;
+
+        native
+        @|bgfx::touch( $display_id );
+         |bgfx::setViewClear( $display_id, (uint16_t)$clear_flags, (uint32_t)$clear_color );
       endBlock
 
     method on_end_render( window:Window ) [override]
@@ -167,7 +167,7 @@ class BGFX : Renderer [singleton]
         local clear_flags = 0
         native @|$clear_flags |= BGFX_CLEAR_DEPTH;
         if (Display.should_clear_color or auto_clear_while_resizing)
-          if (Display.should_clear_color) auto_clear_while_resizing = false
+          if (Display.should_clear_color or render_queue.count) auto_clear_while_resizing = false
           native @|$clear_flags |= BGFX_CLEAR_COLOR;
         endIf
 
@@ -312,12 +312,12 @@ class BGFX : Renderer [singleton]
       first_index = 0
       first_vertex = 0
 
-    method on_window_resized( window:Window, &clear ) [override]
+    method on_window_resized( window:Window ) [override]
       if (is_initialized)
         local size = window.pixel_size
         activate_window_graphics_context( window )
 
-        render_pending_frames( &=clear )
+        render_pending_frames
 
         native
         @|bgfx::reset( $size.x, $size.y, BGFX_RESET_VSYNC );
@@ -331,10 +331,9 @@ class BGFX : Renderer [singleton]
          |);
       endIf
 
-    method render_pending_frames( &clear )
+    method render_pending_frames
       if (is_initialized)
-        clear = clear or auto_clear_while_resizing
-        if (clear) auto_clear_while_resizing = true
+        local clear = auto_clear_while_resizing
 
         native
         @|const bgfx::Stats* stats = bgfx::getStats();
@@ -366,6 +365,13 @@ class BGFX : Renderer [singleton]
          |);
       else
         native @|bgfx::setScissor();
+      endIf
+
+    method update_display_index( window:Window ) [override]
+      if (window.current_display_index != window.native_display_index)
+        # Window moved to different display
+        window.current_display_index = window.native_display_index
+        auto_clear_while_resizing = true
       endIf
 
     method uses_homogeneous_depth->Logical [override]

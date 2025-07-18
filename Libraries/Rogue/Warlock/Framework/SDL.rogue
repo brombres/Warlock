@@ -20,24 +20,18 @@ class SDL : Framework [singleton]
      |  int is_window_moved = (event->type == SDL_EVENT_WINDOW_MOVED);
      |  if (event->type == SDL_EVENT_WINDOW_RESIZED || is_window_moved)
      |  {
-     |    WarlockSDL__on_window_resized__RogueInt_RogueLogical(
-     |      event->window.windowID,
-     |      (RogueLogical)is_window_moved
-     |    );
+     |    WarlockSDL__on_window_resized__RogueInt( event->window.windowID );
      |  }
      |
      |  return true;
      |}
 
   GLOBAL METHODS
-    method on_window_resized( window_id:Int, &clear ) [api]
-      forEach (window in Warlock.windows)
-        if (native("SDL_GetWindowID($window->sdl_window) == $window_id")->Logical)
-          SDL.update_window_size( window )
-          Renderer.on_window_resized( window, &=clear )
-          return
-        endIf
-      endForEach
+    method on_window_resized( window_id:Int ) [api]
+      if local window = Warlock.find_window( &native_id=window_id )
+        SDL.update_window_size( window )
+        Renderer.on_window_resized( window )
+      endIf
 
   METHODS
     method init
@@ -80,6 +74,7 @@ class SDL : Framework [singleton]
         return false
       endIf
 
+      window.current_display_index = window.native_display_index
       update_window_size( window )
 
       native @|SDL_SetEventFilter( WarlockSDL_event_filter, $window->sdl_window );
@@ -269,8 +264,6 @@ class SDL : Framework [singleton]
       return keep_running
 
     method update_window_size( window:Window )
-      #local old_pixel_size = window.pixel_size
-
       native
       @|int w, h;
        |SDL_GetWindowSizeInPixels( $window->sdl_window, &w, &h );
@@ -279,9 +272,7 @@ class SDL : Framework [singleton]
        |$window->density = SDL_GetWindowPixelDensity( $window->sdl_window );
       window.update_size
 
-      #if (window.pixel_size != old_pixel_size)
-      #  Renderer.on_window_resized( window )
-      #endIf
+      Renderer.update_display_index( window )
 
   GLOBAL METHODS
     method .sdl_scancode_to_keycode( scancode:Int )->Keycode
@@ -423,8 +414,12 @@ augment Warlock::Window
   PROPERTIES
     native "SDL_Window* sdl_window;"
     native "void* native_window_handle;"
+    current_display_index : Int
 
   METHODS
+    method native_display_index->Int
+      return native("SDL_GetDisplayForWindow( $this->sdl_window )")->Int
+
     method native_id->Int
-      return native("SDL_GetWindowID($this->sdl_window)")->Int
+      return native("SDL_GetWindowID( $this->sdl_window )")->Int
 endAugment

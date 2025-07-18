@@ -422,7 +422,7 @@ class Renderer [singleton]
       flush
       ++frame
 
-    method on_window_resized( window:Window, &clear )
+    method on_window_resized( window:Window )
       noAction
 
     method print_error
@@ -468,6 +468,9 @@ class Renderer [singleton]
       flush
       textures.expand_to_include( stage )
       textures[stage] = new_texture
+
+    method update_display_index( window:Window )
+      noAction
 
     method uses_homogeneous_depth->Logical
       return true
