@@ -3,6 +3,7 @@
 
 #if defined(__APPLE__)
   #define WARLOCK_PLATFORM_APPLE 1
+  #include <TargetConditionals.h>
 
   #if defined(TARGET_IPHONE_SIMULATOR)
     #if TARGET_IPHONE_SIMULATOR
