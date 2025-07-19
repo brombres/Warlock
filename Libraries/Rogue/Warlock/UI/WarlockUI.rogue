@@ -7,11 +7,5 @@ augment UI::UI
       if (default_font) return default_font
       return SystemFont
 
-    method adjust_layout( bounds:Box ) [replace]
-      temporarily Display.dt=0.0, Display.delta_ticks=0
-        update_layout( bounds )
-        update
-      endTemporarily
-
 endAugment
 
