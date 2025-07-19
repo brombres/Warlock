@@ -45,10 +45,6 @@ augment Build
     ]
 endAugment
 
-routine rogo_macos_open
-  open_xcode( "Platforms/macOS" )
-endRoutine
-
 routine rogo_clean
   print_cmd( "Delete Build/" )
   File("Build").delete
@@ -56,7 +52,7 @@ endRoutine
 
 routine rogo_assets( platform=null:String )
   if (not String.exists(platform)) platform = System.os
-  rogo_deps
+  rogo_deps( platform )
   compile_assets( platform )
 endRoutine
 
@@ -69,6 +65,9 @@ routine rogo_shaders( platform=null:String )
   local shaderc : String
   local platform_flags : String
   which (platform)
+    case "iOS"
+      shaderc = "Libraries/bgfx/.build/osx-arm64/bin/shadercRelease"
+      platform_flags = "--platform ios --profile metal"
     case "macOS"
       shaderc = "Libraries/bgfx/.build/osx-arm64/bin/shadercRelease"
       platform_flags = "--platform osx --profile metal"
@@ -154,17 +153,18 @@ routine find_shader( filepaths:String[], filepath:String, replace_old:String, re
   endIf
 endRoutine
 
-routine rogo_deps [append]
+routine rogo_deps( platform:String ) [append]
   # SYNTAX: rogo deps [update|rebuild] [<libs>]*
   # Where <libs> is any combination of: [bgfx bimg bx miniaudio sdl spine stb tess]
+  if (not String.exists(platform)) platform = System.os
 
   local args = System.command_line_arguments.cloned
   local rebuild = args.remove( "rebuild" )
   local update  = args.remove( "update" )
-  deps( args, &=update, &=rebuild )
+  deps( platform, args, &=update, &=rebuild )
 endRoutine
 
-routine deps( args:String[], &update, &rebuild )
+routine deps( platform:String, args:String[], &update, &rebuild )
   if (Files(".","BuildWarlock.rogue").count == 1)
     banner "ERROR: Rogo should not be run directly in the Warlock library folder."
     System.exit 1
@@ -247,23 +247,8 @@ routine deps( args:String[], &update, &rebuild )
       endIf
     endIf
 
-    contingent
-      sufficient needs_rebuild
-      if (System.is_macos) necessary File("Libraries/bgfx/.build/osx-arm64").exists
-    unsatisfied
-      needs_rebuild = true
-    endContingent
-
-    if (needs_rebuild)
-      # https://bkaradzic.github.io/bgfx/build.html
-      if (System.is_macos)
-        banner "Building BGFX library"
-        #execute "cd Libraries/bgfx && ../bx/tools/bin/darwin/genie --with-tools --gcc=osx-x64 gmake"
-        execute( "cd Libraries/bgfx && make osx-arm64" )
-      else
-        trace "TODO"
-      endIf
-    endIf
+    .build_bgfx( System.os, &rebuild=needs_rebuild )
+    if (platform != System.os) .build_bgfx( platform, &rebuild=needs_rebuild )
   endIf
 
   -------- Libraries/SDL --------
@@ -355,6 +340,36 @@ routine deps( args:String[], &update, &rebuild )
 
 endRoutine
 
+routine .build_bgfx( platform:String, &rebuild )
+  local make_folder, make_target : String
+
+  if (platform == "iOS")
+    make_folder = "Libraries/bgfx/.build/ios-arm64"
+    make_target = "ios-arm64-release"
+  elseIf (platform == "macOS")
+    make_folder = "Libraries/bgfx/.build/osx-arm64"
+    make_target = "osx-arm64-release"
+  else
+    trace
+    throw Error( "[INTERNAL] TODO: build BGFX for $."(platform) )
+  endIf
+
+  contingent
+    sufficient rebuild
+    necessary File( make_folder ).exists
+  unsatisfied
+    rebuild = true
+  endContingent
+
+  if (rebuild)
+    # https://bkaradzic.github.io/bgfx/build.html
+    banner "Building BGFX library"
+    #execute "cd Libraries/bgfx && ../bx/tools/bin/darwin/genie --with-tools --gcc=osx-x64 gmake"
+    execute( "cd Libraries/bgfx && make $"(make_target) )
+  endIf
+endRoutine
+
+
 routine update_gitignore
   local patcher = GitIgnorePatcher( File(".gitignore") )
 
@@ -391,9 +406,22 @@ routine rogo_rebuild
   rogo_build( &rebuild )
 endRoutine
 
+routine rogo_ios
+  # SYNTAX: rogo ios [rebuild|release]
+  build( "iOS" )
+endRoutine
+
+routine rogo_ios_open
+  open_xcode( "Platforms/iOS" )
+endRoutine
+
 routine rogo_macos
   # SYNTAX: rogo macos [rebuild|release]
   build( "macOS" )
+endRoutine
+
+routine rogo_macos_open
+  open_xcode( "Platforms/macOS" )
 endRoutine
 
 routine rogo_build_debug( &rebuild )
@@ -405,7 +433,7 @@ routine build( platform:String, &debug, &rebuild )
   if (not debug)   debug = args.contains("debug")
   if (not rebuild) rebuild = args.contains("rebuild")
 
-  deps( System.command_line_arguments )
+  deps( platform, System.command_line_arguments )
   compile_rogue( platform, &=debug, &=rebuild )
   compile_assets( platform )
 endRoutine
