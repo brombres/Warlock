@@ -1,6 +1,6 @@
 #pragma once
 
-#include "RogueProgram.h"
+#include "RogueInterface.h"
 
 #ifdef __cplusplus
 extern "C" {

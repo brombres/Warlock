@@ -31,7 +31,11 @@
   //#import <Foundation/Foundation.h>
 #endif
 
-#include "RogueProgram.h"
+#if defined(WARLOCK_PROGRAM_MACOS)
+  #include "RogueProgram-macOS.h"
+#else
+  #include "RogueProgram-iOS.h"
+#endif
 
 #ifdef __cplusplus
 extern "C" {

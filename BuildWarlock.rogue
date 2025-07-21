@@ -445,7 +445,7 @@ routine compile_rogue( platform:String, &debug, &rebuild )
   local source_folder = File("Build/$/Source"(platform)).[create_folder]
 
   local is_apple = (platform == "macOS" or platform == "iOS")
-  local source_filename = "RogueProgram.$"(which{ is_apple:"mm" || "cpp" })
+  local source_filename = "RogueProgram-$.$"(platform,which{ is_apple:"mm" || "cpp" })
 
 System.run("cd ~/Projects/Rogue && rogo libs") # FIXME
 local stdlib = Files( "~/Projects/Rogue/Source/Libraries", "**.rogue" ) # FIXME
@@ -469,7 +469,7 @@ if (stdlib.any_newer_than(source_folder/source_filename)) rebuild = true #FIXME
       targets.add( "bgfx" )
       cmd .= appending( "--target=$"(targets.join(',')) )
       cmd .= appending( "--gc=manual" )
-      cmd .= appending( "--output=$/RogueProgram"(source_folder.esc) )
+      cmd .= appending( "--output=$/RogueProgram-$"(source_folder.esc,platform) )
       execute cmd
     endBlock
   endIf
@@ -479,7 +479,7 @@ routine compile_assets( platform:String )
   contingent
     local path = "Libraries/Warlock/Libraries/Rogue/AssetCompiler"
     necessary (0 == System.run("(cd $ && rogo build)"(path)))
-    necessary (0 == System.run("$/Build/AssetCompiler-$ $" (path,System.os,System.os)))
+    necessary (0 == System.run("$/Build/AssetCompiler-$ $" (path,System.os,platform)))
   unsatisfied
     System.exit 1
   endContingent
