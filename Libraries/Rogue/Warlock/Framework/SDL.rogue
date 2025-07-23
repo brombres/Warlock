@@ -249,12 +249,14 @@ class SDL : Framework [singleton]
        |  case SDL_EVENT_WILL_ENTER_BACKGROUND:
             block
               Warlock.controller.handle_app_pause
+              Warlock.is_suspended = true
             endBlock
       native
       @|    break;
        |  case SDL_EVENT_WILL_ENTER_FOREGROUND:
             block
               Warlock.controller.handle_app_resume
+              Warlock.is_suspended = false
             endBlock
       native
       @|    break;
