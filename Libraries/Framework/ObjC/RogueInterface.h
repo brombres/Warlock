@@ -5,16 +5,16 @@
   #define WARLOCK_PLATFORM_APPLE 1
   #include <TargetConditionals.h>
 
-  #if defined(TARGET_IPHONE_SIMULATOR)
-    #if TARGET_IPHONE_SIMULATOR
+  #if defined(TARGET_OS_SIMULATOR)
+    #if TARGET_OS_SIMULATOR
       #define WARLOCK_PLATFORM_IOS 1
       #define WARLOCK_PLATFORM_IOS_SIMULATOR 1
     #endif
   #endif
 
   #if !defined(WARLOCK_PLATFORM_IOS)
-    #if defined(TARGET_OS_IPHONE)
-      #if TARGET_OS_IPHONE
+    #if defined(TARGET_OS_IOS)
+      #if TARGET_OS_IOS
         #define WARLOCK_PLATFORM_IOS 1
       #endif
     #endif

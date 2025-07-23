@@ -12,7 +12,8 @@ $include Warlock/Control
 $include Warlock/Entity/Entity
 $include Warlock/Geometry
 $include Warlock/Graphics
-$include Warlock/UI
+$include Warlock/GUI
+$include Warlock/Platform
 $include Warlock/Utility
 
 uses Control/State [export]
@@ -20,7 +21,7 @@ uses Entity        [export]
 uses Geometry      [export]
 uses Graphics      [export]
 uses Math/Matrix   [export]
-uses UI            [export]
+uses GUI           [export]
 uses Utility/Timer [export]
 
 class Warlock [essential singleton]

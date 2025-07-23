@@ -453,7 +453,7 @@ if (stdlib.any_newer_than(source_folder/source_filename)) rebuild = true #FIXME
     block cmd = "roguec Source/Main.rogue Warlock"
       cmd .= appending( "Warlock/Framework/SDL" )
       cmd .= appending( "Warlock/Graphics/BGFX" )
-      cmd .= appending( "Warlock/Platform/$.rogue"(platform) )
+      #cmd .= appending( "Warlock/Platform/$.rogue"(platform) )
       if (debug) cmd .= appending( "--debug" )
 
       local libs = String[]

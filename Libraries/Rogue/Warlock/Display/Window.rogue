@@ -76,7 +76,7 @@ class Window : Display [singleton]
 
 endClass
 
-augment UI::Event
+augment GUI::Event
   PROPERTIES
     window : Warlock::Window
 endAugment

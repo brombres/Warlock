@@ -195,7 +195,11 @@ class Display [singleton]
       clear_clip
 
     method safe_area->Box
+      if (System.is_ios) return iOS.safe_area
       return bounds
+
+    method scale->Real
+      return size.x / pixel_size.x
 
     method scale_to_fit( scale_to_fit_size )
       if (scale_to_fit_size) @fixed_size = null

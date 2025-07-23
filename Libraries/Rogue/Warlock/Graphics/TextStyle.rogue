@@ -1,14 +1,1 @@
-library UI
-#uses Warlock
-
-#{
-augment UI::TextStyle
-  METHODS
-    method draw( font:UI::Font, text:Text, bounds:Box ) [replace]
-      draw( font->(as Warlock::Font), text, bounds )
-
-    method draw( font:Warlock::Font, text:Text, bounds:Box )
-      font.draw( text, bounds )
-endAugment
-
-}#
+library GUI

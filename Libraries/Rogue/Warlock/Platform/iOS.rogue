@@ -1,1 +1,31 @@
 # iOS Warlock specialization
+
+class iOS [singleton]
+  NATIVE
+    nativeHeader @|#if defined(ROGUE_PLATFORM_IOS)
+                  |  #import <UIKit/UIKit.h>
+                  |#endif
+  METHODS
+    method safe_area->Box
+      local available = false
+      local left, top, right, bottom : Int
+
+      native @|#if defined(ROGUE_PLATFORM_IOS)
+      local density = Display.density
+      native @|if (@available(iOS 11.0, *))
+              |{
+              |  $available = (RogueLogical) true;
+              |  UIWindow* window = UIApplication.sharedApplication.keyWindow;
+              |  $left   = (RogueInt)(window.safeAreaInsets.left * $density);
+              |  $top    = (RogueInt)(window.safeAreaInsets.top * $density);
+              |  $right  = (RogueInt)(window.safeAreaInsets.right * $density);
+              |  $bottom = (RogueInt)(window.safeAreaInsets.bottom * $density);
+              |}
+      native @|#endif
+
+      if (not available) return Display.bounds
+      local bounds = Box( left,top, Display.pixel_size.x-(left+right),Display.pixel_size.y-(top+bottom) )
+      bounds *= Display.scale
+      return bounds
+
+endClass

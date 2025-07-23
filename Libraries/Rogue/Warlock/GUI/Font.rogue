@@ -1,6 +1,8 @@
-library Warlock
+library GUI
 
-augment UI::Font
+uses Warlock
+
+augment GUI::Font
   GLOBAL PROPERTIES
     fonts = [String:Font]
 

@@ -1,6 +1,6 @@
 library Warlock
 
-augment UI::UI
+augment GUI::UI
   METHODS
     method font->Font [replace]
       if (@font) return @font
