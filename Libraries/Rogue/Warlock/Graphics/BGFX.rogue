@@ -153,7 +153,7 @@ class BGFX : Renderer [singleton]
         local clear_color = render_target.clear_color.rgba
         native @|$clear_flags |= BGFX_CLEAR_DEPTH | BGFX_CLEAR_COLOR;
 
-        if (not render_target.should_clear_color) clear_color = 0->Int32;
+        if (not render_target.should_clear_color) clear_color = 0->Int32
 
         native
         @|bgfx::touch( $display_id );
@@ -172,6 +172,10 @@ class BGFX : Renderer [singleton]
         endIf
 
         local clear_color = Display.clear_color.rgba
+
+        #native @|$clear_flags |= BGFX_CLEAR_DEPTH | BGFX_CLEAR_COLOR;
+        #local clear_color = Display.clear_color.rgba
+        #if (not Display.should_clear_color) clear_color = 0x000000FF->Int32
         native @|bgfx::setViewClear( $display_id, (uint16_t)$clear_flags, (uint32_t)$clear_color );
       endBlock
 
@@ -317,8 +321,6 @@ class BGFX : Renderer [singleton]
         local size = window.pixel_size
         activate_window_graphics_context( window )
 
-        render_pending_frames
-
         native
         @|bgfx::reset( $size.x, $size.y, BGFX_RESET_VSYNC );
 
@@ -329,11 +331,14 @@ class BGFX : Renderer [singleton]
          |  static_cast<uint16_t>($size.x),
          |  static_cast<uint16_t>($size.y)
          |);
+
       endIf
 
+      #{
     method render_pending_frames
       if (is_initialized)
         local clear = auto_clear_while_resizing
+clear=true#FIXME
 
         native
         @|const bgfx::Stats* stats = bgfx::getStats();
@@ -349,6 +354,7 @@ class BGFX : Renderer [singleton]
          |  bgfx::frame();
          |}
       endIf
+      }#
 
     method set_clip( clip:Box? ) [override]
       if local pixel_clip = clip

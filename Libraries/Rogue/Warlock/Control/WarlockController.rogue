@@ -78,7 +78,7 @@ class WarlockController
       Window.end_render
 
     method end_tick
-      ++Warlock.frames
+      ++Warlock.ticks
 
     method handle_app_exit
       save_state

@@ -49,7 +49,7 @@ class Warlock [essential singleton]
   PROPERTIES
     windows    = Window[]
     textures   = [File:Texture]
-    frames     : Int
+    ticks      : Int
     actions    : Action
     controller = WarlockController()
 

@@ -156,8 +156,6 @@ endRoutine
 routine rogo_deps( platform:String ) [append]
   # SYNTAX: rogo deps [update|rebuild] [<libs>]*
   # Where <libs> is any combination of: [bgfx bimg bx miniaudio sdl spine stb tess]
-  if (not String.exists(platform)) platform = System.os
-
   local args = System.command_line_arguments.cloned
   local rebuild = args.remove( "rebuild" )
   local update  = args.remove( "update" )
@@ -233,7 +231,7 @@ routine deps( platform:String, args:String[], &update, &rebuild )
     local folder = File("Libraries/bgfx")
     local repo = GitRepo( "https://github.com/bkaradzic/bgfx.git", folder )
 
-    local needs_rebuild = false
+    local needs_rebuild = rebuild
     if (not repo.exists)
       banner "Cloning BGFX repo"
       repo.clone( &verbose )
@@ -345,10 +343,10 @@ routine .build_bgfx( platform:String, &rebuild )
 
   if (platform == "iOS")
     make_folder = "Libraries/bgfx/.build/ios-arm64"
-    make_target = "ios-arm64-release"
+    make_target = "ios-arm64 CFLAGS=-DBGFX_CONFIG_MULTITHREADED=0"
   elseIf (platform == "macOS")
     make_folder = "Libraries/bgfx/.build/osx-arm64"
-    make_target = "osx-arm64-release"
+    make_target = "osx-arm64 CFLAGS=-DBGFX_CONFIG_MULTITHREADED=0"
   else
     trace
     throw Error( "[INTERNAL] TODO: build BGFX for $."(platform) )
