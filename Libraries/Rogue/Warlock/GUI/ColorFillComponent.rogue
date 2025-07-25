@@ -28,7 +28,7 @@ class ColorFillSolidComponent : ColorFillComponent
       noAction
 
     method on_draw
-      display_bounds.fill( color )
+      display_bounds.draw( @color )
 
 endClass
 
@@ -44,7 +44,7 @@ class ColorFillGradientComponent : ColorFillComponent
       noAction
 
     method on_draw
-      display_bounds.fill( top_left_color, top_right_color, bottom_right_color, bottom_left_color )
+      display_bounds.draw( top_left_color, top_right_color, bottom_right_color, bottom_left_color )
 
 endClass
 
