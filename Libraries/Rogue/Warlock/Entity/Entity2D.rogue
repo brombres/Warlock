@@ -30,7 +30,7 @@ augment Entity::Entity2D
       .handle_draw( &fg )
 
       #{
-      local scale = bounds.size / nominal_size
+      local scale = bounds.size / natural_size
       temporarily this.scale = scale
         use Display.transform_stack
           .begin_draw
@@ -51,7 +51,7 @@ augment Entity::Entity2D
             XYZ(position,z),
             anchor,
             size,
-            nominal_size,
+            natural_size,
             scale_z
           )
         )
@@ -62,14 +62,14 @@ augment Entity::Entity2D
             XYZ(position,z),
             anchor,
             size,
-            nominal_size,
+            natural_size,
             scale_z,
             rotation
           )
         )
       endIf
 
-      display_bounds = Box( nominal_size )
+      display_bounds = Box( natural_size )
 
     method .pop_transform
       if (rotation.is_identity)

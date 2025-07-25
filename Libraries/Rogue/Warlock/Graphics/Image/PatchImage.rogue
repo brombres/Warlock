@@ -89,13 +89,13 @@ class PatchImage : Image
 
     method draw( position:XY )
       if (not patches) return
-      temporarily nominal_size=size, scale=1.0
+      temporarily natural_size=size, scale=1.0
         prior.draw( position )
       endTemporarily
 
     method draw( bounds:Box )
       if (not patches) return
-      temporarily nominal_size=bounds.size, scale=1.0
+      temporarily natural_size=bounds.size, scale=1.0
         prior.draw( bounds )
       endTemporarily
 

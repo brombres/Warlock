@@ -8,11 +8,11 @@ class TextureImage : Image
 
   METHODS
     method init( texture )
-      nominal_size = texture.size
+      natural_size = texture.size
       scale = 1.0
 
     method init( asset, image_index )
-      nominal_size = asset.images[image_index].bounds.size
+      natural_size = asset.images[image_index].bounds.size
       scale = 1.0
 
     method init( asset_name:String )
@@ -45,7 +45,7 @@ class TextureImage : Image
         texture.init( original_texture )
         # else texture is already original texture
       endIf
-      nominal_size = texture.size
+      natural_size = texture.size
       scale = 1.0
 
     method texture->Texture [override]

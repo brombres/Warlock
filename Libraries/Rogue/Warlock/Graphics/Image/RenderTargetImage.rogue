@@ -40,7 +40,7 @@ class RenderTargetImage : TextureImage
         endIf
       endIf
 
-      nominal_size = XY( width, height )
+      natural_size = XY( width, height )
 
       contingent
         necessary (@texture)

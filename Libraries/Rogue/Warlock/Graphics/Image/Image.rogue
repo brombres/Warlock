@@ -27,7 +27,7 @@ class Image : Drawable2D
       if (not color) color = this.color
 
       Renderer.draw(
-        Box(nominal_size),
+        Box(natural_size),
         color.value,
         render_mode||RenderMode.ALPHA_COLOR,
         subdivisions
@@ -99,8 +99,8 @@ augment Image[]
     method set_colors( colors:Quad<<Color>> )
       (forEach as Image in this).colors = colors
 
-    method set_nominal_size( nominal_size:XY )
-      (forEach as Image in this).nominal_size = nominal_size
+    method set_natural_size( natural_size:XY )
+      (forEach as Image in this).natural_size = natural_size
 
     method set_opacity( opacity:Real )
       (forEach as Image in this).opacity = opacity
