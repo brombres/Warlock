@@ -33,6 +33,10 @@ class SDL : Framework [singleton]
         Renderer.on_window_resized( window )
       endIf
 
+  PROPERTIES
+    last_multitouch_position : XY?
+    last_multitouch_zoom     : Real?
+
   METHODS
     method init
       Framework = this
@@ -42,6 +46,7 @@ class SDL : Framework [singleton]
       if (is_configured) return
 
       native @|SDL_SetHint( SDL_HINT_MAC_SCROLL_MOMENTUM, "1" );
+              |SDL_SetHint( SDL_HINT_TOUCH_MOUSE_EVENTS, "0" );
 
       if (not native("SDL_Init(SDL_INIT_VIDEO)")->Logical)
         println "[SDL Error] Failed to initialize SDL: $."(error)
@@ -74,7 +79,7 @@ class SDL : Framework [singleton]
         return false
       endIf
 
-      window.current_display_index = window.native_display_index
+      window.current_display_id = window.native_display_id
       update_window_size( window )
 
       native @|SDL_SetEventFilter( WarlockSDL_event_filter, $window->sdl_window );
@@ -98,6 +103,82 @@ class SDL : Framework [singleton]
       native
       @|    $keep_running = false;
        |    break;
+       |  case SDL_EVENT_FINGER_DOWN:
+       |  case SDL_EVENT_FINGER_UP:
+       |  case SDL_EVENT_FINGER_CANCELED:
+            block
+              if local window = Warlock.find_window( &native_id=native("event.tfinger.windowID")->Int )
+                Window = window
+                local display_size = Display.size
+                local id = native("event.tfinger.fingerID")->Int
+                local x  = display_size.x * native("event.tfinger.x")->Real
+                local y  = display_size.y * native("event.tfinger.y")->Real
+                local is_press = native("event.type == SDL_EVENT_FINGER_DOWN")->Logical
+                local is_cancelled = native("event.type == SDL_EVENT_FINGER_CANCELED")->Logical
+                local type = which{ is_press:<PRESS> || <RELEASE> }
+                if (Warlock.is_suspended) is_cancelled = true
+
+                if (pointer_event.refcount) pointer_event = PointerEvent()
+                pointer_event.init( type, XY(x,y), XY(0,0), 0, &=is_cancelled, &is_touch )
+                pointer_event.window = window
+                pointer_event.pointer_id = id
+                pointer_event.timestamp = native("event.tfinger.timestamp")->Int
+                Pointer.record( pointer_event )
+                if (not is_press and Pointer.presses.is_empty)
+                  last_multitouch_position = null
+                  last_multitouch_zoom = null
+                endIf
+
+                Window.state.handle( pointer_event )
+              endIf
+            endBlock
+      native
+      @|    break;
+       |  case SDL_EVENT_FINGER_MOTION:
+            block
+              if local window = Warlock.find_window( &native_id=native("event.tfinger.windowID")->Int )
+                Window = window
+                local display_size = Display.size
+                local id = native("event.tfinger.fingerID")->Int
+                local x  = display_size.x * native("event.tfinger.x")->Real
+                local y  = display_size.y * native("event.tfinger.y")->Real
+                local dx = display_size.x * native("event.tfinger.dx")->Real
+                local dy = display_size.y * native("event.tfinger.dy")->Real
+
+                if (pointer_event.refcount) pointer_event = PointerEvent()
+                pointer_event.init( <MOVE>, XY(x,y), XY(dx,dy), 0, &is_touch )
+                pointer_event.window = window
+                pointer_event.pointer_id = id
+                pointer_event.timestamp = native("event.tfinger.timestamp")->Int
+
+                Pointer.record( pointer_event )
+                Window.state.handle( pointer_event )
+
+                if (pointer_event.is_multitouch and Pointer.presses.count >= 2)
+                  if local current_multitouch_position = Pointer.average_position
+                    if local last_pos = last_multitouch_position
+                      local delta = current_multitouch_position - last_pos
+                      local dz : Real
+                      local cur_zoom =
+                          (Pointer.presses[1].position - Pointer.presses[0].position).magnitude
+                      if local last_zoom = last_multitouch_zoom
+                        dz = (cur_zoom - last_zoom)
+                      endIf
+                      last_multitouch_zoom = cur_zoom
+
+                      if (multitouch_event.refcount) multitouch_event = MultitouchEvent()
+                      multitouch_event.init( XYZ(delta,dz) )
+                      multitouch_event.window = window
+                      multitouch_event.timestamp = native("event.tfinger.timestamp")->Int
+                      Window.state.handle( multitouch_event )
+                    endIf
+                    last_multitouch_position = current_multitouch_position
+                  endIf
+                endIf
+              endIf
+            endBlock
+      native
+      @|    break;
        |  case SDL_EVENT_MOUSE_MOTION:
             block
               if local window = Warlock.find_window( &native_id=native("event.button.windowID")->Int )
@@ -111,8 +192,9 @@ class SDL : Framework [singleton]
                 if (pointer_event.refcount) pointer_event = PointerEvent()
                 pointer_event.init( <MOVE>, XY(x,y), delta, 0 )
                 pointer_event.window = window
+                pointer_event.pointer_id = 0
                 pointer_event.timestamp = native("event.button.timestamp")->Int
-                Pointer.on( pointer_event )
+                Pointer.record( pointer_event )
                 Window.state.handle( pointer_event )
               endIf
             endBlock
@@ -135,8 +217,9 @@ class SDL : Framework [singleton]
                 if (pointer_event.refcount) pointer_event = PointerEvent()
                 pointer_event.init( type, XY(x,y), delta, index )
                 pointer_event.window = window
+                pointer_event.pointer_id = 0
                 pointer_event.timestamp = native("event.button.timestamp")->Int
-                Pointer.on( pointer_event )
+                Pointer.record( pointer_event )
                 Window.state.handle( pointer_event )
               endIf
             endBlock
@@ -149,8 +232,9 @@ class SDL : Framework [singleton]
                 if (pointer_event.refcount) pointer_event = PointerEvent()
                 pointer_event.init( <ENTER> )
                 pointer_event.window = window
+                pointer_event.pointer_id = 0
                 pointer_event.timestamp = native("event.button.timestamp")->Int
-                Pointer.on( pointer_event )
+                Pointer.record( pointer_event )
                 Window.state.handle( pointer_event )
               endIf
             endBlock
@@ -163,8 +247,9 @@ class SDL : Framework [singleton]
                 if (pointer_event.refcount) pointer_event = PointerEvent()
                 pointer_event.init( <LEAVE> )
                 pointer_event.window = window
+                pointer_event.pointer_id = 0
                 pointer_event.timestamp = native("event.button.timestamp")->Int
-                Pointer.on( pointer_event )
+                Pointer.record( pointer_event )
                 Window.state.handle( pointer_event )
               endIf
             endBlock
@@ -422,12 +507,13 @@ augment Warlock::Window
   PROPERTIES
     native "SDL_Window* sdl_window;"
     native "void* native_window_handle;"
-    current_display_index : Int
+    current_display_id : Int
 
   METHODS
-    method native_display_index->Int
+    method native_display_id->Int
       return native("SDL_GetDisplayForWindow( $this->sdl_window )")->Int
 
     method native_id->Int
       return native("SDL_GetWindowID( $this->sdl_window )")->Int
+
 endAugment

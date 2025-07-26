@@ -144,6 +144,7 @@ class WarlockController
       noAction
 
     method restore_state
+      Log.println "Restoring $"(Warlock.application_data_folder/app_name/"SaveState.bin") #FIXME
       AppData.data = JSON.parse(
         load( Warlock.application_data_folder/app_name/"SaveState.bin" )
       ) || @{}

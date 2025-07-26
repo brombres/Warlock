@@ -111,6 +111,9 @@ class Display [singleton]
     method is_landscape->Logical
       return size.x >= size.y
 
+    method is_tablet->Logical
+      return System.is_tablet
+
     method notify( id:GlobalID, arg=undefined:Variant )
       if (@ui) @ui.notify( id, arg )
 

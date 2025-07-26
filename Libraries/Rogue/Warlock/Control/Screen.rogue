@@ -8,6 +8,9 @@ class Screen : Rogue::ActiveState<<Screen,change_screen,exit_screen>>, WarlockSt
     method dispatch( e:KeyEvent )
       e.window.handle( e )
 
+    method dispatch( e:MultitouchEvent )
+      e.window.handle( e )
+
     method dispatch( e:PointerEvent )
       e.window.handle( e )
 

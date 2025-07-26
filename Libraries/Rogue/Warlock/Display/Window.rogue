@@ -52,6 +52,9 @@ class Window : Display [singleton]
     method handle( e:KeyEvent )
       if (@ui) @ui.handle( e )
 
+    method handle( e:MultitouchEvent )
+      if (@ui) @ui.handle( e )
+
     method handle( e:PointerEvent )
       if (@ui) @ui.handle( e )
 
