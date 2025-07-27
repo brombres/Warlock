@@ -43,18 +43,21 @@ class Sound
       endIf
       return seconds
 
-    method fade_in( duration=1.0:Real )
+    method fade_in( duration=1.0:Real, after_delay=0.0:Real )
 Log.println "fade_in $"(this) #FIXME
       current_volume = 0
-      local action = Action( (p) => this.current_volume = volume * p, &=duration )
+      local action : Action
+      if (after_delay) action += Action.wait( after_delay )
+      action += Action( (p) => this.current_volume = volume * p, &=duration )
       AudioManager.actions |= action
       play( &concurrent )
 
-    method fade_out( duration=1.0:Real )
+    method fade_out( duration=1.0:Real, &pause )
 Log.println "fade_out $"(this) #FIXME
       local initial_volume = current_volume
-      local action = Action( (p) => this.current_volume = initial_volume * (1.0 - p), &=duration ) +
-                     Action( () => this.stop )
+      local action = Action( (p) => this.current_volume = initial_volume * (1.0 - p), &=duration )
+      if (pause) action += Action( () => this.pause )
+      else       action += Action( () => this.stop )
       AudioManager.actions |= action
 
     method first_idle->Sound

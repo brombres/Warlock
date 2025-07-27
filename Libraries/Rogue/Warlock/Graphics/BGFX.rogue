@@ -57,7 +57,7 @@ class BGFX : Renderer [singleton]
        |init.debug = false;
        |
        |bgfx::PlatformData platform_data{};
-       |#if defined(ROGUE_PLATFORM_APPLE)
+       |#if defined(ROGUE_TARGET_APPLE)
        |  $window->native_window_handle = SDL_Metal_GetLayer( SDL_Metal_CreateView(window) );
        |#else
        |  #error Must implement Native Window Handle retrieval in BGFX.configure_bgfx() for current platform.

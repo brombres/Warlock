@@ -346,6 +346,10 @@ class SDL : Framework [singleton]
             endBlock
       native
       @|    break;
+       |  case SDL_EVENT_DID_ENTER_BACKGROUND:
+        AudioManager.suspend
+      native
+      @|    break;
        |  case SDL_EVENT_DID_ENTER_FOREGROUND:
        |  case SDL_EVENT_WINDOW_RESTORED:
             block

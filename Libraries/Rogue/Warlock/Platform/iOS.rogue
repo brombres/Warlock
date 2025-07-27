@@ -2,7 +2,7 @@
 
 class iOS [singleton]
   NATIVE
-    nativeHeader @|#if defined(ROGUE_PLATFORM_IOS)
+    nativeHeader @|#if defined(ROGUE_TARGET_IOS)
                   |  #import <UIKit/UIKit.h>
                   |#endif
   METHODS
@@ -10,7 +10,7 @@ class iOS [singleton]
       local available = false
       local left, top, right, bottom : Int
 
-      native @|#if defined(ROGUE_PLATFORM_IOS)
+      native @|#if defined(ROGUE_TARGET_IOS)
       local density = Display.density
       native @|if (@available(iOS 11.0, *))
               |{

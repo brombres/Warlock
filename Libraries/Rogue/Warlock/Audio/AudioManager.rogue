@@ -1,13 +1,6 @@
 library Warlock
 
 class AudioManager [singleton]
-  NATIVE
-    nativeHeader @|#include "miniaudio.h"
-                  |
-                  |#if ROGUE_PLATFORM_IOS
-                  |  #import <AVFoundation/AVFoundation.h>
-                  |#endif
-
   PROPERTIES
     actions      : Action
 
@@ -15,11 +8,21 @@ class AudioManager [singleton]
 
     is_configured : Logical # true if we have attempted to configure audio
     is_prepared   : Logical # true if audio is *successfully* configured
+    is_suspended  : Logical
     native "ma_engine engine;"
+    native "id audio_interruption_observer;"
 
   METHODS
     method on_cleanup
       if (is_prepared)
+        if ($target("iOS"))
+          native
+          @|if ($this->audio_interruption_observer)
+           |{
+           |  [[NSNotificationCenter defaultCenter] removeObserver:$this->audio_interruption_observer];
+           |  $this->audio_interruption_observer = nil;
+           |}
+        endIf
         is_prepared = false
         is_configured = false
         native @|ma_engine_uninit( &$this->engine );
@@ -40,6 +43,20 @@ class AudioManager [singleton]
         return false
       endIf
 
+      if ($target("iOS"))
+        native
+        @|$this->audio_interruption_observer =
+         |[
+         |  [NSNotificationCenter defaultCenter]
+         |  addObserverForName:AVAudioSessionInterruptionNotification
+         |  object:nil
+         |  queue:nil
+         |  usingBlock:^( NSNotification *note ) {
+         |    Warlock_handle_ios_audio_interruption( note );
+         |  }
+         |];
+      endIf
+
       is_prepared = true
 
     method fade_out_music( duration=1.0:Real )
@@ -49,6 +66,10 @@ class AudioManager [singleton]
       endForEach
       actions += fade_actions
 
+    method on_ios_audio_interruption( &beginning )
+      if (beginning) suspend
+      else           resume
+
     method reset
       stop_music
       actions = null
@@ -56,11 +77,16 @@ class AudioManager [singleton]
     method pause_music
       (forEach in AudioManager.active_music step -1).pause
 
-    method reconfigure
+    method reactivate
       if (is_prepared)
         if ($target("iOS"))
           native @|[[AVAudioSession sharedInstance] setActive:YES error:nil];
         endIf
+      endIf
+
+    method reconfigure
+      if (is_prepared)
+        reactivate
 
         native
         @|ma_device_stop( $this->engine.pDevice );
@@ -70,14 +96,62 @@ class AudioManager [singleton]
             configure
         native
         @|}
+
       endIf
 
+    method resume
+      if (not is_suspended) return
+
+      reconfigure
+      resume_music
+
+      #local original_actions = actions
+      #actions = null
+      #(forEach in active_music step -1).fade_in( 0.5 )
+      #actions += original_actions
+
     method resume_music
-      (forEach in AudioManager.active_music step -1).play
+      (forEach in active_music step -1).play
 
     method stop_music
-      (forEach in AudioManager.active_music step -1).stop
+      (forEach in active_music step -1).stop
+
+    method suspend
+      if (is_suspended) return
+      is_suspended = true
 
     method update
       if (actions) actions = actions.updated
+
+  GLOBAL METHODS
+    method handle_ios_audio_interruption( &beginning ) [api]
+      AudioManager.on_ios_audio_interruption( &=beginning )
+
+  NATIVE
+    nativeHeader @|#include "miniaudio.h"
+                  |
+                  |#if ROGUE_TARGET_IOS
+                  |  #import <AVFoundation/AVFoundation.h>
+                  |#endif
+
+    nativeHeader
+    @|#if ROGUE_TARGET_IOS
+     |  static void Warlock_handle_ios_audio_interruption( NSNotification* notification );
+     |  void WarlockAudioManager__handle_ios_audio_interruption__RogueLogical(RogueLogical);
+     |#endif
+
+    nativeHeader
+    @|#if ROGUE_TARGET_IOS
+     |  static void Warlock_handle_ios_audio_interruption( NSNotification* notification )
+     |  {
+     |    NSDictionary *info = notification.userInfo;
+     |    AVAudioSessionInterruptionType type =
+     |        (AVAudioSessionInterruptionType)
+     |          [info[AVAudioSessionInterruptionTypeKey] unsignedIntegerValue];
+     |    WarlockAudioManager__handle_ios_audio_interruption__RogueLogical(
+     |      (RogueLogical)(type == AVAudioSessionInterruptionTypeBegan)
+     |    );
+     |  }
+     |#endif
+
 endClass

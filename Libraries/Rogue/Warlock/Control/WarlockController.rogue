@@ -92,7 +92,7 @@ class WarlockController
 
     method handle_app_resume
       # Only happens on iOS & Android
-      AudioManager.reconfigure
+      AudioManager.resume
       on_app_resume
 
     method handle_focus_gained( window:Window )
