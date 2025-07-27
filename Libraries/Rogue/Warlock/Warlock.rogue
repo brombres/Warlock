@@ -135,3 +135,4 @@ class Warlock [essential singleton]
       controller.configure
 
 endClass
+

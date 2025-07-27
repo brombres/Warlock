@@ -303,7 +303,7 @@ class BGFX : Renderer [singleton]
         @|bgfx::setState( (uint64_t)$bgfx_state_flags );
          |bgfx::submit( $batch.display_id, $shader->program->bgfx_program );
 
-        if (batch.textures) ObjectPool<<Texture[]>>.on_end_use( batch.textures.[clear] )
+        if (batch.textures) RecyclePool<<Texture[]>>.on_end_use( batch.textures.[clear] )
 
       endForEach
       render_queue.clear

@@ -381,7 +381,7 @@ class Renderer [singleton]
       which (textures.count)
         case 0: noAction
         case 1: batch_texture = textures[0]
-        others: batch_textures = ObjectPool<<Texture[]>>.on_use.[ add(textures) ]
+        others: batch_textures = RecyclePool<<Texture[]>>.on_use.[ add(textures) ]
       endWhich
 
       render_queue.add(

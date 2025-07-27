@@ -3,20 +3,25 @@ library Warlock
 class AudioManager [singleton]
   NATIVE
     nativeHeader @|#include "miniaudio.h"
+                  |
+                  |#if ROGUE_PLATFORM_IOS
+                  |  #import <AVFoundation/AVFoundation.h>
+                  |#endif
 
   PROPERTIES
     actions      : Action
 
     active_music = Music[]
 
-    is_configured : Logical
-    is_prepared   : Logical
+    is_configured : Logical # true if we have attempted to configure audio
+    is_prepared   : Logical # true if audio is *successfully* configured
     native "ma_engine engine;"
 
   METHODS
     method on_cleanup
       if (is_prepared)
         is_prepared = false
+        is_configured = false
         native @|ma_engine_uninit( &$this->engine );
       endIf
 
@@ -50,6 +55,22 @@ class AudioManager [singleton]
 
     method pause_music
       (forEach in AudioManager.active_music step -1).pause
+
+    method reconfigure
+      if (is_prepared)
+        if ($target("iOS"))
+          native @|[[AVAudioSession sharedInstance] setActive:YES error:nil];
+        endIf
+
+        native
+        @|ma_device_stop( $this->engine.pDevice );
+         |if (ma_device_start($this->engine.pDevice) != MA_SUCCESS)
+         |{
+            on_cleanup
+            configure
+        native
+        @|}
+      endIf
 
     method resume_music
       (forEach in AudioManager.active_music step -1).play

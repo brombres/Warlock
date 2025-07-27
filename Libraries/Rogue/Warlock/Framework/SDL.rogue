@@ -110,7 +110,6 @@ class SDL : Framework [singleton]
               if local window = Warlock.find_window( &native_id=native("event.tfinger.windowID")->Int )
                 Window = window
                 local display_size = Display.size
-                local id = native("event.tfinger.fingerID")->Int
                 local x  = display_size.x * native("event.tfinger.x")->Real
                 local y  = display_size.y * native("event.tfinger.y")->Real
                 local is_press = native("event.type == SDL_EVENT_FINGER_DOWN")->Logical
@@ -118,18 +117,19 @@ class SDL : Framework [singleton]
                 local type = which{ is_press:<PRESS> || <RELEASE> }
                 if (Warlock.is_suspended) is_cancelled = true
 
-                local pointer_event = ObjectPool<<PointerEvent>>.acquire
-                pointer_event.init( type, XY(x,y), XY(0,0), 0, &=is_cancelled, &is_touch )
-                pointer_event.window = window
-                pointer_event.timestamp = native("event.tfinger.timestamp")->Int
-                Pointer.record( pointer_event )
-                if (not is_press and Pointer.presses.is_empty)
-                  last_multitouch_position = null
-                  last_multitouch_zoom = null
-                endIf
+                use pointer_event = RecyclePool<<PointerEvent>>
+                  pointer_event.init( type, XY(x,y), XY(0,0), 0, &=is_cancelled, &is_touch )
+                  pointer_event.window = window
+                  pointer_event.timestamp = native("event.tfinger.timestamp")->Int / 1000000
+                  pointer_event.pointer_id = native("event.tfinger.fingerID")->Int
+                  Pointer.record( pointer_event )
+                  if (not is_press and Pointer.presses.is_empty)
+                    last_multitouch_position = null
+                    last_multitouch_zoom = null
+                  endIf
 
-                pointer_event.dispatch
-                pointer_event.release
+                  pointer_event.dispatch
+                endUse
               endIf
             endBlock
       native
@@ -139,43 +139,43 @@ class SDL : Framework [singleton]
               if local window = Warlock.find_window( &native_id=native("event.tfinger.windowID")->Int )
                 Window = window
                 local display_size = Display.size
-                local id = native("event.tfinger.fingerID")->Int
                 local x  = display_size.x * native("event.tfinger.x")->Real
                 local y  = display_size.y * native("event.tfinger.y")->Real
                 local dx = display_size.x * native("event.tfinger.dx")->Real
                 local dy = display_size.y * native("event.tfinger.dy")->Real
 
-                local pointer_event = ObjectPool<<PointerEvent>>.acquire
-                pointer_event.init( <MOVE>, XY(x,y), XY(dx,dy), 0, &is_touch )
-                pointer_event.window = window
-                pointer_event.timestamp = native("event.tfinger.timestamp")->Int
+                use pointer_event = RecyclePool<<PointerEvent>>
+                  pointer_event.init( <MOVE>, XY(x,y), XY(dx,dy), 0, &is_touch )
+                  pointer_event.window = window
+                  pointer_event.timestamp = native("event.tfinger.timestamp")->Int / 1000000
+                  pointer_event.pointer_id = native("event.tfinger.fingerID")->Int
 
-                Pointer.record( pointer_event )
-                Window.state.handle( pointer_event )
+                  Pointer.record( pointer_event )
+                  Window.state.handle( pointer_event )
 
-                if (pointer_event.is_multitouch and Pointer.presses.count >= 2)
-                  if local current_multitouch_position = Pointer.average_position
-                    if local last_pos = last_multitouch_position
-                      local delta = current_multitouch_position - last_pos
-                      local dz : Real
-                      local cur_zoom =
-                          (Pointer.presses[1].position - Pointer.presses[0].position).magnitude
-                      if local last_zoom = last_multitouch_zoom
-                        dz = (cur_zoom - last_zoom)
+                  if (pointer_event.is_multitouch and Pointer.presses.count >= 2)
+                    if local current_multitouch_position = Pointer.average_position
+                      if local last_pos = last_multitouch_position
+                        local delta = current_multitouch_position - last_pos
+                        local dz : Real
+                        local cur_zoom =
+                            (Pointer.presses[1].position - Pointer.presses[0].position).magnitude
+                        if local last_zoom = last_multitouch_zoom
+                          dz = (cur_zoom - last_zoom)
+                        endIf
+                        last_multitouch_zoom = cur_zoom
+
+                        use multitouch_event = RecyclePool<<MultitouchEvent>>
+                          multitouch_event.init( XYZ(delta,dz) )
+                          multitouch_event.window = window
+                          multitouch_event.timestamp = native("event.tfinger.timestamp")->Int / 1000000
+                          Window.state.handle( multitouch_event )
+                        endUse
                       endIf
-                      last_multitouch_zoom = cur_zoom
-
-                      if (multitouch_event.refcount) multitouch_event = MultitouchEvent()
-                      multitouch_event.init( XYZ(delta,dz) )
-                      multitouch_event.window = window
-                      multitouch_event.timestamp = native("event.tfinger.timestamp")->Int
-                      Window.state.handle( multitouch_event )
+                      last_multitouch_position = current_multitouch_position
                     endIf
-                    last_multitouch_position = current_multitouch_position
                   endIf
-                endIf
-
-                pointer_event.release
+                endUse
 
               endIf
             endBlock
@@ -191,13 +191,13 @@ class SDL : Framework [singleton]
                 if local previous_position = Pointer.position
                   delta = XY(x,y) - previous_position
                 endIf
-                local pointer_event = ObjectPool<<PointerEvent>>.acquire
-                pointer_event.init( <MOVE>, XY(x,y), delta, 0 )
-                pointer_event.window = window
-                pointer_event.timestamp = native("event.button.timestamp")->Int
-                Pointer.record( pointer_event )
-                Window.state.handle( pointer_event )
-                pointer_event.release
+                use pointer_event = RecyclePool<<PointerEvent>>
+                  pointer_event.init( <MOVE>, XY(x,y), delta, 0 )
+                  pointer_event.window = window
+                  pointer_event.timestamp = native("event.button.timestamp")->Int / 1000000
+                  Pointer.record( pointer_event )
+                  Window.state.handle( pointer_event )
+                endUse
               endIf
             endBlock
       native
@@ -216,13 +216,13 @@ class SDL : Framework [singleton]
                 local index = native("event.button.button")->Int
                 index = which{ index==1:0 || index==3:1 || index==2:2 || index-1 }
                 local type = which{ native("event.type == SDL_EVENT_MOUSE_BUTTON_DOWN")->Logical:<PRESS> || <RELEASE> }
-                local pointer_event = ObjectPool<<PointerEvent>>.acquire
-                pointer_event.init( type, XY(x,y), delta, index )
-                pointer_event.window = window
-                pointer_event.timestamp = native("event.button.timestamp")->Int
-                Pointer.record( pointer_event )
-                Window.state.handle( pointer_event )
-                pointer_event.release
+                use pointer_event = RecyclePool<<PointerEvent>>
+                  pointer_event.init( type, XY(x,y), delta, index )
+                  pointer_event.window = window
+                  pointer_event.timestamp = native("event.button.timestamp")->Int / 1000000
+                  Pointer.record( pointer_event )
+                  Window.state.handle( pointer_event )
+                endUse
               endIf
             endBlock
       native
@@ -231,13 +231,13 @@ class SDL : Framework [singleton]
             block
               if local window = Warlock.find_window( &native_id=native("event.button.windowID")->Int )
                 Window = window
-                local pointer_event = ObjectPool<<PointerEvent>>.acquire
-                pointer_event.init( <ENTER> )
-                pointer_event.window = window
-                pointer_event.timestamp = native("event.button.timestamp")->Int
-                Pointer.record( pointer_event )
-                Window.state.handle( pointer_event )
-                pointer_event.release
+                use pointer_event = RecyclePool<<PointerEvent>>
+                  pointer_event.init( <ENTER> )
+                  pointer_event.window = window
+                  pointer_event.timestamp = native("event.button.timestamp")->Int / 1000000
+                  Pointer.record( pointer_event )
+                  Window.state.handle( pointer_event )
+                endUse
               endIf
             endBlock
       native
@@ -246,13 +246,13 @@ class SDL : Framework [singleton]
             block
               if local window = Warlock.find_window( &native_id=native("event.button.windowID")->Int )
                 Window = window
-                local pointer_event = ObjectPool<<PointerEvent>>.acquire
-                pointer_event.init( <LEAVE> )
-                pointer_event.window = window
-                pointer_event.timestamp = native("event.button.timestamp")->Int
-                Pointer.record( pointer_event )
-                Window.state.handle( pointer_event )
-                pointer_event.release
+                use pointer_event = RecyclePool<<PointerEvent>>
+                  pointer_event.init( <LEAVE> )
+                  pointer_event.window = window
+                  pointer_event.timestamp = native("event.button.timestamp")->Int / 1000000
+                  Pointer.record( pointer_event )
+                  Window.state.handle( pointer_event )
+                endUse
               endIf
             endBlock
       native
@@ -264,11 +264,12 @@ class SDL : Framework [singleton]
                 Window = window
                 local x = native("event.wheel.x")->Int * window.density
                 local y = -native("event.wheel.y")->Int * window.density
-                if (scroll_event.refcount) scroll_event = ScrollEvent()
-                scroll_event.init( XY(x,y) )
-                scroll_event.window = window
-                scroll_event.timestamp = native("event.button.timestamp")->Int
-                Window.state.handle( scroll_event )
+                use scroll_event = RecyclePool<<ScrollEvent>>
+                  scroll_event.init( XY(x,y) )
+                  scroll_event.window = window
+                  scroll_event.timestamp = native("event.button.timestamp")->Int / 1000000
+                  Window.state.handle( scroll_event )
+                endUse
               endIf
             endBlock
       native
@@ -296,20 +297,22 @@ class SDL : Framework [singleton]
                 if (native("$mods & SDL_KMOD_CAPS")->LiteralInt32)    modifiers |= KeyModifier.CAPS_LOCK
                 if (native("$mods & SDL_KMOD_SCROLL")->LiteralInt32)  modifiers |= KeyModifier.SCROLL_LOCK
 
-                if (key_event.refcount) key_event = KeyEvent()
-                key_event.init( keycode, scancode, &=is_press, &=is_repeat, modifiers )
-                key_event.window = window
-                key_event.timestamp = native("event.button.timestamp")->Int
-                Keyboard.on( key_event )
-                Window.state.handle( key_event )
+                use key_event = RecyclePool<<KeyEvent>>
+                  key_event.init( keycode, scancode, &=is_press, &=is_repeat, modifiers )
+                  key_event.window = window
+                  key_event.timestamp = native("event.button.timestamp")->Int / 1000000
+                  Keyboard.on( key_event )
+                  Window.state.handle( key_event )
 
-                if (key_event.is_printable)
-                  if (text_event.refcount) text_event = TextEvent()
-                  text_event.init( key_event.unicode )
-                  text_event.window = window
-                  text_event.timestamp = native("event.button.timestamp")->Int
-                  Window.state.handle( text_event )
-                endIf
+                  if (key_event.is_printable)
+                    use text_event = RecyclePool<<TextEvent>>
+                      text_event.init( key_event.unicode )
+                      text_event.window = window
+                      text_event.timestamp = native("event.button.timestamp")->Int / 1000000
+                      Window.state.handle( text_event )
+                    endUse
+                  endIf
+                endUse
 
               endIf
             endBlock
@@ -519,3 +522,10 @@ augment Warlock::Window
       return native("SDL_GetWindowID( $this->sdl_window )")->Int
 
 endAugment
+
+augment Rogue::System
+  GLOBAL METHODS
+    method execution_time_ms->Int64 [replace]
+      return native("(RogueInt64)SDL_GetTicks()")->Int64
+endAugment
+
