@@ -7,7 +7,6 @@ class Framework [abstract singleton]
     # Event object cache. These are reused for each event by default. To
     # prevent a particular event from being later reused in event-handling
     # code, call .retain() on it and later .release() when finished.
-    pointer_event    = PointerEvent()
     multitouch_event = MultitouchEvent()
     scroll_event     = ScrollEvent()
     key_event        = KeyEvent()
