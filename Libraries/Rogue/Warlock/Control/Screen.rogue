@@ -1,6 +1,6 @@
 library Warlock
 
-class Screen : Rogue::ActiveState<<Screen,change_screen,exit_screen>>, WarlockState
+class Screen : Rogue::ActiveState<<Screen,change_screen>>, WarlockState
   METHODS
     method change_state( new_state:State )
       Window.state.change_state( new_state )
@@ -31,5 +31,11 @@ class Screen : Rogue::ActiveState<<Screen,change_screen,exit_screen>>, WarlockSt
 
     method dispatch_update
       Display.update
+
+    method exit_screen
+      exit
+
+    method state->State
+      return Window.state
 
 endClass

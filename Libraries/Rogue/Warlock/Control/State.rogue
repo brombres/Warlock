@@ -1,6 +1,6 @@
 library Warlock
 
-class State : Rogue::ProgressState<<State,change_state,exit_state>>, WarlockState
+class State : Rogue::ProgressState<<State,change_state>>, WarlockState
   METHODS
     method change_screen( new_screen:Screen )
       Window.screen.change_screen( new_screen )
@@ -32,4 +32,9 @@ class State : Rogue::ProgressState<<State,change_state,exit_state>>, WarlockStat
         endIf
       endIf
 
+    method exit_state
+      exit
+
+    method screen->Screen
+      return Window.screen
 endClass

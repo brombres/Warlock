@@ -2,29 +2,41 @@ library Warlock
 
 class OffscreenBuffer : Component
   PROPERTIES
-    render_target : RenderTarget
+    render_target     : RenderTarget
+    is_fullscreen     : Logical
+    original_position : XY
 
   METHODS
+    method buffer_bounds->Box
+      if (is_fullscreen) return Display.bounds
+      else               return display_bounds
+
     method draw( buffer:Image )
-      buffer.draw( Display.bounds )
+      buffer.draw( buffer_bounds )
+
+    method fullscreen
+      is_fullscreen = true
 
     method on_clear
       Display.clear( Color(0) )
 
     method on_begin_update [override]
-      ensure<<render_target>>( Display.size )
+      ensure<<render_target>>( buffer_bounds.size )
 
     method on_begin_draw [override]
-      render_target.update_size( Display.size )
+      render_target.update_size( buffer_bounds.size )
 
       if (use_offscreen_buffer)
         render_target.on_use
         on_clear
+        original_position = position
+        position = XY(0,0)
       endIf
 
     method on_end_draw [override]
       if (use_offscreen_buffer)
         render_target.on_end_use( render_target )
+        position = original_position
         draw( render_target.image )
       endIf
 
