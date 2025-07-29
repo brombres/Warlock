@@ -4,29 +4,25 @@ class AudioManager [singleton]
   PROPERTIES
     actions      : Action
 
-    active_music = Music[]
+    all_sounds   = Sound[]  # includes sounds and music
+    active_music = Music[]  # actively playing or paused music only
 
-    is_configured : Logical # true if we have attempted to configure audio
-    is_prepared   : Logical # true if audio is *successfully* configured
-    is_suspended  : Logical
+    is_configured    : Logical # true if we have attempted to configure audio
+    is_prepared      : Logical # true if audio is *successfully* configured
+    is_suspended     : Logical
+    configuration_id : Int
+
     native "ma_engine engine;"
     native "id audio_interruption_observer;"
 
   METHODS
+    method clear
+      (forEach in all_sounds).unload
+      all_sounds.clear
+      active_music.clear
+
     method on_cleanup
-      if (is_prepared)
-        if ($target("iOS"))
-          native
-          @|if ($this->audio_interruption_observer)
-           |{
-           |  [[NSNotificationCenter defaultCenter] removeObserver:$this->audio_interruption_observer];
-           |  $this->audio_interruption_observer = nil;
-           |}
-        endIf
-        is_prepared = false
-        is_configured = false
-        native @|ma_engine_uninit( &$this->engine );
-      endIf
+      unload
 
     method configure->Logical
       if (is_configured) return is_prepared
@@ -34,12 +30,24 @@ class AudioManager [singleton]
 
       local success : Logical
 
-      native
-      @|ma_result result = ma_engine_init(NULL, &$this->engine);
-       |$success = (result == MA_SUCCESS);
+      if ($target("iOS"))
+        native @|$success = (RogueLogical)[[AVAudioSession sharedInstance] setActive:YES error:nil];
+      endIf
+
+      if (success)
+        native
+        @|ma_result result = ma_engine_init(NULL, &$this->engine);
+         |$success = (result == MA_SUCCESS);
+      endIf
 
       if (not success)
-        println "Error initializing miniaudio"
+        Log.println "[Error initializing MiniAudio]"
+        if (configuration_id)
+          # We were previously configured at some point. Try configuring again
+          # the next time a sound is played etc.
+          is_configured = false
+          unload
+        endIf
         return false
       endIf
 
@@ -58,6 +66,10 @@ class AudioManager [singleton]
       endIf
 
       is_prepared = true
+      ++configuration_id
+      resume_music
+
+      return true
 
     method fade_out_music( duration=1.0:Real )
       local fade_actions : Action
@@ -80,38 +92,54 @@ class AudioManager [singleton]
     method reactivate
       if (is_prepared)
         if ($target("iOS"))
-          native @|[[AVAudioSession sharedInstance] setActive:YES error:nil];
+          native @|NSError* error = nil;
+                  |[[AVAudioSession sharedInstance] setActive:YES error:&error];
+                  |if (error)
+                  |{
+                  |  NSLog( @"Error reactivating AVAudioSession: %@\n", error );
+          native @|}
         endIf
       endIf
 
     method reconfigure
       if (is_prepared)
         reactivate
-
         native
         @|ma_device_stop( $this->engine.pDevice );
          |if (ma_device_start($this->engine.pDevice) != MA_SUCCESS)
          |{
-            on_cleanup
-            configure
+        Log.println "[Failed to start MiniAudio device - reloading audio system]"
+            unload
+            reconfigure_auto_retry
         native
         @|}
 
+      else
+        configure
+
+      endIf
+
+    method reconfigure_auto_retry
+      if (not configure)
+        Log.println "[Reloading audio system (auto-retry)]"
+        actions = Action.wait( 0.5 ) + Action( ()=> AudioManager.reconfigure_auto_retry ) + actions
       endIf
 
     method resume
       if (not is_suspended) return
 
       reconfigure
-      resume_music
-
-      #local original_actions = actions
-      #actions = null
-      #(forEach in active_music step -1).fade_in( 0.5 )
-      #actions += original_actions
+      if (is_prepared)
+        resume_music
+      endIf
 
     method resume_music
-      (forEach in active_music step -1).play
+      forEach (music in active_music step -1)
+        if (not music.is_paused)
+          music.pause
+          music.play
+        endIf
+      endForEach
 
     method stop_music
       (forEach in active_music step -1).stop
@@ -119,6 +147,24 @@ class AudioManager [singleton]
     method suspend
       if (is_suspended) return
       is_suspended = true
+
+    method unload
+      if (is_prepared)
+        (forEach in all_sounds).unload
+
+        if ($target("iOS"))
+          native
+          @|if ($this->audio_interruption_observer)
+           |{
+           |  [[NSNotificationCenter defaultCenter] removeObserver:$this->audio_interruption_observer];
+           |  $this->audio_interruption_observer = nil;
+           |}
+        endIf
+        is_prepared = false
+        native @|ma_engine_uninit( &$this->engine );
+      endIf
+      is_configured = false
+      native @|memset( &$this->engine, 0, sizeof(ma_engine) );
 
     method update
       if (actions) actions = actions.updated

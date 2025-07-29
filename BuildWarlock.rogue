@@ -410,7 +410,7 @@ routine rogo_ios
 endRoutine
 
 routine rogo_ios_open
-  open_xcode( "Platforms/iOS" )
+  open_xcode( "Platforms/Xcode" )
 endRoutine
 
 routine rogo_macos
@@ -419,7 +419,7 @@ routine rogo_macos
 endRoutine
 
 routine rogo_macos_open
-  open_xcode( "Platforms/macOS" )
+  open_xcode( "Platforms/Xcode" )
 endRoutine
 
 routine rogo_build_debug( &rebuild )
