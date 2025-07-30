@@ -28,7 +28,7 @@ class AudioManager [singleton]
       if (is_configured) return is_prepared
       is_configured = true
 
-      local success : Logical
+      local success = true
 
       if ($target("iOS"))
         native @|$success = (RogueLogical)[[AVAudioSession sharedInstance] setActive:YES error:nil];
@@ -97,7 +97,7 @@ class AudioManager [singleton]
                   |if (error)
                   |{
                   |  NSLog( @"Error reactivating AVAudioSession: %@\n", error );
-          native @|}
+                  |}
         endIf
       endIf
 
