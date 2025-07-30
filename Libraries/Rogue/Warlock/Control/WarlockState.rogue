@@ -202,6 +202,12 @@ class WarlockState [aspect]
       if (result.exists) return result
       return dispatch_find( id, arg, &up )
 
+    method handle_finish [append]
+      prior.handle_finish
+      if (@ui)
+        @ui.deactivate
+      endIf
+
     method on( e:KeyEvent )
 
     method on( e:MultitouchEvent )
@@ -257,8 +263,5 @@ class WarlockState [aspect]
       prior.update
       if (@ui) @ui.update( Display.bounds )
       dispatch_update
-
-    method .handle_finish [append]
-      if (@ui) @ui.deactivate
 
 endClass

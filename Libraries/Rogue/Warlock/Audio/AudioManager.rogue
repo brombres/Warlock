@@ -108,7 +108,7 @@ class AudioManager [singleton]
         @|ma_device_stop( $this->engine.pDevice );
          |if (ma_device_start($this->engine.pDevice) != MA_SUCCESS)
          |{
-        Log.println "[Failed to start MiniAudio device - reloading audio system]"
+            Log.println "[Failed to start MiniAudio device - reloading audio system]"
             unload
             reconfigure_auto_retry
         native
