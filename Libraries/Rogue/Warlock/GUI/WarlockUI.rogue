@@ -13,7 +13,7 @@ augment GUI::Event
   METHODS
     method dispatch [propagated,append]
       if (not (this isType Event))
-        Window.state.handle( this )
+        window.state.handle( this )
       endIf
 endAugment
 

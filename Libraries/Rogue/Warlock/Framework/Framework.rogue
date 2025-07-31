@@ -2,11 +2,18 @@ library Warlock
 
 class Framework [abstract singleton]
   PROPERTIES
-    is_configured : Logical
+    is_configured            : Logical
+    pending_touch_events     = PointerEvent[]
+    last_multitouch_position : XY?
+    last_multitouch_zoom     : Real?
 
   METHODS
     method configure
       print_error
+
+    method clear_pending_touch_events
+      (forEach in pending_touch_events).release
+      pending_touch_events.clear
 
     method close_window( window:Window )
       noAction
@@ -16,6 +23,51 @@ class Framework [abstract singleton]
       print_error
       return false
 
+    method dispatch_pending_events
+      forEach (pointer_event at i in pending_touch_events)
+        pointer_event.tick_delay -= Window.delta_ticks
+        if (pointer_event.tick_delay <= 0)
+          if (not Warlock.is_suspended)
+            if (pointer_event.type != <MOVE>)
+              Pointer.record( pointer_event )
+              if (pointer_event.type != <PRESS> and Pointer.presses.is_empty)
+                last_multitouch_position = null
+                last_multitouch_zoom = null
+              endIf
+              pointer_event.dispatch
+            else
+              Pointer.record( pointer_event )
+              pointer_event.dispatch
+
+              if (pointer_event.is_multitouch and Pointer.presses.count >= 2)
+                if local current_multitouch_position = Pointer.average_position
+                  if local last_pos = last_multitouch_position
+                    local delta = current_multitouch_position - last_pos
+                    local dz : Real
+                    local cur_zoom =
+                        (Pointer.presses[1].position - Pointer.presses[0].position).magnitude
+                    if local last_zoom = last_multitouch_zoom
+                      dz = (cur_zoom - last_zoom)
+                    endIf
+                    last_multitouch_zoom = cur_zoom
+
+                    use multitouch_event = RecyclePool<<MultitouchEvent>>
+                      multitouch_event.init( XYZ(delta,dz) )
+                      multitouch_event.window = pointer_event.window
+                      multitouch_event.timestamp = pointer_event.timestamp
+                      Window.state.handle( multitouch_event )
+                    endUse
+                  endIf
+                  last_multitouch_position = current_multitouch_position
+                endIf
+              endIf
+            endIf
+          endIf
+          pointer_event.release
+        endIf
+      endForEach
+      pending_touch_events.discard( $.tick_delay <= 0 )
+
     method error->String
       return "No Framework selected. Include SDL to use the SDL framework."
 
@@ -23,8 +75,26 @@ class Framework [abstract singleton]
       # Returns false if the app should exit.
       return false
 
+    method queue_touch_event( e:PointerEvent )
+      if (Warlock.is_suspended) return
+
+      local top_danger_h    = (Display.safe_area.position.y) * 2
+      local bottom_danger_h = (Display.size.y - Display.safe_area.y2) * 2
+      local safe_h = Display.safe_area.size.y - (top_danger_h + bottom_danger_h)
+      local conservative_safe_area = Box( 0, top_danger_h, Display.size.x, safe_h )
+      if (pending_touch_events.count or not conservative_safe_area.contains(e.position))
+        e.tick_delay = 3
+      else
+        e.tick_delay = 0
+      endIf
+      e.retain
+      pending_touch_events.add( e )
+
     method print_error
       println this.error
+
+    method update
+      dispatch_pending_events
 
     method update_window_size( window:Window ) [abstract]
 endClass

@@ -16,7 +16,7 @@ class SDL : Framework [singleton]
     nativeCode
     @|bool WarlockSDL_event_filter( void* data, SDL_Event* event )
      |{
-     |  //if (event->type == SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED)
+     |  //if (event->type == SDL_EVENT_WILL_ENTER_BACKGROUND) printf("----will enter BG----\n");
      |  int is_window_moved = (event->type == SDL_EVENT_WINDOW_MOVED);
      |  if (event->type == SDL_EVENT_WINDOW_RESIZED || is_window_moved)
      |  {
@@ -32,10 +32,6 @@ class SDL : Framework [singleton]
         SDL.update_window_size( window )
         Renderer.on_window_resized( window )
       endIf
-
-  PROPERTIES
-    last_multitouch_position : XY?
-    last_multitouch_zoom     : Real?
 
   METHODS
     method init
@@ -122,13 +118,7 @@ class SDL : Framework [singleton]
                   pointer_event.window = window
                   pointer_event.timestamp = native("event.tfinger.timestamp")->Int / 1000000
                   pointer_event.pointer_id = native("event.tfinger.fingerID")->Int
-                  Pointer.record( pointer_event )
-                  if (not is_press and Pointer.presses.is_empty)
-                    last_multitouch_position = null
-                    last_multitouch_zoom = null
-                  endIf
-
-                  pointer_event.dispatch
+                  queue_touch_event( pointer_event )
                 endUse
               endIf
             endBlock
@@ -149,32 +139,7 @@ class SDL : Framework [singleton]
                   pointer_event.window = window
                   pointer_event.timestamp = native("event.tfinger.timestamp")->Int / 1000000
                   pointer_event.pointer_id = native("event.tfinger.fingerID")->Int
-
-                  Pointer.record( pointer_event )
-                  Window.state.handle( pointer_event )
-
-                  if (pointer_event.is_multitouch and Pointer.presses.count >= 2)
-                    if local current_multitouch_position = Pointer.average_position
-                      if local last_pos = last_multitouch_position
-                        local delta = current_multitouch_position - last_pos
-                        local dz : Real
-                        local cur_zoom =
-                            (Pointer.presses[1].position - Pointer.presses[0].position).magnitude
-                        if local last_zoom = last_multitouch_zoom
-                          dz = (cur_zoom - last_zoom)
-                        endIf
-                        last_multitouch_zoom = cur_zoom
-
-                        use multitouch_event = RecyclePool<<MultitouchEvent>>
-                          multitouch_event.init( XYZ(delta,dz) )
-                          multitouch_event.window = window
-                          multitouch_event.timestamp = native("event.tfinger.timestamp")->Int / 1000000
-                          Window.state.handle( multitouch_event )
-                        endUse
-                      endIf
-                      last_multitouch_position = current_multitouch_position
-                    endIf
-                  endIf
+                  queue_touch_event( pointer_event )
                 endUse
 
               endIf
@@ -340,6 +305,7 @@ class SDL : Framework [singleton]
        |  case SDL_EVENT_WINDOW_MINIMIZED:
             block
               if (not Warlock.is_suspended)
+                Framework.clear_pending_touch_events
                 Warlock.controller.handle_app_pause
                 Warlock.is_suspended = true
               endIf

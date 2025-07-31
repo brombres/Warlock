@@ -29,6 +29,7 @@ class WarlockController
     method begin_tick
       OverlayLog.update
       update_audio
+      Framework.update
       Pointer.update
       if (Warlock.actions) Warlock.actions .= updated
 
