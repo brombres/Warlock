@@ -5,6 +5,9 @@ class ColorFillComponent : Component
     method create( color:Color )->ColorFillSolidComponent
       return ColorFillSolidComponent( color )
 
+    method create( color:Color, content:Component )->ColorFillSolidComponent
+      return ColorFillSolidComponent( color, content )
+
     method create( a:Color, b:Color, &h, &v )->ColorFillGradientComponent
       if (h) return ColorFillGradientComponent( a, b, b, a )
       else   return ColorFillGradientComponent( a, a, b, b )
@@ -26,6 +29,9 @@ class ColorFillSolidComponent : ColorFillComponent
   METHODS
     method init( color )
       noAction
+
+    method init( color, content:Component )
+      prior.init( content )
 
     method on_draw
       display_bounds.draw( @color )
