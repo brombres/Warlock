@@ -33,6 +33,10 @@ class SDL : Framework [singleton]
         Renderer.on_window_resized( window )
       endIf
 
+  PROPERTIES
+    precise_mouse_event_info = PreciseMouseEventInfo[]
+    last_mouse_event_window  : Window
+
   METHODS
     method init
       Framework = this
@@ -227,10 +231,35 @@ class SDL : Framework [singleton]
             block
               if local window = Warlock.find_window( &native_id=native("event.wheel.windowID")->Int )
                 Window = window
+                last_mouse_event_window = window
                 local x = native("event.wheel.x")->Int * window.density
                 local y = -native("event.wheel.y")->Int * window.density
+                local is_flipped = native("event.wheel.direction == SDL_MOUSEWHEEL_FLIPPED")->Logical
+
                 use scroll_event = RecyclePool<<ScrollEvent>>
-                  scroll_event.init( XY(x,y) )
+                  local delta = XY( x, y )
+                  scroll_event.init( delta )
+                  delta *= XY( -1, -1 )
+
+                  # Find oldest precision scroll info that matches SDL delta
+                  local density = window.density
+                  contingent
+                    forEach (info at i in precise_mouse_event_info)
+                      if (info.delta * density == delta)
+                        scroll_event.is_precise = true
+                        scroll_event.in_progress = info.in_progress
+                        scroll_event.is_momentum = info.is_momentum
+                        precise_mouse_event_info.discard_first( i + 1 )
+                        escapeContingent
+                      endIf
+                    endForEach
+
+                    if (precise_mouse_event_info.count > 10)
+                      precise_mouse_event_info.discard_first( precise_mouse_event_info.count - 10 )
+                    endIf
+
+                  endContingent
+
                   scroll_event.window = window
                   scroll_event.timestamp = native("event.button.timestamp")->Int / 1000000
                   Window.state.handle( scroll_event )
@@ -330,6 +359,24 @@ class SDL : Framework [singleton]
        |}
 
       return keep_running
+
+    method handle_scroll_event_precision_info( delta:XY, in_progress:Logical, is_momentum:Logical )
+      if (delta == XY(0,0))
+        # We won't get an SDL event for this. If it's not in_progress then we need to
+        # dispatch a final ScrollEvent for anything waiting on it.
+        if (not in_progress and last_mouse_event_window)
+          precise_mouse_event_info.clear
+          Window = last_mouse_event_window
+          use scroll_event = RecyclePool<<ScrollEvent>>
+            scroll_event.init( XY(0,0), &is_precise, &!in_progress, &=is_momentum, Window.density )
+            scroll_event.window = last_mouse_event_window
+            scroll_event.timestamp = System.execution_time
+            Window.state.handle( scroll_event )
+          endUse
+        endIf
+      else
+        precise_mouse_event_info.add( PreciseMouseEventInfo(delta, in_progress, is_momentum) )
+      endIf
 
     method update_window_size( window:Window )
       native
@@ -477,6 +524,8 @@ class SDL : Framework [singleton]
       return Keycode.UNDEFINED
 
 endClass
+
+class PreciseMouseEventInfo( delta:XY, in_progress:Logical, is_momentum:Logical ) [compound];
 
 augment Warlock::Window
   PROPERTIES

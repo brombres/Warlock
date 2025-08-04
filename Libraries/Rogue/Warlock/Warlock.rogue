@@ -43,6 +43,9 @@ class Warlock [essential singleton]
 
       return keep_running
 
+    method handle_scroll_event_precision_info( delta:XY, in_progress:Logical, is_momentum:Logical ) [api]
+      Framework.handle_scroll_event_precision_info( delta, in_progress, is_momentum)
+
     method tick->Logical [api]
       if (not Warlock.is_suspended)
         Warlock.controller.tick

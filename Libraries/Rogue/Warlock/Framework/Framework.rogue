@@ -75,6 +75,9 @@ class Framework [abstract singleton]
       # Returns false if the app should exit.
       return false
 
+    method handle_scroll_event_precision_info( delta:XY, in_progress:Logical, is_momentum:Logical )
+      noAction
+
     method queue_touch_event( e:PointerEvent )
       if (Warlock.is_suspended) return
 
