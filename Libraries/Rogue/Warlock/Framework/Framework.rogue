@@ -86,7 +86,7 @@ class Framework [abstract singleton]
       local safe_h = Display.safe_area.size.y - (top_danger_h + bottom_danger_h)
       local conservative_safe_area = Box( 0, top_danger_h, Display.size.x, safe_h )
       if (pending_touch_events.count or not conservative_safe_area.contains(e.position))
-        e.tick_delay = 3
+        e.tick_delay = 4
       else
         e.tick_delay = 0
       endIf

@@ -342,7 +342,14 @@ class SDL : Framework [singleton]
       native
       @|    break;
        |  case SDL_EVENT_DID_ENTER_BACKGROUND:
-        AudioManager.suspend
+            AudioManager.suspend
+            Pointer.clear
+            if (not Warlock.is_suspended)
+              corner_case = true
+              Framework.clear_pending_touch_events
+              Warlock.controller.handle_app_pause
+              Warlock.is_suspended = true
+            endIf
       native
       @|    break;
        |  case SDL_EVENT_DID_ENTER_FOREGROUND:
