@@ -49,7 +49,7 @@ class SDL : Framework [singleton]
               |SDL_SetHint( SDL_HINT_TOUCH_MOUSE_EVENTS, "0" );
 
       if (not native("SDL_Init(SDL_INIT_VIDEO)")->Logical)
-        println "[SDL Error] Failed to initialize SDL: $."(error)
+        println "[WARLOCK] Failed to initialize SDL: $."(error)
         return
       endIf
 
@@ -75,7 +75,7 @@ class SDL : Framework [singleton]
        |  );
 
       if (not native("!!$window->sdl_window")->Logical)
-        println "Failed to create SDL window: $."(SDL.error)
+        println "[WARLOCK] Failed to create SDL window: $."(SDL.error)
         return false
       endIf
 
@@ -152,7 +152,7 @@ class SDL : Framework [singleton]
       @|    break;
        |  case SDL_EVENT_MOUSE_MOTION:
             block
-              if local window = Warlock.find_window( &native_id=native("event.button.windowID")->Int )
+              if local window = Warlock.find_window( &native_id=native("event.motion.windowID")->Int )
                 Window = window
                 local x = native("event.motion.x")->Int * window.density
                 local y = native("event.motion.y")->Int * window.density
@@ -163,7 +163,7 @@ class SDL : Framework [singleton]
                 use pointer_event = RecyclePool<<PointerEvent>>
                   pointer_event.init( <MOVE>, XY(x,y), delta, 0 )
                   pointer_event.window = window
-                  pointer_event.timestamp = native("event.button.timestamp")->Int / 1000000
+                  pointer_event.timestamp = native("event.motion.timestamp")->Int / 1000000
                   Pointer.record( pointer_event )
                   Window.state.handle( pointer_event )
                 endUse
@@ -198,12 +198,12 @@ class SDL : Framework [singleton]
       @|    break;
        |  case SDL_EVENT_WINDOW_MOUSE_ENTER:
             block
-              if local window = Warlock.find_window( &native_id=native("event.button.windowID")->Int )
+              if local window = Warlock.find_window( &native_id=native("event.window.windowID")->Int )
                 Window = window
                 use pointer_event = RecyclePool<<PointerEvent>>
                   pointer_event.init( <ENTER> )
                   pointer_event.window = window
-                  pointer_event.timestamp = native("event.button.timestamp")->Int / 1000000
+                  pointer_event.timestamp = native("event.window.timestamp")->Int / 1000000
                   Pointer.record( pointer_event )
                   Window.state.handle( pointer_event )
                 endUse
@@ -213,12 +213,12 @@ class SDL : Framework [singleton]
       @|    break;
        |  case SDL_EVENT_WINDOW_MOUSE_LEAVE:
             block
-              if local window = Warlock.find_window( &native_id=native("event.button.windowID")->Int )
+              if local window = Warlock.find_window( &native_id=native("event.window.windowID")->Int )
                 Window = window
                 use pointer_event = RecyclePool<<PointerEvent>>
                   pointer_event.init( <LEAVE> )
                   pointer_event.window = window
-                  pointer_event.timestamp = native("event.button.timestamp")->Int / 1000000
+                  pointer_event.timestamp = native("event.window.timestamp")->Int / 1000000
                   Pointer.record( pointer_event )
                   Window.state.handle( pointer_event )
                 endUse
@@ -261,7 +261,7 @@ class SDL : Framework [singleton]
                   endContingent
 
                   scroll_event.window = window
-                  scroll_event.timestamp = native("event.button.timestamp")->Int / 1000000
+                  scroll_event.timestamp = native("event.wheel.timestamp")->Int / 1000000
                   Window.state.handle( scroll_event )
                 endUse
               endIf
@@ -294,7 +294,7 @@ class SDL : Framework [singleton]
                 use key_event = RecyclePool<<KeyEvent>>
                   key_event.init( keycode, scancode, &=is_press, &=is_repeat, modifiers )
                   key_event.window = window
-                  key_event.timestamp = native("event.button.timestamp")->Int / 1000000
+                  key_event.timestamp = native("event.key.timestamp")->Int / 1000000
                   Keyboard.on( key_event )
                   Window.state.handle( key_event )
 
@@ -302,7 +302,7 @@ class SDL : Framework [singleton]
                     use text_event = RecyclePool<<TextEvent>>
                       text_event.init( key_event.unicode )
                       text_event.window = window
-                      text_event.timestamp = native("event.button.timestamp")->Int / 1000000
+                      text_event.timestamp = native("event.key.timestamp")->Int / 1000000
                       Window.state.handle( text_event )
                     endUse
                   endIf
@@ -314,7 +314,7 @@ class SDL : Framework [singleton]
       @|    break;
        |  case SDL_EVENT_WINDOW_FOCUS_GAINED:
             block
-              if local window = Warlock.find_window( &native_id=native("event.button.windowID")->Int )
+              if local window = Warlock.find_window( &native_id=native("event.window.windowID")->Int )
                 Window = window
                 Warlock.controller.handle_focus_gained( window )
               endIf
@@ -323,7 +323,7 @@ class SDL : Framework [singleton]
       @|    break;
        |  case SDL_EVENT_WINDOW_FOCUS_LOST:
             block
-              if local window = Warlock.find_window( &native_id=native("event.button.windowID")->Int )
+              if local window = Warlock.find_window( &native_id=native("event.window.windowID")->Int )
                 Window = window
                 Warlock.controller.handle_focus_lost( window )
               endIf
@@ -344,12 +344,6 @@ class SDL : Framework [singleton]
        |  case SDL_EVENT_DID_ENTER_BACKGROUND:
             AudioManager.suspend
             Pointer.clear
-            if (not Warlock.is_suspended)
-              corner_case = true
-              Framework.clear_pending_touch_events
-              Warlock.controller.handle_app_pause
-              Warlock.is_suspended = true
-            endIf
       native
       @|    break;
        |  case SDL_EVENT_DID_ENTER_FOREGROUND:
@@ -536,9 +530,11 @@ class PreciseMouseEventInfo( delta:XY, in_progress:Logical, is_momentum:Logical 
 
 augment Warlock::Window
   PROPERTIES
-    native "SDL_Window* sdl_window;"
-    native "void* native_window_handle;"
     current_display_id : Int
+    native "SDL_Window* sdl_window;"
+    native @|#if defined(ROGUE_TARGET_APPLE)
+            |  SDL_MetalView native_metal_view;
+            |#endif
 
   METHODS
     method native_display_id->Int

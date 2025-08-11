@@ -64,6 +64,11 @@ class Window : Display [singleton]
     method handle( e:TextEvent )
       if (@ui) @ui.handle( e )
 
+
+    method handle_app_resume
+      Framework.handle_app_resume( this )
+      Renderer.handle_app_resume( this )
+
     method native_id->Int
       noAction  # defined by extended Platform, e.g. SDL
 

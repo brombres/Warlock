@@ -403,6 +403,9 @@ class Renderer [singleton]
       first_vertex = vertex_count
       first_index  = index_count
 
+    method handle_app_resume( window:Window )
+      noAction
+
     method on_begin_render( render_target:RenderTarget )
       display_id = render_target.id
       draw_triangles

@@ -16,6 +16,8 @@ class BGFX : Renderer [singleton]
 
     auto_clear_while_resizing : Logical
 
+    previous_native_window_handle : Int64
+
   METHODS
     method init
       Renderer = this
@@ -33,7 +35,11 @@ class BGFX : Renderer [singleton]
 
       native
       @|bgfx::PlatformData pd;
-       |pd.nwh = $window->native_window_handle;
+       |#if defined(ROGUE_TARGET_APPLE)
+       |  pd.nwh = SDL_Metal_GetLayer( $window->native_metal_view );
+       |#else
+       |  #error Must implement Native Window Handle retrieval in BGFX.configure_bgfx() for current platform.
+       |#endif
        |bgfx::setPlatformData( pd );
 
     method configure_bgfx( window:Window )
@@ -45,8 +51,7 @@ class BGFX : Renderer [singleton]
       endLoop
 
       native
-      @|SDL_Window* window = $window->sdl_window;
-       |uint16_t w = static_cast<uint16_t>( $window->pixel_size.x );
+      @|uint16_t w = static_cast<uint16_t>( $window->pixel_size.x );
        |uint16_t h = static_cast<uint16_t>( $window->pixel_size.y );
        |
        |bgfx::Init init;
@@ -58,11 +63,12 @@ class BGFX : Renderer [singleton]
        |
        |bgfx::PlatformData platform_data{};
        |#if defined(ROGUE_TARGET_APPLE)
-       |  $window->native_window_handle = SDL_Metal_GetLayer( SDL_Metal_CreateView(window) );
+       |    $window->native_metal_view = SDL_Metal_CreateView( $window->sdl_window );
+       |    platform_data.nwh = SDL_Metal_GetLayer( $window->native_metal_view );
+       |    $this->previous_native_window_handle = (RogueInt64) platform_data.nwh;
        |#else
        |  #error Must implement Native Window Handle retrieval in BGFX.configure_bgfx() for current platform.
        |#endif
-       |platform_data.nwh = $window->native_window_handle;
        |init.platformData = platform_data;
        |
       if (not native("bgfx::init(init)")->Logical)
@@ -132,6 +138,23 @@ class BGFX : Renderer [singleton]
       activate_window_graphics_context( window )
 
       native @|bgfx::touch( $window->id );
+
+    method handle_app_resume( window:Window ) [override]
+
+      local native_window_handle : Int64
+
+      #{
+      if (native("!!$window->native_metal_view")->Logical)
+        native @|SDL_Metal_DestroyView( $window->native_metal_view );
+      endIf
+      native @|$window->native_metal_view = SDL_Metal_CreateView( $window->sdl_window );
+      }#
+
+      native @|$native_window_handle = (RogueInt64) SDL_Metal_GetLayer( $window->native_metal_view );
+      if (native_window_handle != previous_native_window_handle)
+        #previous_native_window_handle = native_window_handle
+        println "dbg native_window_handle $"(native_window_handle->String(&hex))
+      endIf
 
     method on_begin_render( render_target:RenderTarget ) [override]
       prior.on_begin_render( render_target )

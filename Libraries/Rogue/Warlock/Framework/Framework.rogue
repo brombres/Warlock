@@ -71,6 +71,9 @@ class Framework [abstract singleton]
     method error->String
       return "No Framework selected. Include SDL to use the SDL framework."
 
+    method handle_app_resume( window:Window )
+      noAction
+
     method handle_native_event->Logical
       # Returns false if the app should exit.
       return false
