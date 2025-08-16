@@ -15,9 +15,9 @@ class Music : Sound
       # Fades all other active music out and this music in over the specified duration
       local actions : Action
       forEach (music in AudioManager.active_music)
-        actions |= Action( () => music.fade_out(duration) )
+        actions |= music.fade_out_action( duration )
       endForEach
-      actions |= Action( () => this.fade_in(duration) )
+      actions |= this.fade_in_action( duration )
       AudioManager.actions += actions
 
     method play( concurrent:Logical ) [override]

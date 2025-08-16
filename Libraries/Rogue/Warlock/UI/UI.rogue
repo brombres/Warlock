@@ -7,3 +7,16 @@ $include Warlock/UI/OffscreenBuffer
 $include Warlock/UI/WarlockUI
 $include Warlock/UI/Text
 
+
+augment UI::UI
+  PROPERTIES
+    safe_area : Box
+
+  METHODS
+    method bounds_changed( bounds:Box )->Logical [insert]
+      if (safe_area != Window.safe_area) return true
+
+    method update_bounds( bounds:Box ) [insert]
+      safe_area = Window.safe_area
+
+endAugment

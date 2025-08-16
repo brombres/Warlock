@@ -135,11 +135,16 @@ class AudioManager [singleton]
       endIf
 
     method resume_music
+      local actions : Action
+
       forEach (music in active_music step -1)
         if (music.is_suspended)
-          music.fade_in( 0.5 )
+          actions |= music.fade_in_action( 0.5 )
         endIf
       endForEach
+
+      # Enqueue on essential_actions in case the suspend fade-out actions are still executing
+      Warlock.essential_actions += actions
 
     method stop_music
       (forEach in active_music step -1).stop
