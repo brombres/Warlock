@@ -9,6 +9,7 @@ class Sound
     is_looping       : Logical
     is_concurrent    : Logical  # only has an effect for Music
     is_paused        : Logical
+    is_suspended     : Logical
     configuration_id : Int  # must match AudioManager.configuraton_id or else reload()
     volume         = 1.0
     native "ma_sound sound;"
@@ -52,21 +53,26 @@ class Sound
       return seconds
 
     method fade_in( duration=1.0:Real, after_delay=0.0:Real )
-Log.println "fade_in $"(this) #FIXME
+      AudioManager.actions |= fade_in_action( &=duration &=after_delay )
+
+    method fade_in_action( duration=1.0:Real, after_delay=0.0:Real )->Action
       current_volume = 0
       local action : Action
       if (after_delay) action += Action.wait( after_delay )
+      action += Action( () => this.play( &concurrent ) )
       action += Action( (p) => this.current_volume = volume * p, &=duration )
-      AudioManager.actions |= action
-      play( &concurrent )
+      return action
 
     method fade_out( duration=1.0:Real, &pause )
-Log.println "fade_out $"(this) #FIXME
+      AudioManager.actions |= fade_out_action( &=duration, &=pause )
+
+    method fade_out_action( duration=1.0:Real, &pause, &suspend )->Action
       local initial_volume = current_volume
       local action = Action( (p) => this.current_volume = initial_volume * (1.0 - p), &=duration )
-      if (pause) action += Action( () => this.pause )
-      else       action += Action( () => this.stop )
-      AudioManager.actions |= action
+      if (pause)       action += Action( () => this.pause )
+      elseIf (suspend) action += Action( () => this.suspend )
+      else             action += Action( () => this.stop )
+      return action
 
     method first_idle->Sound
       if (is_playing or not load)
@@ -102,9 +108,9 @@ Log.println "fade_out $"(this) #FIXME
 
     method play( &concurrent )
       # concurrent flag is ignored here but is utilized in Music override
-if (this instanceOf Music) Log.println "play $"(this) #FIXME
       if (prepare)
         is_paused = false
+        is_suspended = false
         if (is_playing)
           next_in_pool?.play( &=concurrent )
         else
@@ -170,6 +176,12 @@ if (this instanceOf Music) Log.println "play $"(this) #FIXME
       current_volume = _volume
       is_looping = _looping
 
+    method resume
+      if (is_suspended)
+        play
+        is_suspended = false
+      endIf
+
     method set_is_looping( setting:Logical )
       if (is_looping == setting) return
       @is_looping = setting
@@ -195,6 +207,12 @@ if (this instanceOf Music) Log.println "play $"(this) #FIXME
       if (is_prepared)
         native @|ma_sound_stop( &$this->sound );
                 |ma_sound_seek_to_pcm_frame( &$this->sound, 0 );
+      endIf
+
+    method suspend
+      if (not is_paused)
+        pause
+        is_suspended = true
       endIf
 
     method to->String

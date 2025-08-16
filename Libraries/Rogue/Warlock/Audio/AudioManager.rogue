@@ -74,7 +74,7 @@ class AudioManager [singleton]
     method fade_out_music( duration=1.0:Real )
       local fade_actions : Action
       forEach (music in AudioManager.active_music)
-        fade_actions |= Action( () => music.fade_out(duration) )
+        fade_actions |= music.fade_out_action( duration )
       endForEach
       actions += fade_actions
 
@@ -127,6 +127,7 @@ class AudioManager [singleton]
 
     method resume
       if (not is_suspended) return
+      is_suspended = false
 
       reconfigure
       if (is_prepared)
@@ -135,9 +136,8 @@ class AudioManager [singleton]
 
     method resume_music
       forEach (music in active_music step -1)
-        if (not music.is_paused)
-          music.pause
-          music.play
+        if (music.is_suspended)
+          music.fade_in( 0.5 )
         endIf
       endForEach
 
@@ -147,6 +147,14 @@ class AudioManager [singleton]
     method suspend
       if (is_suspended) return
       is_suspended = true
+
+      local fade_actions : Action
+      forEach (music in AudioManager.active_music)
+        if (not music.is_paused)
+          fade_actions |= music.fade_out_action( 0.50, &suspend )
+        endIf
+      endForEach
+      Warlock.essential_actions += fade_actions
 
     method unload
       if (is_prepared)
@@ -183,7 +191,7 @@ class AudioManager [singleton]
     nativeHeader
     @|#if ROGUE_TARGET_IOS
      |  static void Warlock_handle_ios_audio_interruption( NSNotification* notification );
-     |  void WarlockAudioManager__handle_ios_audio_interruption__RogueLogical(RogueLogical);
+     |  void RogueWarlockAudioManager__handle_ios_audio_interruption__RogueLogical(RogueLogical);
      |#endif
 
     nativeHeader
@@ -194,7 +202,7 @@ class AudioManager [singleton]
      |    AVAudioSessionInterruptionType type =
      |        (AVAudioSessionInterruptionType)
      |          [info[AVAudioSessionInterruptionTypeKey] unsignedIntegerValue];
-     |    WarlockAudioManager__handle_ios_audio_interruption__RogueLogical(
+     |    RogueWarlockAudioManager__handle_ios_audio_interruption__RogueLogical(
      |      (RogueLogical)(type == AVAudioSessionInterruptionTypeBegan)
      |    );
      |  }

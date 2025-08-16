@@ -47,18 +47,22 @@ class Warlock [essential singleton]
       Framework.handle_scroll_event_precision_info( delta, in_progress, is_momentum)
 
     method tick->Logical [api]
+      if (Warlock.essential_actions) Warlock.essential_actions .= updated
+
       if (not Warlock.is_suspended)
         Warlock.controller.tick
       endIf
+
       return true  # keep running
 
   PROPERTIES
-    windows      = Window[]
-    textures     = [File:Texture]
-    ticks        : Int
-    actions      : Action
-    controller   = WarlockController()
-    is_suspended : Logical
+    windows           = Window[]
+    textures          = [File:Texture]
+    ticks             : Int
+    actions           : Action
+    essential_actions : Action  # always update, even when app is going into suspension
+    controller        = WarlockController()
+    is_suspended      : Logical
 
   METHODS
     method init
