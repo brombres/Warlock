@@ -20,7 +20,7 @@ class SDL : Framework [singleton]
      |  int is_window_moved = (event->type == SDL_EVENT_WINDOW_MOVED);
      |  if (event->type == SDL_EVENT_WINDOW_RESIZED || is_window_moved)
      |  {
-     |    WarlockSDL__on_window_resized__RogueInt( event->window.windowID );
+     |    RogueWarlockSDL__on_window_resized__RogueInt( event->window.windowID );
      |  }
      |
      |  return true;
@@ -379,7 +379,90 @@ class SDL : Framework [singleton]
         precise_mouse_event_info.add( PreciseMouseEventInfo(delta, in_progress, is_momentum) )
       endIf
 
+
+    method recover_from_bad_state_on_ios( window:Window )
+      if (not System.is_ios) return
+
+      native @|#if defined(ROGUE_TARGET_IOS)
+
+      local in_bad_state : Logical
+
+      native
+      @|SDL_PropertiesID props = SDL_GetWindowProperties( $window->sdl_window );
+       |UIWindow *ui_window = (__bridge UIWindow*)SDL_GetPointerProperty(
+       |  props, SDL_PROP_WINDOW_UIKIT_WINDOW_POINTER, NULL
+       |);
+       |if (ui_window.isKeyWindow == 0 || ui_window.windowScene == nil) $in_bad_state = true;
+
+       if (in_bad_state)
+println "dbg BAD STATE"
+Log.println "dbg [Warlock] Attempting recovery from bad window state"
+         native
+         @|UIWindowScene* active_scene = nil;
+          |for (UIScene *scene in UIApplication.sharedApplication.connectedScenes)
+          |{
+          |  if ([scene isKindOfClass:[UIWindowScene class]] &&
+          |      scene.activationState == UISceneActivationStateForegroundActive)
+          |  {
+          |    active_scene = (UIWindowScene *)scene;
+          |    break;
+          |  }
+          |}
+
+         native
+         @|if (active_scene)
+          |{
+          |  ui_window.windowScene = active_scene;
+          |  [ui_window makeKeyAndVisible];  // possibly redundant with SDL_ShowWindow
+          |
+          |  SDL_Window* sdl_window = $window->sdl_window;
+          |  SDL_HideWindow(sdl_window);  // forces a detach/reattach path in SDL’s UIKit backend
+          |  SDL_ShowWindow(sdl_window);  // rebinds to active UIWindowScene + call makeKeyAndVisible
+          |  SDL_RaiseWindow(sdl_window);
+          |}
+          |
+          |//const int tag = SDL_GetNumberProperty( props, SDL_PROP_WINDOW_UIKIT_METAL_VIEW_TAG_NUMBER, 0 );
+          |//UIView* ui_view = [ui_window viewWithTag:tag];
+          |//SDL_MetalView metal_view = (__bridge SDL_MetalView) ui_view;
+          |//
+          |//// Optional but recommended: refresh CAMetalLayer drawable size
+          |//int pxw, pxh;
+          |//SDL_GetWindowSizeInPixels(sdl_window, &pxw, &pxh);
+          |//os_log(OS_LOG_DEFAULT, "%{public}s %dx%d\n", "dbg pixel size",pxw,pxh);
+          |//
+          |//void *layer = SDL_Metal_GetLayer(metal_view);
+          |//if (layer) {
+          |//    ((__bridge CAMetalLayer*)layer).drawableSize = CGSizeMake(pxw, pxh);
+          |//}
+          |//
+          |//os_log( OS_LOG_DEFAULT, "%{public}s key=%d hidden=%d alpha=%g scene=%@", "dbg async", w.isKeyWindow, w.hidden, w.alpha, w.windowScene);
+      endIf
+
+      #if (update_ios_metal_view(window)) @trace "dbg resume update_metal_view:true"
+
+      #local native_window_handle : Int64
+
+      #{
+      if (native("!!$window->native_metal_view")->Logical)
+        native @|SDL_Metal_DestroyView( $window->native_metal_view );
+      endIf
+      native @|$window->native_metal_view = SDL_Metal_CreateView( $window->sdl_window );
+      }#
+
+      #{
+      native @|$native_window_handle = (RogueInt64) SDL_Metal_GetLayer( $window->native_metal_view );
+      if (native_window_handle != previous_native_window_handle)
+        #previous_native_window_handle = native_window_handle
+        println "dbg native_window_handle $"(native_window_handle->String(&hex))
+      endIf
+      }#
+
+      native @|#endif // ROGUE_TARGET_IOS
+
+
     method update_window_size( window:Window )
+      recover_from_bad_state_on_ios( window )
+
       native
       @|int w, h;
        |SDL_GetWindowSizeInPixels( $window->sdl_window, &w, &h );
