@@ -1,6 +1,6 @@
 library Warlock
 
-augment GUI::UI
+augment UI::UI
   METHODS
     method font->Font [replace]
       if (@font) return @font
@@ -9,7 +9,7 @@ augment GUI::UI
 
 endAugment
 
-augment GUI::Event
+augment UI::Event
   METHODS
     method dispatch [propagated,append]
       if (not (this isType Event))

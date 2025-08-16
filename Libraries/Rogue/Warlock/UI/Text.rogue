@@ -1,7 +1,7 @@
-library GUI
+library UI
 uses Warlock
 
-augment GUI::Text
+augment UI::Text
   PROPERTIES
     app_data_key : VariantEntry
 

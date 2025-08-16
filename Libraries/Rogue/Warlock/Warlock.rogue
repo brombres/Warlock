@@ -4,6 +4,14 @@ nativeHeader @|#include "WarlockInterface.h"
 
 $include Warlock/Macros
 
+uses Control/State [export]
+uses Entity        [export]
+uses Geometry      [export]
+uses Graphics      [export]
+uses Math/Matrix   [export]
+uses UI            [export]
+uses Utility/Timer [export]
+
 $include Warlock/Audio
 $include Warlock/Data
 $include Warlock/Display
@@ -12,17 +20,9 @@ $include Warlock/Control
 $include Warlock/Entity/Entity
 $include Warlock/Geometry
 $include Warlock/Graphics
-$include Warlock/GUI
+$include Warlock/UI
 $include Warlock/Platform
 $include Warlock/Utility
-
-uses Control/State [export]
-uses Entity        [export]
-uses Geometry      [export]
-uses Graphics      [export]
-uses Math/Matrix   [export]
-uses GUI           [export]
-uses Utility/Timer [export]
 
 class Warlock [essential singleton]
   GLOBAL METHODS
