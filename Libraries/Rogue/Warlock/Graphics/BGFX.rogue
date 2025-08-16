@@ -71,6 +71,7 @@ class BGFX : Renderer [singleton]
        |#endif
        |init.platformData = platform_data;
        |
+
       if (not native("bgfx::init(init)")->Logical)
         println "[Warlock] Failed to initialize BGFX."
         return
@@ -139,23 +140,6 @@ class BGFX : Renderer [singleton]
 
       native @|bgfx::touch( $window->id );
 
-    method handle_app_resume( window:Window ) [override]
-
-      local native_window_handle : Int64
-
-      #{
-      if (native("!!$window->native_metal_view")->Logical)
-        native @|SDL_Metal_DestroyView( $window->native_metal_view );
-      endIf
-      native @|$window->native_metal_view = SDL_Metal_CreateView( $window->sdl_window );
-      }#
-
-      native @|$native_window_handle = (RogueInt64) SDL_Metal_GetLayer( $window->native_metal_view );
-      if (native_window_handle != previous_native_window_handle)
-        #previous_native_window_handle = native_window_handle
-        println "dbg native_window_handle $"(native_window_handle->String(&hex))
-      endIf
-
     method on_begin_render( render_target:RenderTarget ) [override]
       prior.on_begin_render( render_target )
 
@@ -196,9 +180,6 @@ class BGFX : Renderer [singleton]
 
         local clear_color = Display.clear_color.rgba
 
-        #native @|$clear_flags |= BGFX_CLEAR_DEPTH | BGFX_CLEAR_COLOR;
-        #local clear_color = Display.clear_color.rgba
-        #if (not Display.should_clear_color) clear_color = 0x000000FF->Int32
         native @|bgfx::setViewClear( $display_id, (uint16_t)$clear_flags, (uint32_t)$clear_color );
       endBlock
 
@@ -215,8 +196,8 @@ class BGFX : Renderer [singleton]
 
       native
       @|{
-       |  WarlockVertex*      src_data = (WarlockVertex*)($data->vertices->data);
-       |  WarlockBGFXVertex* dest_data = (WarlockBGFXVertex*)($vertex_data->data);
+       |  RogueWarlockVertex*      src_data = (RogueWarlockVertex*)($data->vertices->data);
+       |  RogueWarlockBGFXVertex* dest_data = (RogueWarlockBGFXVertex*)($vertex_data->data);
        |  for (int i=(int)$data->vertices->count; --i>=0; )
        |  {
        |    dest_data->x  = (float) src_data->position.x;
@@ -242,7 +223,7 @@ class BGFX : Renderer [singleton]
        |
        |bgfx::update(
        |  $this->bgfx_vertex_buffer, 0,
-       |  bgfx::makeRef( $vertex_data->data, (uint32_t)($data->vertices->count * sizeof(WarlockBGFXVertex)) )
+       |  bgfx::makeRef( $vertex_data->data, (uint32_t)($data->vertices->count * sizeof(RogueWarlockBGFXVertex)) )
        |);
        |
        |{
@@ -356,28 +337,6 @@ class BGFX : Renderer [singleton]
          |);
 
       endIf
-
-      #{
-    method render_pending_frames
-      if (is_initialized)
-        local clear = auto_clear_while_resizing
-clear=true#FIXME
-
-        native
-        @|const bgfx::Stats* stats = bgfx::getStats();
-         |int n = stats->numDraw;
-         |if ( !n ) n = 1;
-         |for (int i=n; --i>=0; )
-         |{
-         |  if ($clear)
-         |  {
-         |    bgfx::setViewClear( $display_id, BGFX_CLEAR_COLOR|BGFX_CLEAR_DEPTH, 0x000000FF, 1.0f, 0 );
-         |    bgfx::touch( $display_id );
-         |  }
-         |  bgfx::frame();
-         |}
-      endIf
-      }#
 
     method set_clip( clip:Box? ) [override]
       if local pixel_clip = clip

@@ -67,7 +67,7 @@ class Spine [essential singleton]
      |extern "C" void _spAtlasPage_createTexture( spAtlasPage* self, const char* path )
      |{
      |  printf( "Load Spine texture: %s\n", path );
-     |  WarlockImage* img = (WarlockImage*) WarlockSpine__load_atlas_image__RogueString( RogueString_create(path) );
+     |  RogueWarlockImage* img = (RogueWarlockImage*) RogueWarlockSpine__load_atlas_image__RogueString( RogueString_create(path) );
      |  self->rendererObject = img;
      |
      |  //Rogue_spine_skeleton_scale = img->size.x / (RogueReal64) self->width;
@@ -85,12 +85,12 @@ class Spine [essential singleton]
      |
      |extern "C" void _spAtlasPage_disposeTexture( spAtlasPage* self )
      |{
-     | //WarlockSpine__unload_atlas_image__WarlockImage( (WarlockImage*) self->rendererObject );
+     | //RogueWarlockSpine__unload_atlas_image__WarlockImage( (RogueWarlockImage*) self->rendererObject );
      |}
      |
      |extern "C" char* _spUtil_readFile( const char* path, int* length )
      |{
-     |  char* filepath = (char*) WarlockSpine__data_filepath__RogueString( RogueString_create(path) )->data->as_utf8;
+     |  char* filepath = (char*) RogueWarlockSpine__data_filepath__RogueString( RogueString_create(path) )->data->as_utf8;
      |  printf( "Loading Spine skeleton: %s\n", path );
      |  return _spReadFile( filepath, length );
      |}
@@ -383,28 +383,28 @@ class SpineAnimation
     nativeCode
     @|void SpineAnimation_listener( spAnimationState* state, spEventType type, spTrackEntry* entry, spEvent* event )
      |{
-     |   WarlockSpineAnimationEvent rogue_event;
+     |   RogueWarlockSpineAnimationEvent rogue_event;
      |   rogue_event.entry = entry;
      |   rogue_event.event = event;
      |   switch (type)
      |   {
      |     case SP_ANIMATION_COMPLETE:
-     |       rogue_event.type = WarlockSpineAnimationEventType(0);
+     |       rogue_event.type = RogueWarlockSpineAnimationEventType(0);
      |       break;
      |     case SP_ANIMATION_DISPOSE:
-     |       rogue_event.type = WarlockSpineAnimationEventType(1);
+     |       rogue_event.type = RogueWarlockSpineAnimationEventType(1);
      |       break;
      |     case SP_ANIMATION_END:
-     |       rogue_event.type = WarlockSpineAnimationEventType(2);
+     |       rogue_event.type = RogueWarlockSpineAnimationEventType(2);
      |       break;
      |     case SP_ANIMATION_EVENT:
-     |       rogue_event.type = WarlockSpineAnimationEventType(3);
+     |       rogue_event.type = RogueWarlockSpineAnimationEventType(3);
      |       break;
      |     case SP_ANIMATION_INTERRUPT:
-     |       rogue_event.type = WarlockSpineAnimationEventType(4);
+     |       rogue_event.type = RogueWarlockSpineAnimationEventType(4);
      |       break;
      |     case SP_ANIMATION_START:
-     |       rogue_event.type = WarlockSpineAnimationEventType(5);
+     |       rogue_event.type = RogueWarlockSpineAnimationEventType(5);
      |       break;
      |     default:
      |       printf( "SpineAnimation_listener unknown event status: %i\n", type );
@@ -414,7 +414,7 @@ class SpineAnimation
      |   rogue_event.state = RogueString_create( entry->animation->name );
      |   rogue_event.track = entry->trackIndex;
      |   rogue_event.play_id = (RogueInt64)(intptr_t)entry;
-     |   WarlockSpineAnimation__dispatch__RogueInt64_WarlockSpineAnimationEvent(
+     |   RogueWarlockSpineAnimation__dispatch__RogueInt64_WarlockSpineAnimationEvent(
      |     (RogueInt64)(intptr_t)state, rogue_event
      |   );
      |}
@@ -572,7 +572,7 @@ class SpineAnimation
        |    // Our engine specific Texture is stored in the spAtlasRegion which was
        |    // assigned to the attachment on load. It represents the texture atlas
        |    // page that contains the image the region attachment is mapped to
-       |    $img = (WarlockImage*)((spAtlasRegion*)regionAttachment->rendererObject)->page->rendererObject;
+       |    $img = (RogueWarlockImage*)((spAtlasRegion*)regionAttachment->rendererObject)->page->rendererObject;
        |
        |    // Computed the world vertices positions for the 4 vertices that make up
        |    // the rectangular region attachment. This assumes the world transform of the
@@ -673,7 +673,7 @@ class SpineAnimation
       @|   // Our engine specific Texture is stored in the spAtlasRegion which was
        |   // assigned to the attachment on load. It represents the texture atlas
        |   // page that contains the image the mesh attachment is mapped to
-       |   $img = (WarlockImage*)((spAtlasRegion*)mesh->rendererObject)->page->rendererObject;
+       |   $img = (RogueWarlockImage*)((spAtlasRegion*)mesh->rendererObject)->page->rendererObject;
 
            if (img)
              local texture = img.texture
