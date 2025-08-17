@@ -395,8 +395,8 @@ class SDL : Framework [singleton]
        |if (ui_window.isKeyWindow == 0 || ui_window.windowScene == nil) $in_bad_state = true;
 
        if (in_bad_state)
-println "dbg BAD STATE"
-Log.println "dbg [Warlock] Attempting recovery from bad window state"
+         Log.println "[Warlock] Recovering from bad window state"
+
          native
          @|UIWindowScene* active_scene = nil;
           |for (UIScene *scene in UIApplication.sharedApplication.connectedScenes)
