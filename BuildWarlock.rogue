@@ -51,15 +51,14 @@ routine rogo_clean
 endRoutine
 
 routine rogo_assets( platform=null:String )
-  if (platform) platform = Build.platform_lookup[platform]  # ios -> iOS etc.
-  if (not String.exists(platform)) platform = System.os
+  platform = Build.resolve_platform( platform )
+
   rogo_deps( platform )
   compile_assets( platform )
 endRoutine
 
 routine rogo_shaders( platform=null:String )
-  if (platform) platform = Build.platform_lookup[platform]  # ios -> iOS etc.
-  if (not String.exists(platform)) platform = System.os
+  platform = Build.resolve_platform( platform )
 
   local dest = File( "Build/$/Assets/Shaders"(platform) )
   ensure_folder( dest )
