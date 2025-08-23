@@ -26,12 +26,6 @@ class State : Rogue::ProgressState<<State,change_state>>, WarlockState
     method dispatch_draw( &fg )
       Window.screen.draw( &=fg )
 
-      if (not fg)
-        if (@ui)
-          @ui.draw
-        endIf
-      endIf
-
     method exit_state
       exit
 

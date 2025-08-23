@@ -33,26 +33,50 @@ class WarlockState [aspect]
     method draw( &fg )
       if (fg)
         dispatch_draw( &fg )
-        on_draw_fg
-        local cur = actions
-        while (cur)
-          cur.on_draw_fg
-          cur .= concurrent_state
-        endWhile
-      else
-        local cur = actions
-        while (cur)
-          cur.on_draw
-          cur .= concurrent_state
-        endWhile
 
-        on_draw
+        block cur = this
+          while (cur)
+            cur.on_draw_fg
+            cur .= concurrent_state
+          endWhile
+        endBlock
+
+        block cur = actions
+          while (cur)
+            cur.on_draw_fg
+            cur .= concurrent_state
+          endWhile
+        endBlock
+      else
+        block cur = actions
+          while (cur)
+            cur.on_draw
+            cur .= concurrent_state
+          endWhile
+        endBlock
+
+        block cur = this
+          while (cur)
+            cur.on_draw
+            cur .= concurrent_state
+          endWhile
+        endBlock
 
         dispatch_draw( &!fg )
 
-        on_draw_ui
+        block cur = this
+          while (cur)
+            cur.on_draw_ui
+            cur .= concurrent_state
+          endWhile
+        endBlock
 
-        if (@ui) ui.draw
+        block cur = this
+          while (cur)
+            if (cur.@ui) cur.@ui.draw
+            cur .= concurrent_state
+          endWhile
+        endBlock
       endIf
 
     method find( id:GlobalID, arg=undefined:Variant, &up )->Variant
