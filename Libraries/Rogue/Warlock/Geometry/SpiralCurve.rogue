@@ -1,0 +1,51 @@
+library Geometry
+
+class SpiralCurve
+  PROPERTIES
+    position     : XY   # center point
+    radius       : Real # largest radius
+    turns        : Real
+    decay        : Real # 1.0=linear, 0..<1=tighter outer spirals, >1=tighter inner spirals
+    is_clockwise : Logical
+    rotation     : Radians
+
+  METHODS
+    method init( position, radius, turns=3, decay=1.0, &clockwise, &cw, &counter_clockwise, &ccw )
+      if (not (counter_clockwise or ccw))
+        is_clockwise = true
+      endIf
+
+    method at( t:Real )->XY
+      local r = radius * (1.0 - t) ^ decay
+      localize rotation
+      if (not is_clockwise) rotation = -rotation
+      local theta = rotation + 2 * pi * turns * t
+      local offset_x = r * theta.cos
+      local offset_y = r * theta.sin
+      if (not is_clockwise) offset_y = -offset_y
+      return position + XY( offset_x, offset_y )
+
+    method ccw
+      is_clockwise = false
+
+    method cw
+      is_clockwise = true
+
+    method clockwise
+      is_clockwise = true
+
+    method counter_clockwise
+      is_clockwise = false
+
+    method draw( color=Color.WHITE:Color )
+      local prev = at( 0 )
+      forEach (t in 0.01..<1.0 step 0.01)
+        local pos = at( t )
+        Line( prev, pos ).draw( color )
+        prev = pos
+      endForEach
+      Line( prev, at(1) ).draw( color )
+
+    method set_rotation( @rotation )
+
+endClass

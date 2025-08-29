@@ -1,8 +1,10 @@
 augment Geometry::BezierCurve
   METHODS
-    method draw( color:Color, render_mode=RenderMode.ALPHA_COLOR:RenderMode, thickness=1:Real )
+    method draw( color:Color, render_mode=RenderMode.ALPHA_COLOR:RenderMode, thickness=1:Real,
+                 scale=XY(1.0):XY )
       local prev : XY
       forEach (point at index in this->XY[])
+        point *= scale
         if (index > 0)
           Line( prev, point ).draw( color, render_mode, thickness )
         endIf
