@@ -25,6 +25,15 @@ class AssetManager [singleton]
         println "[ERROR] Assets/AssetManifest.txt is missing."
       endIf
 
+    method find_bitmap( name:String )->Bitmap
+      if local asset = find_image( name )
+        return asset.images[0].bitmap
+      else
+        local message = ''[Warlock] No such bitmap "$".''(name)
+        Log.println message
+        return Bitmap( 1, 1, Color.WHITE ).[ error=message ]
+      endIf
+
     method find_font( name:String )->AssetInfo
       load
       use work_name = StringPool

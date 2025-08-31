@@ -39,6 +39,7 @@ class GenerateAssetConfig : Visitor
 
       forEach (filepath in unreferenced)
         if (filepath.ends_with(".png",&ignore_case) and filepath.contains("font",&ignore_case))
+          # Font strip images
           local file = File( "Assets/$/$"(folder,filepath) )
           local bitmap = Bitmap( file )
           if (bitmap.error)
@@ -60,24 +61,34 @@ class GenerateAssetConfig : Visitor
               write_echo ''@ $''(filepath)
             endIf
             local filepath_lc = filepath.to_lowercase
-            which (File(filepath_lc).extension)
-              case "png", "jpg", "jpeg"
-                write_echo " image"
-                if (filepath_lc.contains(".9."))     write_echo " patch:9"
-                elseIf (filepath_lc.contains(".8.")) write_echo " patch:8"
-                elseIf (filepath_lc.contains(".3.")) write_echo " patch:3"
-                writeln_echo
-              case "wav", "flac", "aiff", "ima4"
-                if (filepath_lc.contains("music")) writeln_echo " music"
-                else                               writeln_echo " sound"
-              case "mp3", "ogg"
-                if (filepath_lc.contains("sound")) writeln_echo " sound"
-                else                               writeln_echo " music"
-              case "json"
-                writeln_echo " json"
-              others
-                writeln_echo " binary"
-            endWhich
+            if (folder == "Data" or folder.begins_with("Data/"))
+              # Data files are treated as either json or binary
+              which (File(filepath_lc).extension)
+                case "json"
+                  writeln_echo " json"
+                others
+                  writeln_echo " binary"
+              endWhich
+            else
+              which (File(filepath_lc).extension)
+                case "png", "jpg", "jpeg"
+                  write_echo " image"
+                  if (filepath_lc.contains(".9."))     write_echo " patch:9"
+                  elseIf (filepath_lc.contains(".8.")) write_echo " patch:8"
+                  elseIf (filepath_lc.contains(".3.")) write_echo " patch:3"
+                  writeln_echo
+                case "wav", "flac", "aiff", "ima4"
+                  if (filepath_lc.contains("music")) writeln_echo " music"
+                  else                               writeln_echo " sound"
+                case "mp3", "ogg"
+                  if (filepath_lc.contains("sound")) writeln_echo " sound"
+                  else                               writeln_echo " music"
+                case "json"
+                  writeln_echo " json"
+                others
+                  writeln_echo " binary"
+              endWhich
+            endIf
           endIf
         endIf
       endForEach

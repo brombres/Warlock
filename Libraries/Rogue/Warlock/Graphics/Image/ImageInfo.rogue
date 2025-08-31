@@ -2,6 +2,13 @@ library Warlock
 
 class ImageInfo( texture_index:Int, bounds:Box, wrap:Logical ) [compound]
   METHODS
+    method bitmap->Bitmap
+      if local filepath = Warlock.find_asset( AssetManager.texture_filepaths[texture_index] )
+        return Bitmap( filepath )
+      else
+        return Bitmap( 1, 1, Color.WHITE ).[ error="[Warlock] ImageInfo file not found." ]
+      endIf
+
     method texture( &mipmaps=true )->Texture
       if local texture_filepath = Warlock.find_asset( AssetManager.texture_filepaths[texture_index] )
         return Texture( Texture(texture_filepath,&=mipmaps,&=wrap), bounds )
