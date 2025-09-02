@@ -91,6 +91,11 @@ class Texture
 
     method polygon_mesh( polygon:XY[], mesh=Mesh():Mesh )->Mesh
       # polygon should contain normalized positions between (0,0) and (1,1).
+      if (polygon.is_empty)
+        println "[Warlock] Texture.polygon_mesh() tessellation failed - polygon vertex list is empty."
+        return null
+      endIf
+
       if (Tessellator.tessellate(polygon))
         local i0 = mesh.indices.count
         local uv1 = uv.a
@@ -102,6 +107,9 @@ class Texture
         forEach (t in Tessellator.triangle_indices)
           mesh.add( t.a+i0, t.b+i0, t.c+i0 )
         endForEach
+      else
+        println "[Warlock] Texture.polygon_mesh() tessellation failed"
+        println polygon
       endIf
 
       return mesh

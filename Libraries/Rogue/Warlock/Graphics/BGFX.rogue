@@ -105,6 +105,7 @@ class BGFX : Renderer [singleton]
       RenderMode.ALPHA_TEXTURE_SCREEN     = RenderModeAlphaTextureScreen
       RenderMode.ALPHA_TEXTURE_COLOR_FILL = RenderModeAlphaTextureColorFill
       RenderMode.LIT_TEXTURE              = RenderModeLitTexture
+      RenderMode.LIT_TEXTURE_WRITE_Z      = RenderModeLitTextureWriteZ
 
       is_initialized = true
 

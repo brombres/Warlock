@@ -11,6 +11,7 @@ class RenderMode
     ALPHA_TEXTURE_SCREEN     : RenderMode
     ALPHA_TEXTURE_COLOR_FILL : RenderMode
     LIT_TEXTURE              : RenderMode
+    LIT_TEXTURE_WRITE_Z      : RenderMode
 
   PROPERTIES
     shader            : Shader
@@ -96,4 +97,13 @@ class RenderModeLitTexture : RenderMode [singleton]
     should_update_normals = true
     culling_mode          = CullingMode.CCW : CullingMode
     depth_test            = DepthTest.LE    : DepthTest
+endClass
+
+class RenderModeLitTextureWriteZ : RenderMode [singleton]
+  PROPERTIES
+    shader                = Shader.LIT_TEXTURE : Shader
+    should_update_normals = true
+    culling_mode          = CullingMode.CCW : CullingMode
+    depth_test            = DepthTest.LE    : DepthTest
+    write_z               = true
 endClass

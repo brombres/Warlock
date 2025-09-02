@@ -16,6 +16,13 @@ class Shader
     method init( filename:String )
       program = ShaderProgram( filename )
 
+    method init( existing:Shader )
+      program = existing.program
+      uniforms = existing.uniforms.cloned
+
+    method cloned->Shader
+      return Shader( this )
+
     method apply_uniforms
       program.uniforms = @uniforms
       program.apply_uniforms

@@ -78,6 +78,18 @@ class Mesh
     method set_color( color:Color )
       vertices.modify( (v) => v.color = color; return v )
 
+    method scale( xy:XY )
+      scale( XYZ(xy,1) )
+
+    method scale( xyz:XYZ )
+      forEach (v in writer=vertices.rewriter)
+        v.position *= xyz
+        writer.write( v )
+      endForEach
+
+    method translate( delta:XY )
+      scale( XYZ(xy,0) )
+
     method translate( delta:XYZ )
       forEach (v in writer=vertices.rewriter)
         v.position += delta
