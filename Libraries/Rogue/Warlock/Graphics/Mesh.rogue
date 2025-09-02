@@ -56,8 +56,8 @@ class Mesh
       Renderer.draw( this, render_mode||RenderMode.ALPHA_COLOR )
 
     method draw( texture:Texture, render_mode=null:RenderMode )
-      Renderer.draw( this, texture, render_mode||RenderMode.ALPHA_TEXTURE )
-      #Renderer.render_mode = render_mode || RenderMode.ALPHA_TEXTURE
+      Renderer.draw( this, texture, render_mode||RenderMode.ALPHA_TEXTURE_COLOR_MULTIPLY )
+      #Renderer.render_mode = render_mode || RenderMode.ALPHA_TEXTURE_COLOR_MULTIPLY
       #Renderer.texture = texture
       #Renderer.draw_triangles
       #Renderer.data.add( this, Renderer.first_vertex )

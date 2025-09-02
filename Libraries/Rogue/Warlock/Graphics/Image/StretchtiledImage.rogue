@@ -55,7 +55,7 @@ class StretchtiledImage : Image
     method .draw_entity [override]
       local h_flip = attributes.h_flip
       local v_flip = attributes.v_flip
-      local render_mode = render_mode || RenderMode.ALPHA_TEXTURE
+      local render_mode = render_mode || RenderMode.ALPHA_TEXTURE_COLOR_MULTIPLY
       localize size
       local natural_size = image.natural_size.scaled_to_fit( size )
       local tile_count = (size / natural_size).floor

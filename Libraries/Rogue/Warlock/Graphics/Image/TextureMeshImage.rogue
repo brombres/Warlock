@@ -3,7 +3,7 @@ library Warlock
 class TextureMeshImage : TextureImage
   PROPERTIES
     mesh        : Mesh
-    render_mode = RenderMode.LIT_TEXTURE : RenderMode
+    render_mode = RenderMode.LIT_TEXTURE_COLOR_MULTIPLY : RenderMode
 
   METHODS
     method init( texture, mesh )
@@ -18,5 +18,5 @@ class TextureMeshImage : TextureImage
       mesh = existing.mesh
 
     method .draw_entity [override]
-      mesh.draw( texture, render_mode || RenderMode.ALPHA_TEXTURE )
+      mesh.draw( texture, render_mode || RenderMode.ALPHA_TEXTURE_COLOR_MULTIPLY )
 endClass

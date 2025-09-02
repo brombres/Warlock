@@ -14,7 +14,7 @@ augment Triangle
         Renderer.draw( this, color, render_mode )
       endIf
 
-    method draw( texture:Texture, color=Color.WHITE:Color, render_mode=RenderMode.ALPHA_TEXTURE:RenderMode )
+    method draw( texture:Texture, color=Color.WHITE:Color, render_mode=RenderMode.ALPHA_TEXTURE_COLOR_MULTIPLY:RenderMode )
       Renderer.draw( this, texture, color, render_mode )
 endAugment
 

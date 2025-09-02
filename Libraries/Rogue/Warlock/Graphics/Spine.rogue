@@ -511,7 +511,7 @@ class SpineAnimation
        |  switch (slot->data->blendMode)
        |  {
        |     case SP_BLEND_MODE_NORMAL:
-                Renderer.render_mode = RenderMode.ALPHA_TEXTURE
+                Renderer.render_mode = RenderMode.ALPHA_TEXTURE_COLOR_MULTIPLY
       native
       @|        break;
        |     case SP_BLEND_MODE_ADD:
@@ -519,7 +519,7 @@ class SpineAnimation
       native
       @|        break;
        |     case SP_BLEND_MODE_MULTIPLY:
-                Renderer.render_mode = RenderMode.ALPHA_TEXTURE
+                Renderer.render_mode = RenderMode.ALPHA_TEXTURE_COLOR_MULTIPLY
       native
       @|        break;
        |     case SP_BLEND_MODE_SCREEN:

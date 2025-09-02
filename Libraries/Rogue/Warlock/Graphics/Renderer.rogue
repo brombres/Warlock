@@ -9,7 +9,7 @@ class Renderer [singleton]
     first_vertex   : Int
     first_index    : Int
     textures       = Texture[]
-    render_mode    = RenderMode.ALPHA_TEXTURE : RenderMode
+    render_mode    = RenderMode.ALPHA_TEXTURE_COLOR_MULTIPLY : RenderMode
 
     render_queue   = RendererBatch[]
 
@@ -137,14 +137,14 @@ class Renderer [singleton]
       endIf
 
     method draw( box:Box, texture:Texture, color:Color,
-        render_mode=RenderMode.ALPHA_TEXTURE, subdivisions=XY(0,0):XY, &h_flip, &v_flip )
+        render_mode=RenderMode.ALPHA_TEXTURE_COLOR_MULTIPLY, subdivisions=XY(0,0):XY, &h_flip, &v_flip )
       # Draws a textured box as an image, where the texture corners are mapped to the
       # display position of the box corners.
       local colors = Quad<<Color>>( color, color, color, color )
       draw( box, texture, colors, render_mode, subdivisions, &=h_flip, &=v_flip )
 
     method draw( box:Box, texture:Texture, colors:Quad<<Color>>,
-        render_mode=RenderMode.ALPHA_TEXTURE, subdivisions=XY(0,0):XY, &h_flip, &v_flip )
+        render_mode=RenderMode.ALPHA_TEXTURE_COLOR_MULTIPLY, subdivisions=XY(0,0):XY, &h_flip, &v_flip )
       # Draws a textured box as an image, where the texture corners are mapped to the
       # display position of the box corners.
       set_texture( texture )
@@ -189,7 +189,7 @@ class Renderer [singleton]
       endIf
 
     method draw( box:Box, texture_bounds:Box, texture:Texture, color=Color.WHITE:Color,
-        render_mode=RenderMode.ALPHA_TEXTURE, subdivisions=XY(0,0):XY, &h_flip, &v_flip )
+        render_mode=RenderMode.ALPHA_TEXTURE_COLOR_MULTIPLY, subdivisions=XY(0,0):XY, &h_flip, &v_flip )
       draw(
         box, texture_bounds, texture,
         Quad<<Color>>(color,color,color,color),
@@ -197,7 +197,7 @@ class Renderer [singleton]
       )
 
     method draw( box:Box, texture_bounds:Box, texture:Texture, colors:Quad<<Color>>,
-        render_mode=RenderMode.ALPHA_TEXTURE, subdivisions=XY(0,0):XY, &h_flip, &v_flip )
+        render_mode=RenderMode.ALPHA_TEXTURE_COLOR_MULTIPLY, subdivisions=XY(0,0):XY, &h_flip, &v_flip )
       # Draws a textured box as a texture fill, where the specified texture corners (in pixels)
       # are mapped to the display position of the box corners.
       set_texture( texture )
@@ -251,7 +251,7 @@ class Renderer [singleton]
       draw_triangles
       data.add( mesh, first_vertex )
 
-    method draw( mesh:Mesh, texture:Texture, render_mode=RenderMode.ALPHA_TEXTURE )
+    method draw( mesh:Mesh, texture:Texture, render_mode=RenderMode.ALPHA_TEXTURE_COLOR_MULTIPLY )
       set_texture( texture )
       draw_triangles
       data.add( mesh, first_vertex )
@@ -283,12 +283,12 @@ class Renderer [singleton]
       endIf
 
     method draw( quad:Quad, texture:Texture, color:Color,
-        render_mode=RenderMode.ALPHA_TEXTURE, subdivisions=XY(0,0):XY, &h_flip, &v_flip )
+        render_mode=RenderMode.ALPHA_TEXTURE_COLOR_MULTIPLY, subdivisions=XY(0,0):XY, &h_flip, &v_flip )
       local colors = Quad<<Color>>( color, color, color, color )
       draw( quad, texture, colors, render_mode, subdivisions, &=h_flip, &=v_flip )
 
     method draw( quad:Quad, texture:Texture, colors:Quad<<Color>>,
-        render_mode=RenderMode.ALPHA_TEXTURE, subdivisions=XY(0,0):XY, &h_flip, &v_flip )
+        render_mode=RenderMode.ALPHA_TEXTURE_COLOR_MULTIPLY, subdivisions=XY(0,0):XY, &h_flip, &v_flip )
       set_texture( texture )
       draw_triangles
 
@@ -358,7 +358,7 @@ class Renderer [singleton]
       data.add Vertex( triangle.c, color )
       data.add( i0, i0+1, i0+2 )
 
-    method draw( triangle:Triangle, texture:Texture, color:Color, render_mode=RenderMode.ALPHA_TEXTURE )
+    method draw( triangle:Triangle, texture:Texture, color:Color, render_mode=RenderMode.ALPHA_TEXTURE_COLOR_MULTIPLY )
       set_texture( texture )
       draw_triangles
       local i0 = data.vertices.count - first_vertex
@@ -409,7 +409,7 @@ class Renderer [singleton]
     method on_begin_render( render_target:RenderTarget )
       display_id = render_target.id
       draw_triangles
-      render_mode = RenderMode.ALPHA_TEXTURE
+      render_mode = RenderMode.ALPHA_TEXTURE_COLOR_MULTIPLY
       clear_textures
 
     method on_begin_render( window:Window )
@@ -438,7 +438,7 @@ class Renderer [singleton]
       first_index = 0
       first_untransformed_vertex = 0
       clear_textures
-      render_mode = RenderMode.ALPHA_TEXTURE
+      render_mode = RenderMode.ALPHA_TEXTURE_COLOR_MULTIPLY
 
     method set_clip( clip:Box? )
       print_error

@@ -3,15 +3,18 @@ library Warlock
 class RenderMode
   GLOBAL PROPERTIES
     # These are initialized in BGFX after shaders have been created.
-    ALPHA_COLOR              : RenderMode
-    ALPHA_COLOR_ADD          : RenderMode
-    ALPHA_TEXTURE            : RenderMode
-    ALPHA_TEXTURE_MAX_LOD    : RenderMode
-    ALPHA_TEXTURE_ADD        : RenderMode
-    ALPHA_TEXTURE_SCREEN     : RenderMode
-    ALPHA_TEXTURE_COLOR_FILL : RenderMode
-    LIT_TEXTURE              : RenderMode
-    LIT_TEXTURE_WRITE_Z      : RenderMode
+    ALPHA_COLOR                        : RenderMode
+    ALPHA_COLOR_ADD                    : RenderMode
+    ALPHA_TEXTURE_COLOR_MULTIPLY       : RenderMode
+    ALPHA_TEXTURE_COLOR_ADD            : RenderMode
+    ALPHA_TEXTURE_MAX_LOD              : RenderMode
+    ALPHA_TEXTURE_ADD                  : RenderMode
+    ALPHA_TEXTURE_SCREEN               : RenderMode
+    ALPHA_TEXTURE_COLOR_FILL           : RenderMode
+    LIT_TEXTURE_COLOR_MULTIPLY         : RenderMode
+    LIT_TEXTURE_COLOR_MULTIPLY_WRITE_Z : RenderMode
+    LIT_TEXTURE_COLOR_ADD              : RenderMode
+    LIT_TEXTURE_COLOR_ADD_WRITE_Z      : RenderMode
 
   PROPERTIES
     shader            : Shader
@@ -60,9 +63,14 @@ class RenderModeAlphaColorAdd : RenderMode [singleton]
 endClass
 
 
-class RenderModeAlphaTexture : RenderMode [singleton]
+class RenderModeAlphaTextureColorMultiply : RenderMode [singleton]
   PROPERTIES
-    shader = Shader.ALPHA_TEXTURE : Shader
+    shader = Shader.ALPHA_TEXTURE_COLOR_MULTIPLY : Shader
+endClass
+
+class RenderModeAlphaTextureColorAdd : RenderMode [singleton]
+  PROPERTIES
+    shader = Shader.ALPHA_TEXTURE_COLOR_ADD : Shader
 endClass
 
 class RenderModeAlphaTextureMaxLOD : RenderMode [singleton]
@@ -73,14 +81,14 @@ endClass
 
 class RenderModeAlphaTextureAdd : RenderMode [singleton]
   PROPERTIES
-    shader            = Shader.ALPHA_TEXTURE : Shader
+    shader            = Shader.ALPHA_TEXTURE_COLOR_MULTIPLY : Shader
     source_blend      = BlendMode.ONE : BlendMode
     destination_blend = BlendMode.ONE : BlendMode
 endClass
 
 class RenderModeAlphaTextureScreen : RenderMode [singleton]
   PROPERTIES
-    shader            = Shader.ALPHA_TEXTURE           : Shader
+    shader            = Shader.ALPHA_TEXTURE_COLOR_MULTIPLY           : Shader
     source_blend      = BlendMode.ONE                  : BlendMode
     destination_blend = BlendMode.INVERSE_SOURCE_COLOR : BlendMode
 endClass
@@ -91,17 +99,34 @@ class RenderModeAlphaTextureColorFill : RenderMode [singleton]
 endClass
 
 
-class RenderModeLitTexture : RenderMode [singleton]
+class RenderModeLitTextureColorMultiply : RenderMode [singleton]
   PROPERTIES
-    shader                = Shader.LIT_TEXTURE : Shader
+    shader                = Shader.LIT_TEXTURE_COLOR_MULTIPLY : Shader
     should_update_normals = true
     culling_mode          = CullingMode.CCW : CullingMode
     depth_test            = DepthTest.LE    : DepthTest
 endClass
 
-class RenderModeLitTextureWriteZ : RenderMode [singleton]
+class RenderModeLitTextureColorMultiplyWriteZ : RenderMode [singleton]
   PROPERTIES
-    shader                = Shader.LIT_TEXTURE : Shader
+    shader                = Shader.LIT_TEXTURE_COLOR_MULTIPLY : Shader
+    should_update_normals = true
+    culling_mode          = CullingMode.CCW : CullingMode
+    depth_test            = DepthTest.LE    : DepthTest
+    write_z               = true
+endClass
+
+class RenderModeLitTextureColorAdd : RenderMode [singleton]
+  PROPERTIES
+    shader                = Shader.LIT_TEXTURE_COLOR_ADD : Shader
+    should_update_normals = true
+    culling_mode          = CullingMode.CCW : CullingMode
+    depth_test            = DepthTest.LE    : DepthTest
+endClass
+
+class RenderModeLitTextureColorAddWriteZ : RenderMode [singleton]
+  PROPERTIES
+    shader                = Shader.LIT_TEXTURE_COLOR_ADD : Shader
     should_update_normals = true
     culling_mode          = CullingMode.CCW : CullingMode
     depth_test            = DepthTest.LE    : DepthTest
