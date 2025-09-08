@@ -124,6 +124,9 @@ class Sound
         endIf
       endIf
 
+    method play_after_delay( seconds:Real )
+      AudioManager.actions |= Action.wait( seconds ) + Action( () => this.play )
+
     method position->Real
       local seconds : Real
       if (is_prepared)
