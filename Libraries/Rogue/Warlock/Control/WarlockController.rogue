@@ -10,7 +10,7 @@ class WarlockController
       AssetManager.load
       AudioManager.configure
 
-      Pointer.display_density = () => Display.density
+      UI.display_density = () => Window.density
 
       if (Warlock.windows.is_empty) create_default_window( launch_state )
       restore_state
