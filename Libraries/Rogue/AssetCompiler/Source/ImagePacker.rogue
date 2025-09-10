@@ -7,7 +7,8 @@ class ImagePacker
     pages      = AtlasPage[]
     max_size   = XY(4096)
     atlas_padding    = 8  # Edges of each texture are extruded this many pixels to prevent
-                    # color artifacts.
+                          # color artifacts.
+    existing_placements = Placement[]
 
   METHODS
     method init( group )
@@ -19,6 +20,7 @@ class ImagePacker
 
       .convert_oversize_placements_to_standalone
 
+      existing_placements.reserve( placements.count )
       while (placements.count)
         pages.add( .pack_another_page(max_size) )
       endWhile
@@ -80,6 +82,7 @@ class ImagePacker
       endUse
 
     method .repack_last_page( new_page_size:XY )->Logical
+      existing_placements.clear
       placements.clear
       placements.add( pages.last.placements )
       local new_page = .pack_another_page( new_page_size )
@@ -104,6 +107,20 @@ class ImagePacker
       if (bounds.size.x <= 0 or bounds.size.y <= 0) return false
 
       forEach (placement in placements)
+        forEach (existing in existing_placements)
+          if (existing.has_equivalent_bitmap(placement,this))
+            # Use the existing placement info
+            placement.position = existing.position
+            placement.padding_left = existing.padding_left
+            placement.padding_top = existing.padding_top
+            placement.padding_right = existing.padding_right
+            placement.padding_bottom = existing.padding_bottom
+            placements.remove( placement )
+            .perform_layout( page, bounds )
+            return true
+          endIf
+        endForEach
+
         local atlas_padding = which{ placement.asset.image_padding || this.atlas_padding }
         local padding_left   = which{ bounds.position.x==0:0     || atlas_padding }
         local padding_top    = which{ bounds.position.y==0:0     || atlas_padding }
@@ -127,6 +144,7 @@ class ImagePacker
           placement.padding_right = padding_right
           placement.padding_bottom = padding_bottom
           placements.remove( placement )
+          existing_placements.add( placement )
           page.add( placement )
 
           # We've just placed 'A', now recursively pack areas 'B' and 'C':

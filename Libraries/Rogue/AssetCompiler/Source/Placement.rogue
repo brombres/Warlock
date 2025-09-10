@@ -1,5 +1,7 @@
 library AssetCompiler
 
+uses Codec/CRC32
+
 class Placement
   PROPERTIES
     build_folder   : String
@@ -15,11 +17,25 @@ class Placement
     asset          : Asset
     source_bounds  : Box
 
+    crc32            : Int32?
+
   METHODS
     method init( asset, source_bounds )
       bitmap = Bitmap( asset.bitmap, source_bounds )
 
       size = source_bounds.size
+
+    method has_equivalent_bitmap( other:Placement, packer:ImagePacker )->Logical
+      if (size != other.size) return false
+      local this_padding = which{ asset.image_padding || packer.atlas_padding }
+      local other_padding = which{ other.asset.image_padding || packer.atlas_padding }
+      if (this_padding != other_padding) return false
+
+      if (not crc32)       crc32 = CRC32( bitmap.pixels.to_unsafe_bytes )->Int32
+      if (not other.crc32) other.crc32 = CRC32( other.bitmap.pixels.to_unsafe_bytes )->Int32
+
+      if (crc32 != other.crc32) return false
+      return bitmap == other.bitmap
 
     method draw_to( page:Bitmap )
       local work_bitmap = bitmap
