@@ -38,4 +38,9 @@ class Screen : Rogue::ActiveState<<Screen,change_screen>>, WarlockState
     method state->State
       return Window.state
 
+    method .get_top_level_state->Screen [override]
+      return Window.screen
+
+    method .set_top_level_state( screen:Screen ) [override]
+      Window.screen = screen
 endClass

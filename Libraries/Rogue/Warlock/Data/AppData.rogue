@@ -11,6 +11,22 @@ class AppData [singleton]
     method disconnect_on_change( path:GlobalID )
       data.disconnect_on_change( path )
 
+    method entry( path:GlobalID )->VariantEntry
+      # E.g. <AppData.a.b> or <a.b>
+      return AppDataValue( path )
+
+    method entry( path:String )->VariantEntry
+      # E.g. "<AppData.a.b>", "<a.b>", or "a.b"
+      if (path.begins_with("<AppData."))
+        return data.entry( "<" + path.after_first("<AppData.") )
+      elseIf (path.begins_with("AppData."))
+        return data.entry( "<" + path.after_first("AppData.") + ">" )
+      elseIf (not path.begins_with("<"))
+        return data.entry( "<" + path + ">" )
+      else
+        return data.entry( path )
+      endIf
+
     method get( key:String )->Variant
       return data[key]
 

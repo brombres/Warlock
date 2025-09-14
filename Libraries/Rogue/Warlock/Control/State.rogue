@@ -31,4 +31,10 @@ class State : Rogue::ProgressState<<State,change_state>>, WarlockState
 
     method screen->Screen
       return Window.screen
+
+    method .get_top_level_state->State [override]
+      return Window.state
+
+    method .set_top_level_state( state:State ) [override]
+      Window.state = state
 endClass
