@@ -68,6 +68,7 @@ class WarlockController
       # Update the current window state and screen
       Window.state = Window.state.updated || State()
       Window.screen = Window.screen.updated || Screen()
+      if (Window.actions) Window.actions = Window.actions.updated
 
     method end_update
       noAction

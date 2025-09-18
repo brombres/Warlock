@@ -6,6 +6,7 @@ class Window : Display [singleton]
     screen   = Screen()
     state    : State
     old_size : XY  # used to detect size changes in WarlockController.tick(Window)
+    actions  : Action
 
   METHODS
     method init( title, width:Int, height:Int, state=State() )
@@ -39,6 +40,14 @@ class Window : Display [singleton]
 
     method draw [override]
       @ui?.draw
+
+      block cur = actions
+        while (cur)
+          cur.on_draw
+          cur .= concurrent_state
+        endWhile
+      endBlock
+
 
     method end_render [override]
       prior.end_render
