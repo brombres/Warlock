@@ -28,7 +28,6 @@ augment UI::Font
     ascii_characters   : FontCharacter[]
     character_lookup   : [Character:FontCharacter]
 
-    anchor             = Anchor.CENTER : Anchor
     color              = Color.WHITE : Color
     opacity            = 1.0
 
@@ -79,7 +78,6 @@ augment UI::Font
       fixed_width        = existing.fixed_width
       ascii_characters   = existing.ascii_characters
       character_lookup   = existing.character_lookup
-      anchor             = existing.anchor
       color              = existing.color
       opacity            = existing.opacity
       error              = existing.error
@@ -94,33 +92,6 @@ augment UI::Font
       opacity            = 1.0
       spacing_adjustment = 0
       snap               = false
-
-    method anchor_top_left
-      anchor = Anchor.TOP_LEFT
-
-    method anchor_top
-      anchor = Anchor.TOP
-
-    method anchor_top_right
-      anchor = Anchor.TOP_RIGHT
-
-    method anchor_left
-      anchor = Anchor.LEFT
-
-    method anchor_center
-      anchor = Anchor.CENTER
-
-    method anchor_right
-      anchor = Anchor.RIGHT
-
-    method anchor_bottom_left
-      anchor = Anchor.BOTTOM_LEFT
-
-    method anchor_bottom
-      anchor = Anchor.BOTTOM
-
-    method anchor_bottom_right
-      anchor = Anchor.BOTTOM_RIGHT
 
     method character( unicode:Character )->FontCharacter
       if (error) return null

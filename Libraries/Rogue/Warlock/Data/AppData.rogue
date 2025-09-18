@@ -27,8 +27,15 @@ class AppData [singleton]
         return data.entry( path )
       endIf
 
+    method get( key:GlobalID )->Variant
+      return entry( key )->Variant
+
     method get( key:String )->Variant
-      return data[key]
+      if (key.begins_with('<') or key.contains('.'))
+        return entry( key )->Variant
+      else
+        return data[key]
+      endIf
 
     method load( json:String )
       data = JSON( json ).parse_table || @{}
@@ -45,8 +52,15 @@ class AppData [singleton]
     method on_change( path:GlobalID, global_id:GlobalID )
       data.on_change( path, global_id )
 
+    method set( key:GlobalID, value:Variant )
+      entry( key ).set( value )
+
     method set( key:String, value:Variant )
-      data[key] = value
+      if (key.begins_with('<') or key.contains('.'))
+        entry( key ).set( value )
+      else
+        data[key] = value
+      endIf
 
     method to->String
       return data->String
