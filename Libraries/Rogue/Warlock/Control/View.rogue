@@ -1,6 +1,6 @@
 library Warlock
 
-class Environment : Rogue::ActiveState<<Environment,change_environment>>, WarlockState
+class View : Rogue::ActiveState<<View,change_view>>, WarlockState
   METHODS
     method change_screen( new_screen:Screen )
       Window.screen.change_state( new_screen )
@@ -44,9 +44,9 @@ class Environment : Rogue::ActiveState<<Environment,change_environment>>, Warloc
     method state->State
       return Window.state
 
-    method .get_top_level_state->Environment [override]
-      return Window.environment
+    method .get_top_level_state->View [override]
+      return Window.view
 
-    method .set_top_level_state( environment:Environment ) [override]
-      Window.environment = environment
+    method .set_top_level_state( view:View ) [override]
+      Window.view = view
 endClass

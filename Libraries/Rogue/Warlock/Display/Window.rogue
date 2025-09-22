@@ -3,7 +3,7 @@ library Warlock
 class Window : Display [singleton]
   PROPERTIES
     title       : String
-    environment = Environment()
+    view = View()
     screen      = Screen()
     state       : State
     old_size    : XY  # used to detect size changes in WarlockController.tick(Window)
@@ -22,7 +22,7 @@ class Window : Display [singleton]
       prior.begin_render
       state.on_begin_render
       screen.on_begin_render
-      environment.on_begin_render
+      view.on_begin_render
       Renderer.on_begin_render( this )
 
     method begin_tick [override]
@@ -30,8 +30,8 @@ class Window : Display [singleton]
       Framework.update_window_size( this )
       prior.begin_tick
 
-    method change_environment( new_environment:Environment )
-      environment.change_environment( new_environment )
+    method change_view( new_view:View )
+      view.change_view( new_view )
 
     method change_screen( new_screen:Screen )
       screen.change_screen( new_screen )
