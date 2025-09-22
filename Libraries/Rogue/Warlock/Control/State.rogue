@@ -2,6 +2,9 @@ library Warlock
 
 class State : Rogue::ProgressState<<State,change_state>>, WarlockState
   METHODS
+    method change_environment( new_environment:Environment )
+      Window.environment.change_environment( new_environment )
+
     method change_screen( new_screen:Screen )
       Window.screen.change_screen( new_screen )
 

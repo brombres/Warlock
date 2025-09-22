@@ -2,11 +2,12 @@ library Warlock
 
 class Window : Display [singleton]
   PROPERTIES
-    title    : String
-    screen   = Screen()
-    state    : State
-    old_size : XY  # used to detect size changes in WarlockController.tick(Window)
-    actions  : Action
+    title       : String
+    environment = Environment()
+    screen      = Screen()
+    state       : State
+    old_size    : XY  # used to detect size changes in WarlockController.tick(Window)
+    actions     : Action
 
   METHODS
     method init( title, width:Int, height:Int, state=State() )
@@ -21,12 +22,16 @@ class Window : Display [singleton]
       prior.begin_render
       state.on_begin_render
       screen.on_begin_render
+      environment.on_begin_render
       Renderer.on_begin_render( this )
 
     method begin_tick [override]
       Window = this
       Framework.update_window_size( this )
       prior.begin_tick
+
+    method change_environment( new_environment:Environment )
+      environment.change_environment( new_environment )
 
     method change_screen( new_screen:Screen )
       screen.change_screen( new_screen )

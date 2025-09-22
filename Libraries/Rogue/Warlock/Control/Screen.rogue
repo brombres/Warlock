@@ -1,36 +1,37 @@
 library Warlock
 
-class Screen : Rogue::ActiveState<<Screen,change_screen>>, WarlockState
+class Screen : Rogue::ProgressState<<Screen,change_screen>>, WarlockState
   METHODS
+    method change_environment( new_environment:Environment )
+      Window.environment.change_environment( new_environment )
+
     method change_state( new_state:State )
       Window.state.change_state( new_state )
 
     method dispatch( e:KeyEvent )
-      e.window.handle( e )
+      Window.environment.handle( e )
 
     method dispatch( e:MultitouchEvent )
-      e.window.handle( e )
+      Window.environment.handle( e )
 
     method dispatch( e:PointerEvent )
-      e.window.handle( e )
+      Window.environment.handle( e )
 
     method dispatch( e:ScrollEvent )
-      e.window.handle( e )
+      Window.environment.handle( e )
 
     method dispatch( e:TextEvent )
-      e.window.handle( e )
-
-    method dispatch_draw( &fg )
-      if (not fg)
-        Display.draw
-      endIf
+      Window.environment.handle( e )
 
     method dispatch_find( id:GlobalID, arg=undefined:Variant, &up )->Variant
-      if (up) return Screen.find( id, arg, &up )
-      else    return Display.find( id, arg )
+      if (up) return Window.state.find( id, arg )
+      else    return Window.environment.find( id, arg )
 
-    method dispatch_update
-      Display.update
+    method dispatch_draw( &fg )
+      Window.environment.draw( &=fg )
+
+    method environment->Environment
+      return Window.environment
 
     method exit_screen
       exit
