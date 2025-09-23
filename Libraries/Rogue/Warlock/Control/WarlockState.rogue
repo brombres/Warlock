@@ -47,6 +47,7 @@ class WarlockState [aspect]
             cur .= concurrent_state
           endWhile
         endBlock
+
       else
         block cur = actions
           while (cur)
@@ -226,11 +227,8 @@ class WarlockState [aspect]
       if (result.exists) return result
       return dispatch_find( id, arg, &up )
 
-    method handle_finish [append]
-      prior.handle_finish
-      if (@ui)
-        @ui.deactivate
-      endIf
+    method handle_deactivate [append]
+      if (@ui) @ui.deactivate
 
     method on( e:KeyEvent )
 
