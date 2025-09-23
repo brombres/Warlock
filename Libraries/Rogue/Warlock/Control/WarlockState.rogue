@@ -227,7 +227,8 @@ class WarlockState [aspect]
       if (result.exists) return result
       return dispatch_find( id, arg, &up )
 
-    method handle_deactivate [append]
+    method handle_deactivate [override]
+      on_deactivate
       if (@ui) @ui.deactivate
 
     method on( e:KeyEvent )
