@@ -42,4 +42,6 @@ class Music : Sound
       prior.stop
       AudioManager.active_music.remove( this )
 
+    method .effective_volume->Real
+      return AudioManager.master_volume * AudioManager.music_volume * current_volume
 endClass

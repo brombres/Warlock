@@ -2,6 +2,10 @@ library Warlock
 
 class AudioManager [singleton]
   PROPERTIES
+    master_volume = 1.0  # multiplied by AudioManager.sound/music_volume and individual .volume
+    sound_volume  = 1.0
+    music_volume  = 1.0
+
     actions      : Action
 
     all_sounds   = Sound[]  # includes sounds and music
@@ -145,6 +149,18 @@ class AudioManager [singleton]
 
       # Enqueue on essential_actions in case the suspend fade-out actions are still executing
       Warlock.essential_actions += actions
+
+    method set_music_volume( new_volume:Real, fade_duration=0.0:Real )
+      if (fade_duration)
+        actions |= Action( (p) => this.music_volume = p.lerp(music_volume,new_volume), fade_duration )
+      else
+        @music_volume = new_volume
+        if (active_music)
+          forEach (music in active_music)
+            music.current_volume = music.current_volume  # reapply music volume
+          endForEach
+        endIf
+      endIf
 
     method stop_music
       (forEach in active_music step -1).stop

@@ -11,7 +11,8 @@ class Sound
     is_paused        : Logical
     is_suspended     : Logical
     configuration_id : Int  # must match AudioManager.configuraton_id or else reload()
-    volume         = 1.0
+    volume           = 1.0  # volume when sound first starts playing
+    current_volume   : Real # dynamically adjusted volume from fades etc.
     native "ma_sound sound;"
 
     next_in_pool   : Sound
@@ -24,6 +25,7 @@ class Sound
 
     method init_object
       AudioManager.all_sounds.add( this )
+      @current_volume = 1.0
 
     method on_cleanup
       unload
@@ -34,13 +36,6 @@ class Sound
     method crossfade( duration=1.0:Real )
       # Only has an effect for Music
       noAction
-
-    method current_volume->Real
-      local result : Real
-      if (is_prepared)
-        native @|$result = ma_sound_get_volume( &$this->sound );
-      endIf
-      return result
 
     method duration->Real
       local seconds : Real
@@ -200,8 +195,9 @@ class Sound
         @|ma_sound_seek_to_second( &$this->sound, (float)$seconds );
       endIf
 
-    method set_current_volume( p:Real )
+    method set_current_volume( @current_volume )
       if (prepare)
+        local p = .effective_volume
         native @|ma_sound_set_volume( &$this->sound, (float)$p );
       endIf
 
@@ -232,6 +228,9 @@ class Sound
                 |memset( &$this->sound, 0, sizeof(ma_sound) );
       endIf
       is_configured = false
+
+    method .effective_volume->Real
+      return AudioManager.master_volume * AudioManager.sound_volume * current_volume
 
 endClass
 
