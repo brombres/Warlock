@@ -499,3 +499,16 @@ routine open_xcode( folder:String )
   endIf
 endRoutine
 
+routine rogo_xcode_deep_clean
+  println "🧹 Removing DerivedData..."
+  execute "rm -rf ~/Library/Developer/Xcode/DerivedData"
+
+  println "🧹 Cleaning Pods..."
+  execute "cd Platforms/Xcode && pod deintegrate && pod install"
+
+  println "🧹 Cleaning Xcode build folder..."
+  execute "cd Platforms/Xcode && xcodebuild clean -workspace Warlock.xcworkspace -scheme Warlock-iOS -configuration Debug"
+  execute "cd Platforms/Xcode && xcodebuild clean -workspace Warlock.xcworkspace -scheme Warlock-macOS -configuration Debug"
+
+  println "✅ Environment reset complete. 'rogo macos/ios open' and rebuild."
+endRoutine
