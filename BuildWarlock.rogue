@@ -454,7 +454,14 @@ local stdlib = Files( "~/Projects/Rogue/Source/Libraries", "**.rogue" ) # FIXME
 if (stdlib.any_newer_than(source_folder/source_filename)) rebuild = true #FIXME
 
   if (rebuild or files.any_newer_than(source_folder/source_filename))
-    block cmd = "roguec Source/Main.rogue Warlock"
+    block cmd = "roguec Source/Main.rogue"
+      local target_specific = "Source/Target-$.rogue"(platform)
+      if (File(target_specific).exists)
+        cmd .= appending( target_specific )
+      else
+        println "Note: if you create $ it will be automatically included with $ builds."(target_specific,platform)
+      endIf
+      cmd .= appending( "Warlock" )
       cmd .= appending( "Warlock/Framework/SDL" )
       cmd .= appending( "Warlock/Graphics/BGFX" )
       #cmd .= appending( "Warlock/Platform/$.rogue"(platform) )
