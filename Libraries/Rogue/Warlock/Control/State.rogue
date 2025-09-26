@@ -26,20 +26,23 @@ class State : Rogue::ProgressState<<State>>, WarlockState<<State>>
     method dispatch( e:TextEvent )
       Window.screen.handle( e )
 
-    method dispatch_find( id:GlobalID, arg=undefined:Variant, &up )->Variant
-      if (not up) return Window.screen.find( id, arg )
-
     method dispatch_draw( &fg )
       Window.screen.draw( &=fg )
+
+    method dispatch_find( id:GlobalID, arg=undefined:Variant, &up )->Variant
+      if (not up) return Window.screen.find( id, arg )
 
     method exit_state
       exit
 
-    method screen->Screen
-      return Window.screen
-
     method mark_modified
       Window.is_state_modified = true
+
+    method scene->Scene
+      return Window.scene
+
+    method screen->Screen
+      return Window.screen
 
     method .get_top_level_state->State [override]
       return Window.state

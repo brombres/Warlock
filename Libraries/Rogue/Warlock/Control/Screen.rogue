@@ -26,21 +26,21 @@ class Screen : Rogue::ProgressState<<Screen>>, WarlockState<<State>>
     method dispatch( e:TextEvent )
       Window.scene.handle( e )
 
+    method dispatch_draw( &fg )
+      Window.scene.draw( &=fg )
+
     method dispatch_find( id:GlobalID, arg=undefined:Variant, &up )->Variant
       if (up) return Window.state.find( id, arg )
       else    return Window.scene.find( id, arg )
 
-    method dispatch_draw( &fg )
-      Window.scene.draw( &=fg )
-
-    method scene->Scene
-      return Window.scene
+    method exit_screen
+      exit
 
     method mark_modified
       Window.is_screen_modified = true
 
-    method exit_screen
-      exit
+    method scene->Scene
+      return Window.scene
 
     method state->State
       return Window.state
