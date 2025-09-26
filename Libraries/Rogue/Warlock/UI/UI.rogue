@@ -4,8 +4,9 @@ $include Warlock/UI/ColorFillComponent
 $include Warlock/UI/Font
 $include Warlock/UI/ImageComponent
 $include Warlock/UI/OffscreenBuffer
-$include Warlock/UI/WarlockUI
+$include Warlock/UI/SlidingPanel
 $include Warlock/UI/Text
+$include Warlock/UI/WarlockUI
 
 
 augment UI::UI

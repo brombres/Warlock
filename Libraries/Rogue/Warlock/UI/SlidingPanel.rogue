@@ -1,0 +1,145 @@
+class SlidingPanel : Component
+  # Note: shrink_to_fit_height by default.
+  PROPERTIES
+    visibility   : VariantEntry  # e.g. <AppData.ui.slider_visibility>
+    offset_out   = XY( 0, 1 )
+    offset_in    = XY( 0, 0 )
+
+    size_factor  = 0.0
+    # Every slide() call accepts a value for size_factor, default zero.
+    #
+    # If zero, this panel slides one screenful to or from the direction
+    # of offset_out.
+    #
+    # If nonzero, then a size_factor of 1.0 represents the screen distance
+    # required to slide the panel just out of sight, based on its size.
+    #
+    # For example, if this panel is 250 pixels high on a display that's
+    # 1000 pixels high and this panel is positioned at the bottom of the
+    # display, here's the result of calling slide_out_down() with various
+    # size factors:
+    #
+    # slide_out_down( &size_factor=0 )
+    #   Panel slides down +1000 pixels, a screenful away from its starting
+    #   position.
+    #
+    # slide_out_down( &size_factor=1.0 )
+    #   Panel slides down +250 pixels, 100% of its height, so that it is
+    #   positioned just below the bottom of the screen.
+    #
+    # The user won't see the panel once it's slid out in either case, but
+    # there's a difference in the apparent "trajectory" of the panel.
+    # In the first case the panel looks like it's headed to or from "way out
+    # there" and in the second case it's obvious that it's going or coming
+    # from just out of sight.
+    #
+    # If you have multiple sliding panels in a UI and you want them to
+    # possibly slide in at different times and then slide out together,
+    # or vice versa, it's important to use size_factor 0 or else they'll
+    # move at different speeds.
+
+  METHODS
+    method init( component:Component, visibility:GlobalID, &in, &out )
+      init( component, AppDataValue(visibility), &=in, &=out )
+
+    method init( component:Component, visibility, &in, &out )
+      prior.init( component )
+      init( visibility, &=in, &=out )
+
+    method init( visibility, &in, &out )
+      if (in) set( 1 )
+      else    set( 0 )
+      shrink_to_fit_height
+
+    method current_offset->XY
+      localize offset_out
+      if (size_factor)
+        if (offset_out == XY(0,1))
+          offset_out = ((Display.size - display_bounds.top_left).yv / Display.size) * size_factor
+        elseIf (offset_out == XY(0,-1))
+          offset_out = ((display_bounds.bottom_left).yv / Display.size) * size_factor
+        elseIf (offset_out == XY(1,0))
+          offset_out = ((Display.size - display_bounds.top_left).xv / Display.size) * size_factor
+        elseIf (offset_out == XY(-1,0))
+          offset_out = ((display_bounds.top_right).xv / Display.size) * size_factor
+        endIf
+      endIf
+
+      return progress.lerp( offset_out, offset_in )
+
+    method on_update
+      content_offset = Display.size * current_offset
+
+    method progress->Real
+      return visibility->Real
+
+    method set( progress:Real )
+      visibility.set( progress )
+
+    method slide_in( duration=1.0:Real )
+      actions += ActionSlideIn( visibility, duration )
+
+    method slide_in_down( duration=1.0:Real, size_factor=0.0 )
+      offset_out = XY( 0, -1 )
+      slide_in( duration )
+
+    method slide_in_left( duration=1.0:Real, size_factor=0.0 )
+      offset_out = XY( 1, 0 )
+      slide_in( duration )
+
+    method slide_in_right( duration=1.0:Real, size_factor=0.0 )
+      offset_out = XY( -1, 0 )
+      slide_in( duration )
+
+    method slide_in_up( duration=1.0:Real, size_factor=0.0 )
+      offset_out = XY( 0, 1 )
+      slide_in( duration )
+
+    method slide_out( duration=1.0:Real )
+      actions += ActionSlideOut( visibility, duration )
+
+    method slide_out_down( duration=1.0:Real, size_factor=0.0 )
+      offset_out = XY( 0, 1 )
+      slide_out( duration )
+
+    method slide_out_left( duration=1.0:Real, size_factor=0.0 )
+      offset_out = XY( -1, 0 )
+      slide_out( duration )
+
+    method slide_out_right( duration=1.0:Real, size_factor=0.0 )
+      offset_out = XY( 1, 0 )
+      slide_out( duration )
+
+    method slide_out_up( duration=1.0:Real, size_factor=0.0 )
+      offset_out = XY( 0, -1 )
+      slide_out( duration )
+
+
+endClass
+
+class ActionSlide : Action
+  PROPERTIES
+    app_data_value : VariantEntry
+
+  METHODS
+    method init( app_data_value, duration=1.0 )
+
+    method on_update [override]
+      app_data_value.set( progress(progress) )
+
+    method progress( p:Real )->Real
+      return ProgressFn.QUADRATIC( p )
+endClass
+
+class ActionSlideIn : ActionSlide
+  METHODS
+    method progress( p:Real )->Real
+      return ProgressFn.QUADRATIC_OUT( p )
+endClass
+
+class ActionSlideOut : ActionSlide
+  METHODS
+    method progress( p:Real )->Real
+      return 1.0 - ProgressFn.QUADRATIC_IN( p )
+endClass
+
