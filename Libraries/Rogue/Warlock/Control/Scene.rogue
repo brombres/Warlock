@@ -1,6 +1,6 @@
 library Warlock
 
-class Scene : Rogue::ActiveState<<Scene>>, WarlockState
+class Scene : Rogue::ActiveState<<Scene>>, WarlockState<<State>>
   METHODS
     method change_scene( new_scene:Scene )
       change( new_scene )

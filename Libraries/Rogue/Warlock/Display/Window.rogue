@@ -90,6 +90,15 @@ class Window : Display [singleton]
       state.draw( &!fg )
       state.draw( &fg )
 
+    method set_scene( new_scene:Scene )
+      @scene = WarlockState<<Scene>>.reordered( new_scene )
+
+    method set_screen( new_screen:Screen )
+      @screen = WarlockState<<Screen>>.reordered( new_screen )
+
+    method set_state( new_state:State )
+      @state = WarlockState<<State>>.reordered( new_state )
+
     method update [override]
       if (@ui)
         ui.update( bounds )

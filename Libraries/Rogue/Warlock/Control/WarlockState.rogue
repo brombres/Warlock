@@ -1,9 +1,11 @@
 library Warlock
 
-class WarlockState [aspect]
+class WarlockState<<$ExtendedType>> [aspect]
   PROPERTIES
-    actions : Action
-    ui      : UI
+    actions     : Action
+    ui          : UI
+    layer_order : Int
+    # UI & drawing order within group, e.g. Screens. Higher # screen is above lower # screen.
 
   METHODS
     method dispatch( e:KeyEvent )
@@ -286,5 +288,31 @@ class WarlockState [aspect]
       prior.update
       if (@ui) @ui.update( Display.bounds )
       dispatch_update
+
+  GLOBAL METHODS
+    method reordered( first:$ExtendedType )->$ExtendedType
+      if (not first or not first.concurrent_state) return first
+
+      use list = WorkList<<$ExtendedType>>
+        block cur = first
+          while (cur)
+            list.add( cur )
+            local next = cur.concurrent_state
+            cur.concurrent_state = null
+            cur = next
+          endWhile
+        endBlock
+
+        list.sort( $1.layer_order < $2.layer_order )
+
+        first = list.first
+        local prev = first
+        forEach (cur in list from 1)
+          prev.concurrent_state = cur
+          prev = cur
+        endForEach
+        return first
+
+      endUse
 
 endClass

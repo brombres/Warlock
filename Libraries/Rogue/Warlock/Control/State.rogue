@@ -1,6 +1,6 @@
 library Warlock
 
-class State : Rogue::ProgressState<<State>>, WarlockState
+class State : Rogue::ProgressState<<State>>, WarlockState<<State>>
   METHODS
     method change_scene( new_scene:Scene )
       Window.change_scene( new_scene )
