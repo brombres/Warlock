@@ -65,10 +65,10 @@ class WarlockController
       noAction
 
     method update
-      # Update the current window state, screen, and view
+      # Update the current window state, screen, and scene
       Window.state = Window.state.updated || State()
       Window.screen = Window.screen.updated || Screen()
-      Window.view = Window.view.updated || View()
+      Window.scene = Window.scene.updated || Scene()
       if (Window.actions) Window.actions = Window.actions.updated
 
     method end_update

@@ -1,37 +1,40 @@
 library Warlock
 
-class Screen : Rogue::ProgressState<<Screen,change_screen>>, WarlockState
+class Screen : Rogue::ProgressState<<Screen>>, WarlockState
   METHODS
-    method change_view( new_view:View )
-      Window.view.change_view( new_view )
+    method change_scene( new_scene:Scene )
+      Window.scene.change_scene( new_scene )
+
+    method change_screen( new_screen:Screen )
+      change( new_screen )
 
     method change_state( new_state:State )
       Window.state.change_state( new_state )
 
     method dispatch( e:KeyEvent )
-      Window.view.handle( e )
+      Window.scene.handle( e )
 
     method dispatch( e:MultitouchEvent )
-      Window.view.handle( e )
+      Window.scene.handle( e )
 
     method dispatch( e:PointerEvent )
-      Window.view.handle( e )
+      Window.scene.handle( e )
 
     method dispatch( e:ScrollEvent )
-      Window.view.handle( e )
+      Window.scene.handle( e )
 
     method dispatch( e:TextEvent )
-      Window.view.handle( e )
+      Window.scene.handle( e )
 
     method dispatch_find( id:GlobalID, arg=undefined:Variant, &up )->Variant
       if (up) return Window.state.find( id, arg )
-      else    return Window.view.find( id, arg )
+      else    return Window.scene.find( id, arg )
 
     method dispatch_draw( &fg )
-      Window.view.draw( &=fg )
+      Window.scene.draw( &=fg )
 
-    method view->View
-      return Window.view
+    method scene->Scene
+      return Window.scene
 
     method exit_screen
       exit

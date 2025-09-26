@@ -1,6 +1,6 @@
 library Warlock
 
-$include Warlock/Control/View
+$include Warlock/Control/Scene
 $include Warlock/Control/Screen
 $include Warlock/Control/State
 $include Warlock/Control/WarlockState

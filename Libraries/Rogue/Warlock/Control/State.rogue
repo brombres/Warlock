@@ -1,12 +1,15 @@
 library Warlock
 
-class State : Rogue::ProgressState<<State,change_state>>, WarlockState
+class State : Rogue::ProgressState<<State>>, WarlockState
   METHODS
-    method change_view( new_view:View )
-      Window.view.change_view( new_view )
+    method change_scene( new_scene:Scene )
+      Window.change_scene( new_scene )
 
     method change_screen( new_screen:Screen )
-      Window.screen.change_screen( new_screen )
+      Window.change_screen( new_screen )
+
+    method change_state( new_state:State )
+      change( new_state )
 
     method dispatch( e:KeyEvent )
       Window.screen.handle( e )

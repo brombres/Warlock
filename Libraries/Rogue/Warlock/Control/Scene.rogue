@@ -1,7 +1,10 @@
 library Warlock
 
-class View : Rogue::ActiveState<<View,change_view>>, WarlockState
+class Scene : Rogue::ActiveState<<Scene>>, WarlockState
   METHODS
+    method change_scene( new_scene:Scene )
+      change( new_scene )
+
     method change_screen( new_screen:Screen )
       Window.screen.change_state( new_screen )
 
@@ -44,9 +47,9 @@ class View : Rogue::ActiveState<<View,change_view>>, WarlockState
     method state->State
       return Window.state
 
-    method .get_top_level_state->View [override]
-      return Window.view
+    method .get_top_level_state->Scene [override]
+      return Window.scene
 
-    method .set_top_level_state( view:View ) [override]
-      Window.view = view
+    method .set_top_level_state( scene:Scene ) [override]
+      Window.scene = scene
 endClass
