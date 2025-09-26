@@ -2,9 +2,9 @@ library Warlock
 
 class WarlockState<<$ExtendedType>> [aspect]
   PROPERTIES
-    actions     : Action
-    ui          : UI
-    layer_order : Int
+    actions       : Action
+    ui            : UI
+    display_index : Int
     # UI & drawing order within group, e.g. Screens. Higher # screen is above lower # screen.
 
   METHODS
@@ -273,6 +273,12 @@ class WarlockState<<$ExtendedType>> [aspect]
 
     method on_unhandled_ui( e:TextEvent )
 
+    method set_display_index( new_display_index:Int )
+      if (display_index != new_display_index)
+        @display_index = new_display_index
+        mark_modified
+      endIf
+
     method set_ui( @ui )
       if (@ui)
         @ui.find_handler   = (this=>handle_find_up)
@@ -303,7 +309,7 @@ class WarlockState<<$ExtendedType>> [aspect]
           endWhile
         endBlock
 
-        list.sort( $1.layer_order < $2.layer_order )
+        list.sort( $1.display_index < $2.display_index )
 
         first = list.first
         local prev = first

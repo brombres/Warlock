@@ -38,6 +38,9 @@ class State : Rogue::ProgressState<<State>>, WarlockState<<State>>
     method screen->Screen
       return Window.screen
 
+    method mark_modified
+      Window.is_state_modified = true
+
     method .get_top_level_state->State [override]
       return Window.state
 

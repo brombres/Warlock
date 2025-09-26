@@ -41,6 +41,9 @@ class Scene : Rogue::ActiveState<<Scene>>, WarlockState<<State>>
     method exit_screen
       exit
 
+    method mark_modified
+      Window.is_scene_modified = true
+
     method screen->Screen
       return Window.screen
 

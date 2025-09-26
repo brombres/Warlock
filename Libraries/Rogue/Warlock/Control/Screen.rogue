@@ -36,6 +36,9 @@ class Screen : Rogue::ProgressState<<Screen>>, WarlockState<<State>>
     method scene->Scene
       return Window.scene
 
+    method mark_modified
+      Window.is_screen_modified = true
+
     method exit_screen
       exit
 

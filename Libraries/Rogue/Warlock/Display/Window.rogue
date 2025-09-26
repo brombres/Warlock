@@ -3,9 +3,15 @@ library Warlock
 class Window : Display [singleton]
   PROPERTIES
     title       : String
-    scene = Scene()
+
+    scene       = Scene()
     screen      = Screen()
     state       : State
+
+    is_scene_modified  : Logical
+    is_screen_modified : Logical
+    is_state_modified  : Logical
+
     old_size    : XY  # used to detect size changes in WarlockController.tick(Window)
     actions     : Action
 
@@ -86,18 +92,48 @@ class Window : Display [singleton]
     method native_id->Int
       noAction  # defined by extended Platform, e.g. SDL
 
+    method remove_scene( scene:Scene )
+      @scene = scene.removing( scene )
+
+    method remove_screen( screen:Screen )
+      @screen = screen.removing( screen )
+
+    method remove_state( state:State )
+      @state = state.removing( state )
+
     method render
       state.draw( &!fg )
       state.draw( &fg )
 
-    method set_scene( new_scene:Scene )
-      @scene = WarlockState<<Scene>>.reordered( new_scene )
+    method scene->Scene
+      if (is_scene_modified)
+        is_scene_modified = false
+        @scene = WarlockState<<Scene>>.reordered( @scene )
+      endIf
+      return @scene
 
-    method set_screen( new_screen:Screen )
-      @screen = WarlockState<<Screen>>.reordered( new_screen )
+    method screen->Screen
+      if (is_screen_modified)
+        is_screen_modified = false
+        @screen = WarlockState<<Screen>>.reordered( @screen )
+      endIf
+      return @screen
 
-    method set_state( new_state:State )
-      @state = WarlockState<<State>>.reordered( new_state )
+    method set_scene( @scene )
+      is_scene_modified = true
+
+    method set_screen( @screen )
+      is_screen_modified = true
+
+    method set_state( @state )
+      is_state_modified = true
+
+    method state->State
+      if (is_state_modified)
+        is_state_modified = false
+        @state = WarlockState<<State>>.reordered( @state )
+      endIf
+      return @state
 
     method update [override]
       if (@ui)
