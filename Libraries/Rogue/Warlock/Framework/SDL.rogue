@@ -165,7 +165,7 @@ class SDL : Framework [singleton]
                   pointer_event.window = window
                   pointer_event.timestamp = native("event.motion.timestamp")->Int / 1000000
                   Pointer.record( pointer_event )
-                  Window.state.handle( pointer_event )
+                  Window.dispatch( pointer_event )
                 endUse
               endIf
             endBlock
@@ -190,7 +190,7 @@ class SDL : Framework [singleton]
                   pointer_event.window = window
                   pointer_event.timestamp = native("event.button.timestamp")->Int / 1000000
                   Pointer.record( pointer_event )
-                  Window.state.handle( pointer_event )
+                  Window.dispatch( pointer_event )
                 endUse
               endIf
             endBlock
@@ -205,7 +205,7 @@ class SDL : Framework [singleton]
                   pointer_event.window = window
                   pointer_event.timestamp = native("event.window.timestamp")->Int / 1000000
                   Pointer.record( pointer_event )
-                  Window.state.handle( pointer_event )
+                  Window.dispatch( pointer_event )
                 endUse
               endIf
             endBlock
@@ -220,7 +220,7 @@ class SDL : Framework [singleton]
                   pointer_event.window = window
                   pointer_event.timestamp = native("event.window.timestamp")->Int / 1000000
                   Pointer.record( pointer_event )
-                  Window.state.handle( pointer_event )
+                  Window.dispatch( pointer_event )
                 endUse
               endIf
             endBlock
@@ -262,7 +262,7 @@ class SDL : Framework [singleton]
 
                   scroll_event.window = window
                   scroll_event.timestamp = native("event.wheel.timestamp")->Int / 1000000
-                  Window.state.handle( scroll_event )
+                  Window.dispatch( scroll_event )
                 endUse
               endIf
             endBlock
@@ -296,14 +296,14 @@ class SDL : Framework [singleton]
                   key_event.window = window
                   key_event.timestamp = native("event.key.timestamp")->Int / 1000000
                   Keyboard.on( key_event )
-                  Window.state.handle( key_event )
+                  Window.dispatch( key_event )
 
                   if (key_event.is_printable)
                     use text_event = RecyclePool<<TextEvent>>
                       text_event.init( key_event.unicode )
                       text_event.window = window
                       text_event.timestamp = native("event.key.timestamp")->Int / 1000000
-                      Window.state.handle( text_event )
+                      Window.dispatch( text_event )
                     endUse
                   endIf
                 endUse
@@ -372,7 +372,7 @@ class SDL : Framework [singleton]
             scroll_event.init( XY(0,0), &is_precise, &!in_progress, &=is_momentum, Window.density )
             scroll_event.window = last_mouse_event_window
             scroll_event.timestamp = System.execution_time
-            Window.state.handle( scroll_event )
+            Window.dispatch( scroll_event )
           endUse
         endIf
       else

@@ -4,31 +4,46 @@ class Window : Display [singleton]
   PROPERTIES
     title       : String
 
-    scene       = Scene()
-    screen      = Screen()
-    state       : State
-
-    is_scene_modified  : Logical
-    is_screen_modified : Logical
-    is_state_modified  : Logical
+    control_states     = ControlStates()
+    active_layers      = State[]    # A flat copy of control_states used during event dispatch.
+    active_layer_ids   = GlobalID[] # Used for reverse lookup from active layer index to control state.
+    active_layer_index : Int        # The current control state index during an event dispatch.
 
     old_size    : XY  # used to detect size changes in WarlockController.tick(Window)
     actions     : Action
 
   METHODS
-    method init( title, width:Int, height:Int, state=State() )
+    method init( title, width:Int, height:Int, state=State():State )
       Window = this
+
+      define_control_states( state )
+
       pixel_size = XY(width,height)
       if (Framework.create_window(this))
         Warlock.add_window( this )
         Renderer.configure_window( this )
       endIf
 
+    method active_layers->State[]
+      if (control_states.are_modified) .update_active_layers
+      return @active_layers
+
+    method define_control_states( start_state:State )
+      # The order that new blank states are added to the control_states[] table defines
+      # the drawing order and corresponding UI event dispatch order of various control
+      # state types. Augment-replace in your app to customize.
+      control_states//background = null
+      control_states//scene      = null
+      control_states//screen     = null
+      control_states//overlays   = null
+      control_states//state      = start_state
+
     method begin_render [override]
       prior.begin_render
-      state.on_begin_render
-      screen.on_begin_render
-      scene.on_begin_render
+      forEach (state at index in active_layers step -1)
+        active_layer_index = index
+        state.on_begin_render
+      endForEach
       Renderer.on_begin_render( this )
 
     method begin_tick [override]
@@ -36,18 +51,101 @@ class Window : Display [singleton]
       Framework.update_window_size( this )
       prior.begin_tick
 
-    method change_scene( new_scene:Scene )
-      scene.change_scene( new_scene )
+    method change_scene( new_scene:State )
+      if local scene = control_states//scene
+        control_states//scene.change( new_scene )
+      else
+        control_states//scene = new_scene
+      endIf
 
-    method change_screen( new_screen:Screen )
-      screen.change_screen( new_screen )
+    method change_screen( new_screen:State )
+      if local screen = control_states//screen
+        control_states//screen.change( new_screen )
+      else
+        control_states//screen = new_screen
+      endIf
 
     method change_state( new_state:State )
-      state.change( new_state )
+      if local state = control_states//state
+        control_states//state.change( new_state )
+      else
+        control_states//state = new_state
+      endIf
 
     method close
       Warlock.windows.remove( this )
       Framework.close_window( this )
+
+    method dispatch( e:KeyEvent, layer_index=null:Int? )
+      localize active_layers
+      if (not layer_index) layer_index = active_layers.count - 1
+
+      if (layer_index.value >= 0)
+        temporarily active_layer_index = layer_index.value
+          local state = active_layers[layer_index.value]
+          state.handle( e )
+        endTemporarily
+      else
+        handle( e )
+      endIf
+
+    method dispatch( e:MultitouchEvent, layer_index=null:Int? )
+      localize active_layers
+      if (not layer_index) layer_index = active_layers.count - 1
+
+      if (layer_index.value >= 0)
+        temporarily active_layer_index = layer_index.value
+          local state = active_layers[layer_index.value]
+          state.handle( e )
+        endTemporarily
+      else
+        handle( e )
+      endIf
+
+    method dispatch( e:PointerEvent, layer_index=null:Int? )
+      localize active_layers
+      if (not layer_index) layer_index = active_layers.count - 1
+
+      if (layer_index.value >= 0)
+        temporarily active_layer_index = layer_index.value
+          local state = active_layers[layer_index.value]
+          state.handle( e )
+        endTemporarily
+      else
+        handle( e )
+      endIf
+
+    method dispatch( e:ScrollEvent, layer_index=null:Int? )
+      localize active_layers
+      if (not layer_index) layer_index = active_layers.count - 1
+
+      if (layer_index.value >= 0)
+        temporarily active_layer_index = layer_index.value
+          local state = active_layers[layer_index.value]
+          state.handle( e )
+        endTemporarily
+      else
+        handle( e )
+      endIf
+
+    method dispatch( e:TextEvent, layer_index=null:Int? )
+      localize active_layers
+      if (not layer_index) layer_index = active_layers.count - 1
+
+      if (layer_index.value >= 0)
+        temporarily active_layer_index = layer_index.value
+          local state = active_layers[layer_index.value]
+          state.handle( e )
+        endTemporarily
+      else
+        handle( e )
+      endIf
+
+    method dispatch_draw
+      draw_state
+
+    method dispatch_update
+      update_state
 
     method draw [override]
       @ui?.draw
@@ -59,31 +157,45 @@ class Window : Display [singleton]
         endWhile
       endBlock
 
+    method draw_state( layer_index=null:Int? )
+      localize active_layers
+
+      if (not layer_index) layer_index = active_layers.count - 1
+
+      if (layer_index.value >= 0)
+        temporarily active_layer_index = layer_index.value
+          local state = active_layers[layer_index.value]
+          state.draw
+        endTemporarily
+      else
+        draw
+      endIf
 
     method end_render [override]
       prior.end_render
 
-      state.on_end_render
-      screen.on_end_render
+      forEach (state at index in active_layers step -1)
+        active_layer_index = index
+        state.on_end_render
+      endForEach
 
       if (Warlock.windows.count and Warlock.windows.first is this) OverlayLog.draw
       Renderer.on_end_render( this )
 
     method handle( e:KeyEvent )
-      if (@ui) @ui.handle( e )
+      @ui?.handle( e )
 
     method handle( e:MultitouchEvent )
-      if (@ui) @ui.handle( e )
+      @ui?.handle( e )
 
     method handle( e:PointerEvent )
-      if (@ui) @ui.handle( e )
+      @ui?.handle( e )
 
     method handle( e:ScrollEvent )
-      if (@ui) @ui.handle( e )
+      @ui?.handle( e )
 
     method handle( e:TextEvent )
-      if (@ui) @ui.handle( e )
-
+      @ui?.handle( e )
 
     method handle_app_resume
       Framework.handle_app_resume( this )
@@ -92,48 +204,59 @@ class Window : Display [singleton]
     method native_id->Int
       noAction  # defined by extended Platform, e.g. SDL
 
-    method remove_scene( scene:Scene )
-      @scene = scene.removing( scene )
+    method remove_scene( scene:State )
+      if local cur_scene = control_states//scene
+        control_states//scene = cur_scene.removing( scene )
+      endIf
 
-    method remove_screen( screen:Screen )
-      @screen = screen.removing( screen )
+    method remove_screen( screen:State )
+      if local cur_screen = control_states//screen
+        control_states//screen = cur_screen.removing( screen )
+      endIf
 
     method remove_state( state:State )
-      @state = state.removing( state )
-
-    method render
-      state.draw( &!fg )
-      state.draw( &fg )
-
-    method scene->Scene
-      if (is_scene_modified)
-        is_scene_modified = false
-        @scene = WarlockState<<Scene>>.reordered( @scene )
+      if local cur_state = control_states//state
+        control_states//state = cur_state.removing( state )
       endIf
-      return @scene
 
-    method screen->Screen
-      if (is_screen_modified)
-        is_screen_modified = false
-        @screen = WarlockState<<Screen>>.reordered( @screen )
+    method scene->State
+      .update_active_layers
+      if local scene = control_states//scene
+        return scene
+      else
+        local result = State()
+        control_states//scene = result
+        return result
       endIf
-      return @screen
 
-    method set_scene( @scene )
-      is_scene_modified = true
+    method screen->State
+      .update_active_layers
+      if local screen = control_states//screen
+        return screen
+      else
+        local result = State()
+        control_states//screen = result
+        return result
+      endIf
 
-    method set_screen( @screen )
-      is_screen_modified = true
+    method set_scene( scene:State )
+      control_states//scene = scene
 
-    method set_state( @state )
-      is_state_modified = true
+    method set_screen( screen:State )
+      control_states//screen = screen
+
+    method set_state( state:State )
+      control_states//state = state
 
     method state->State
-      if (is_state_modified)
-        is_state_modified = false
-        @state = WarlockState<<State>>.reordered( @state )
+      .update_active_layers
+      if local state = control_states//state
+        return state
+      else
+        local result = State()
+        control_states//state = result
+        return result
       endIf
-      return @state
 
     method update [override]
       if (@ui)
@@ -141,6 +264,26 @@ class Window : Display [singleton]
         ui.request_redraw
       endIf
 
+      if (actions) actions = actions.updated
+
+    method update_state( layer_index=null:Int? )
+      localize active_layers
+      if (not layer_index) layer_index = active_layers.count - 1
+
+      if (layer_index.value >= 0)
+        temporarily active_layer_index = layer_index.value
+          local state = active_layers[layer_index.value]
+          local updated_state = state.updated
+          if (updated_state is not state)
+            control_states[active_layer_ids[layer_index.value]] = updated_state
+          endIf
+        endTemporarily
+      else
+        update
+      endIf
+
+    method .update_active_layers
+      control_states.update_order( @active_layers, active_layer_ids )
 endClass
 
 augment UI::Event

@@ -13,7 +13,9 @@ augment UI::Event
   METHODS
     method dispatch [propagated,append]
       if (not (this isType Event))
-        window.state.handle( this )
+        temporarily Window = window
+          window.dispatch( this )
+        endTemporarily
       endIf
 endAugment
 

@@ -1,0 +1,32 @@
+library Warlock
+
+class ControlStates : [GlobalID:State]
+  PROPERTIES
+    are_modified : Logical
+
+  METHODS
+    method clear [override]
+      prior.clear
+      are_modified = true
+
+    method set( id:GlobalID, state:State ) [override]
+      prior.set( id, state )
+      are_modified = true
+
+    method collect_list( states:State[], ids:GlobalID[] )
+      states.clear
+      ids.clear
+      forEach (entry in entries)
+        if local state = State.ordered( entry.value )
+          entry.value = state
+          states.add( state )
+          ids.add( entry.key )
+        endIf
+      endForEach
+
+    method update_order( states:State[], ids:GlobalID[] )
+      if (not are_modified) return
+      are_modified = false
+      collect_list( states, ids )
+
+endClass

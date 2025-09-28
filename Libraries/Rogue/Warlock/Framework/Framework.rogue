@@ -55,7 +55,7 @@ class Framework [abstract singleton]
                       multitouch_event.init( XYZ(delta,dz) )
                       multitouch_event.window = pointer_event.window
                       multitouch_event.timestamp = pointer_event.timestamp
-                      Window.state.handle( multitouch_event )
+                      Window.dispatch( multitouch_event )
                     endUse
                   endIf
                   last_multitouch_position = current_multitouch_position
