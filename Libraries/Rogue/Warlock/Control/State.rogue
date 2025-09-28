@@ -22,28 +22,28 @@ class State : Rogue::ProgressState<<State>>
       Window.change_state( new_state )
 
     method dispatch( e:KeyEvent )
-      Window.dispatch( e, Window.active_layer_index - 1 )
+      Window.dispatch( e, Window.control_states.active_layer_index - 1 )
 
     method dispatch( e:MultitouchEvent )
-      Window.dispatch( e, Window.active_layer_index - 1 )
+      Window.dispatch( e, Window.control_states.active_layer_index - 1 )
 
     method dispatch( e:PointerEvent )
-      Window.dispatch( e, Window.active_layer_index - 1 )
+      Window.dispatch( e, Window.control_states.active_layer_index - 1 )
 
     method dispatch( e:ScrollEvent )
-      Window.dispatch( e, Window.active_layer_index - 1 )
+      Window.dispatch( e, Window.control_states.active_layer_index - 1 )
 
     method dispatch( e:TextEvent )
-      Window.dispatch( e, Window.active_layer_index - 1 )
+      Window.dispatch( e, Window.control_states.active_layer_index - 1 )
 
     method dispatch_draw
-      Window.draw_state( Window.active_layer_index - 1 )
+      Window.draw_state( Window.control_states.active_layer_index - 1 )
 
     method dispatch_find( id:GlobalID, arg=undefined:Variant, &up )->Variant
-      local stepped_layer_index = Window.active_layer_index + ?:{up:1 || -1}
-      if (stepped_layer_index >= 0 and stepped_layer_index < Window.active_layers.count)
-        temporarily Window.active_layer_index = stepped_layer_index
-          return Window.active_layers[stepped_layer_index].find( id, arg &=up )
+      local stepped_layer_index = Window.control_states.active_layer_index + ?:{up:1 || -1}
+      if (stepped_layer_index >= 0 and stepped_layer_index < Window.control_states.active_list.count)
+        temporarily Window.control_states.active_layer_index = stepped_layer_index
+          return Window.control_states.active_layer.find( id, arg &=up )
         endTemporarily
       elseIf (not up)
         return Window.find( id, arg )
@@ -52,7 +52,7 @@ class State : Rogue::ProgressState<<State>>
       endIf
 
     method dispatch_update
-      Window.update_state( Window.active_layer_index - 1 )
+      Window.update_state( Window.control_states.active_layer_index - 1 )
 
     method draw
       # Background
@@ -333,11 +333,10 @@ class State : Rogue::ProgressState<<State>>
       dispatch_update
 
     method .get_top_level_state->State [override]
-      return Window.active_layers[Window.active_layer_index]
+      return Window.control_states.active_layer
 
     method .set_top_level_state( state:State ) [override]
-      local window = Window
-      window.control_states[window.active_layer_ids[window.active_layer_index]] = state
+      Window.control_states.active_layer = state
 
   GLOBAL METHODS
     method ordered( first:State )->State
