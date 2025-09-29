@@ -2,13 +2,23 @@ library Warlock
 
 class Texture
   PROPERTIES
-    size   : XY
-    uv     : Quad     # .a/b/c/d = tl/tr/br/bl; corners orthogonal, maybe rotated 90º/180º/270º.
-    source : Texture  # if non-null, the original texture this is a subset of.
+    size     : XY
+    uv       : Quad     # .a/b/c/d = tl/tr/br/bl; corners orthogonal, maybe rotated 90º/180º/270º.
+    source   : Texture  # if non-null, the original texture this is a subset of.
+    filepath : String
 
   GLOBAL METHODS
     method create( bitmap:Bitmap, &mipmaps=true, &wrap )->Texture
       local texture = Texture().[ set(bitmap,&=mipmaps,&=wrap) ]
+      if (texture.size != bitmap.size)
+        # Texture size was expanded to power of 2; return a subset texture.
+        return Texture( texture, Box(bitmap.size) )
+      else
+        return texture
+      endIf
+
+    method create( bitmap:Bitmap, mipmap_pixels:Color[], &wrap )->Texture
+      local texture = Texture().[ set(bitmap,mipmap_pixels,&=wrap) ]
       if (texture.size != bitmap.size)
         # Texture size was expanded to power of 2; return a subset texture.
         return Texture( texture, Box(bitmap.size) )

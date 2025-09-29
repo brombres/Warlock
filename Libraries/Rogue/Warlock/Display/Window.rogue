@@ -21,6 +21,19 @@ class Window : Display [singleton]
         Renderer.configure_window( this )
       endIf
 
+    method add_overlay( overlay:State )
+      overlays |= overlay
+
+    method background->State
+      control_states.update_active_list
+      if local background = control_states//background
+        return background
+      else
+        local result = State().[exit]
+        control_states//background = result
+        return result
+      endIf
+
     method define_control_states( start_state:State )
       # The order that new blank states are added to the control_states[] table defines
       # the drawing order and corresponding UI event dispatch order of various control
@@ -28,8 +41,8 @@ class Window : Display [singleton]
       control_states//background = null
       control_states//scene      = null
       control_states//screen     = null
-      control_states//overlays   = null
       control_states//state      = start_state
+      control_states//overlays   = null
 
     method begin_render [override]
       prior.begin_render
@@ -43,6 +56,20 @@ class Window : Display [singleton]
       Window = this
       Framework.update_window_size( this )
       prior.begin_tick
+
+    method change_background( new_background:State )
+      if local background = control_states//background
+        control_states//background.change( new_background )
+      else
+        control_states//background = new_background
+      endIf
+
+    method change_overlay( new_overlay:State )
+      if local overlays = control_states//overlays
+        control_states//overlays.change( new_overlay )
+      else
+        control_states//overlays = new_overlay
+      endIf
 
     method change_scene( new_scene:State )
       if local scene = control_states//scene
@@ -138,7 +165,11 @@ class Window : Display [singleton]
       draw_state
 
     method dispatch_update
-      update_state
+      forEach (layer_index of control_states.active_list step -1)
+        update_state( layer_index )
+      endForEach
+
+      update
 
     method draw [override]
       @ui?.draw
@@ -197,6 +228,26 @@ class Window : Display [singleton]
     method native_id->Int
       noAction  # defined by extended Platform, e.g. SDL
 
+    method overlays->State
+      control_states.update_active_list
+      if local overlays = control_states//overlays
+        return overlays
+      else
+        local result = State().[exit]
+        control_states//overlays = result
+        return result
+      endIf
+
+    method remove_background( background:State )
+      if local cur_background = control_states//background
+        control_states//background = cur_background.removing( background )
+      endIf
+
+    method remove_overlay( overlay:State )
+      if local cur_overlay = control_states//overlays
+        control_states//overlays = cur_overlay.removing( overlay )
+      endIf
+
     method remove_scene( scene:State )
       if local cur_scene = control_states//scene
         control_states//scene = cur_scene.removing( scene )
@@ -217,7 +268,7 @@ class Window : Display [singleton]
       if local scene = control_states//scene
         return scene
       else
-        local result = State()
+        local result = State().[exit]
         control_states//scene = result
         return result
       endIf
@@ -227,10 +278,16 @@ class Window : Display [singleton]
       if local screen = control_states//screen
         return screen
       else
-        local result = State()
+        local result = State().[exit]
         control_states//screen = result
         return result
       endIf
+
+    method set_background( background:State )
+      control_states//background = background
+
+    method set_overlays( overlay:State )
+      control_states//overlays = overlay
 
     method set_scene( scene:State )
       control_states//scene = scene
@@ -246,7 +303,7 @@ class Window : Display [singleton]
       if local state = control_states//state
         return state
       else
-        local result = State()
+        local result = State().[exit]
         control_states//state = result
         return result
       endIf
@@ -259,21 +316,17 @@ class Window : Display [singleton]
 
       if (actions) actions = actions.updated
 
-    method update_state( layer_index=null:Int? )
+    method update_state( layer_index:Int )
       localize control_states.active_list
-      if (not layer_index) layer_index = active_list.count - 1
 
-      if (layer_index.value >= 0)
-        temporarily control_states.active_layer_index = layer_index.value
-          local state = active_list[layer_index.value]
-          local updated_state = state.updated
-          if (updated_state is not state)
-            control_states.active_layer = updated_state
-          endIf
-        endTemporarily
-      else
-        update
-      endIf
+      temporarily control_states.active_layer_index = layer_index
+        local state = control_states.active_layer
+        local layer_id = control_states.active_layer_id
+        local updated_state = state.updated
+        if (updated_state is not state)
+          control_states[layer_id] = updated_state
+        endIf
+      endTemporarily
 
 endClass
 

@@ -512,52 +512,45 @@ augment Texture
 
   METHODS
     method set( bitmap:Bitmap, &mipmaps=true, &wrap )
-      local is_cloned = false
-      if (not bitmap.is_power_of_2 or not bitmap.is_premultiplied_alpha)
-        is_cloned = true
-        bitmap = bitmap.cloned
-        bitmap.expand_to_power_of_2
-        bitmap.premultiply_alpha
-      endIf
+      filepath = bitmap.filepath
 
-      size = bitmap.size  # will be power of 2
-      uv = Quad( XY(0,0), XY(1,0), XY(1,1), XY(0,1) )
-
-      bitmap.swap_red_and_blue
+      local mipmap = bitmap.cloned
+      mipmap.expand_to_power_of_2
+      mipmap.premultiply_alpha
+      mipmap.swap_red_and_blue
 
       local mipmap_pixels : Color[]
 
       if (mipmaps)
-        local mip_w = bitmap.width
-        local mip_h = bitmap.height
+        local mip_w = mipmap.width
+        local mip_h = mipmap.height
         local mipmap_pixel_count = 1   # final 1x1
         while (mip_w > 1 or mip_h > 1)
           mipmap_pixel_count += mip_w * mip_h
-          mip_w = (mip_w/2).or_larger(1)
-          mip_h = (mip_h/2).or_larger(1)
+          if (mip_w > 1) mip_w :>>>:= 1
+          if (mip_h > 1) mip_h :>>>:= 1
         endWhile
 
         mipmap_pixels = Color[]( mipmap_pixel_count )
-        mipmap_pixels.add( bitmap.pixels )
-        mip_w = bitmap.width
-        mip_h = bitmap.height
-        if (mip_w > 1 or mip_h > 1)
-          mip_w = (mip_w / 2).or_larger( 1 )
-          mip_h = (mip_h / 2).or_larger( 1 )
-          local mipmap : Bitmap
-          if (is_cloned) mipmap = bitmap.[ resize(mip_w,mip_h) ]
-          else           mipmap = bitmap.resized( mip_w, mip_h )
-          while (mip_w > 1 or mip_h > 1)
-            mipmap_pixels.add( mipmap.pixels )
-            mip_w = (mip_w / 2).or_larger( 1 )
-            mip_h = (mip_h / 2).or_larger( 1 )
-            mipmap.resize( mip_w, mip_h )
-          endWhile
+        mipmap_pixels.add( mipmap.pixels )
+        mip_w = mipmap.width
+        mip_h = mipmap.height
+        while (mip_w > 1 or mip_h > 1)
+          if (mip_w > 1) mip_w :>>>:= 1
+          if (mip_h > 1) mip_h :>>>:= 1
+          mipmap.resize( mip_w, mip_h )
           mipmap_pixels.add( mipmap.pixels )
-        endIf
-      else
-        mipmap_pixels = bitmap.pixels
+        endWhile
       endIf
+
+      set( bitmap, mipmap_pixels, &=wrap )
+
+    method set( bitmap:Bitmap, mipmap_pixels:Color[], &wrap )
+      size = XY( bitmap.width.to_power_of_2, bitmap.height.to_power_of_2 )
+      uv = Quad( XY(0,0), XY(1,0), XY(1,1), XY(0,1) )
+
+      local mipmaps = mipmap_pixels?
+      if (not mipmap_pixels) mipmap_pixels = bitmap.pixels
 
       native
       @|uint32_t sampler_flags = BGFX_SAMPLER_MIN_ANISOTROPIC | BGFX_SAMPLER_MAG_ANISOTROPIC;
@@ -571,8 +564,6 @@ augment Texture
        |  sampler_flags,
        |  bgfx::copy( $mipmap_pixels->as_bytes, (uint32_t) ($mipmap_pixels->count*4) )
        |);
-
-      if (not is_cloned) bitmap.swap_red_and_blue
 
     method on_cleanup
       native

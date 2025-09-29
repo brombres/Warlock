@@ -8,9 +8,15 @@ class State : Rogue::ProgressState<<State>>
     # UI & drawing order within layer group, e.g. screens. Higher # screen is above lower # screen.
 
   METHODS
+    method background->State
+      return Window.background
+
     method change( new_state:State )
       prior.change( new_state )
-      Window.control_states.are_modified = true
+      Window.control_states.is_modified = true
+
+    method change_background( new_background:State )
+      Window.change_background( new_background )
 
     method change_scene( new_scene:State )
       Window.change_scene( new_scene )
@@ -50,9 +56,6 @@ class State : Rogue::ProgressState<<State>>
       else
         return undefined
       endIf
-
-    method dispatch_update
-      Window.update_state( Window.control_states.active_layer_index - 1 )
 
     method draw
       # Background
@@ -313,7 +316,7 @@ class State : Rogue::ProgressState<<State>>
     method set_display_index( new_display_index:Int )
       if (display_index != new_display_index)
         @display_index = new_display_index
-        Window.control_states.are_modified = true
+        Window.control_states.is_modified = true
       endIf
 
     method set_ui( @ui )
@@ -330,7 +333,6 @@ class State : Rogue::ProgressState<<State>>
       actions = actions?.updated
       prior.update
       if (@ui) @ui.update( Display.bounds )
-      dispatch_update
 
     method .get_top_level_state->State [override]
       return Window.control_states.active_layer

@@ -24,7 +24,7 @@ class Sound
       endIf
 
     method init_object
-      AudioManager.all_sounds.add( this )
+      AudioManager.all_audio.add( this )
       @current_volume = 1.0
 
     method on_cleanup

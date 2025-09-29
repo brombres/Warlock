@@ -8,7 +8,7 @@ class AudioManager [singleton]
 
     actions      : Action
 
-    all_sounds   = Sound[]  # includes sounds and music
+    all_audio    = Sound[]  # includes sounds and music
     active_music = Music[]  # actively playing or paused music only
 
     is_configured    : Logical # true if we have attempted to configure audio
@@ -21,8 +21,8 @@ class AudioManager [singleton]
 
   METHODS
     method clear
-      (forEach in all_sounds).unload
-      all_sounds.clear
+      (forEach in all_audio).unload
+      all_audio.clear
       active_music.clear
 
     method on_cleanup
@@ -179,7 +179,7 @@ class AudioManager [singleton]
 
     method unload
       if (is_prepared)
-        (forEach in all_sounds).unload
+        (forEach in all_audio).unload
 
         if ($target("iOS"))
           native

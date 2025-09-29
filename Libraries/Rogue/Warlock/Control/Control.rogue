@@ -1,4 +1,5 @@
 library Warlock
 
+$include Warlock/Control/AssetLoadingState
 $include Warlock/Control/State
 $include Warlock/Control/WarlockController

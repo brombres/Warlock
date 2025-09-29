@@ -1,0 +1,107 @@
+library Warlock
+
+class AssetLoadingState : State
+  PROPERTIES
+    pending_audio       = Sound[]
+    pending_textures    = TextureInfo[]
+    loaded_asset_count  : Int
+    total_asset_count   : Int
+    current_texture     : TextureInfo
+    current_bitmap      : Bitmap
+    current_mipmap      : Bitmap
+    mipmap_pixels       : Color[]
+    is_loading_finished : Logical
+    update_timer        = Timer()
+
+  METHODS
+    method loading_progress->Real
+      return loaded_asset_count->Real / total_asset_count
+
+    method on_start [critical]
+      pending_audio.add( AudioManager.all_audio )
+      pending_textures = AssetManager.textures.to_list
+      total_asset_count = pending_audio.count + pending_textures.count
+
+    method on_loading_finished
+      exit
+
+    method on_update [critical]
+      if (not is_loading_finished)
+        loop Window.delta_ticks
+          if (not load_more)
+            is_loading_finished = true
+            on_loading_finished
+            escapeLoop
+          endIf
+        endLoop
+      endIf
+
+    method load_more->Logical [critical]
+      if (current_mipmap)
+        ++loaded_asset_count
+        ++total_asset_count
+
+        local w = current_mipmap.width
+        local h = current_mipmap.height
+        local first = true
+
+        while (first or (w*h <= 512*512))
+          first = false
+          mipmap_pixels.add( current_mipmap.pixels )
+
+          if (w > 1 or h > 1)
+            if (w > 1) w :>>>:= 1
+            if (h > 1) h :>>>:= 1
+            current_mipmap.resize( w, h )
+          else
+            Texture( current_bitmap, mipmap_pixels, &wrap=current_texture.wrap )
+            current_bitmap = null
+            current_mipmap = null
+            mipmap_pixels = null
+            return true
+          endIf
+        endWhile
+
+      elseIf (current_bitmap)
+        current_mipmap = current_bitmap.cloned
+        current_mipmap.swap_red_and_blue
+        current_mipmap.premultiply_alpha
+        current_mipmap.expand_to_power_of_2
+
+        local w = current_mipmap.width
+        local h = current_mipmap.height
+        local total_pixel_count = 1  # count final 1x1
+        while (w > 1 or h > 1)
+          total_pixel_count += w * h
+          if (w > 1) w :>>>:= 1
+          if (h > 1) h :>>>:= 1
+        endWhile
+
+        mipmap_pixels = Color[]( total_pixel_count )
+
+        ++loaded_asset_count
+        ++total_asset_count
+
+      elseIf (pending_textures.count)
+        local info = pending_textures.remove_last
+        if local filepath = Warlock.find_asset( info.filepath )
+          current_texture = info
+          current_bitmap = Bitmap( filepath )
+        endIf
+        ++loaded_asset_count
+
+      elseIf (pending_audio.count)
+        update_timer.restart
+        while (pending_audio.count and update_timer.elapsed < 0.010)
+          pending_audio.remove_last.load
+          ++loaded_asset_count
+        endWhile
+
+      else
+        loaded_asset_count = total_asset_count  # Ensuring but should already be true
+        return false
+
+      endIf
+
+      return true
+endClass
