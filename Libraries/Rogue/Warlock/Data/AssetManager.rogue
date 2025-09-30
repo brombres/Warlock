@@ -27,16 +27,16 @@ class AssetManager [singleton]
         println "[ERROR] Assets/AssetManifest.txt is missing."
       endIf
 
-      forEach (asset in assets)
-        if (asset.image_count)
-          forEach (image_info in asset.images)
-            local filepath = texture_filepaths[image_info.texture_index]
-            if (not texture_info.contains(filepath))
-              texture_info[filepath] = TextureInfo( filepath, asset.image_mipmaps, asset.texture_wrap )
-            endIf
-          endForEach
-        endIf
-      endForEach
+      #forEach (asset in assets)
+      #  if (asset.image_count)
+      #    forEach (image_info in asset.images)
+      #      local filepath = texture_filepaths[image_info.texture_index]
+      #      if (not texture_info.contains(filepath))
+      #        texture_info[filepath] = TextureInfo( filepath, asset.image_mipmaps, asset.texture_wrap )
+      #      endIf
+      #    endForEach
+      #  endIf
+      #endForEach
 
     method find_bitmap( name:String )->Bitmap
       if local asset = find_image( name )
@@ -117,12 +117,24 @@ class AssetManager [singleton]
 
     method .load_texture_filepaths
       texture_filepaths.clear
+      texture_info.clear
       .consume_ws( &eols )
       if (not .consume_id("textures")) return
       local n = scanner.scan_int
       loop (n)
         .consume_ws( &eols )
-        texture_filepaths.add( scanner.read_line )
+        local w = scanner.scan_int
+        .consume_ws
+        local h = scanner.scan_int
+        local mipmaps = true
+        .consume_ws
+        if (.consume_id("mipmaps")) mipmaps = .scan_logical
+        local wrap = true
+        .consume_ws
+        if (.consume_id("wrap")) wrap = .scan_logical
+        local filepath = scanner.read_line
+        texture_filepaths.add( filepath )
+        texture_info[filepath] = TextureInfo( texture_filepaths.last, XY(w,h), &=mipmaps, &=wrap )
       endLoop
 
     method .load_another_asset->Logical
@@ -201,6 +213,12 @@ class AssetManager [singleton]
 
       return true
 
+    method .scan_logical->Logical
+      .consume_ws
+      if (.consume_id("true")) return true
+      .consume_id( "false" )
+      return false
+
     method .load_image( asset:AssetInfo )->Logical
       asset.type = <Image>
       .consume_ws
@@ -234,5 +252,5 @@ class AssetManager [singleton]
 
 endClass
 
-class TextureInfo( filepath:String, mipmaps:Logical, wrap:Logical ) [compound]
+class TextureInfo( filepath:String, size:XY, mipmaps:Logical, wrap:Logical ) [compound]
 endClass
