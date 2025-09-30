@@ -27,7 +27,7 @@ class Texture
       endIf
 
     method create( file:File, &mipmaps=true, &wrap )->Texture
-      if local cached = Warlock.textures[file]
+      if local cached = AssetManager.textures[file]
         return cached
       endIf
 
@@ -38,7 +38,7 @@ class Texture
 
       Log.println "Loading " + file
       local texture = Texture( Bitmap(file), &=mipmaps, &=wrap )
-      Warlock.textures[file] = texture
+      AssetManager.textures[file] = texture
       return texture
 
   METHODS

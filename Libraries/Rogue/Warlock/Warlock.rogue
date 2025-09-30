@@ -57,7 +57,6 @@ class Warlock [essential singleton]
 
   PROPERTIES
     windows           = Window[]
-    textures          = [File:Texture]
     ticks             : Int
     actions           : Action
     essential_actions : Action  # always update, even when app is going into suspension

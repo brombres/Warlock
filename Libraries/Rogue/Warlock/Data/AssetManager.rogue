@@ -4,7 +4,8 @@ class AssetManager [singleton]
   PROPERTIES
     scanner           : Scanner
     texture_filepaths = String[]
-    textures          = [String:TextureInfo]
+    texture_info      = [String:TextureInfo]
+    textures          = [File:Texture]
     assets            = [String:AssetInfo]
     is_loaded         : Logical
 
@@ -30,8 +31,8 @@ class AssetManager [singleton]
         if (asset.image_count)
           forEach (image_info in asset.images)
             local filepath = texture_filepaths[image_info.texture_index]
-            if (not textures.contains(filepath))
-              textures[filepath] = TextureInfo( filepath, asset.image_mipmaps, asset.texture_wrap )
+            if (not texture_info.contains(filepath))
+              texture_info[filepath] = TextureInfo( filepath, asset.image_mipmaps, asset.texture_wrap )
             endIf
           endForEach
         endIf

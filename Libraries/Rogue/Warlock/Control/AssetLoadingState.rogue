@@ -14,12 +14,113 @@ class AssetLoadingState : State
     update_timer        = Timer()
 
   METHODS
+    method clear
+      pending_audio.clear
+      pending_textures.clear
+      total_asset_count = 0
+
+    method exclude( audio:Sound )
+      if (not audio) return
+
+      if local index = pending_audio.locate( audio )
+        pending_audio.remove_at( index )
+        --total_asset_count
+      endIf
+
+    method exclude( audio:Music[] )
+      exclude( forEach in audio )
+
+    method exclude( audio:Sound[] )
+      exclude( forEach in audio )
+
+    method exclude( audio:SoundVariants )
+      exclude( forEach in audio )
+
+    method exclude( font:Font )
+      forEach (ch in font.character_lookup)
+        exclude( ch.image )
+      endForEach
+
+    method exclude( image:Image )
+      if (not image) return
+
+      if local asset = image.asset
+        if (asset.images)
+          forEach (image_info in asset.images)
+            local filepath = AssetManager.texture_filepaths[ image_info.texture_index ]
+            if local index = pending_textures.locate( (info) => info.filepath == filepath )
+              pending_textures.remove_at( index )
+              --total_asset_count
+            endIf
+          endForEach
+        endIf
+      endIf
+
+    method exclude( images:Image[] )
+      exclude( forEach in images )
+
+    method exclude( patch_image:PatchImage )
+      exclude( forEach in patch_image.patches )
+
+    method include( audio:Sound )
+      if (not audio) return
+
+      if (not pending_audio.locate(audio))
+        pending_audio.add( audio )
+        ++total_asset_count
+      endIf
+
+    method include( audio:Music[] )
+      include( forEach in audio )
+
+    method include( audio:Sound[] )
+      include( forEach in audio )
+
+    method include( audio:SoundVariants )
+      include( forEach in audio )
+
+    method include( font:Font )
+      forEach (ch in font.character_lookup)
+        include( ch.image )
+      endForEach
+
+    method include( image:Image )
+      if (not image) return
+
+      if local asset = image.asset
+        if (asset.images)
+          forEach (image_info in asset.images)
+            local filepath = AssetManager.texture_filepaths[ image_info.texture_index ]
+            if (not pending_textures.locate( (info) => info.filepath == filepath ))
+              pending_textures.add( TextureInfo(filepath, &mipmaps=asset.image_mipmaps, &wrap=asset.texture_wrap) )
+              ++total_asset_count
+            endIf
+          endForEach
+        endIf
+      endIf
+
+    method include( images:Image[] )
+      include( forEach in images )
+
+    method include( patch_image:PatchImage )
+      include( forEach in patch_image.patches )
+
     method loading_progress->Real
       return loaded_asset_count->Real / total_asset_count
 
     method on_start [critical]
-      pending_audio.add( AudioManager.all_audio )
-      pending_textures = AssetManager.textures.to_list
+      forEach (audio in AudioManager.all_audio)
+        if (not audio.is_prepared) pending_audio.add( audio )
+      endForEach
+
+      forEach (texture_info in AssetManager.texture_info.to_list)
+        if local filepath = Warlock.find_asset( texture_info.filepath )
+          if (not AssetManager.textures[filepath])
+            pending_textures.add( texture_info )
+          endIf
+        endIf
+      endForEach
+
       total_asset_count = pending_audio.count + pending_textures.count
 
     method on_loading_finished
