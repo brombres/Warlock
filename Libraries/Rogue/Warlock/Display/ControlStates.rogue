@@ -2,7 +2,7 @@ library Warlock
 
 class ControlStates : [GlobalID:State]
   PROPERTIES
-    is_modified       : Logical
+    is_modified        : Logical
     active_list        = State[]    # A flat copy of control_states used during event dispatch.
     active_list_ids    = GlobalID[] # Used for reverse lookup from active layer index to control state.
     active_layer_index : Int        # The current control state index during an event dispatch.
@@ -21,13 +21,19 @@ class ControlStates : [GlobalID:State]
     method clear [override]
       prior.clear
       is_modified = true
+      Window.control_states_modified = true
 
     method get( layer_index:Int )->State [novel]
       return active_list[layer_index]
 
+    method mark_modified [novel]
+      is_modified = true
+      Window.control_states_modified = true
+
     method set( id:GlobalID, state:State ) [override]
       prior.set( id, state )
       is_modified = true
+      Window.control_states_modified = true
 
     method set_active_layer( state:State )
       this[active_list_ids[active_layer_index]] = state

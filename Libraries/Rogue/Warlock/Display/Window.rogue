@@ -4,7 +4,8 @@ class Window : Display [singleton]
   PROPERTIES
     title       : String
 
-    control_states     = ControlStates()
+    control_states          = ControlStates()
+    control_states_modified : Logical
 
     old_size    : XY  # used to detect size changes in WarlockController.tick(Window)
     actions     : Action
@@ -165,9 +166,29 @@ class Window : Display [singleton]
       draw_state
 
     method dispatch_update
+      control_states.update_active_list
+      control_states_modified = false
+
       forEach (layer_index of control_states.active_list step -1)
         update_state( layer_index )
       endForEach
+
+      while (control_states_modified)
+        # Some new control states may not have gotten their first update
+        # during the update pass above. Make sure all states are started
+        # before letting them handle other events.
+        control_states_modified = false
+
+        forEach (entry in control_states.entries)
+          if local state = entry.value
+            local started_state = state.started
+            if (state is not started_state)
+              entry.value = started_state
+              control_states.mark_modified
+            endIf
+          endIf
+        endForEach
+      endWhile
 
       update
 
