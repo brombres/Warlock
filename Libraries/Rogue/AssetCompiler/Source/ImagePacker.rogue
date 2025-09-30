@@ -9,12 +9,19 @@ class ImagePacker
     atlas_padding    = 8  # Edges of each texture are extruded this many pixels to prevent
                           # color artifacts.
     existing_placements = Placement[]
+    uses_mipmaps      = true
+    uses_texture_wrap : Logical
 
   METHODS
     method init( group )
 
     method pack( assets:Asset[] )->AtlasPage[]
-      (forEach in assets).create_placements
+      forEach (asset in assets)
+        if (not asset.image_mipmaps) uses_mipmaps = false
+        if (asset.texture_wrap) uses_texture_wrap = true
+        asset.create_placements
+      endForEach
+
       placements.add( (forEach in assets).placements )
       if (placements.is_empty) return pages
 
@@ -55,7 +62,15 @@ class ImagePacker
         forEach (placement in page.placements)
           placement.build_folder   = build_folder
           placement.atlas_filepath = filepath
-          placement.asset.group.filepaths.add( build_filepath )
+          placement.asset.group.page_info.add(
+            @{
+               asset_filepath:filepath,
+               build_filepath:build_filepath,
+               size:page.size,
+               mipmaps:page.uses_mipmaps,
+               wrap:page.uses_texture_wrap
+             }
+          )
         endForEach
         println "Saving $"(build_filepath)
         page.bitmap.save_as_png( build_filepath )
@@ -96,7 +111,7 @@ class ImagePacker
 
     method .pack_another_page( page_size:XY )->AtlasPage
       .sort_placements
-      local page = AtlasPage( page_size )
+      local page = AtlasPage( page_size, &mipmaps=uses_mipmaps, &wrap=uses_texture_wrap )
       if (.perform_layout(page, Box(page_size))) return page
       else                                       return null
 
@@ -110,6 +125,7 @@ class ImagePacker
         forEach (existing in existing_placements)
           if (existing.has_equivalent_bitmap(placement,this))
             # Use the existing placement info
+            placement.existing = existing
             placement.position = existing.position
             placement.padding_left = existing.padding_left
             placement.padding_top = existing.padding_top

@@ -43,7 +43,7 @@ class AssetCompiler [singleton]
     targets  = Set<<String>>()
     assets   = [String:Asset]
     groups   = Set<<AssetGroup>>()
-    textures = IndexedSet<<String>>()
+    texture_info   = @{}
 
     asset_info      : Variant
     asset_info_json = ""
@@ -125,8 +125,8 @@ class AssetCompiler [singleton]
         if local info = group_info[group.hash]
           group.check_for_changes( info )
           group.id = info//id
-          forEach (page in info//pages)
-            group.filepaths.add( page )
+          forEach (info in info//pages)
+            group.page_info.add( info )
           endForEach
         endIf
       endForEach
@@ -143,13 +143,24 @@ class AssetCompiler [singleton]
         asset_info//groups.add( group->Variant )
       endForEach
 
-      textures.clear
-      (forEach in assets).collect_texture_filepaths( textures )
-      asset_info//textures = @[]
-      asset_info//textures.add( forEach in textures )
+      texture_info.clear
+      forEach (group in all_groups)
+        forEach (info in group.page_info)
+          texture_info[info//asset_filepath] = info
+          existing_textures.remove( info//build_filepath->String )
+        endForEach
+      endForEach
+
+      forEach (index of texture_info)
+        texture_info.at(index)//index = index
+      endForEach
+
+      #textures.clear
+      #(forEach in assets).collect_texture_filepaths( textures )
+      #asset_info//textures = @[]
+      #asset_info//textures.add( forEach in textures )
 
       block build_folder = "Build/$"(platform)
-        existing_textures.remove( build_folder / (forEach in textures) )
         forEach (texture in existing_textures)
           println "Removing $"(texture)
           File( texture ).delete
@@ -169,9 +180,11 @@ class AssetCompiler [singleton]
     method create_asset_manifest
       local manifest = Manifest()
 
-      manifest.println "textures $"(textures.count)
-      forEach (texture_filepath in textures)
-        manifest.println texture_filepath
+      manifest.println "textures $"(texture_info.count)
+      forEach (info in texture_info)
+        manifest.print "$ $ "(info//size//x->Int.format("4"),info//size//y->Int.format("4"))
+        manifest.print "mipmaps $ wrap $ "(info//mipmaps->String.justified(5),info//wrap->String.justified(5))
+        manifest.println info//asset_filepath
       endForEach
       manifest.println
 

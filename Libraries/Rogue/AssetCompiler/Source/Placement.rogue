@@ -17,7 +17,9 @@ class Placement
     asset          : Asset
     source_bounds  : Box
 
-    crc32            : Int32?
+    crc32          : Int32?
+
+    existing       : Placement  # if this placement is re-using an existing placement
 
   METHODS
     method init( asset, source_bounds )
@@ -76,6 +78,9 @@ class Placement
 
       endIf
       work_bitmap.blit( page, position-XY(padding_left,padding_top) )
+
+    method original->Placement
+      return existing || this
 
     method to->String
       return source_bounds

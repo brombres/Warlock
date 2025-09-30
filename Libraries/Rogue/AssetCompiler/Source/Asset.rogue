@@ -164,17 +164,20 @@ class Asset
           necessary (info.contains("font_height"))
           necessary (info.contains("font_width"))
           necessary (info.contains("font_info"))
+          necessary (info.contains("image_mipmaps"))
           image_size = XY( info//image_size )
           necessary (image_size != XY.zero)
           font_characters = info//font_characters
           font_height = info//font_height
           font_width  = info//font_width
+          image_mipmaps = info//image_mipmaps->Logical
 
         unsatisfied
           is_modified = true
 
           info//image_size = bitmap.size
           image_size = bitmap.size
+          image_mipmaps = true
 
           font_characters = parse_characters
 
@@ -213,6 +216,23 @@ class Asset
             info//font_info = undefined
           endIf
 
+          block
+            if local mipmaps_attribute = rule.find_attribute( "mipmaps" )
+              image_mipmaps = true
+
+              local setting = mipmaps_attribute.value?.value
+              if (setting)
+                if (setting == "true" or setting == "false")
+                  image_mipmaps = setting->Logical
+                else
+                  throw rule.t.error( "Expected 'mipmaps:true' or 'mipmaps:false' (default)." )
+                endIf
+              endIf
+            endIf
+
+            info//image_mipmaps = image_mipmaps
+          endBlock
+
           info//font_characters = font_characters
           info//font_width  = font_width
           info//font_height = font_height
@@ -242,10 +262,10 @@ class Asset
         placement_info = info//placements
       endIf
 
-    method collect_texture_filepaths( textures:IndexedSet<<String>> )
-      forEach (placement in placement_info)
-        textures.add( placement//atlas_filepath )
-      endForEach
+      #method collect_texture_filepaths( textures:IndexedSet<<String>> )
+      #  forEach (placement in placement_info)
+      #    textures.add( placement//atlas_filepath )
+      #  endForEach
 
     method create_placements
       placement_info = undefined
@@ -354,7 +374,7 @@ class Asset
       forEach (placement in placements)
         @placement_info.add(
           @{
-            atlas_filepath:placement.atlas_filepath,
+            atlas_filepath:placement.original.atlas_filepath,
             position:{x:placement.position.x->Int,y:placement.position.y->Int},
             size:{x:placement.size.x->Int,y:placement.size.y->Int}
           }
@@ -451,7 +471,7 @@ class Asset
 
     method write_placements( manifest:Manifest )
       forEach (placement in placement_info)
-        manifest.print "  $"(AssetCompiler.textures[placement//atlas_filepath].value - 1)
+        manifest.print "  $"(AssetCompiler.texture_info[placement//atlas_filepath]//index)
         manifest.print " $ $"(placement//position//x,placement//position//y)
         manifest.print " $ $"(placement//size//x,placement//size//y)
         manifest.println

@@ -2,13 +2,17 @@ library AssetCompiler
 
 class AtlasPage
   PROPERTIES
-    placements     = Placement[]
-    size           : XY
-    build_filepath : String
-    filepath       : String
+    placements        = Placement[]
+    size              : XY
+    build_filepath    : String
+    filepath          : String
+    uses_mipmaps      : Logical
+    uses_texture_wrap : Logical
 
   METHODS
-    method init( size )
+    method init( size, &mipmaps, &wrap )
+      uses_mipmaps = mipmaps
+      uses_texture_wrap = wrap
 
     method add( placement:Placement )
       placements.add( placement )
