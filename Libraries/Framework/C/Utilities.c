@@ -19,9 +19,12 @@ unsigned char* Warlock_decode_image(
 }
 
 
-STBIRDEF unsigned char * stbir_resize_uint8_srgb( const unsigned char *input_pixels , int input_w , int input_h, int input_stride_in_bytes,
-                                                        unsigned char *output_pixels, int output_w, int output_h, int output_stride_in_bytes,
-                                                        stbir_pixel_layout pixel_type );
+STBIRDEF unsigned char * stbir_resize_uint8_srgb(
+    const unsigned char *input_pixels , int input_w , int input_h, int input_stride_in_bytes,
+    unsigned char *output_pixels, int output_w, int output_h, int output_stride_in_bytes,
+    stbir_pixel_layout pixel_type
+);
+
 void Warlock_resize_image(
     unsigned char* input_pixels,
     int  input_width,

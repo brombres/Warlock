@@ -3,7 +3,7 @@ library Warlock
 nativeHeader
 @|#include <SDL3/SDL.h>
 
-$include Framework/SDLAsync
+$include Framework/SDLJobs
 
 SDL  # instance SDL singleton on launch
 
@@ -596,6 +596,9 @@ endAugment
 
 augment Rogue::System
   GLOBAL METHODS
+    method cpu_core_count->Int
+      return native( "SDL_GetNumLogicalCPUCores()" )->Int
+
     method execution_time_ms->Int64 [replace]
       return native("(RogueInt64)SDL_GetTicks()")->Int64
 endAugment

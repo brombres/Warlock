@@ -1,0 +1,114 @@
+library Warlock
+
+class ImageDecodeJob
+  PROPERTIES
+    texture_info   : TextureInfo
+    filepath       : String
+    image_bytes    : Byte[]
+    texture_width  : Int
+    texture_height : Int
+    texture_pixels : Color[]
+    on_result      : Function(TextureInfo,Color[])
+    native "SDL_AtomicInt is_finished;"
+
+  METHODS
+    method init( texture_info, on_result=null )
+      filepath = Warlock.find_asset( texture_info.filepath )
+      if (not filepath)
+        Log.println "[Warlock] No such file: " + texture_info.filepath
+        native @|SDL_SetAtomicInt( &$this->is_finished, -1 );
+        return
+      endIf
+
+      image_bytes = Byte[]( File(filepath) )
+
+      local w = texture_info.size.x->Int
+      local h = texture_info.size.y->Int
+      local mipmap_data_count = 1  # counts final 1x1 image
+      while (w > 1 or h > 1)
+        mipmap_data_count += w * h
+        if (w > 1) w :>>>:= 1
+        if (h > 1) h :>>>:= 1
+      endWhile
+
+      texture_pixels = Dim<<Color>>( mipmap_data_count )
+
+      native
+      @|SDL_SetAtomicInt( &$this->is_finished, 0 );
+       |SDL_Thread *thread = SDL_CreateThread( WarlockImageDecodeJob_run, "ImageDecodeJob", $this );
+       |SDL_DetachThread( thread );  // no join, worker will signal via atomic
+
+    method is_finished->Logical
+      return native( "(RogueLogical)SDL_GetAtomicInt(&$this->is_finished)" )->Logical
+
+  NATIVE
+    nativeHeader @|int WarlockImageDecodeJob_run( void* userdata );
+
+    nativeCode
+    @|int WarlockImageDecodeJob_run( void* userdata )
+     |{
+     |  RogueWarlockImageDecodeJob* job = (RogueWarlockImageDecodeJob*)userdata;
+     |
+     |  // Decode bitmap from bytes
+     |  int width, height, channels=4;
+     |  unsigned char* bytes = job->image_bytes->as_bytes;
+     |  int byte_size = (int)job->image_bytes->count;
+     |  unsigned char* bitmap_data = Warlock_decode_image( bytes, byte_size, &width, &height, &channels );
+     |  if (bitmap_data)
+     |  {
+     |    job->texture_width  = (RogueInt) width;
+     |    job->texture_height = (RogueInt) height;
+     |    memcpy( job->texture_pixels->data, bitmap_data, width*height*4 );
+     |    free( bitmap_data );
+     |  }
+     |  else
+     |  {
+     |    printf( "[Warlock:WarlockImageDecodeJob_run] Error decoding image bytes.\n" );
+     |    SDL_SetAtomicInt( &job->is_finished, -1 );
+     |    return 0;
+     |  }
+     |
+     |  // Premultiply alpha
+     |  RogueInt32* data = job->texture_pixels->as_int32s - 1;
+     |  int count = width * height;
+     |  while (--count >= 0)
+     |  {
+     |    RogueInt32 argb = *(++data);
+     |    int a = (argb >> 24) & 255;
+     |    if (a)
+     |    {
+     |      int r = (argb >> 16) & 255;
+     |      int g = (argb >> 8)  & 255;
+     |      int b = argb & 255;
+     |      r = (r * a + 127) / 255;
+     |      g = (g * a + 127) / 255;
+     |      b = (b * a + 127) / 255;
+     |      *data = (a<<24) | (r<<16) | (g<<8) | b;
+     |    }
+     |    else
+     |    {
+     |      *data = 0;
+     |    }
+     |  }
+     |
+     |  // Create mipmaps
+     |  RogueInt32* src  = job->texture_pixels->as_int32s;
+     |  RogueInt32* dest = src + (width * height);
+     |  int w = width;
+     |  int h = height;
+     |  while (w > 1 || h > 1)
+     |  {
+     |    int half_w = (w > 1) ? (w >> 1) : 1;
+     |    int half_h = (h > 1) ? (h >> 1) : 1;
+     |    Warlock_resize_image( (unsigned char*)src, w, h, (unsigned char*)dest, half_w, half_h );
+     |    w = half_w;
+     |    h = half_h;
+     |    src = dest;
+     |    dest += w * h;
+     |  }
+     |
+     |  SDL_SetAtomicInt( &job->is_finished, 1 );
+     |  return 0;
+     |}
+
+endClass

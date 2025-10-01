@@ -8,6 +8,9 @@ class Texture
     filepath : String
 
   GLOBAL METHODS
+    method is_cached( file:File )->Logical
+      return AssetManager.textures[file]?
+
     method create( bitmap:Bitmap, &mipmaps=true, &wrap )->Texture
       local texture = Texture().[ set(bitmap,&=mipmaps,&=wrap) ]
       if (texture.size != bitmap.size)
@@ -17,14 +20,21 @@ class Texture
         return texture
       endIf
 
-    method create( bitmap:Bitmap, mipmap_pixels:Color[], &wrap )->Texture
-      local texture = Texture().[ set(bitmap,mipmap_pixels,&=wrap) ]
-      if (texture.size != bitmap.size)
-        # Texture size was expanded to power of 2; return a subset texture.
-        return Texture( texture, Box(bitmap.size) )
-      else
-        return texture
+    method create( file:File, texels:Color[], image_size:XY, texture_size=null:XY?, &mipmaps, &wrap )->Texture
+      if local cached = AssetManager.textures[file]
+        return cached
       endIf
+
+      Log.println "Loading " + file
+      if (not texture_size) texture_size = image_size
+      local texture = Texture().[ set(texels,texture_size.value,&=mipmaps,&=wrap) ]
+      if (texture_size.value != image_size)
+        # Texture size was expanded to power of 2; return a subset texture.
+        texture = Texture( texture, Box(image_size) )
+      endIf
+
+      AssetManager.textures[file] = texture
+      return texture
 
     method create( file:File, &mipmaps=true, &wrap )->Texture
       if local cached = AssetManager.textures[file]

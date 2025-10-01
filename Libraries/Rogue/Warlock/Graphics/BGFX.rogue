@@ -518,8 +518,9 @@ augment Texture
       mipmap.expand_to_power_of_2
       mipmap.premultiply_alpha
       mipmap.swap_red_and_blue
+      local size = mipmap.size
 
-      local mipmap_pixels : Color[]
+      local texels : Color[]
 
       if (mipmaps)
         local mip_w = mipmap.width
@@ -531,26 +532,25 @@ augment Texture
           if (mip_h > 1) mip_h :>>>:= 1
         endWhile
 
-        mipmap_pixels = Color[]( mipmap_pixel_count )
-        mipmap_pixels.add( mipmap.pixels )
+        texels = Color[]( mipmap_pixel_count )
+        texels.add( mipmap.pixels )
         mip_w = mipmap.width
         mip_h = mipmap.height
         while (mip_w > 1 or mip_h > 1)
           if (mip_w > 1) mip_w :>>>:= 1
           if (mip_h > 1) mip_h :>>>:= 1
           mipmap.resize( mip_w, mip_h )
-          mipmap_pixels.add( mipmap.pixels )
+          texels.add( mipmap.pixels )
         endWhile
+      else
+        texels = bitmap.pixels
       endIf
 
-      set( bitmap, mipmap_pixels, &=wrap )
+      set( texels, size, &=mipmaps, &=wrap )
 
-    method set( bitmap:Bitmap, mipmap_pixels:Color[], &wrap )
-      size = XY( bitmap.width.to_power_of_2, bitmap.height.to_power_of_2 )
+    method set( texels:Color[], size:XY, &mipmaps, &wrap )
+      this.size = size
       uv = Quad( XY(0,0), XY(1,0), XY(1,1), XY(0,1) )
-
-      local mipmaps = mipmap_pixels?
-      if (not mipmap_pixels) mipmap_pixels = bitmap.pixels
 
       native
       @|uint32_t sampler_flags = BGFX_SAMPLER_MIN_ANISOTROPIC | BGFX_SAMPLER_MAG_ANISOTROPIC;
@@ -562,7 +562,7 @@ augment Texture
        |  1,
        |  bgfx::TextureFormat::RGBA8,
        |  sampler_flags,
-       |  bgfx::copy( $mipmap_pixels->as_bytes, (uint32_t) ($mipmap_pixels->count*4) )
+       |  bgfx::copy( $texels->as_bytes, (uint32_t) ($texels->count*4) )
        |);
 
     method on_cleanup
