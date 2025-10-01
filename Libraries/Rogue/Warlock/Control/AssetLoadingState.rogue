@@ -90,9 +90,10 @@ class AssetLoadingState : State
       if local asset = image.asset
         if (asset.images)
           forEach (image_info in asset.images)
-            local filepath = AssetManager.texture_filepaths[ image_info.texture_index ]
+            local filepath = AssetManager.texture_filepaths[image_info.texture_index]
             if (not pending_textures.locate( (info) => info.filepath == filepath ))
-              pending_textures.add( TextureInfo(filepath, &mipmaps=asset.image_mipmaps, &wrap=asset.texture_wrap) )
+              local texture_info = AssetManager.texture_info[filepath]
+              pending_textures.add( texture_info )
               ++total_asset_count
             endIf
           endForEach

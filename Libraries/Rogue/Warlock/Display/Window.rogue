@@ -60,35 +60,35 @@ class Window : Display [singleton]
 
     method change_background( new_background:State )
       if local background = control_states//background
-        control_states//background.change( new_background )
+        control_states//background.change_state( new_background )
       else
         control_states//background = new_background
       endIf
 
     method change_overlay( new_overlay:State )
       if local overlays = control_states//overlays
-        control_states//overlays.change( new_overlay )
+        control_states//overlays.change_state( new_overlay )
       else
         control_states//overlays = new_overlay
       endIf
 
     method change_scene( new_scene:State )
       if local scene = control_states//scene
-        control_states//scene.change( new_scene )
+        control_states//scene.change_state( new_scene )
       else
         control_states//scene = new_scene
       endIf
 
     method change_screen( new_screen:State )
       if local screen = control_states//screen
-        control_states//screen.change( new_screen )
+        control_states//screen.change_state( new_screen )
       else
         control_states//screen = new_screen
       endIf
 
     method change_state( new_state:State )
       if local state = control_states//state
-        control_states//state.change( new_state )
+        control_states//state.change_state( new_state )
       else
         control_states//state = new_state
       endIf
@@ -182,9 +182,11 @@ class Window : Display [singleton]
         forEach (entry in control_states.entries)
           if local state = entry.value
             local started_state = state.started
-            if (state is not started_state)
-              entry.value = started_state
-              control_states.mark_modified
+            if (entry.value is state)
+              if (state is not started_state)
+                entry.value = started_state
+                control_states.mark_modified
+              endIf
             endIf
           endIf
         endForEach
@@ -341,11 +343,15 @@ class Window : Display [singleton]
       localize control_states.active_list
 
       temporarily control_states.active_layer_index = layer_index
-        local state = control_states.active_layer
+        local original_state = control_states.active_layer
         local layer_id = control_states.active_layer_id
-        local updated_state = state.updated
-        if (updated_state is not state)
-          control_states[layer_id] = updated_state
+        local updated_state = original_state.updated
+        if (control_states[layer_id] is original_state)
+          # Only replace with result if state update didn't already replace state.
+          if (updated_state is not original_state)
+            # Only replace if different.
+            control_states[layer_id] = updated_state
+          endIf
         endIf
       endTemporarily
 

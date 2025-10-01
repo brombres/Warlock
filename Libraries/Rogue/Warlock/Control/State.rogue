@@ -11,21 +11,9 @@ class State : Rogue::ProgressState<<State>>
     method background->State
       return Window.background
 
-    method change( new_state:State )
-      prior.change( new_state )
-      Window.control_states.is_modified = true
-
-    method change_background( new_background:State )
-      Window.change_background( new_background )
-
-    method change_scene( new_scene:State )
-      Window.change_scene( new_scene )
-
-    method change_screen( new_screen:State )
-      Window.change_screen( new_screen )
-
     method change_state( new_state:State )
-      Window.change_state( new_state )
+      prior.change_state( new_state )
+      Window.control_states.is_modified = true
 
     method dispatch( e:KeyEvent )
       Window.dispatch( e, Window.control_states.active_layer_index - 1 )
