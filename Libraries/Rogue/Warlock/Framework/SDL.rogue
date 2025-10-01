@@ -3,6 +3,8 @@ library Warlock
 nativeHeader
 @|#include <SDL3/SDL.h>
 
+$include Framework/SDLAsync
+
 SDL  # instance SDL singleton on launch
 
 class SDL : Framework [singleton]

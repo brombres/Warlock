@@ -20,8 +20,8 @@ $include Warlock/Control
 $include Warlock/Entity/Entity
 $include Warlock/Geometry
 $include Warlock/Graphics
-$include Warlock/UI
 $include Warlock/Platform
+$include Warlock/UI
 $include Warlock/Utility
 
 class Warlock [essential singleton]

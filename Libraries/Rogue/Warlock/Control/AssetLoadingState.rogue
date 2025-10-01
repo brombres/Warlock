@@ -2,16 +2,17 @@ library Warlock
 
 class AssetLoadingState : State
   PROPERTIES
-    pending_audio       = Sound[]
-    pending_textures    = TextureInfo[]
-    loaded_asset_count  : Int
-    total_asset_count   : Int
-    current_texture     : TextureInfo
-    current_bitmap      : Bitmap
-    current_mipmap      : Bitmap
-    mipmap_pixels       : Color[]
-    is_loading_finished : Logical
-    update_timer        = Timer()
+    pending_audio        = Sound[]
+    pending_textures     = TextureInfo[]
+    loaded_asset_count   : Int
+    total_asset_count    : Int
+    current_image_decode : ImageDecodeJob
+    current_texture_info : TextureInfo
+    current_bitmap       : Bitmap
+    current_mipmap       : Bitmap
+    mipmap_pixels        : Color[]
+    is_loading_finished  : Logical
+    update_timer         = Timer()
 
   METHODS
     method clear
@@ -138,7 +139,14 @@ class AssetLoadingState : State
       endIf
 
     method load_more->Logical [critical]
-      if (current_mipmap)
+      if (current_image_decode)
+        if (current_image_decode.is_finished)
+          @trace "FINISHED"
+          current_image_decode = null
+          ++loaded_asset_count
+        endIf
+
+      elseIf (current_mipmap)
         ++loaded_asset_count
         ++total_asset_count
 
@@ -146,7 +154,7 @@ class AssetLoadingState : State
         local h = current_mipmap.height
         local first = true
 
-        while (first or (w*h <= 512*512))
+        while (first) # or (w*h <= 512*512))
           first = false
           mipmap_pixels.add( current_mipmap.pixels )
 
@@ -155,7 +163,7 @@ class AssetLoadingState : State
             if (h > 1) h :>>>:= 1
             current_mipmap.resize( w, h )
           else
-            Texture( current_bitmap, mipmap_pixels, &wrap=current_texture.wrap )
+            Texture( current_bitmap, mipmap_pixels, &wrap=current_texture_info.wrap )
             current_bitmap = null
             current_mipmap = null
             mipmap_pixels = null
@@ -184,12 +192,17 @@ class AssetLoadingState : State
         ++total_asset_count
 
       elseIf (pending_textures.count)
+        current_image_decode = ImageDecodeJob( pending_textures.remove_last )
+        #{
         local info = pending_textures.remove_last
         if local filepath = Warlock.find_asset( info.filepath )
-          current_texture = info
-          current_bitmap = Bitmap( filepath )
+          current_texture_info = info
+          local bytes = Byte[]( filepath )
+          Async.decode_image_to_mipmapped_texture_data( info, bytes )
+          current_bitmap = Bitmap( bytes )
         endIf
         ++loaded_asset_count
+        }#
 
       elseIf (pending_audio.count)
         update_timer.restart
