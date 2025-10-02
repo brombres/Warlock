@@ -437,7 +437,7 @@ class SDL : Framework [singleton]
        |$window->density = SDL_GetWindowPixelDensity( $window->sdl_window );
       window.update_size
 
-      Renderer.update_display_index( window )
+      Renderer.update_display_order( window )
 
   GLOBAL METHODS
     method .sdl_scancode_to_keycode( scancode:Int )->Keycode

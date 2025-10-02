@@ -472,7 +472,7 @@ class Renderer [singleton]
       textures.expand_to_include( stage )
       textures[stage] = new_texture
 
-    method update_display_index( window:Window )
+    method update_display_order( window:Window )
       noAction
 
     method uses_homogeneous_depth->Logical

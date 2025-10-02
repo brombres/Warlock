@@ -1,5 +1,10 @@
 library Warlock
 
 $include Warlock/Control/AssetLoadingState
+$include Warlock/Control/Background
+$include Warlock/Control/Scene
+$include Warlock/Control/Screen
 $include Warlock/Control/State
+$include Warlock/Control/Overlay
 $include Warlock/Control/WarlockController
+$include Warlock/Control/ControlState

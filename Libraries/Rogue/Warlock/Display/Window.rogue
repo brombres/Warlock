@@ -2,13 +2,10 @@ library Warlock
 
 class Window : Display [singleton]
   PROPERTIES
-    title       : String
-
-    control_states          = ControlStates()
-    control_states_modified : Logical
-
-    old_size    : XY  # used to detect size changes in WarlockController.tick(Window)
-    actions     : Action
+    title          : String
+    control_states = ControlStates()
+    old_size       : XY  # used to detect size changes in WarlockController.tick(Window)
+    actions        : Action
 
   METHODS
     method init( title, width:Int, height:Int, state=State():State )
@@ -22,15 +19,14 @@ class Window : Display [singleton]
         Renderer.configure_window( this )
       endIf
 
-    method add_overlay( overlay:State )
+    method add_overlay( overlay:Overlay )
       overlays |= overlay
 
-    method background->State
-      control_states.update_active_list
-      if local background = control_states//background
+    method background->Background
+      if local background = control_states//background->(as Background)
         return background
       else
-        local result = State().[exit]
+        local result = Background()
         control_states//background = result
         return result
       endIf
@@ -47,9 +43,10 @@ class Window : Display [singleton]
 
     method begin_render [override]
       prior.begin_render
-      forEach (state at index in control_states.active_list step -1)
-        control_states.active_layer_index = index
-        state.on_begin_render
+      forEach (entry in control_states.reverse_entries)
+        if local state = entry.value
+          state.on_begin_render
+        endIf
       endForEach
       Renderer.on_begin_render( this )
 
@@ -58,37 +55,37 @@ class Window : Display [singleton]
       Framework.update_window_size( this )
       prior.begin_tick
 
-    method change_background( new_background:State )
+    method change_background( new_background:Background )
       if local background = control_states//background
-        control_states//background.change_state( new_background )
+        control_states//background.change( new_background )
       else
         control_states//background = new_background
       endIf
 
-    method change_overlay( new_overlay:State )
+    method change_overlay( new_overlay:Overlay )
       if local overlays = control_states//overlays
-        control_states//overlays.change_state( new_overlay )
+        control_states//overlays.change( new_overlay )
       else
         control_states//overlays = new_overlay
       endIf
 
-    method change_scene( new_scene:State )
+    method change_scene( new_scene:Scene )
       if local scene = control_states//scene
-        control_states//scene.change_state( new_scene )
+        control_states//scene.change( new_scene )
       else
         control_states//scene = new_scene
       endIf
 
-    method change_screen( new_screen:State )
+    method change_screen( new_screen:Screen )
       if local screen = control_states//screen
-        control_states//screen.change_state( new_screen )
+        control_states//screen.change( new_screen )
       else
         control_states//screen = new_screen
       endIf
 
     method change_state( new_state:State )
       if local state = control_states//state
-        control_states//state.change_state( new_state )
+        control_states//state.change( new_state )
       else
         control_states//state = new_state
       endIf
@@ -97,95 +94,60 @@ class Window : Display [singleton]
       Warlock.windows.remove( this )
       Framework.close_window( this )
 
-    method dispatch( e:KeyEvent, layer_index=null:Int? )
-      localize control_states.active_list
-      if (not layer_index) layer_index = active_list.count - 1
+    method dispatch( e:KeyEvent, to_state=Window.control_states.top_layer:ControlState )
+      if (to_state) to_state.handle( e )
+      else          handle( e )
 
-      if (layer_index.value >= 0)
-        temporarily control_states.active_layer_index = layer_index.value
-          local state = active_list[layer_index.value]
-          state.handle( e )
-        endTemporarily
-      else
-        handle( e )
-      endIf
+    method dispatch( e:MultitouchEvent, to_state=Window.control_states.top_layer:ControlState )
+      if (to_state) to_state.handle( e )
+      else          handle( e )
 
-    method dispatch( e:MultitouchEvent, layer_index=null:Int? )
-      localize control_states.active_list
-      if (not layer_index) layer_index = active_list.count - 1
+    method dispatch( e:PointerEvent, to_state=Window.control_states.top_layer:ControlState )
+      if (to_state) to_state.handle( e )
+      else          handle( e )
 
-      if (layer_index.value >= 0)
-        temporarily control_states.active_layer_index = layer_index.value
-          local state = active_list[layer_index.value]
-          state.handle( e )
-        endTemporarily
-      else
-        handle( e )
-      endIf
+    method dispatch( e:ScrollEvent, to_state=Window.control_states.top_layer:ControlState )
+      if (to_state) to_state.handle( e )
+      else          handle( e )
 
-    method dispatch( e:PointerEvent, layer_index=null:Int? )
-      localize control_states.active_list
-      if (not layer_index) layer_index = active_list.count - 1
-
-      if (layer_index.value >= 0)
-        temporarily control_states.active_layer_index = layer_index.value
-          local state = active_list[layer_index.value]
-          state.handle( e )
-        endTemporarily
-      else
-        handle( e )
-      endIf
-
-    method dispatch( e:ScrollEvent, layer_index=null:Int? )
-      localize control_states.active_list
-      if (not layer_index) layer_index = active_list.count - 1
-
-      if (layer_index.value >= 0)
-        temporarily control_states.active_layer_index = layer_index.value
-          local state = active_list[layer_index.value]
-          state.handle( e )
-        endTemporarily
-      else
-        handle( e )
-      endIf
-
-    method dispatch( e:TextEvent, layer_index=null:Int? )
-      localize control_states.active_list
-      if (not layer_index) layer_index = active_list.count - 1
-
-      if (layer_index.value >= 0)
-        temporarily control_states.active_layer_index = layer_index.value
-          local state = active_list[layer_index.value]
-          state.handle( e )
-        endTemporarily
-      else
-        handle( e )
-      endIf
+    method dispatch( e:TextEvent, to_state=Window.control_states.top_layer:ControlState )
+      if (to_state) to_state.handle( e )
+      else          handle( e )
 
     method dispatch_draw
       draw_state
 
     method dispatch_update
-      control_states.update_active_list
-      control_states_modified = false
+      control_states.modified = false
+      control_states.update_display_order
 
-      forEach (layer_index of control_states.active_list step -1)
-        update_state( layer_index )
+      forEach (entry in control_states.reverse_entries)
+        if local original_state = entry.value
+          local updated_state = original_state.updated
+          if (entry.value is original_state)  # if not then the head state was changed during update; leave it
+            updated_state = ControlState.ordered( updated_state )
+            if (updated_state is not original_state)
+              entry.value = updated_state
+              control_states.modified = true
+            endIf
+          endIf
+        endIf
       endForEach
 
-      while (control_states_modified)
+      while (control_states.modified)
         # Some new control states may not have gotten their first update
         # during the update pass above. Make sure all states are started
         # before letting them handle other events.
-        control_states_modified = false
+        control_states.modified = false
+        control_states.update_display_order
 
         forEach (entry in control_states.entries)
-          if local state = entry.value
-            local started_state = state.started
-            if (entry.value is state)
-              if (state is not started_state)
+          if local original_state = entry.value
+            local started_state = original_state.started
+            if (entry.value is original_state)
+              if (original_state is not started_state)
                 entry.value = started_state
-                control_states.mark_modified
+                control_states.modified = true
               endIf
             endIf
           endIf
@@ -204,26 +166,17 @@ class Window : Display [singleton]
         endWhile
       endBlock
 
-    method draw_state( layer_index=null:Int? )
-      localize control_states.active_list
-
-      if (not layer_index) layer_index = active_list.count - 1
-
-      if (layer_index.value >= 0)
-        temporarily control_states.active_layer_index = layer_index.value
-          local state = active_list[layer_index.value]
-          state.draw
-        endTemporarily
-      else
-        draw
-      endIf
+    method draw_state( state=Window.control_states.top_layer:ControlState )
+      if (state) state.draw
+      else       draw
 
     method end_render [override]
       prior.end_render
 
-      forEach (state at index in control_states.active_list step -1)
-        control_states.active_layer_index = index
-        state.on_end_render
+      forEach (entry in control_states.reverse_entries)
+        if local state = entry.value
+          state.on_end_render
+        endIf
       endForEach
 
       if (Warlock.windows.count and Warlock.windows.first is this) OverlayLog.draw
@@ -251,32 +204,31 @@ class Window : Display [singleton]
     method native_id->Int
       noAction  # defined by extended Platform, e.g. SDL
 
-    method overlays->State
-      control_states.update_active_list
-      if local overlays = control_states//overlays
+    method overlays->Overlay
+      if local overlays = control_states//overlays->(as Overlay)
         return overlays
       else
-        local result = State().[exit]
+        local result = Overlay()
         control_states//overlays = result
         return result
       endIf
 
-    method remove_background( background:State )
+    method remove_background( background:Background )
       if local cur_background = control_states//background
         control_states//background = cur_background.removing( background )
       endIf
 
-    method remove_overlay( overlay:State )
+    method remove_overlay( overlay:Overlay )
       if local cur_overlay = control_states//overlays
         control_states//overlays = cur_overlay.removing( overlay )
       endIf
 
-    method remove_scene( scene:State )
+    method remove_scene( scene:Scene )
       if local cur_scene = control_states//scene
         control_states//scene = cur_scene.removing( scene )
       endIf
 
-    method remove_screen( screen:State )
+    method remove_screen( screen:Screen )
       if local cur_screen = control_states//screen
         control_states//screen = cur_screen.removing( screen )
       endIf
@@ -286,47 +238,44 @@ class Window : Display [singleton]
         control_states//state = cur_state.removing( state )
       endIf
 
-    method scene->State
-      control_states.update_active_list
-      if local scene = control_states//scene
+    method scene->Scene
+      if local scene = control_states//scene->(as Scene)
         return scene
       else
-        local result = State().[exit]
+        local result = Scene()
         control_states//scene = result
         return result
       endIf
 
-    method screen->State
-      control_states.update_active_list
-      if local screen = control_states//screen
+    method screen->Screen
+      if local screen = control_states//screen->(as Screen)
         return screen
       else
-        local result = State().[exit]
+        local result = Screen()
         control_states//screen = result
         return result
       endIf
 
-    method set_background( background:State )
+    method set_background( background:Background )
       control_states//background = background
 
-    method set_overlays( overlay:State )
+    method set_overlays( overlay:Overlay )
       control_states//overlays = overlay
 
-    method set_scene( scene:State )
+    method set_scene( scene:Scene )
       control_states//scene = scene
 
-    method set_screen( screen:State )
+    method set_screen( screen:Screen )
       control_states//screen = screen
 
     method set_state( state:State )
       control_states//state = state
 
     method state->State
-      control_states.update_active_list
-      if local state = control_states//state
+      if local state = control_states//state->(as State)
         return state
       else
-        local result = State().[exit]
+        local result = State()
         control_states//state = result
         return result
       endIf
@@ -338,22 +287,6 @@ class Window : Display [singleton]
       endIf
 
       if (actions) actions = actions.updated
-
-    method update_state( layer_index:Int )
-      localize control_states.active_list
-
-      temporarily control_states.active_layer_index = layer_index
-        local original_state = control_states.active_layer
-        local layer_id = control_states.active_layer_id
-        local updated_state = original_state.updated
-        if (control_states[layer_id] is original_state)
-          # Only replace with result if state update didn't already replace state.
-          if (updated_state is not original_state)
-            # Only replace if different.
-            control_states[layer_id] = updated_state
-          endIf
-        endIf
-      endTemporarily
 
 endClass
 

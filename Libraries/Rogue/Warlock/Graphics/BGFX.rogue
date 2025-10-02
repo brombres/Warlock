@@ -361,7 +361,7 @@ class BGFX : Renderer [singleton]
         native @|bgfx::setScissor();
       endIf
 
-    method update_display_index( window:Window ) [override]
+    method update_display_order( window:Window ) [override]
       if (window.current_display_id != window.native_display_id)
         # Window moved to different display
         window.current_display_id = window.native_display_id

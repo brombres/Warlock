@@ -1,7 +1,7 @@
 library Warlock
 
-class State : ControlState<<State>>
+class Scene : ControlState<<Scene>>
   METHODS
     method layer_id->GlobalID
-      return <state>
+      return <scene>
 endClass

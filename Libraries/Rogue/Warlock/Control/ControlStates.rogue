@@ -1,0 +1,41 @@
+library Warlock
+
+class ControlStates : [GlobalID:ControlState]
+  PROPERTIES
+    modified               : Logical
+    display_order_modified : Logical
+
+  METHODS
+    method clear [override]
+      prior.clear
+      modified = true
+
+    method mark_modified [novel]
+      modified = true
+
+    method set( id:GlobalID, state:ControlState ) [override]
+      prior.set( id, ControlState.ordered(state) )  # ordered() arranges concurrent states by display_order
+      modified = true
+
+    method top_layer->ControlState [novel]
+      local cur_entry = last_entry
+      while (cur_entry and not cur_entry.value) cur_entry .= previous_entry
+      return cur_entry?.value
+
+    method underlying_layer( layer_id:GlobalID )->ControlState [novel]
+      # Returns the non-null state that comes before the state at the given key, e.g.
+      # underlying_layer(<scene>) returns the state at <background> (if the default
+      # ordering is used and if a <background> state is exists).
+      local result : ControlState
+      forEach (entry in entries)
+        if (entry.key == layer_id) return result
+        elseIf (entry.value)       result = entry.value
+      endForEach
+
+    method update_display_order
+      if (not display_order_modified) return
+      display_order_modified = false
+
+      forEach (entry in entries) entry.value = ControlState.ordered( entry.value )
+
+endClass

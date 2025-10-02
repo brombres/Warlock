@@ -1,0 +1,377 @@
+library Warlock
+
+class ControlState<<$ExtendedType>> : ControlState
+  GLOBAL METHODS
+    method create( fn:Function() )->$ExtendedType
+      return ProgressStateCall<<$ExtendedType>>( fn )
+
+    method create( fn:Function(Real), duration:Real )->$ExtendedType
+      return ProgressStateCallWithProgress<<$ExtendedType>>( fn, duration )
+
+    method operator+( a:$ExtendedType, b:$ExtendedType )->$ExtendedType
+      if (not a) return b
+      if (not b) return a
+      return a.and_then( b )->(as $ExtendedType)
+
+    method operator|( a:$ExtendedType, b:$ExtendedType )->$ExtendedType
+      if (not a) return b
+      if (not b) return a
+      return a.also( b )->(as $ExtendedType)
+
+    method wait( duration:Real )->$ExtendedType
+      if (duration <= 0) return wait_for( () => true )
+      else               return ProgressStateWait<<$ExtendedType>>( duration )
+
+    method wait_for( condition:Function->Logical, duration=$ExtendedType.INDEFINITE:Real )->$ExtendedType
+      return ProgressStateWaitFor<<$ExtendedType>>( condition, duration )
+
+    method yield->$ExtendedType
+      return ProgressStateYield<<$ExtendedType>>()
+
+endClass
+
+class ControlState : Rogue::ProgressState<<ControlState>>
+  PROPERTIES
+    actions       : Action
+    ui            : UI
+    display_order : Int
+    # UI & drawing order within layer group, e.g. screens. Higher # Screen is above lower # Screen.
+
+  METHODS
+    method background->Background
+      return Window.background
+
+    method dispatch( e:KeyEvent )
+      Window.dispatch( e, Window.control_states.underlying_layer(layer_id) )
+
+    method dispatch( e:MultitouchEvent )
+      Window.dispatch( e, Window.control_states.underlying_layer(layer_id) )
+
+    method dispatch( e:PointerEvent )
+      Window.dispatch( e, Window.control_states.underlying_layer(layer_id) )
+
+    method dispatch( e:ScrollEvent )
+      Window.dispatch( e, Window.control_states.underlying_layer(layer_id) )
+
+    method dispatch( e:TextEvent )
+      Window.dispatch( e, Window.control_states.underlying_layer(layer_id) )
+
+    method dispatch_draw
+      Window.draw_state( Window.control_states.underlying_layer(layer_id) )
+
+    method dispatch_find( id:GlobalID, arg=undefined:Variant, &up )->Variant
+      local stepped_layer_index = Window.control_states.active_layer_index + ?:{up:1 || -1}
+      if (stepped_layer_index >= 0 and stepped_layer_index < Window.control_states.active_list.count)
+        temporarily Window.control_states.active_layer_index = stepped_layer_index
+          return Window.control_states.active_layer.find( id, arg &=up )
+        endTemporarily
+      elseIf (not up)
+        return Window.find( id, arg )
+      else
+        return undefined
+      endIf
+
+    method draw
+      # Background
+
+      # BG draw state
+      block cur = this
+        while (cur)
+          cur.on_draw
+          cur .= concurrent_state
+        endWhile
+      endBlock
+
+      # BG draw actions
+      block cur = actions
+        while (cur)
+          cur.on_draw
+          cur .= concurrent_state
+        endWhile
+      endBlock
+
+      # Draw underlying state or Window
+      dispatch_draw
+
+      # Prepare to draw UI
+      block cur = this
+        while (cur)
+          cur.on_draw_ui
+          cur .= concurrent_state
+        endWhile
+      endBlock
+
+      # Draw UI
+      block cur = this
+        while (cur)
+          if (cur.@ui)
+            cur.@ui.draw
+          endIf
+          cur .= concurrent_state
+        endWhile
+      endBlock
+
+      # FG draw state
+      block cur = this
+        while (cur)
+          cur.on_draw_fg
+          cur .= concurrent_state
+        endWhile
+      endBlock
+
+      # FG draw actions
+      block cur = actions
+        while (cur)
+          cur.on_draw_fg
+          cur .= concurrent_state
+        endWhile
+      endBlock
+
+    method find( id:GlobalID, arg=undefined:Variant, &up )->Variant
+      if (@ui)
+        if local result = @ui.find( id, arg )
+          return result
+        endIf
+      endIf
+
+      return dispatch_find( id, arg, &=up )
+
+    method get( id:GlobalID, arg=undefined:Variant )->Variant
+      return undefined
+
+    method handle( e:KeyEvent, &limited )
+      contingent
+        if (concurrent_state)
+          concurrent_state.handle( e, &limited )
+          necessary (not e.is_consumed)
+        endIf
+
+        on( e )
+        necessary (not e.is_consumed)
+
+        if (@ui)
+          @ui.handle( e )
+          necessary (not e.is_consumed)
+        endIf
+
+        on_unhandled_ui( e )
+        necessary (not e.is_consumed)
+
+        if (not limited)
+          dispatch( e )
+          necessary (not e.is_consumed)
+        endIf
+
+        on_unhandled( e )
+      endContingent
+
+    method handle( e:MultitouchEvent, &limited )
+      contingent
+        if (concurrent_state)
+          concurrent_state.handle( e, &limited )
+          necessary (not e.is_consumed)
+        endIf
+
+        on( e )
+        necessary (not e.is_consumed)
+
+        if (@ui)
+          @ui.handle( e )
+          necessary (not e.is_consumed)
+        endIf
+
+        on_unhandled_ui( e )
+        necessary (not e.is_consumed)
+
+        if (not limited)
+          dispatch( e )
+          necessary (not e.is_consumed)
+        endIf
+
+        on_unhandled( e )
+      endContingent
+
+    method handle( e:PointerEvent, &limited )
+      contingent
+        if (concurrent_state)
+          concurrent_state.handle( e, &limited )
+          necessary (not e.is_consumed)
+        endIf
+
+        on( e )
+        necessary (not e.is_consumed)
+
+        if (@ui)
+          @ui.handle( e )
+          necessary (not e.is_consumed)
+        endIf
+
+        on_unhandled_ui( e )
+        necessary (not e.is_consumed)
+
+        if (not limited)
+          dispatch( e )
+          necessary (not e.is_consumed)
+        endIf
+
+        on_unhandled( e )
+      endContingent
+
+    method handle( e:ScrollEvent, &limited )
+      contingent
+        if (concurrent_state)
+          concurrent_state.handle( e, &limited )
+          necessary (not e.is_consumed)
+        endIf
+
+        on( e )
+        necessary (not e.is_consumed)
+
+        if (@ui)
+          @ui.handle( e )
+          necessary (not e.is_consumed)
+        endIf
+
+        on_unhandled_ui( e )
+        necessary (not e.is_consumed)
+
+        if (not limited)
+          dispatch( e )
+          necessary (not e.is_consumed)
+        endIf
+
+        on_unhandled( e )
+      endContingent
+
+    method handle( e:TextEvent, &limited )
+      contingent
+        if (concurrent_state)
+          concurrent_state.handle( e, &limited )
+          necessary (not e.is_consumed)
+        endIf
+
+        on( e )
+        necessary (not e.is_consumed)
+
+        if (@ui)
+          @ui.handle( e )
+          necessary (not e.is_consumed)
+        endIf
+
+        on_unhandled_ui( e )
+        necessary (not e.is_consumed)
+
+        if (not limited)
+          dispatch( e )
+          necessary (not e.is_consumed)
+        endIf
+
+        on_unhandled( e )
+      endContingent
+
+    method handle_find_up( id:GlobalID, arg:Variant )->Variant
+      local result = get( id, arg )
+      if (result.exists) return result
+      return dispatch_find( id, arg, &up )
+
+    method handle_deactivate [override]
+      on_deactivate
+      if (@ui) @ui.deactivate
+
+    method layer_id->GlobalID
+      return <Undefined>
+
+    method on( e:KeyEvent )
+
+    method on( e:MultitouchEvent )
+
+    method on( e:PointerEvent )
+
+    method on( e:ScrollEvent )
+
+    method on( e:TextEvent )
+
+    method on_draw
+
+    method on_draw_fg
+
+    method on_draw_ui
+
+    method on_begin_render
+
+    method on_end_render
+
+    method on_unhandled( e:KeyEvent )
+
+    method on_unhandled( e:MultitouchEvent )
+
+    method on_unhandled( e:PointerEvent )
+
+    method on_unhandled( e:ScrollEvent )
+
+    method on_unhandled( e:TextEvent )
+
+    method on_unhandled_ui( e:KeyEvent )
+
+    method on_unhandled_ui( e:MultitouchEvent )
+
+    method on_unhandled_ui( e:PointerEvent )
+
+    method on_unhandled_ui( e:ScrollEvent )
+
+    method on_unhandled_ui( e:TextEvent )
+
+    method set_display_order( new_display_order:Int )
+      if (display_order != new_display_order)
+        @display_order = new_display_order
+        Window.control_states.display_order_modified = true
+      endIf
+
+    method set_ui( @ui )
+      if (@ui)
+        @ui.find_handler   = (this=>handle_find_up)
+      endIf
+
+    method ui->UI
+      if (@ui) return @ui
+      ui = UI()
+      return @ui
+
+    method update [override]
+      actions = actions?.updated
+      prior.update
+      if (@ui) @ui.update( Display.bounds )
+
+    method .get_top_level_state->ControlState [override]
+      return Window.control_states[layer_id]
+
+    method .set_top_level_state( state:ControlState ) [override]
+      Window.control_states[layer_id] = state
+
+  GLOBAL METHODS
+    method ordered( first:ControlState )->ControlState
+      if (not first or not first.concurrent_state) return first
+
+      use list = WorkList<<ControlState>>
+        block cur = first
+          while (cur)
+            list.add( cur )
+            local next = cur.concurrent_state
+            cur.concurrent_state = null
+            cur = next
+          endWhile
+        endBlock
+
+        list.sort( $1.display_order < $2.display_order )
+
+        first = list.first
+        local prev = first
+        forEach (cur in list from 1)
+          prev.concurrent_state = cur
+          prev = cur
+        endForEach
+        return first
+
+      endUse
+
+endClass

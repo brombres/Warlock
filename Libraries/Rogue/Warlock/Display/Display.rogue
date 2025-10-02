@@ -1,6 +1,6 @@
 library Warlock
 
-$include Warlock/Display/ControlStates
+$include Warlock/Control/ControlStates
 $include Warlock/Display/RenderTarget
 $include Warlock/Display/IDManager
 $include Warlock/Display/Window

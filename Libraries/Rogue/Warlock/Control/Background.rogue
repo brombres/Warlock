@@ -1,0 +1,7 @@
+library Warlock
+
+class Background : ControlState<<Background>>
+  METHODS
+    method layer_id->GlobalID
+      return <background>
+endClass
