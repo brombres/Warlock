@@ -3,5 +3,5 @@ library Warlock
 class Overlay : ControlState<<Overlay>>
   METHODS
     method layer_id->GlobalID
-      return <overlay>
+      return <overlays>
 endClass

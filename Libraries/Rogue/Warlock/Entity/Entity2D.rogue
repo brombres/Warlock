@@ -18,16 +18,16 @@ augment Entity::Entity2D
 
         .push_transform( position )
 
-        .handle_draw( &!fg )
-        .handle_draw( &fg )
+        .handle_draw( &!over )
+        .handle_draw( &over )
       endUse
 
     method draw( display_bounds )
       if (attributes.invisible) return
 
       .begin_draw
-      .handle_draw( &!fg )
-      .handle_draw( &fg )
+      .handle_draw( &!over )
+      .handle_draw( &over )
 
       #{
       local scale = bounds.size / natural_size
@@ -38,8 +38,8 @@ augment Entity::Entity2D
             Matrix.translate( XYZ(bounds.position,z) ) *
             Matrix.scale( scale )
           )
-          .handle_draw( &!fg )
-          .handle_draw( &fg )
+          .handle_draw( &!over )
+          .handle_draw( &over )
         endUse
       endTemporarily
       }#

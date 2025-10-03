@@ -31,6 +31,7 @@ class ControlStates : [GlobalID:ControlState]
         if (entry.key == layer_id) return result
         elseIf (entry.value)       result = entry.value
       endForEach
+      return null
 
     method update_display_order
       if (not display_order_modified) return

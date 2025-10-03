@@ -38,8 +38,8 @@ class Window : Display [singleton]
       control_states//background = null
       control_states//scene      = null
       control_states//screen     = null
-      control_states//state      = start_state
       control_states//overlays   = null
+      control_states//state      = start_state
 
     method begin_render [override]
       prior.begin_render
@@ -115,7 +115,7 @@ class Window : Display [singleton]
       else          handle( e )
 
     method dispatch_draw
-      draw_state
+      draw_state( Window.control_states.top_layer )
 
     method dispatch_update
       control_states.modified = false
@@ -166,7 +166,7 @@ class Window : Display [singleton]
         endWhile
       endBlock
 
-    method draw_state( state=Window.control_states.top_layer:ControlState )
+    method draw_state( state:ControlState )
       if (state) state.draw
       else       draw
 
@@ -205,13 +205,7 @@ class Window : Display [singleton]
       noAction  # defined by extended Platform, e.g. SDL
 
     method overlays->Overlay
-      if local overlays = control_states//overlays->(as Overlay)
-        return overlays
-      else
-        local result = Overlay()
-        control_states//overlays = result
-        return result
-      endIf
+      return control_states//overlays->(as Overlay)
 
     method remove_background( background:Background )
       if local cur_background = control_states//background
