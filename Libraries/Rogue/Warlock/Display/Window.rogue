@@ -23,13 +23,7 @@ class Window : Display [singleton]
       overlays |= overlay
 
     method background->Background
-      if local background = control_states//background->(as Background)
-        return background
-      else
-        local result = Background()
-        control_states//background = result
-        return result
-      endIf
+      return control_states//background->(as Background)
 
     method define_control_states( start_state:State )
       # The order that new blank states are added to the control_states[] table defines
@@ -233,22 +227,10 @@ class Window : Display [singleton]
       endIf
 
     method scene->Scene
-      if local scene = control_states//scene->(as Scene)
-        return scene
-      else
-        local result = Scene()
-        control_states//scene = result
-        return result
-      endIf
+      return control_states//scene->(as Scene)
 
     method screen->Screen
-      if local screen = control_states//screen->(as Screen)
-        return screen
-      else
-        local result = Screen()
-        control_states//screen = result
-        return result
-      endIf
+      return control_states//screen->(as Screen)
 
     method set_background( background:Background )
       control_states//background = background
@@ -266,13 +248,7 @@ class Window : Display [singleton]
       control_states//state = state
 
     method state->State
-      if local state = control_states//state->(as State)
-        return state
-      else
-        local result = State()
-        control_states//state = result
-        return result
-      endIf
+      return control_states//state->(as State)
 
     method update [override]
       if (@ui)
