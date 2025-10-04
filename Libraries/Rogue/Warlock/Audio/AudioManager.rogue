@@ -11,6 +11,7 @@ class AudioManager [singleton]
     all_audio    = Sound[]  # includes sounds and music
     active_music = Music[]  # actively playing or paused music only
 
+    is_exclusive     = true    # true: other music suspended, false: BG music allowed
     is_configured    : Logical # true if we have attempted to configure audio
     is_prepared      : Logical # true if audio is *successfully* configured
     is_suspended     : Logical
@@ -28,20 +29,42 @@ class AudioManager [singleton]
     method on_cleanup
       unload
 
-    method configure->Logical
+    method configure( &exclusive=null:Logical )->Logical
+      if (exclusive)
+        reconfigure( &=exclusive )
+        return is_prepared
+      endIf
+
       if (is_configured) return is_prepared
       is_configured = true
 
       local success = true
 
       if ($target("iOS"))
-        native @|$success = (RogueLogical)[[AVAudioSession sharedInstance] setActive:YES error:nil];
+        success = .ios_set_audio_session_active
       endIf
 
       if (success)
         native
-        @|ma_result result = ma_engine_init(NULL, &$this->engine);
+        @|//ma_context_config context_config = ma_context_config_init();
+         |//if ($is_exclusive) context_config.coreaudio.sessionCategory = ma_ios_session_category_solo_ambient;
+         |//else               context_config.coreaudio.sessionCategory = ma_ios_session_category_ambient;
+         |//
+         |//ma_context context;
+         |//if (ma_context_init(NULL, 0, &context_config, &context) == MA_SUCCESS)
+         |//{
+         |//  ma_engine_config engine_config = ma_engine_config_init();
+         |//  engine_config.pContext = &context;
+         |//
+         |//  ma_result result = ma_engine_init( &engine_config, &$this->engine);
+         |//  $success = (result == MA_SUCCESS);
+         |//}
+         |ma_result result = ma_engine_init( NULL, &$this->engine);
          |$success = (result == MA_SUCCESS);
+
+         if (success and $target("iOS"))
+           success = .ios_set_audio_session_active  # reapply exclusivity after MiniAudio start
+         endIf
       endIf
 
       if (not success)
@@ -95,18 +118,64 @@ class AudioManager [singleton]
 
     method reactivate
       if (is_prepared)
-        if ($target("iOS"))
-          native @|NSError* error = nil;
-                  |[[AVAudioSession sharedInstance] setActive:YES error:&error];
-                  |if (error)
-                  |{
-                  |  NSLog( @"Error reactivating AVAudioSession: %@\n", error );
-                  |}
-        endIf
+        .ios_set_audio_session_active
       endIf
 
-    method reconfigure
+    method .ios_set_audio_session_active( &active=true )->Logical
+      local success = true
+      if ($target("iOS"))
+        if (active)
+          #.ios_set_audio_session_active( &!active )
+          .ios_set_audio_session_exclusivity
+        endIf
+
+        native
+        @|NSError* error = nil;
+         |[[AVAudioSession sharedInstance] setActive:($active?YES:NO) error:&error];
+         |if (error)
+         |{
+         |  $success = 0;
+         |  NSLog( @"[Warlock] Error %sactivating AVAudioSession: %@\n", ($active?"":"de"), error );
+         |}
+      endIf
+      return success
+
+    method .ios_set_audio_session_exclusivity
+      if ($target("iOS"))
+        native
+        @|NSError* error = nil;
+         |AVAudioSession* session = [AVAudioSession sharedInstance];
+         |if ($this->is_exclusive)
+         |{
+         |  [session setCategory:AVAudioSessionCategorySoloAmbient withOptions:0 error:&error];
+         |}
+         |else
+         |{
+         |  [session setCategory:AVAudioSessionCategoryAmbient withOptions:0 error:&error];
+         |}
+         |
+         |if (error)
+         |{
+         |  NSLog( @"[Warlock] Error setting AVAudioSession category: %@\n", error );
+         |}
+      endIf
+
+    method reconfigure( &exclusive=null:Logical? )
+      if (exclusive)
+        # Developer is setting exclusivity.
+        if (exclusive.value != is_exclusive)
+          is_exclusive = exclusive.value
+          if (System.is_mobile and is_prepared)
+            suspend( &instant )
+            unload
+            auto_retry_reconfigure
+          endIf
+        endIf
+        if (is_prepared) return
+      endIf
+
       if (is_prepared)
+        # Reconfiguring after suspension
         reactivate
         native
         @|ma_device_stop( $this->engine.pDevice );
@@ -114,19 +183,20 @@ class AudioManager [singleton]
          |{
             Log.println "[Failed to start MiniAudio device - reloading audio system]"
             unload
-            reconfigure_auto_retry
+            auto_retry_reconfigure
         native
         @|}
 
       else
+        if (exclusive) is_exclusive = exclusive.value
         configure
 
       endIf
 
-    method reconfigure_auto_retry
+    method auto_retry_reconfigure
       if (not configure)
         Log.println "[Reloading audio system (auto-retry)]"
-        actions = Action.wait( 0.5 ) + Action( ()=> AudioManager.reconfigure_auto_retry ) + actions
+        actions = Action.wait( 0.5 ) + Action( ()=> AudioManager.auto_retry_reconfigure ) + actions
       endIf
 
     method resume
@@ -150,29 +220,36 @@ class AudioManager [singleton]
       # Enqueue on essential_actions in case the suspend fade-out actions are still executing
       Warlock.essential_actions += actions
 
-    method set_music_volume( new_volume:Real, fade_duration=0.0:Real )
+    method set_music_volume( new_volume:Real, fade_duration=0.0:Real, &exclusive=null:Logical? )->Action
       if (fade_duration)
-        actions |= Action( (p) => this.music_volume = p.lerp(music_volume,new_volume), fade_duration )
+        local action = Action( (p) => this.music_volume = p.lerp(music_volume,new_volume), fade_duration )
+        if (exclusive) action += Action( () => AudioManager.reconfigure(&exclusive=exclusive.value) )
+        actions |= action
+        return action
       else
         @music_volume = new_volume
+        if (exclusive) AudioManager.reconfigure( &exclusive=exclusive.value )
+
         if (active_music)
           forEach (music in active_music)
             music.current_volume = music.current_volume  # reapply music volume
           endForEach
         endIf
+        return null
       endIf
 
     method stop_music
       (forEach in active_music step -1).stop
 
-    method suspend
+    method suspend( &instant )
       if (is_suspended) return
       is_suspended = true
 
       local fade_actions : Action
       forEach (music in AudioManager.active_music)
         if (not music.is_paused)
-          fade_actions |= music.fade_out_action( 0.50, &suspend )
+          if (instant) music.suspend
+          else         fade_actions |= music.fade_out_action( 0.50, &suspend )
         endIf
       endForEach
       Warlock.essential_actions += fade_actions
