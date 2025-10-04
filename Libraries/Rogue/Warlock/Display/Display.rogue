@@ -199,8 +199,13 @@ class Display [singleton]
       clear_clip
 
     method safe_area->Box
-      if (System.is_ios) return iOS.safe_area
       return bounds
+
+    method safe_area_bottom_margin->Box
+      return Corners( safe_area.bottom_left, size )->Box
+
+    method safe_area_top_margin->Box
+      return Box( 0, 0, safe_area.top_right )
 
     method scale->Real
       return size.x / pixel_size.x

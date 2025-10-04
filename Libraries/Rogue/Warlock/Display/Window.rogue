@@ -226,6 +226,10 @@ class Window : Display [singleton]
         control_states//state = cur_state.removing( state )
       endIf
 
+    method safe_area->Box [override]
+      if (System.is_ios) return iOS.safe_area
+      return bounds
+
     method scene->Scene
       return control_states//scene->(as Scene)
 
