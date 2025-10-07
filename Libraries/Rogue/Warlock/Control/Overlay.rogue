@@ -2,6 +2,9 @@ library Warlock
 
 class Overlay : ControlState<<Overlay>>
   METHODS
+    method change_overlay( next_overlay:Overlay )
+      change( next_overlay )
+
     method layer_id->GlobalID
       return <overlays>
 endClass

@@ -2,6 +2,9 @@ library Warlock
 
 class Background : ControlState<<Background>>
   METHODS
+    method change_background( next_background:Background )
+      change( next_background )
+
     method layer_id->GlobalID
       return <background>
 endClass

@@ -2,6 +2,9 @@ library Warlock
 
 class Screen : ControlState<<Screen>>
   METHODS
+    method change_screen( next_screen:Screen )
+      change( next_screen )
+
     method layer_id->GlobalID
       return <screen>
 endClass

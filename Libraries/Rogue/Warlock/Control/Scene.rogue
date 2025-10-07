@@ -2,6 +2,9 @@ library Warlock
 
 class Scene : ControlState<<Scene>>
   METHODS
+    method change_scene( next_scene:Scene )
+      change( next_scene )
+
     method layer_id->GlobalID
       return <scene>
 endClass
