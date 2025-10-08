@@ -229,8 +229,10 @@ augment UI::Font
         endWhich
       endIf
 
-    method measure( text:String, i1=null:Int?, i2=null:Int? )->XY
+    method measure( text:String, i1=null:Int?, count=null:Int? )->XY
       if (error) return XY.zero
+
+      if (count and count.value == 0) return XY( 0, 0 )
 
       local line_height = internal_height * scale.y
       if (snap) line_height = line_height.floor
@@ -242,6 +244,10 @@ augment UI::Font
       local max_i2 = text.count - 1
       if (i1) i1 = i1.value.clamped(0,max_i2)
       else    i1 = 0
+
+      local i2 : Int?
+      if (count) i2 = i1.value + (count.value - 1)
+
       if (i2) i2 = i2.value.clamped(i1.value,max_i2)
       else    i2 = max_i2
 
