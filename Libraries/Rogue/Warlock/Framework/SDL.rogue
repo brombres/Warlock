@@ -373,7 +373,7 @@ class SDL : Framework [singleton]
           use scroll_event = RecyclePool<<ScrollEvent>>
             scroll_event.init( XY(0,0), &is_precise, &!in_progress, &=is_momentum, Window.density )
             scroll_event.window = last_mouse_event_window
-            scroll_event.timestamp = System.execution_time
+            scroll_event.timestamp = System.execution_time_ms
             Window.dispatch( scroll_event )
           endUse
         endIf

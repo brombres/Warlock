@@ -266,5 +266,5 @@ endClass
 
 augment UI::Event
   PROPERTIES
-    window : Warlock::Window
+    window = Window : Warlock::Window
 endAugment
