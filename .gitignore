@@ -11,3 +11,11 @@ BuildLocal.rogue
 *.swo
 *.swp
 *~
+
+# Warlock
+/Assets/Staging
+/Libraries
+
+# Xcode
+xcuserdata
+Pods
