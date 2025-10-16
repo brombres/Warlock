@@ -16,6 +16,7 @@ class Sound
     native "ma_sound sound;"
 
     next_in_pool   : Sound
+    rate_limit     : Timer # shared with pool, if present
 
   METHODS
     method init( filepath, pool_count=1:Int )
@@ -103,6 +104,11 @@ class Sound
 
     method play( &concurrent )
       # concurrent flag is ignored here but is utilized in Music override
+      if (rate_limit)
+        if (not rate_limit.is_expired) return
+        rate_limit.restart
+      endIf
+
       if (prepare)
         is_paused = false
         is_suspended = false
@@ -200,6 +206,16 @@ class Sound
         local p = .effective_volume
         native @|ma_sound_set_volume( &$this->sound, (float)$p );
       endIf
+
+    method set_rate_limit( interval:Real? )
+      # Set to 0.5 to limit sounds to play once every 0.5 seconds, etc.
+      local timer : Timer
+      if (interval.exists) timer = Timer( interval.value, &expired )
+      local cur = this
+      while (cur)
+        cur.@rate_limit = timer
+        cur .= next_in_pool
+      endWhile
 
     method stop
       is_paused = false
