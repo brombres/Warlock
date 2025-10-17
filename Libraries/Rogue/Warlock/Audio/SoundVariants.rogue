@@ -17,7 +17,7 @@ class SoundVariants : Sound[]
       #
       #   SoundVariants( "Damage-##.wav", 1, 3 )
       #
-      # loads Damage-01.wav, Damage-02.wav, and Damage-03.wav
+      # loads Damage-01.wav, Damage-02.wav, and Damage-03.wav with 3 simultaneous plays each
       add( filepattern, sequence, pool_count )
 
     method add( filepattern:String, sequence:RangeUpTo<<Int>>, pool_count=1:Int )
@@ -67,5 +67,8 @@ class SoundVariants : Sound[]
       if local sound = next
         sound.play( &=concurrent )
       endIf
+
+    method set_rate_limit( interval:Real? )
+      (forEach in this).rate_limit = interval
 
 endClass
