@@ -207,7 +207,8 @@
 		3084FE722E2C66B1003DBBBC /* SDL3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3084FE712E2C66B1003DBBBC /* SDL3.framework */; };
 		308AF4D12E9AC907000BE42C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 308AF4D02E9AC907000BE42C /* Localizable.strings */; };
 		308AF4D22E9AC907000BE42C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 308AF4D02E9AC907000BE42C /* Localizable.strings */; };
-		30F185042E6F76C500B0061D /* SDLStatusBarSwizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = 30F185022E6F745A00B0061D /* SDLStatusBarSwizzle.m */; };
+		30AF47D12EA30B0900F8D6B4 /* SDLViewControllerModifications.m in Sources */ = {isa = PBXBuildFile; fileRef = 30AF47D02EA30B0900F8D6B4 /* SDLViewControllerModifications.m */; };
+		30AF47D22EA30B0900F8D6B4 /* SDLViewControllerModifications.m in Sources */ = {isa = PBXBuildFile; fileRef = 30AF47D02EA30B0900F8D6B4 /* SDLViewControllerModifications.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -533,8 +534,8 @@
 		308AF4D02E9AC907000BE42C /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		30A8CA6A2E2C626700203E31 /* Warlock-macOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Warlock-macOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		30A8CA8A2E2C656E00203E31 /* SDL.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SDL.xcodeproj; path = ../../Libraries/SDL/Xcode/SDL/SDL.xcodeproj; sourceTree = SOURCE_ROOT; };
+		30AF47D02EA30B0900F8D6B4 /* SDLViewControllerModifications.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SDLViewControllerModifications.m; sourceTree = "<group>"; };
 		30F185012E6BD0ED00B0061D /* Warlock-iOS-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Warlock-iOS-Info.plist"; sourceTree = "<group>"; };
-		30F185022E6F745A00B0061D /* SDLStatusBarSwizzle.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SDLStatusBarSwizzle.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -662,7 +663,7 @@
 		3021A6742E2D9429002E6394 /* Warlock */ = {
 			isa = PBXGroup;
 			children = (
-				30F185022E6F745A00B0061D /* SDLStatusBarSwizzle.m */,
+				30AF47D02EA30B0900F8D6B4 /* SDLViewControllerModifications.m */,
 				3021A6812E2D943F002E6394 /* iOS */,
 				3021A6822E2D9449002E6394 /* macOS */,
 				3021A66D2E2D9429002E6394 /* Preview Content */,
@@ -1733,7 +1734,7 @@
 			files = (
 				3021A9B52E32D2AB002E6394 /* RogueProgram-iOS.mm in Sources */,
 				3063D2312E2D67FB004ECAC9 /* miniaudio.m in Sources */,
-				30F185042E6F76C500B0061D /* SDLStatusBarSwizzle.m in Sources */,
+				30AF47D12EA30B0900F8D6B4 /* SDLViewControllerModifications.m in Sources */,
 				3021A9B22E32D279002E6394 /* RogueInterface.mm in Sources */,
 				3021A67F2E2D9429002E6394 /* Main.mm in Sources */,
 				3021A9B42E32D28B002E6394 /* WarlockInterface.mm in Sources */,
@@ -1858,6 +1859,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				30AF47D22EA30B0900F8D6B4 /* SDLViewControllerModifications.m in Sources */,
 				3063D2322E2D67FB004ECAC9 /* miniaudio.m in Sources */,
 				3021A9B12E32D279002E6394 /* RogueInterface.mm in Sources */,
 				3021A6762E2D9429002E6394 /* Main.mm in Sources */,
