@@ -208,7 +208,6 @@
 		308AF4D12E9AC907000BE42C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 308AF4D02E9AC907000BE42C /* Localizable.strings */; };
 		308AF4D22E9AC907000BE42C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 308AF4D02E9AC907000BE42C /* Localizable.strings */; };
 		30AF47D12EA30B0900F8D6B4 /* SDLViewControllerModifications.m in Sources */ = {isa = PBXBuildFile; fileRef = 30AF47D02EA30B0900F8D6B4 /* SDLViewControllerModifications.m */; };
-		30AF47D22EA30B0900F8D6B4 /* SDLViewControllerModifications.m in Sources */ = {isa = PBXBuildFile; fileRef = 30AF47D02EA30B0900F8D6B4 /* SDLViewControllerModifications.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1859,7 +1858,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				30AF47D22EA30B0900F8D6B4 /* SDLViewControllerModifications.m in Sources */,
 				3063D2322E2D67FB004ECAC9 /* miniaudio.m in Sources */,
 				3021A9B12E32D279002E6394 /* RogueInterface.mm in Sources */,
 				3021A6762E2D9429002E6394 /* Main.mm in Sources */,
