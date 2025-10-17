@@ -63,6 +63,9 @@ class Display [singleton]
     method at( p:XY )->XY
       return p * size
 
+    method aspect_ratio->Real
+      return size.x / size.y
+
     method begin_render
       Display = this
 
