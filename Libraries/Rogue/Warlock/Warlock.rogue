@@ -25,6 +25,9 @@ $include Warlock/UI
 $include Warlock/Utility
 
 class Warlock [essential singleton]
+  GLOBAL PROPERTIES
+    dev_mode = false
+
   GLOBAL METHODS
     method configure [api]
       Warlock.controller.configure
