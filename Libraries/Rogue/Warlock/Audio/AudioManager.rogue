@@ -11,7 +11,7 @@ class AudioManager [singleton]
     all_audio    = Sound[]  # includes sounds and music
     active_music = Music[]  # actively playing or paused music only
 
-    is_exclusive     = true    # true: other music suspended, false: BG music allowed
+    @is_exclusive    = true    # true: other music suspended, false: BG music allowed
     is_configured    : Logical # true if we have attempted to configure audio
     is_prepared      : Logical # true if audio is *successfully* configured
     is_suspended     : Logical
@@ -164,7 +164,7 @@ class AudioManager [singleton]
       if (exclusive)
         # Developer is setting exclusivity.
         if (exclusive.value != is_exclusive)
-          is_exclusive = exclusive.value
+          @is_exclusive = exclusive.value
           if (System.is_mobile and is_prepared)
             suspend( &instant )
             unload
@@ -188,13 +188,18 @@ class AudioManager [singleton]
         @|}
 
       else
-        if (exclusive) is_exclusive = exclusive.value
+        if (exclusive) @is_exclusive = exclusive.value
         configure
 
       endIf
 
     method auto_retry_reconfigure
-      if (not configure)
+      if (configure)
+        if (is_suspended)
+          is_suspended = false
+          resume_music
+        endIf
+      else
         Log.println "[Reloading audio system (auto-retry)]"
         actions = Action.wait( 0.5 ) + Action( ()=> AudioManager.auto_retry_reconfigure ) + actions
       endIf
@@ -212,18 +217,22 @@ class AudioManager [singleton]
       local actions : Action
 
       forEach (music in active_music step -1)
-        if (music.is_suspended)
-          actions |= music.fade_in_action( 0.5 )
-        endIf
+        if (music.is_suspended) music.play
+        #if (music.is_suspended)
+        #  actions |= music.fade_in_action( 0.5 )
+        #endIf
       endForEach
 
       # Enqueue on essential_actions in case the suspend fade-out actions are still executing
       Warlock.essential_actions += actions
 
+    method set_is_exclusive( setting:Logical )
+      if (is_exclusive != setting) reconfigure( &exclusive=setting )
+
     method set_music_volume( new_volume:Real, fade_duration=0.0:Real, &exclusive=null:Logical? )->Action
       if (fade_duration)
         local action = Action( (p) => this.music_volume = p.lerp(music_volume,new_volume), fade_duration )
-        if (exclusive) action += Action( () => AudioManager.reconfigure(&exclusive=exclusive.value) )
+        if (exclusive) action += Action( () => AudioManager.is_exclusive = exclusive.value )
         actions |= action
         return action
       else
@@ -235,6 +244,7 @@ class AudioManager [singleton]
             music.current_volume = music.current_volume  # reapply music volume
           endForEach
         endIf
+
         return null
       endIf
 

@@ -13,6 +13,7 @@ class Sound
     configuration_id : Int  # must match AudioManager.configuraton_id or else reload()
     volume           = 1.0  # volume when sound first starts playing
     current_volume   : Real # dynamically adjusted volume from fades etc.
+    saved_position   : Real # used when music is suspended, unloaded, reloaded
     native "ma_sound sound;"
 
     next_in_pool   : Sound
@@ -167,6 +168,8 @@ class Sound
         println "Audio file not found: " + filepath
       endIf
 
+      if (is_prepared) position = saved_position  # defaults to 0.0
+
       return is_prepared
 
     method reload
@@ -226,6 +229,7 @@ class Sound
 
     method suspend
       if (not is_paused)
+        saved_position = position
         pause
         is_suspended = true
       endIf
