@@ -300,7 +300,7 @@ class SDL : Framework [singleton]
                   Keyboard.on( key_event )
                   Window.dispatch( key_event )
 
-                  if (key_event.is_printable)
+                  if (key_event.is_press and key_event.is_printable)
                     use text_event = RecyclePool<<TextEvent>>
                       text_event.init( key_event.unicode )
                       text_event.window = window
