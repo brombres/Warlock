@@ -19,8 +19,20 @@ class Window : Display [singleton]
         Renderer.configure_window( this )
       endIf
 
-    method add_overlay( overlay:Overlay )
-      overlays |= overlay
+    method add_background( new_background:Background )
+      background |= new_background
+
+    method add_overlay( new_overlay:Overlay )
+      overlay |= new_overlay
+
+    method add_scene( new_scene:Scene )
+      scene |= new_scene
+
+    method add_screen( new_screen:Screen )
+      screen |= new_screen
+
+    method add_state( new_state:State )
+      state |= new_state
 
     method background->Background
       return control_states//background->(as Background)
@@ -32,7 +44,7 @@ class Window : Display [singleton]
       control_states//background = null
       control_states//scene      = null
       control_states//screen     = null
-      control_states//overlays   = null
+      control_states//overlay   = null
       control_states//state      = start_state
 
     method begin_render [override]
@@ -57,10 +69,10 @@ class Window : Display [singleton]
       endIf
 
     method change_overlay( new_overlay:Overlay )
-      if local overlays = control_states//overlays
-        control_states//overlays.change( new_overlay )
+      if local overlay = control_states//overlay
+        control_states//overlay.change( new_overlay )
       else
-        control_states//overlays = new_overlay
+        control_states//overlay = new_overlay
       endIf
 
     method change_scene( new_scene:Scene )
@@ -198,8 +210,8 @@ class Window : Display [singleton]
     method native_id->Int
       noAction  # defined by extended Platform, e.g. SDL
 
-    method overlays->Overlay
-      return control_states//overlays->(as Overlay)
+    method overlay->Overlay
+      return control_states//overlay->(as Overlay)
 
     method remove_background( background:Background )
       if local cur_background = control_states//background
@@ -207,8 +219,8 @@ class Window : Display [singleton]
       endIf
 
     method remove_overlay( overlay:Overlay )
-      if local cur_overlay = control_states//overlays
-        control_states//overlays = cur_overlay.removing( overlay )
+      if local cur_overlay = control_states//overlay
+        control_states//overlay = cur_overlay.removing( overlay )
       endIf
 
     method remove_scene( scene:Scene )
@@ -239,8 +251,8 @@ class Window : Display [singleton]
     method set_background( background:Background )
       control_states//background = background
 
-    method set_overlays( overlay:Overlay )
-      control_states//overlays = overlay
+    method set_overlay( overlay:Overlay )
+      control_states//overlay = overlay
 
     method set_scene( scene:Scene )
       control_states//scene = scene

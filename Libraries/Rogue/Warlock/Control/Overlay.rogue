@@ -6,5 +6,5 @@ class Overlay : ControlState<<Overlay>>
       change( next_overlay )
 
     method layer_id->GlobalID
-      return <overlays>
+      return <overlay>
 endClass
