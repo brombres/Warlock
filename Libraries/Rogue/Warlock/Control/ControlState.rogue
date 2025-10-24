@@ -35,10 +35,10 @@ class ControlState : Rogue::ProgressState<<ControlState>>
     actions       : Action
     ui            : UI
     display_order : Int
-    # UI & drawing order within layer group, e.g. screens. Higher # Screen is above lower # Screen.
+    # UI & drawing order within layer group, e.g. screens. Higher # ScreenState is above lower # ScreenState.
 
   METHODS
-    method background->Background
+    method background->BackgroundState
       return Window.background
 
     method dispatch( e:KeyEvent )
@@ -72,7 +72,7 @@ class ControlState : Rogue::ProgressState<<ControlState>>
       endIf
 
     method draw
-      # Background
+      # BackgroundState
 
       # BG draw state
       block cur = this

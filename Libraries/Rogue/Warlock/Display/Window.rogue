@@ -19,23 +19,23 @@ class Window : Display [singleton]
         Renderer.configure_window( this )
       endIf
 
-    method add_background( new_background:Background )
+    method add_background( new_background:BackgroundState )
       background |= new_background
 
-    method add_overlay( new_overlay:Overlay )
+    method add_overlay( new_overlay:OverlayState )
       overlay |= new_overlay
 
-    method add_scene( new_scene:Scene )
+    method add_scene( new_scene:SceneState )
       scene |= new_scene
 
-    method add_screen( new_screen:Screen )
+    method add_screen( new_screen:ScreenState )
       screen |= new_screen
 
     method add_state( new_state:State )
       state |= new_state
 
-    method background->Background
-      return control_states//background->(as Background)
+    method background->BackgroundState
+      return control_states//background->(as BackgroundState)
 
     method define_control_states( start_state:State )
       # The order that new blank states are added to the control_states[] table defines
@@ -61,28 +61,28 @@ class Window : Display [singleton]
       Framework.update_window_size( this )
       prior.begin_tick
 
-    method change_background( new_background:Background )
+    method change_background( new_background:BackgroundState )
       if local background = control_states//background
         control_states//background.change( new_background )
       else
         control_states//background = new_background
       endIf
 
-    method change_overlay( new_overlay:Overlay )
+    method change_overlay( new_overlay:OverlayState )
       if local overlay = control_states//overlay
         control_states//overlay.change( new_overlay )
       else
         control_states//overlay = new_overlay
       endIf
 
-    method change_scene( new_scene:Scene )
+    method change_scene( new_scene:SceneState )
       if local scene = control_states//scene
         control_states//scene.change( new_scene )
       else
         control_states//scene = new_scene
       endIf
 
-    method change_screen( new_screen:Screen )
+    method change_screen( new_screen:ScreenState )
       if local screen = control_states//screen
         control_states//screen.change( new_screen )
       else
@@ -210,25 +210,25 @@ class Window : Display [singleton]
     method native_id->Int
       noAction  # defined by extended Platform, e.g. SDL
 
-    method overlay->Overlay
-      return control_states//overlay->(as Overlay)
+    method overlay->OverlayState
+      return control_states//overlay->(as OverlayState)
 
-    method remove_background( background:Background )
+    method remove_background( background:BackgroundState )
       if local cur_background = control_states//background
         control_states//background = cur_background.removing( background )
       endIf
 
-    method remove_overlay( overlay:Overlay )
+    method remove_overlay( overlay:OverlayState )
       if local cur_overlay = control_states//overlay
         control_states//overlay = cur_overlay.removing( overlay )
       endIf
 
-    method remove_scene( scene:Scene )
+    method remove_scene( scene:SceneState )
       if local cur_scene = control_states//scene
         control_states//scene = cur_scene.removing( scene )
       endIf
 
-    method remove_screen( screen:Screen )
+    method remove_screen( screen:ScreenState )
       if local cur_screen = control_states//screen
         control_states//screen = cur_screen.removing( screen )
       endIf
@@ -242,22 +242,22 @@ class Window : Display [singleton]
       if (System.is_ios) return iOS.safe_area
       return bounds
 
-    method scene->Scene
-      return control_states//scene->(as Scene)
+    method scene->SceneState
+      return control_states//scene->(as SceneState)
 
-    method screen->Screen
-      return control_states//screen->(as Screen)
+    method screen->ScreenState
+      return control_states//screen->(as ScreenState)
 
-    method set_background( background:Background )
+    method set_background( background:BackgroundState )
       control_states//background = background
 
-    method set_overlay( overlay:Overlay )
+    method set_overlay( overlay:OverlayState )
       control_states//overlay = overlay
 
-    method set_scene( scene:Scene )
+    method set_scene( scene:SceneState )
       control_states//scene = scene
 
-    method set_screen( screen:Screen )
+    method set_screen( screen:ScreenState )
       control_states//screen = screen
 
     method set_state( state:State )
