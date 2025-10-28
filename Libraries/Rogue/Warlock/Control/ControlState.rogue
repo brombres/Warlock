@@ -1,6 +1,6 @@
 library Warlock
 
-class ControlState<<$ExtendedType>> : ControlState
+class ControlState<<$ExtendedType,$layer_id>> : ControlState
   GLOBAL METHODS
     method create( fn:Function() )->$ExtendedType
       return ProgressStateCall<<$ExtendedType>>( fn )
@@ -28,6 +28,10 @@ class ControlState<<$ExtendedType>> : ControlState
     method yield->$ExtendedType
       return ProgressStateYield<<$ExtendedType>>()
 
+  METHODS
+    method layer_id->GlobalID [override]
+      return $layer_id
+
 endClass
 
 class ControlState : Rogue::ProgressState<<ControlState>>
@@ -40,6 +44,10 @@ class ControlState : Rogue::ProgressState<<ControlState>>
   METHODS
     method background->BackgroundState
       return Window.background
+
+    method cancel [override]
+      prior.cancel
+      actions?.cancel
 
     method dispatch( e:KeyEvent )
       Window.dispatch( e, Window.control_states.underlying_layer(layer_id) )
@@ -278,6 +286,11 @@ class ControlState : Rogue::ProgressState<<ControlState>>
       on_deactivate
       if (@ui) @ui.deactivate
 
+    method is_finished->Logical [override]
+      if (is_exited) return true
+      if (actions)   return false
+      return prior.is_finished    # (duration >= 0 and t >= duration)
+
     method layer_id->GlobalID
       return <Undefined>
 
@@ -327,9 +340,12 @@ class ControlState : Rogue::ProgressState<<ControlState>>
         Window.control_states.display_order_modified = true
       endIf
 
-    method set_ui( @ui )
-      if (@ui)
-        @ui.find_handler   = (this=>handle_find_up)
+    method set_ui( new_ui:UI )
+      if (@ui) @ui.deactivate
+      @ui = new_ui
+
+      if (new_ui)
+        new_ui.find_handler = (this=>handle_find_up)
       endIf
 
     method ui->UI

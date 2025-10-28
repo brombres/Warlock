@@ -1,10 +1,8 @@
 library Warlock
 
-class State : ControlState<<State>>
+class State : ControlState<< State, <state> >>
   METHODS
     method change_state( next_state:State )
       change( next_state )
 
-    method layer_id->GlobalID
-      return <state>
 endClass

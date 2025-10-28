@@ -44,7 +44,7 @@ class Window : Display [singleton]
       control_states//background = null
       control_states//scene      = null
       control_states//screen     = null
-      control_states//overlay   = null
+      control_states//overlay    = null
       control_states//state      = start_state
 
     method begin_render [override]

@@ -149,7 +149,7 @@ class WarlockController
 
     method restore_state
       if (Warlock.dev_mode)
-        Log.println "Restoring $"(Warlock.application_data_folder/app_name/"SaveState.bin") #FIXME
+        Log.println "Restoring $"(Warlock.application_data_folder/app_name/"SaveState.bin")
       endIf
       AppData.data = JSON.parse(
         load( Warlock.application_data_folder/app_name/"SaveState.bin" )

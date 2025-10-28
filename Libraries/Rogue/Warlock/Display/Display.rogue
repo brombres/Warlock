@@ -283,6 +283,10 @@ class Display [singleton]
       @size = new_size
       projection_mode.update
 
+    method set_ui( new_ui:UI )
+      if (@ui) @ui.deactivate
+      @ui = new_ui
+
     method set_view_transform( new_transform:Matrix )
       if (view_transform != new_transform)
         <Display.modify_view_projection>.signal
