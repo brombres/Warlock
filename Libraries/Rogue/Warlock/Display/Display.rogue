@@ -141,14 +141,15 @@ class Display [singleton]
       clip_stack.add( clip )
       local result = PushedClip( new_clip )
 
+      local old_clip = clip
+      if (not old_clip) old_clip = bounds
+
       if (new_clip)
-        if (clip)
-          new_clip = clip.value & new_clip.value
+          new_clip = old_clip.value & new_clip.value
           if (not new_clip)
             # No interesection, but don't use 'null' as that means "no clip".
             new_clip = Box(0,0,0,0)
           endIf
-        endIf
       endIf
 
       clip = new_clip

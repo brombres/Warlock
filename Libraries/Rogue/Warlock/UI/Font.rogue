@@ -22,7 +22,6 @@ augment UI::Font
     asset_name         : String
     asset              : AssetInfo
     internal_height    : Int
-    scale              = XY(1,1)
     offset             : XY  # as a fraction of height
     fixed_width        : Int
     ascii_characters   : FontCharacter[]
@@ -295,11 +294,6 @@ augment UI::Font
 
     method set_height( new_height:Real )
       @scale = XY( new_height / internal_height )
-
-    method set_scale( new_scale:Real )
-      @scale = XY( new_scale )
-
-    method set_scale( @scale )
 
 endAugment
 
