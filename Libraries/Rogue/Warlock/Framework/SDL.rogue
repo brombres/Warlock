@@ -3,6 +3,7 @@ library Warlock
 nativeHeader
 @|#include <SDL3/SDL.h>
 
+$include Framework/SDLCustomEvents
 $include Framework/SDLJobs
 
 SDL  # instance SDL singleton on launch
@@ -356,6 +357,20 @@ class SDL : Framework [singleton]
                 Warlock.is_suspended = false
               endIf
             endBlock
+      native
+      @|    break;
+       |  case SDL_EVENT_USER:
+            local event_code = SDLCustomEvents( native("(RogueInt)(event.user.code)")->Int )
+            which (event_code)
+              case SDLCustomEvents.DEEP_LINK
+                local url : String
+                native
+                @|$url = RogueString_create( (char*)(event.user.data1) );
+                 |free( event.user.data1 );
+                Warlock.controller.on_deep_link( url )
+              others
+                Log.println "[Warlock] Unhandled user event code: $"(event_code)
+            endWhich
       native
       @|    break;
        |

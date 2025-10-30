@@ -19,68 +19,8 @@ class WarlockController
     method create_default_window( initial_state:State )
       Window( app_name, 1280, 720, initial_state )
 
-    method tick
-      begin_tick
-
-      forEach (window in Warlock.windows)
-        tick( window )
-      endForEach
-
-      end_tick
-
-    method begin_tick
-      OverlayLog.update
-      update_audio
-      Framework.update
-      Pointer.update
-      if (Warlock.actions) Warlock.actions .= updated
-
-    method update_audio
-      AudioManager.update
-
-    method tick( window:Window )
-      window.begin_tick  # includes setting singleton 'Window = window'
-      if (window.size != window.old_size)
-        on_resize( window )
-        window.old_size = window.size
-      endIf
-
-      begin_update
-      update
-      end_update
-
-      begin_draw
-      draw
-      end_draw
-
-      window.end_tick
-
-    method on_resize
+    method on_deep_link( url:String )
       noAction
-
-    method on_resize( window:Window )
-      on_resize
-
-    method begin_update
-      noAction
-
-    method update
-      Window.dispatch_update
-
-    method end_update
-      noAction
-
-    method begin_draw
-      Window.begin_render
-
-    method draw
-      Window.dispatch_draw
-
-    method end_draw
-      Window.end_render
-
-    method end_tick
-      ++Warlock.ticks
 
     method handle_app_exit
       save_state
@@ -164,6 +104,69 @@ class WarlockController
       local folder = Warlock.application_data_folder / app_name
       folder.create_folder
       save( AppData.data->JSON(&formatted), folder/"SaveState.bin" )
+
+    method tick
+      begin_tick
+
+      forEach (window in Warlock.windows)
+        tick( window )
+      endForEach
+
+      end_tick
+
+    method begin_tick
+      OverlayLog.update
+      update_audio
+      Framework.update
+      Pointer.update
+      if (Warlock.actions) Warlock.actions .= updated
+
+    method update_audio
+      AudioManager.update
+
+    method tick( window:Window )
+      window.begin_tick  # includes setting singleton 'Window = window'
+      if (window.size != window.old_size)
+        on_resize( window )
+        window.old_size = window.size
+      endIf
+
+      begin_update
+      update
+      end_update
+
+      begin_draw
+      draw
+      end_draw
+
+      window.end_tick
+
+    method on_resize
+      noAction
+
+    method on_resize( window:Window )
+      on_resize
+
+    method begin_update
+      noAction
+
+    method update
+      Window.dispatch_update
+
+    method end_update
+      noAction
+
+    method begin_draw
+      Window.begin_render
+
+    method draw
+      Window.dispatch_draw
+
+    method end_draw
+      Window.end_render
+
+    method end_tick
+      ++Warlock.ticks
 
 
 endClass
