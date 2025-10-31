@@ -94,6 +94,7 @@ class WarlockController
       AppData.data = JSON.parse(
         load( Warlock.application_data_folder/app_name/"SaveState.bin" )
       ) || @{}
+      AppData.data .= xorint_encoded  # internally converts Int->XorInt to hide vars from runtime memory scanners
       on_restore_state
 
     method save( data:String, file:File )
