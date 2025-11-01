@@ -1,7 +1,35 @@
+enum SlideDirection
+  CATEGORIES
+    UP
+    LEFT
+    DOWN
+    RIGHT
+
+  METHODS
+    method ending_offset->XY
+      which (this)
+        case UP:     return XY(  0, -1 )
+        case LEFT:   return XY( -1,  0 )
+        case DOWN:   return XY(  0,  1 )
+        others:      return XY(  1,  0 )
+      endWhich
+
+    method starting_offset->XY
+      which (this)
+        case UP:     return XY(  0,  1 )
+        case LEFT:   return XY(  1,  0 )
+        case DOWN:   return XY(  0, -1 )
+        others:      return XY( -1,  0 )
+      endWhich
+endEnum
+
 class SlidingPanel : Component
   # Note: shrink_to_fit_height by default.
   PROPERTIES
-    visibility   : VariantEntry  # e.g. <AppData.ui.slider_visibility>
+    visibility          : VariantEntry         # e.g. <AppData.ui.slider_visibility>
+
+    slide_in_direction  = SlideDirection.UP    : SlideDirection
+    slide_out_direction = SlideDirection.DOWN  : SlideDirection
     offset_out   = XY( 0, 1 )
     offset_in    = XY( 0, 0 )
 
@@ -76,42 +104,48 @@ class SlidingPanel : Component
     method set( progress:Real )
       visibility.set( progress )
 
-    method slide_in( duration=1.0:Real )
+    method slide_in( duration=0.5:Real )
+      offset_out = slide_in_direction.starting_offset
       actions += ActionSlideIn( visibility, duration )
 
-    method slide_in_down( duration=1.0:Real, size_factor=0.0 )
-      offset_out = XY( 0, -1 )
+    method slide_in( direction:SlideDirection, duration=0.5:Real, size_factor=0.0 )
+      slide_in_direction = direction
       slide_in( duration )
 
-    method slide_in_left( duration=1.0:Real, size_factor=0.0 )
-      offset_out = XY( 1, 0 )
+    method slide_in_down( duration=0.5:Real, size_factor=0.0 )
+      slide_in_direction = SlideDirection.DOWN
       slide_in( duration )
 
-    method slide_in_right( duration=1.0:Real, size_factor=0.0 )
-      offset_out = XY( -1, 0 )
+    method slide_in_left( duration=0.5:Real, size_factor=0.0 )
+      slide_in_direction = SlideDirection.LEFT
       slide_in( duration )
 
-    method slide_in_up( duration=1.0:Real, size_factor=0.0 )
-      offset_out = XY( 0, 1 )
+    method slide_in_right( duration=0.5:Real, size_factor=0.0 )
+      slide_in_direction = SlideDirection.RIGHT
       slide_in( duration )
 
-    method slide_out( duration=1.0:Real )
+    method slide_in_up( duration=0.5:Real, size_factor=0.0 )
+      slide_in_direction = SlideDirection.UP
+      slide_in( duration )
+
+    method slide_out( duration=0.5:Real )
+      offset_out = slide_out_direction.ending_offset
       actions += ActionSlideOut( visibility, duration )
 
-    method slide_out_down( duration=1.0:Real, size_factor=0.0 )
-      offset_out = XY( 0, 1 )
+    method slide_out_down( duration=0.5:Real, size_factor=0.0 )
+      slide_out_direction = SlideDirection.DOWN
       slide_out( duration )
 
-    method slide_out_left( duration=1.0:Real, size_factor=0.0 )
-      offset_out = XY( -1, 0 )
+    method slide_out_left( duration=0.5:Real, size_factor=0.0 )
+      slide_out_direction = SlideDirection.LEFT
       slide_out( duration )
 
-    method slide_out_right( duration=1.0:Real, size_factor=0.0 )
-      offset_out = XY( 1, 0 )
+    method slide_out_right( duration=0.5:Real, size_factor=0.0 )
+      slide_out_direction = SlideDirection.RIGHT
       slide_out( duration )
 
-    method slide_out_up( duration=1.0:Real, size_factor=0.0 )
-      offset_out = XY( 0, -1 )
+    method slide_out_up( duration=0.5:Real, size_factor=0.0 )
+      slide_out_direction = SlideDirection.UP
       slide_out( duration )
 
 
@@ -122,7 +156,7 @@ class ActionSlide : Action
     app_data_value : VariantEntry
 
   METHODS
-    method init( app_data_value, duration=1.0 )
+    method init( app_data_value, duration=0.5 )
 
     method on_update [override]
       app_data_value.set( progress(progress) )
