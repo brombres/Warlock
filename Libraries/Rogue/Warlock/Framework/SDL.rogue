@@ -1,7 +1,6 @@
 library Warlock
 
-nativeHeader
-@|#include <SDL3/SDL.h>
+nativeHeader @|#include <SDL3/SDL.h>
 
 $include Framework/SDLCustomEvents
 $include Framework/SDLJobs
@@ -606,6 +605,18 @@ augment Warlock::Window
 
     method native_id->Int
       return native("SDL_GetWindowID( $this->sdl_window )")->Int
+
+    method native_window_pointer->RogueVoidPointer
+      local result : RogueVoidPointer
+
+      native
+      @|#if defined(ROGUE_TARGET_MACOS)
+       |$result.value = (void*)SDL_GetPointerProperty(
+       |  SDL_GetWindowProperties($this->sdl_window), SDL_PROP_WINDOW_COCOA_WINDOW_POINTER, NULL
+       |);
+       |#endif
+
+      return result
 
 endAugment
 

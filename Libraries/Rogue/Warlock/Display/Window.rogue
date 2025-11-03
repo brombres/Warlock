@@ -210,6 +210,9 @@ class Window : Display [singleton]
     method native_id->Int
       noAction  # defined by extended Platform, e.g. SDL
 
+    method native_window_pointer->RogueVoidPointer
+      noAction  # defined by extended Platform, e.g. SDL
+
     method overlay->OverlayState
       return control_states//overlay->(as OverlayState)
 
