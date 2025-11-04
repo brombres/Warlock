@@ -611,9 +611,13 @@ augment Warlock::Window
 
       native
       @|#if defined(ROGUE_TARGET_MACOS)
-       |$result.value = (void*)SDL_GetPointerProperty(
-       |  SDL_GetWindowProperties($this->sdl_window), SDL_PROP_WINDOW_COCOA_WINDOW_POINTER, NULL
-       |);
+       |  $result.value = (void*)SDL_GetPointerProperty(
+       |    SDL_GetWindowProperties($this->sdl_window), SDL_PROP_WINDOW_COCOA_WINDOW_POINTER, NULL
+       |  );
+       |#elif defined(ROGUE_TARGET_IOS)
+       |  $result.value = (void*)SDL_GetPointerProperty(
+       |    SDL_GetWindowProperties($this->sdl_window), SDL_PROP_WINDOW_UIKIT_WINDOW_POINTER, NULL
+       |  );
        |#endif
 
       return result
