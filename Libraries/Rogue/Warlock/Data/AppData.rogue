@@ -52,6 +52,9 @@ class AppData [singleton]
     method on_change( path:GlobalID, global_id:GlobalID )
       data.on_change( path, global_id )
 
+    method remove( key:String )->Variant
+      return data.remove( key )
+
     method set( key:GlobalID, value:Variant )
       entry( key ).set( value )
 

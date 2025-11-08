@@ -46,7 +46,7 @@ class WarlockController
     method handle_launch
       on_launch
 
-    method load( file:File )->String
+    method load_state( file:File )->String
       return String( file )
 
     method on_app_exit
@@ -92,19 +92,19 @@ class WarlockController
         Log.println "Restoring $"(Warlock.application_data_folder/app_name/"SaveState.bin")
       endIf
       AppData.data = JSON.parse(
-        load( Warlock.application_data_folder/app_name/"SaveState.bin" )
+        load_state( Warlock.application_data_folder/app_name/"SaveState.bin" )
       ) || @{}
       AppData.data .= xorint_encoded  # internally converts Int->XorInt to hide vars from runtime memory scanners
       on_restore_state
 
-    method save( data:String, file:File )
+    method save_state( data:String, file:File )
       file.save( data )
 
     method save_state
       on_save_state
       local folder = Warlock.application_data_folder / app_name
       folder.create_folder
-      save( AppData.data->JSON(&formatted), folder/"SaveState.bin" )
+      save_state( AppData.data->JSON(&formatted), folder/"SaveState.bin" )
 
     method tick
       begin_tick

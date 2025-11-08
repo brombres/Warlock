@@ -4,6 +4,8 @@ uses Warlock
 augment UI::Text
   PROPERTIES
     app_data_key : VariantEntry
+    cur_value    : Variant
+    format       : String  # Value is inserted at '$' placeholder.
 
   METHODS
     method init( app_data_key )
@@ -14,10 +16,17 @@ augment UI::Text
       # e.g. <AppData.health>
       init( Warlock::AppDataValue(app_data_id) )
 
+    method init( format, app_data_key:VariantEntry )
+      init( app_data_key )
+
+    method init( format, app_data_id:GlobalID )
+      # e.g. <AppData.health>
+      init( app_data_id )
+
     method app_data_needs_update->Logical
       if (app_data_key)
-        local new_value = app_data_key->String || ""
-        return (new_value != value)
+        local new_value = app_data_key->Variant
+        return (new_value != cur_value)
       endIf
       return false
 
@@ -33,7 +42,15 @@ augment UI::Text
 
     method on_update_app_data
       if (app_data_key)
+        cur_value = app_data_key->Variant
         value.clear
-        value.print( AppData[app_data_key] )
+        if (format)
+          forEach (ch in format)
+            if (ch == '$') value.print( cur_value )
+            else           value.print( ch )
+          endForEach
+        else
+          value.print( cur_value )
+        endIf
       endIf
 endAugment
