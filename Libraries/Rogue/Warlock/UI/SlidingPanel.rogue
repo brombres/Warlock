@@ -132,6 +132,10 @@ class SlidingPanel : Component
       offset_out = slide_out_direction.ending_offset
       actions += ActionSlideOut( visibility, duration )
 
+    method slide_out( direction:SlideDirection, duration=0.5:Real, size_factor=0.0 )
+      slide_out_direction = direction
+      slide_out( duration )
+
     method slide_out_down( duration=0.5:Real, size_factor=0.0 )
       slide_out_direction = SlideDirection.DOWN
       slide_out( duration )
