@@ -33,7 +33,11 @@ class OffscreenBuffer : Component
         position = XY(0,0)
       endIf
 
+      prior.on_begin_draw
+
     method on_end_draw [override]
+      prior.on_end_draw
+
       if (use_offscreen_buffer)
         render_target.on_end_use( render_target )
         position = original_position
