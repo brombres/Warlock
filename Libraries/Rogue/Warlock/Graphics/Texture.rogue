@@ -134,6 +134,11 @@ class Texture
 
       return mesh
 
+    method recycle
+      # Kludgy, texture can never be reloaded without clearing AssetManager cache.
+      # Improve someday.
+      on_cleanup
+
     method split( columns:Int, rows:Int )->Texture[]
       local result = Texture[]( columns * rows )
       local sz = size / XY(columns,rows)

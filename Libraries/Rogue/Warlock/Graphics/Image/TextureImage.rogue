@@ -40,6 +40,11 @@ class TextureImage : Image
       # Ensures image is fully loaded.
       texture  # will load if necessary
 
+    method recycle
+      if (@texture) @texture.recycle
+      texture = null
+      original_texture = null
+
     method reset_crop
       if (original_texture)
         texture.init( original_texture )

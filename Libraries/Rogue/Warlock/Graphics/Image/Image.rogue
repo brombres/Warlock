@@ -37,6 +37,9 @@ class Image : Drawable2D
       # Ensures image is fully loaded.
       noAction
 
+    method recycle
+      noAction
+
     method set_opacity( @opacity )
 
     method texture->Texture
