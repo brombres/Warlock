@@ -254,3 +254,8 @@ class Sound
 
 endClass
 
+augment Rogue::ProgressState
+  GLOBAL METHODS
+    method wait_for( sound:Warlock::Sound )->$ExtendedType
+      return wait_for( () => not sound.is_playing )
+endAugment
