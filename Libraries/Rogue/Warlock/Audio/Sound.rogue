@@ -61,6 +61,7 @@ class Sound
       return action
 
     method fade_out( duration=1.0:Real, &pause )
+      if (not is_playing) return
       AudioManager.actions |= fade_out_action( &=duration, &=pause )
 
     method fade_out_action( duration=1.0:Real, &pause, &suspend )->Action
