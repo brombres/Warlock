@@ -29,6 +29,8 @@ augment UI::Font
 
     color              = Color.WHITE : Color
     opacity            = 1.0
+    @width_scale       = 1.0  # applied when height is modified
+    scale              = XY( width_scale, 1.0 )
 
     error              : String
     spacing_adjustment = 0
@@ -82,9 +84,10 @@ augment UI::Font
       error              = existing.error
       spacing_adjustment = 0
       snap               = existing.snap
+      width_scale        = existing.width_scale
 
     method reset
-      scale              = XY(1,1)
+      scale              = XY(width_scale,1)
       offset             = XY.zero
       anchor             = Anchor.CENTER
       color              = Color.WHITE
@@ -293,7 +296,14 @@ augment UI::Font
       return XY( max_w*scale.x, h )
 
     method set_height( new_height:Real )
-      @scale = XY( new_height / internal_height )
+      @scale = XY( new_height / internal_height ) * XY( width_scale, 1.0 )
+
+    method set_width_scale( new_factor:Real )
+      if local old_factor = @width_scale
+        @scale = XY( (@scale.x/old_factor) * new_factor, @scale.y )
+      else
+        @scale = XY( new_factor, @scale.y )
+      endIf
 
 endAugment
 
