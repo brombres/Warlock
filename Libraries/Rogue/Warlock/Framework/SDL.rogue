@@ -344,7 +344,7 @@ class SDL : Framework [singleton]
       native
       @|    break;
        |  case SDL_EVENT_DID_ENTER_BACKGROUND:
-            AudioManager.suspend
+            AudioManager.suspend( &backgrounded )
             Pointer.clear
       native
       @|    break;

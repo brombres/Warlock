@@ -10,6 +10,7 @@ class Sound
     is_concurrent    : Logical  # only has an effect for Music
     is_paused        : Logical
     is_suspended     : Logical
+    is_backgrounded  : Logical
     configuration_id : Int  # must match AudioManager.configuraton_id or else reload()
     volume           = 1.0  # volume when sound first starts playing
     current_volume   : Real # dynamically adjusted volume from fades etc.
@@ -64,11 +65,11 @@ class Sound
       if (not is_playing) return
       AudioManager.actions |= fade_out_action( &=duration, &=pause )
 
-    method fade_out_action( duration=1.0:Real, &pause, &suspend )->Action
+    method fade_out_action( duration=1.0:Real, &pause, &suspend, &backgrounded )->Action
       local initial_volume = current_volume
       local action = Action( (p) => this.current_volume = initial_volume * (1.0 - p), &=duration )
       if (pause)       action += Action( () => this.pause )
-      elseIf (suspend) action += Action( () => this.suspend )
+      elseIf (suspend) action += Action( () => this.suspend(&backgrounded=backgrounded) )
       else             action += Action( () => this.stop )
       return action
 
@@ -188,6 +189,7 @@ class Sound
       if (is_suspended)
         play
         is_suspended = false
+        is_backgrounded = false
       endIf
 
     method set_is_looping( setting:Logical )
@@ -228,11 +230,12 @@ class Sound
                 |ma_sound_seek_to_pcm_frame( &$this->sound, 0 );
       endIf
 
-    method suspend
+    method suspend( &backgrounded )
       if (not is_paused)
         saved_position = position
         pause
         is_suspended = true
+        is_backgrounded = backgrounded
       endIf
 
     method to->String

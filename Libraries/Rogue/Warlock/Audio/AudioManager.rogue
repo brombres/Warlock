@@ -15,6 +15,7 @@ class AudioManager [singleton]
     is_configured    : Logical # true if we have attempted to configure audio
     is_prepared      : Logical # true if audio is *successfully* configured
     is_suspended     : Logical
+    is_backgrounded  : Logical
     configuration_id : Int
 
     native "ma_engine engine;"
@@ -192,8 +193,8 @@ class AudioManager [singleton]
 
     method auto_retry_reconfigure
       if (configure)
-        if (is_suspended)
-          is_suspended = false
+        if (is_backgrounded)
+          is_backgrounded = false
           resume_music
         endIf
       else
@@ -201,21 +202,29 @@ class AudioManager [singleton]
         actions = Action.wait( 0.5 ) + Action( ()=> AudioManager.auto_retry_reconfigure ) + actions
       endIf
 
-    method resume( &reconfigure )
-      if (not is_suspended) return
-      is_suspended = false
-
-      if (reconfigure) this.reconfigure
-
-      if (is_prepared)
-        resume_music
+    method resume( &backgrounded )
+      if (backgrounded)
+        if (not is_backgrounded) return
+        is_backgrounded = true
+        this.reconfigure
+      else
+        if (not is_suspended) return
+        is_suspended = false
       endIf
 
-    method resume_music
+      if (is_prepared)
+        resume_music( &=backgrounded )
+      endIf
+
+    method resume_music( &backgrounded )
       local actions : Action
 
       forEach (music in active_music step -1)
-        if (music.is_suspended) music.play
+        if (backgrounded)
+          if (music.is_backgrounded) music.play
+        else
+          if (music.is_suspended) music.play
+        endIf
       endForEach
 
       # Enqueue on essential_actions in case the suspend fade-out actions are still executing
@@ -246,15 +255,20 @@ class AudioManager [singleton]
     method stop_music
       (forEach in active_music step -1).stop
 
-    method suspend( &instant )
-      if (is_suspended) return
-      is_suspended = true
+    method suspend( &instant, &backgrounded )
+      if (backgrounded)
+        if (is_backgrounded) return
+        is_backgrounded = true
+      else
+        if (is_suspended) return
+        is_suspended = true
+      endIf
 
       local fade_actions : Action
       forEach (music in AudioManager.active_music)
         if (not music.is_paused)
-          if (instant) music.suspend
-          else         fade_actions |= music.fade_out_action( 0.50, &suspend )
+          if (instant) music.suspend( &=backgrounded )
+          else         fade_actions |= music.fade_out_action( 0.50, &suspend, &=backgrounded )
         endIf
       endForEach
       Warlock.essential_actions += fade_actions
