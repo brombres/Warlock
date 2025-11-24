@@ -33,7 +33,7 @@ class WarlockController
 
     method handle_app_resume
       # Only happens on iOS & Android
-      AudioManager.resume
+      AudioManager.resume( &reconfigure )
       (forEach in Warlock.windows).handle_app_resume
       on_app_resume
 

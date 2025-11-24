@@ -113,9 +113,6 @@ class AudioManager [singleton]
       stop_music
       actions = null
 
-    method pause_music
-      (forEach in AudioManager.active_music step -1).pause
-
     method reactivate
       if (is_prepared)
         .ios_set_audio_session_active
@@ -204,11 +201,12 @@ class AudioManager [singleton]
         actions = Action.wait( 0.5 ) + Action( ()=> AudioManager.auto_retry_reconfigure ) + actions
       endIf
 
-    method resume
+    method resume( &reconfigure )
       if (not is_suspended) return
       is_suspended = false
 
-      reconfigure
+      if (reconfigure) this.reconfigure
+
       if (is_prepared)
         resume_music
       endIf
