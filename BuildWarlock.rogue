@@ -174,6 +174,8 @@ routine deps( platform:String, args:String[], &update, &rebuild )
 
   update_gitignore
 
+  if (platform == "android") .check_android_configuration
+
   ensure_folder( File("Assets/Audio") )
   ensure_folder( File("Assets/Data") )
   ensure_folder( File("Assets/Fonts") )
@@ -270,6 +272,10 @@ routine deps( platform:String, args:String[], &update, &rebuild )
         repo.pull( &verbose )
       endIf
     endIf
+
+    if (platform == "android")
+      .check_android_sdl_lib( &=update )
+    endIf
   endIf
 
   -------- Libraries/spine --------
@@ -342,6 +348,33 @@ routine deps( platform:String, args:String[], &update, &rebuild )
 
 endRoutine
 
+routine .check_android_configuration
+  local sdk = System.env//ANDROID_SDK_ROOT
+  if (not String.exists(sdk))
+    throw Error( "ERROR: Necessary system environment variable ANDROID_SDK_ROOT is undefined. Ensure the Android SDK is installed and add a line such as the following to your shell profile:\n\nexport ANDROID_SDK_ROOT=~/Library/Android/sdk" )
+  endIf
+
+  if (not String.exists(System.env//ANDROID_NDK_ROOT))
+    local files = File( sdk / "ndk" ).listing
+
+    local latest : String
+    if (files.count)
+      latest = files.first
+      forEach (filepath in files from 1)
+        if (VersionNumber(File(filepath).filename) > File(latest).filename)
+          latest = filepath
+        endIf
+      endForEach
+
+      latest .= replacing( System.env//HOME, "~" )
+    else
+      latest = sdk / "ndk/27.0.12077973"
+    endIf
+
+    throw Error( "ERROR: Necessary system environment variable ANDROID_NDK_ROOT is undefined. Ensure the Android NDK is installed and add a line such as the following to your shell profile:\n\nexport ANDROID_NDK_ROOT=$"(latest) )
+  endIf
+endRoutine
+
 routine .build_bgfx( platform:String, &rebuild )
   local make_folder, make_target : String
 
@@ -351,6 +384,10 @@ routine .build_bgfx( platform:String, &rebuild )
   elseIf (platform == "macOS")
     make_folder = "Libraries/bgfx/.build/osx-arm64"
     make_target = "osx-arm64 CFLAGS=-DBGFX_CONFIG_MULTITHREADED=0"
+  elseIf (platform == "android")
+    .configure_bgfx_android
+    make_folder = "Libraries/bgfx/.build/android-arm64"
+    make_target = "android-arm64-release CFLAGS=-DBGFX_CONFIG_MULTITHREADED=0"
   else
     trace
     throw Error( "[INTERNAL] TODO: build BGFX for $."(platform) )
@@ -369,8 +406,50 @@ routine .build_bgfx( platform:String, &rebuild )
     #execute "cd Libraries/bgfx && ../bx/tools/bin/darwin/genie --with-tools --gcc=osx-x64 gmake"
     execute( "cd Libraries/bgfx && make $"(make_target) )
   endIf
+
+  if (platform == "android") .sync_bgfx_android_libs
 endRoutine
 
+routine .configure_bgfx_android
+  local android_makefile = File( "Libraries/bgfx/.build/projects/gmake-android-arm64/bgfx-shared-lib.make" )
+  if (android_makefile.exists) return
+
+  execute @|cd Libraries/bgfx && ../bx/tools/bin/darwin/genie --gcc=android-arm64 --with-combined-examples --with-shared-lib gmake
+
+  print_cmd "Patching BGFX Android makefile '-dynamiclib' -> '-staticlib'."
+  local content = String( android_makefile )
+  content .= replacing( " -dynamiclib ", " -shared " )
+  android_makefile.save( content )
+endRoutine
+
+routine .sync_bgfx_android_libs
+  local files = Files( "Libraries/bgfx/.build/android-arm64/bin" )
+  files.add( "libbgfxRelease.a" )
+  files.add( "libbxRelease.a" )
+  files.add( "libbimgRelease.a" )
+  files.add( "libbimg_decodeRelease.a" )
+  #libbgfx-shared-libRelease.so  ?
+
+  local targets = [ "arm64-v8a" ]
+  forEach (target in targets)
+    local folder = File( "Platforms/Android/app/src/main/cpp/libs" / target )
+    folder.create_folder
+
+    forEach (filepath in files)
+      local dest = folder / (File(filepath).filename.before_last( "Release.a" ) + ".a")
+      if (File(filepath).is_different_than(dest))
+        print_cmd "Copy $\n    -> $"(filepath,dest)
+        File( filepath ).copy_to( dest )
+      endIf
+    endForEach
+  endForEach
+endRoutine
+
+routine .check_android_sdl_lib( &update )
+  #Platforms/Android/app/libs/
+  #Platforms/Android/app/src/main/cpp/Warlock.cpp
+  #Platforms/Android/app/src/main/cpp/libs/
+endRoutine
 
 routine update_gitignore
   local patcher = GitIgnorePatcher( File(".gitignore") )
@@ -406,6 +485,11 @@ endRoutine
 
 routine rogo_rebuild
   rogo_build( &rebuild )
+endRoutine
+
+routine rogo_android
+  # SYNTAX: rogo macos [rebuild|release]
+  build( "android" )
 endRoutine
 
 routine rogo_ios
