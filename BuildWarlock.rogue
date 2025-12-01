@@ -455,12 +455,12 @@ routine .check_android_sdl_lib( &update )
   local sdl_releases_url = "https://github.com/libsdl-org/SDL/releases/"
   print_cmd "Checking for latest SDL3 release at " + sdl_releases_url
 
-  local html = CURL( sdl_releases_url ).get_string
+  local html = CURL( sdl_releases_url ).fetch_string
 
   local latest_url : String
   local latest_version : VersionNumber
 
-  forEach (line in LineReader(html).[use_recycled_buffer])
+  forEach (line in LineReader(html))
     if (line.contains("android.zip"))
       if local url = line.extract_string( "*<a href=?$android.zip*" )
         url += "android.zip"
@@ -489,7 +489,7 @@ routine .check_android_sdl_lib( &update )
 
     local zip_url = "https://github.com" + latest_url
     print_cmd "Downloading " + zip_url
-    local zip_bytes = CURL( "https://github.com"/latest_url ).get_bytes
+    local zip_bytes = CURL( "https://github.com"/latest_url ).fetch_bytes
     necessary (zip_bytes)
 
     local local_zip_file = File( ".rogo/sdl3-android.zip" )
