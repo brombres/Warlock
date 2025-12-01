@@ -6,6 +6,8 @@ $define SDL_BRANCH "release-3.2.x"
 
 $requireRogue "2.34.3"
 
+uses Codec/Zip
+uses Utility/CURL
 uses Utility/GitRepo
 uses Utility/VersionNumber
 
@@ -446,9 +448,65 @@ routine .sync_bgfx_android_libs
 endRoutine
 
 routine .check_android_sdl_lib( &update )
-  #Platforms/Android/app/libs/
-  #Platforms/Android/app/src/main/cpp/Warlock.cpp
-  #Platforms/Android/app/src/main/cpp/libs/
+  local libs_folder = File( "Platforms/Android/app/libs" )
+  local files = Files( libs_folder, "SDL3*.aar" )
+  if (files.count and not update) return
+
+  local sdl_releases_url = "https://github.com/libsdl-org/SDL/releases/"
+  print_cmd "Checking for latest SDL3 release at " + sdl_releases_url
+
+  local html = CURL( sdl_releases_url ).get_string
+
+  local latest_url : String
+  local latest_version : VersionNumber
+
+  forEach (line in LineReader(html).[use_recycled_buffer])
+    if (line.contains("android.zip"))
+      if local url = line.extract_string( "*<a href=?$android.zip*" )
+        url += "android.zip"
+        if (latest_url)
+          if local v = url.extract_string( "*/release-$/*" )
+            local version = VersionNumber( v )
+            if (version > latest_version)
+              latest_url = url
+              latest_version = version
+            endIf
+          endIf
+        else
+          if local v = url.extract_string( "*/release-$/*" )
+            latest_url = url
+            latest_version = VersionNumber( v )
+          endIf
+        endIf
+
+        #<a href="/libsdl-org/SDL/releases/download/release-3.2.26/SDL3-devel-3.2.26-android.zip" rel="nofollow" data-turbo="false" data-view-component="true" class="Truncate">
+      endIf
+    endIf
+  endForEach
+
+  contingent
+    necessary (latest_url and latest_version.version.begins_with("3."))
+
+    local zip_url = "https://github.com" + latest_url
+    print_cmd "Downloading " + zip_url
+    local zip_bytes = CURL( "https://github.com"/latest_url ).get_bytes
+    necessary (zip_bytes)
+
+    local local_zip_file = File( ".rogo/sdl3-android.zip" )
+    local_zip_file.save( zip_bytes )
+
+    local zip = Zip( local_zip_file )
+    local aar_list = zip.find( "*.aar" )
+    necessary (aar_list.count == 1)
+
+    local aar = aar_list.first
+    print_cmd "Extracting $/$"(libs_folder,aar.name)
+    aar.extract( libs_folder / File(aar.name) )
+  unsatisfied
+    throw Error(
+      "Unable to automatically download the latest SDL3 library for Android. Visit https://github.com/libsdl-org/SDL/releases/ , download the latest SDL3-devel-3.x.x-android.zip, and copy the contained SDL-3.x.x.aar to $"(libs_folder)
+    )
+  endContingent
 endRoutine
 
 routine update_gitignore
