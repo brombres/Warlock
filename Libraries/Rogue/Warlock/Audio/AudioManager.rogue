@@ -246,6 +246,7 @@ class AudioManager [singleton]
         if (active_music)
           forEach (music in active_music)
             music.current_volume = music.current_volume  # reapply music volume
+            if (not music.is_playing) music.play
           endForEach
         endIf
 
