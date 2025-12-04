@@ -8,14 +8,45 @@ class AssetManager [singleton]
     textures          = [File:Texture]
     assets            = [String:AssetInfo]
     is_loaded         : Logical
+    asset_manifest    = [String:String]
 
   METHODS
+    method init
+      load
+
     method load
       if (is_loaded) return
       is_loaded = true
 
-      if local file = Warlock.find_asset( "Assets/AssetManifest.txt" )
-        Log.println "Loading AssetManifest.txt"
+      block
+        local assets_parent = ""
+
+        local manifest_filepath = "Assets/AssetManifest.txt"
+
+        # On Android we need to load AssetManifest.txt first for Warlock.find_asset() to work.
+        local file : File?
+        if ($target("Android"))
+          file = File( manifest_filepath )
+        else
+          manifest_filepath = native("WarlockInterface_find_asset($manifest_filepath)")->String
+          if (manifest_filepath)
+            file = File( manifest_filepath )
+            assets_parent = file.value.parent.folder
+          endIf
+        endIf
+
+        if (file)
+          forEach (asset_name in LineReader(file.value).[disable_recycled_buffer])
+            local asset_filepath = assets_parent / asset_name
+            asset_manifest[asset_name] = asset_filepath
+          endForEach
+        else
+          @trace "Cannot load asset manifest"
+        endIf
+      endBlock
+
+      if local file = Warlock.find_asset( "Assets/AssetConfig.txt" )
+        Log.println "Loading AssetConfig.txt"
         scanner = Scanner( file )
         .load_texture_filepaths
         assets.clear
@@ -24,7 +55,7 @@ class AssetManager [singleton]
         endWhile
         Log.println "# asset".pluralized(assets.count)
       else
-        println "[ERROR] Assets/AssetManifest.txt is missing."
+        println "[ERROR] Assets/AssetConfig.txt is missing."
       endIf
 
       #forEach (asset in assets)
@@ -150,7 +181,7 @@ class AssetManager [singleton]
       elseIf (id == "font")
         if (not .load_font(asset)) return false
       else
-        println "Unknown asset type in AssetManifest.txt: " + id
+        println "Unknown asset type in AssetConfig.txt: " + id
         return false
       endIf
 

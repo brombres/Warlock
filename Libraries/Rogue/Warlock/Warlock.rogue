@@ -15,6 +15,7 @@ uses Utility/Timer [export]
 $include Warlock/Audio
 $include Warlock/Data
 $include Warlock/Display
+$include Warlock/FileIO
 $include Warlock/Framework/Framework
 $include Warlock/Control
 $include Warlock/Entity/Entity
@@ -101,7 +102,7 @@ class Warlock [essential singleton]
       endIf
 
     method find_asset( name:String )->File?
-      local filepath = native("WarlockInterface_find_asset($name)")->String
+      local filepath = AssetManager.asset_manifest[name]
       if (filepath) return File( filepath )
       else          return null
 

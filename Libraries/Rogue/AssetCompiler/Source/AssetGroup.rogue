@@ -44,7 +44,7 @@ class AssetGroup
           (forEach in assets).update_placement_info
 
         case <Sound>, <Music>
-          local output_folder = "Build/$"(AssetCompiler.platform)
+          local output_folder = AssetCompiler.assets_folder.parent.filepath
           forEach (asset in assets)
 
             local output_filepath = asset.filepath
@@ -61,7 +61,7 @@ class AssetGroup
           endForEach
 
         case <Binary>
-          local output_folder = "Build/$"(AssetCompiler.platform)
+          local output_folder = AssetCompiler.assets_folder.parent.filepath
           forEach (asset in assets)
 
             local output_filepath = asset.filepath
@@ -97,7 +97,7 @@ class AssetGroup
           endForEach
 
         case <Binary>
-          local output_folder = "Build/$"(AssetCompiler.platform)
+          local output_folder = AssetCompiler.assets_folder.parent.filepath
           forEach (asset in assets)
             local output_filepath = output_folder/asset.filepath
             if (File(asset.filepath).is_different_than(File(output_filepath)))

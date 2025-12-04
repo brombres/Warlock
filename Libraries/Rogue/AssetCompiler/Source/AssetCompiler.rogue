@@ -77,7 +77,7 @@ class AssetCompiler [singleton]
       # Second time to process those new files while loading.
 
       local existing_textures = Set<<String>>()
-      existing_textures.add( forEach in File("Build/$/Assets/Textures"(platform)).listing )
+      existing_textures.add( forEach in (assets_folder/"Textures").listing )
 
       # Apply exclusion rules
       assets.discard( $.value.rule instanceOf ExcludedAssetRule )
@@ -160,12 +160,10 @@ class AssetCompiler [singleton]
       #asset_info//textures = @[]
       #asset_info//textures.add( forEach in textures )
 
-      block build_folder = "Build/$"(platform)
-        forEach (texture in existing_textures)
-          println "Removing $"(texture)
-          File( texture ).delete
-        endForEach
-      endBlock
+      forEach (texture in existing_textures)
+        println "Removing $"(texture)
+        File( texture ).delete
+      endForEach
 
       # Save asset info
       block
@@ -176,6 +174,13 @@ class AssetCompiler [singleton]
       endBlock
 
       create_asset_manifest
+
+    method assets_folder->File
+      if (platform == "Android") return File( "Platforms/Android/app/src/main/assets/Assets" )
+      else                       return File( "Build/$/Assets"(platform) )
+
+    method build_folder->File
+      return File( "Build/$"(platform) )
 
     method create_asset_manifest
       local manifest = Manifest()
@@ -193,7 +198,7 @@ class AssetCompiler [singleton]
       endForEach
       #println manifest
 
-      local file = File( "Build/$/Assets/AssetManifest.txt"(platform) )
+      local file = assets_folder/"AssetConfig.txt"
       if (not file.exists or String(file) != manifest)
         println "Saving $"(file)
         file.save( manifest )
@@ -210,7 +215,7 @@ class AssetCompiler [singleton]
       (forEach in groups).process
 
     method load_asc( &suppress_errors )
-      asset_info_file = File( "Build/$/Cache/AssetInfo.json"(platform) )
+      asset_info_file = build_folder/"Cache/AssetInfo.json"
       if (asset_info_file.exists)
         asset_info_json = String( asset_info_file )
         asset_info = JSON.parse( asset_info_json )

@@ -114,6 +114,30 @@ routine rogo_shaders( platform=null:String )
   endForEach
 endRoutine
 
+routine rogo_update_asset_manifest( platform:String )
+  platform = Build.resolve_platform( platform )
+
+  local assets_folder : File
+  if (platform == "iOS" or platform == "macOS")
+    assets_folder = File( "Build/$"(platform) )
+  elseIf (platform == "Android")
+    assets_folder = File( "Platforms/Android/app/src/main/assets" )
+  else
+    throw Error( "TODO: support platform $"(platform) )
+  endIf
+
+  assets_folder.create_folder
+  local manifest_file = assets_folder/"Assets/AssetManifest.txt"
+  if (not manifest_file.exists) manifest_file.save( "Placeholder" )
+
+  local files = Files( assets_folder, "Assets/**", &include_folders )
+  local manifest = files.relative_filepaths.[insert("Assets"),add("")].join( "\n" )
+  if (manifest != String(manifest_file))
+    print_cmd "Writing $"(manifest_file)
+    manifest_file.save( manifest )
+  endIf
+endRoutine
+
 routine organize_shader_pairs( filepaths:String[] )->Variant
   local result = @[]
 
@@ -176,7 +200,7 @@ routine deps( platform:String, args:String[], &update, &rebuild )
 
   update_gitignore
 
-  if (platform == "android") .check_android_configuration
+  if (platform == "Android") .check_android_configuration
 
   ensure_folder( File("Assets/Audio") )
   ensure_folder( File("Assets/Data") )
@@ -275,7 +299,7 @@ routine deps( platform:String, args:String[], &update, &rebuild )
       endIf
     endIf
 
-    if (platform == "android")
+    if (platform == "Android")
       .check_android_sdl_lib( &=update )
     endIf
   endIf
@@ -386,7 +410,7 @@ routine .build_bgfx( platform:String, &rebuild )
   elseIf (platform == "macOS")
     make_folder = "Libraries/bgfx/.build/osx-arm64"
     make_target = "osx-arm64 CFLAGS=-DBGFX_CONFIG_MULTITHREADED=0"
-  elseIf (platform == "android")
+  elseIf (platform == "Android")
     .configure_bgfx_android
     make_folder = "Libraries/bgfx/.build/android-arm64"
     make_target = "android-arm64-release CFLAGS=-DBGFX_CONFIG_MULTITHREADED=0"
@@ -409,7 +433,7 @@ routine .build_bgfx( platform:String, &rebuild )
     execute( "cd Libraries/bgfx && make $"(make_target) )
   endIf
 
-  if (platform == "android") .sync_bgfx_android_libs
+  if (platform == "Android") .sync_bgfx_android_libs
 endRoutine
 
 routine .configure_bgfx_android
@@ -546,8 +570,8 @@ routine rogo_rebuild
 endRoutine
 
 routine rogo_android
-  # SYNTAX: rogo macos [rebuild|release]
-  build( "android" )
+  # SYNTAX: rogo android [rebuild|release]
+  build( "Android" )
 endRoutine
 
 routine rogo_ios
@@ -636,6 +660,7 @@ routine compile_assets( platform:String )
   endContingent
 
   rogo_shaders( platform )
+  rogo_update_asset_manifest( platform )
 endRoutine
 
 routine open_xcode( folder:String )
