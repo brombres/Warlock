@@ -28,10 +28,16 @@ class AssetManager [singleton]
         if ($target("Android"))
           file = File( manifest_filepath )
         else
-          manifest_filepath = native("WarlockInterface_find_asset($manifest_filepath)")->String
-          if (manifest_filepath)
-            file = File( manifest_filepath )
-            assets_parent = file.value.parent.folder
+          if ($target("ObjC"))
+            native
+            @|NSString* ns_name = Rogue_string_to_ns_string( $manifest_filepath );
+             |NSString* ns_filepath = [[NSBundle mainBundle] pathForResource:ns_name ofType:nil];
+             |if (ns_filepath)
+             |{
+                file = File( native("Rogue_ns_string_to_string(ns_filepath)")->String )
+                assets_parent = file.value.parent.folder
+            native
+            @|}
           endIf
         endIf
 

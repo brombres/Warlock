@@ -1,7 +1,5 @@
 library Warlock
 
-nativeHeader @|#include "WarlockInterface.h"
-
 $include Warlock/Macros
 
 uses Control/State [export]
@@ -78,7 +76,7 @@ class Warlock [essential singleton]
       windows.add( window )
 
     method application_data_folder->File
-      if (System.is_apple)
+      if ($target("ObjC"))
         return Apple.application_data_folder
       else
         println "TODO: defined Warlock.application_data_folder() for $"(System.os)
@@ -86,7 +84,7 @@ class Warlock [essential singleton]
       endIf
 
     method cache_folder->File
-      if (System.is_apple)
+      if ($target("ObjC"))
         return Apple.cache_folder
       else
         println "TODO: defined Warlock.cache_folder() for $"(System.os)
@@ -94,7 +92,7 @@ class Warlock [essential singleton]
       endIf
 
     method user_data_folder->File
-      if (System.is_apple)
+      if ($target("ObjC"))
         return Apple.user_data_folder
       else
         println "TODO: defined Warlock.user_data_folder() for $"(System.os)

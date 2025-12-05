@@ -1,16 +1,5 @@
 #import "RogueInterface.h"
 
-//#import <AVFoundation/AVAudioPlayer.h>
-
-
-#ifdef PLASMACORE_PLATFORM_IOS
-//  #import <UIKit/UIKit.h>
-//  #import <GLKit/GLKit.h>
-  //#import "Project-iOS-Swift.h"
-#else
-  //#import "Warlock-macOS-Swift.h"
-#endif
-
 #include <cstdio>
 #include <cstring>
 using namespace std;

@@ -51,7 +51,7 @@ class ImagePacker
       endIf
 
       # Save images and store info in assets.
-      local build_folder = AssetCompiler.build_folder.parent
+      local build_folder = AssetCompiler.assets_folder.parent
       local folder = File("Assets/Textures")
       (build_folder/folder).create_folder
       forEach (page at i in pages)

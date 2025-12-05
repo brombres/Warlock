@@ -18,8 +18,11 @@ class AudioManager [singleton]
     is_backgrounded  : Logical
     configuration_id : Int
 
-    native "ma_engine engine;"
-    native "id audio_interruption_observer;"
+    native @|ma_engine engine;
+            |
+            |#if defined(ROGUE_TARGET_IOS)
+            |  id audio_interruption_observer;
+            |#endif
 
   METHODS
     method clear

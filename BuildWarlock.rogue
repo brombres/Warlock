@@ -47,9 +47,32 @@ augment Build
     ]
 endAugment
 
-routine rogo_clean
-  print_cmd( "Delete Build/" )
-  File("Build").delete
+routine rogo_clean( platform=null:String )
+  local list = String[]
+
+  if (String.exists(platform))
+    if (platform != "all")
+      list.add( Build.resolve_platform( forEach in platform.split(' ') ) )
+    endIf
+  endIf
+
+  if (list.is_empty)
+    verbose_delete( File("Build") )
+    list.add( "Android" )
+  endIf
+
+  forEach (_platform in list)
+    verbose_delete( File( "Build/$"(_platform) ) )
+    verbose_delete( output_assets_folder( _platform ) )
+    verbose_delete( output_source_folder( _platform ) )
+  endForEach
+endRoutine
+
+routine verbose_delete( file:File )
+  if (file.exists)
+    print_cmd "Delete $"(file)
+    file.delete
+  endIf
 endRoutine
 
 routine rogo_assets( platform=null:String )
@@ -59,21 +82,41 @@ routine rogo_assets( platform=null:String )
   compile_assets( platform )
 endRoutine
 
+routine output_assets_folder( platform=null:String )->File
+  platform = Build.resolve_platform( platform )
+  if (platform == "Android") return File( "Platforms/Android/app/src/main/assets/Assets" )
+  else                       return File( "Build/$/Assets"(platform) )
+endRoutine
+
+routine output_cache_folder( platform=null:String )->File
+  platform = Build.resolve_platform( platform )
+  return File( "Build/$/Cache"(platform) )
+endRoutine
+
+routine output_source_folder( platform=null:String )->File
+  platform = Build.resolve_platform( platform )
+  if (platform == "Android") return File( "Platforms/Android/app/src/main/cpp/Rogue" )
+  else                       return File( "Build/$/Source"(platform) )
+endRoutine
+
 routine rogo_shaders( platform=null:String )
   platform = Build.resolve_platform( platform )
 
-  local dest = File( "Build/$/Assets/Shaders"(platform) )
+  local dest = output_assets_folder(platform)/"Shaders"
   ensure_folder( dest )
 
   local shaderc : String
   local platform_flags : String
   which (platform)
+    case "Android"
+      shaderc = "Libraries/bgfx/.build/osx-arm64/bin/shadercRelease"
+      platform_flags = "--platform android --profile 300_es -O3"
     case "iOS"
       shaderc = "Libraries/bgfx/.build/osx-arm64/bin/shadercRelease"
-      platform_flags = "--platform ios --profile metal"
+      platform_flags = "--platform ios --profile metal -O3"
     case "macOS"
       shaderc = "Libraries/bgfx/.build/osx-arm64/bin/shadercRelease"
-      platform_flags = "--platform osx --profile metal"
+      platform_flags = "--platform osx --profile metal -O3"
     others
       println "[SHADERS] No shader build process is defined for platform '$'."(platform)
       return
@@ -85,6 +128,7 @@ routine rogo_shaders( platform=null:String )
   endIf
 
   platform_flags .= appending( "-i Libraries/bgfx/src" )
+  platform_flags .= appending( "-i Libraries/Warlock/Libraries/Shaders" )
   platform_flags .= appending( "--varyingdef $"(varying_defs.esc) )
 
   local vs_cmd = "$ --type vertex"(shaderc).appending( platform_flags )
@@ -117,20 +161,13 @@ endRoutine
 routine rogo_update_asset_manifest( platform:String )
   platform = Build.resolve_platform( platform )
 
-  local assets_folder : File
-  if (platform == "iOS" or platform == "macOS")
-    assets_folder = File( "Build/$"(platform) )
-  elseIf (platform == "Android")
-    assets_folder = File( "Platforms/Android/app/src/main/assets" )
-  else
-    throw Error( "TODO: support platform $"(platform) )
-  endIf
+  local output_assets_folder = output_assets_folder( platform ).[create_folder].parent
 
-  assets_folder.create_folder
-  local manifest_file = assets_folder/"Assets/AssetManifest.txt"
+  output_assets_folder.create_folder
+  local manifest_file = output_assets_folder/"Assets/AssetManifest.txt"
   if (not manifest_file.exists) manifest_file.save( "Placeholder" )
 
-  local files = Files( assets_folder, "Assets/**", &include_folders )
+  local files = Files( output_assets_folder, "Assets/**", &include_folders )
   local manifest = files.relative_filepaths.[insert("Assets"),add("")].join( "\n" )
   if (manifest != String(manifest_file))
     print_cmd "Writing $"(manifest_file)
@@ -200,14 +237,14 @@ routine deps( platform:String, args:String[], &update, &rebuild )
 
   update_gitignore
 
-  if (platform == "Android") .check_android_configuration
+  #if (platform == "Android") .check_android_configuration
 
   ensure_folder( File("Assets/Audio") )
   ensure_folder( File("Assets/Data") )
   ensure_folder( File("Assets/Fonts") )
 
-  ensure_folder( File("Build/macOS/Assets") )
-  ensure_folder( File("Build/macOS/Source") )
+  ensure_folder( output_assets_folder(platform) )
+  ensure_folder( output_source_folder(platform) )
   ensure_folder( File("Source") )
 
   create_default_asset_config
@@ -374,6 +411,7 @@ routine deps( platform:String, args:String[], &update, &rebuild )
 
 endRoutine
 
+#{
 routine .check_android_configuration
   local sdk = System.env//ANDROID_SDK_ROOT
   if (not String.exists(sdk))
@@ -400,6 +438,7 @@ routine .check_android_configuration
     throw Error( "ERROR: Necessary system environment variable ANDROID_NDK_ROOT is undefined. Ensure the Android NDK is installed and add a line such as the following to your shell profile:\n\nexport ANDROID_NDK_ROOT=$"(latest) )
   endIf
 endRoutine
+}#
 
 routine .build_bgfx( platform:String, &rebuild )
   local make_folder, make_target : String
@@ -574,6 +613,11 @@ routine rogo_android
   build( "Android" )
 endRoutine
 
+routine rogo_and
+  # SYNTAX: rogo and [rebuild|release]
+  build( "Android" )
+endRoutine
+
 routine rogo_ios
   # SYNTAX: rogo ios [rebuild|release]
   build( "iOS" )
@@ -610,16 +654,16 @@ routine compile_rogue( platform:String, &debug, &rebuild )
   local files = Files( ".", "Libraries/Warlock/Libraries/Rogue/**.rogue" )
   files.add( "Source/**.rogue" )
 
-  local source_folder = File("Build/$/Source"(platform)).[create_folder]
+  local output_source_folder = output_source_folder( platform ).[create_folder]
 
   local is_apple = (platform == "macOS" or platform == "iOS")
   local source_filename = "RogueProgram-$.$"(platform,which{ is_apple:"mm" || "cpp" })
 
-System.run("cd ~/Projects/Rogue && rogo libs") # FIXME
+  System.run("cd ~/Projects/Rogue && rogo libs") # FIXME
 local stdlib = Files( "~/Projects/Rogue/Source/Libraries", "**.rogue" ) # FIXME
-if (stdlib.any_newer_than(source_folder/source_filename)) rebuild = true #FIXME
+if (stdlib.any_newer_than(output_source_folder/source_filename)) rebuild = true #FIXME
 
-  if (rebuild or files.any_newer_than(source_folder/source_filename))
+  if (rebuild or files.any_newer_than(output_source_folder/source_filename))
     block cmd = "roguec Source/Main.rogue"
       local target_specific = "Source/Target-$.rogue"(platform)
       if (File(target_specific).exists)
@@ -644,7 +688,7 @@ if (stdlib.any_newer_than(source_folder/source_filename)) rebuild = true #FIXME
       targets.add( "bgfx" )
       cmd .= appending( "--target=$"(targets.join(',')) )
       cmd .= appending( "--gc=manual" )
-      cmd .= appending( "--output=$/RogueProgram-$"(source_folder.esc,platform) )
+      cmd .= appending( "--output=$/RogueProgram-$"(output_source_folder.esc,platform) )
       execute cmd
     endBlock
   endIf
