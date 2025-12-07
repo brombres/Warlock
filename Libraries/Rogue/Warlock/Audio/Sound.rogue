@@ -153,16 +153,33 @@ class Sound
       if (not manager.configure) return false
 
       if local file = Warlock.find_audio_file( filepath )
+        local bytes = Byte[]( file )
+
         native
-        @|ma_result result = ma_sound_init_from_file(
-         |  &$manager->engine,
-         |  $file.filepath->data->as_utf8,
-         |  MA_SOUND_FLAG_NO_PITCH | MA_SOUND_FLAG_NO_SPATIALIZATION,
-         |  NULL,
-         |  NULL,
-         |  &$this->sound
-         |);
-         |$is_prepared = (result == MA_SUCCESS);
+        @|ma_result result;
+         |ma_decoder decoder;
+         |ma_decoder_config config;
+         |
+         |size_t audioDataSize = (size_t) $bytes->count;
+         |
+         |config = ma_decoder_config_init( ma_format_f32, 2, 48000 );
+         |result = ma_decoder_init_memory( $bytes->as_bytes, audioDataSize, &config, &decoder );
+         |
+         |if (result == MA_SUCCESS)
+         |{
+         |  result = ma_sound_init_from_data_source(
+         |    &$manager->engine,
+         |    &decoder,
+         |    MA_SOUND_FLAG_NO_PITCH | MA_SOUND_FLAG_NO_SPATIALIZATION,
+         |    NULL,
+         |    &$this->sound
+         |  );
+         |
+         |  $is_prepared = (result == MA_SUCCESS);
+         |
+         |  ma_decoder_uninit( &decoder );
+         |}
+
          if (not is_prepared)
           println "Unable to decode audio file: " + filepath
         endIf

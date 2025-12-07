@@ -78,14 +78,25 @@ class Warlock [essential singleton]
     method application_data_folder->File
       if ($target("ObjC"))
         return Apple.application_data_folder
+      elseIf ($target("Android"))
+        local result : String
+        native @|$result = RogueString_create( SDL_GetAndroidInternalStoragePath() );
+        return result
       else
         println "TODO: defined Warlock.application_data_folder() for $"(System.os)
         return File( "~" )
       endIf
 
+    method asset_listing( pattern:FilePattern )->String[]
+      return AssetManager.asset_listing( pattern )
+
     method cache_folder->File
       if ($target("ObjC"))
         return Apple.cache_folder
+      elseIf ($target("Android"))
+        local result : String
+        native @|$result = RogueString_create( SDL_GetAndroidCachePath() );
+        return result
       else
         println "TODO: defined Warlock.cache_folder() for $"(System.os)
         return File( "~" )
@@ -94,6 +105,10 @@ class Warlock [essential singleton]
     method user_data_folder->File
       if ($target("ObjC"))
         return Apple.user_data_folder
+      elseIf ($target("Android"))
+        local result : String
+        native @|$result = RogueString_create( SDL_GetAndroidInternalStoragePath() );
+        return result
       else
         println "TODO: defined Warlock.user_data_folder() for $"(System.os)
         return File( "~" )

@@ -221,15 +221,20 @@ routine find_shader( filepaths:String[], filepath:String, replace_old:String, re
 endRoutine
 
 routine rogo_deps( platform:String ) [append]
-  # SYNTAX: rogo deps [update|rebuild] [<libs>]*
-  # Where <libs> is any combination of: [bgfx bimg bx miniaudio sdl spine stb tess]
+  # SYNTAX: rogo deps [platform] [update|rebuild|reinstall] [<libs>]*
+  # Where <libs> is any combination of: [bgfx bimg bx miniaudio sdl spine stb tess2]
   local args = System.command_line_arguments.cloned
-  local rebuild = args.remove( "rebuild" )
-  local update  = args.remove( "update" )
-  deps( platform, args, &=update, &=rebuild )
+
+  if (platform) args.remove( platform.to_lowercase )
+  else          platform  = Build.resolve_platform( args )
+
+  local rebuild   = args.remove( "rebuild" )
+  local update    = args.remove( "update" )
+  local reinstall = args.remove( "reinstall" )
+  deps( platform, args, &=update, &=rebuild, &=reinstall )
 endRoutine
 
-routine deps( platform:String, args:String[], &update, &rebuild )
+routine deps( platform:String, args:String[], &update, &rebuild, &reinstall )
   if (Files(".","BuildWarlock.rogue").count == 1)
     banner "ERROR: Rogo should not be run directly in the Warlock library folder."
     System.exit 1
@@ -251,11 +256,17 @@ routine deps( platform:String, args:String[], &update, &rebuild )
 
   local libs = @{}
   local select_all = false
+  local all_libs = ["bgfx","bimg","bx","miniaudio","sdl","spine","stb","tess2"]
   loop 2
-    forEach (lib in ["bgfx","bimg","bx","miniaudio","sdl","spine","stb","tess"])
+    forEach (lib in all_libs)
       if (select_all or args.contains(lib)) libs[lib] = true
     endForEach
     if (libs.count) escapeLoop
+
+    if (reinstall)
+      throw Error( "'reinstall' must specify specific libraries (one or more of [$])."(all_libs.join(' ')) )
+    endIf
+
     select_all = true
   endLoop
 
@@ -265,6 +276,12 @@ routine deps( platform:String, args:String[], &update, &rebuild )
   if (libs//bx)
     local folder = File("Libraries/bx")
     local repo = GitRepo( "https://github.com/bkaradzic/bx.git", folder )
+
+    if (reinstall and repo.exists)
+      print_cmd "Reinstall bx"
+      print_cmd "Delete $"(repo.folder)
+      repo.folder.delete
+    endIf
 
     if (not repo.exists)
       banner "Cloning BX repo"
@@ -282,6 +299,12 @@ routine deps( platform:String, args:String[], &update, &rebuild )
   if (libs//bimg)
     local folder = File("Libraries/bimg")
     local repo = GitRepo( "https://github.com/bkaradzic/bimg.git", folder )
+
+    if (reinstall and repo.exists)
+      print_cmd "Reinstall bimg"
+      print_cmd "Delete $"(repo.folder)
+      repo.folder.delete
+    endIf
 
     if (not repo.exists)
       banner "Cloning BIMG repo"
@@ -301,6 +324,13 @@ routine deps( platform:String, args:String[], &update, &rebuild )
     local repo = GitRepo( "https://github.com/bkaradzic/bgfx.git", folder )
 
     local needs_rebuild = rebuild
+
+    if (reinstall and repo.exists)
+      print_cmd "Reinstall bgfx"
+      print_cmd "Delete $"(repo.folder)
+      repo.folder.delete
+    endIf
+
     if (not repo.exists)
       banner "Cloning BGFX repo"
       repo.clone( &verbose )
@@ -314,14 +344,25 @@ routine deps( platform:String, args:String[], &update, &rebuild )
       endIf
     endIf
 
-    .build_bgfx( System.os, &rebuild=needs_rebuild )
-    if (platform != System.os) .build_bgfx( platform, &rebuild=needs_rebuild )
+    if (platform != System.os)
+      if (not rebuild or not .is_bgfx_built(System.os))
+        .build_bgfx( System.os, &rebuild=needs_rebuild )
+      endIf
+    endIf
+
+     .build_bgfx( platform, &rebuild=needs_rebuild )
   endIf
 
   -------- Libraries/SDL --------
   if (libs//sdl)
     local folder = File("Libraries/SDL")
     local repo = GitRepo( "https://github.com/libsdl-org/SDL.git", folder )
+
+    if (reinstall and repo.exists)
+      print_cmd "Reinstall sdl"
+      print_cmd "Delete $"(repo.folder)
+      repo.folder.delete
+    endIf
 
     if (not repo.exists)
       banner "Cloning SDL repo"
@@ -346,6 +387,12 @@ routine deps( platform:String, args:String[], &update, &rebuild )
     local folder = File("Libraries/spine-runtimes")
     local repo = GitRepo( "https://github.com/EsotericSoftware/spine-runtimes.git", folder )
 
+    if (reinstall and repo.exists)
+      print_cmd "Reinstall spine"
+      print_cmd "Delete $"(repo.folder)
+      repo.folder.delete
+    endIf
+
     if (not repo.exists)
       banner "Cloning spine repo"
       repo.clone( &verbose )
@@ -363,6 +410,12 @@ routine deps( platform:String, args:String[], &update, &rebuild )
     local folder = File("Libraries/stb")
     local repo = GitRepo( "https://github.com/nothings/stb.git", folder )
 
+    if (reinstall and repo.exists)
+      print_cmd "Reinstall stb"
+      print_cmd "Delete $"(repo.folder)
+      repo.folder.delete
+    endIf
+
     if (not repo.exists)
       banner "Cloning stb repo"
       repo.clone( &verbose )
@@ -376,9 +429,15 @@ routine deps( platform:String, args:String[], &update, &rebuild )
   endIf
 
   -------- Libraries/libtess2 --------
-  if (libs//tess)
+  if (libs//tess2)
     local folder = File("Libraries/libtess2")
     local repo = GitRepo( "https://github.com/memononen/libtess2.git", folder )
+
+    if (reinstall and repo.exists)
+      print_cmd "Reinstall tess2"
+      print_cmd "Delete $"(repo.folder)
+      repo.folder.delete
+    endIf
 
     if (not repo.exists)
       banner "Cloning libtess2 repo"
@@ -396,6 +455,12 @@ routine deps( platform:String, args:String[], &update, &rebuild )
   if (libs//miniaudio)
     local folder = File("Libraries/miniaudio")
     local repo = GitRepo( "https://github.com/mackron/miniaudio.git", folder )
+
+    if (reinstall and repo.exists)
+      print_cmd "Reinstall miniaudio"
+      print_cmd "Delete $"(repo.folder)
+      repo.folder.delete
+    endIf
 
     if (not repo.exists)
       banner "Cloning miniaudio repo"
@@ -440,6 +505,35 @@ routine .check_android_configuration
 endRoutine
 }#
 
+routine .is_bgfx_built( platform:String )->Logical
+  local folder : String
+  local files = [
+    "libbgfxDebug.a", "libbxDebug.a", "libbimgDebug.a", "libbimg_decodeDebug.a",
+    "libbgfxRelease.a", "libbxRelease.a", "libbimgRelease.a", "libbimg_decodeRelease.a"
+  ]
+
+  if (platform == "Android")
+    folder = "Libraries/bgfx/.build/android-arm64/bin"
+  elseIf (platform == "iOS")
+    folder = "Libraries/bgfx/.build/ios-arm64/bin"
+  elseIf (platform == "macOS")
+    folder = "Libraries/bgfx/.build/osx-arm64/bin"
+    files.add( "shadercDebug" )
+    files.add( "shadercRelease" )
+  else
+    trace
+    throw Error( "TODO: determine .is_bgfx_built for $"(platform) )
+  endIf
+
+  return .confirm_all_files_present( folder, files )
+endRoutine
+
+routine .confirm_all_files_present( folder:String, files:String[] )->Logical
+  local existing_files = Files( folder )
+  existing_files.add( forEach in files )
+  return existing_files.count == files.count
+endRoutine
+
 routine .build_bgfx( platform:String, &rebuild )
   local make_folder, make_target : String
 
@@ -450,26 +544,39 @@ routine .build_bgfx( platform:String, &rebuild )
     make_folder = "Libraries/bgfx/.build/osx-arm64"
     make_target = "osx-arm64 CFLAGS=-DBGFX_CONFIG_MULTITHREADED=0"
   elseIf (platform == "Android")
-    .configure_bgfx_android
     make_folder = "Libraries/bgfx/.build/android-arm64"
-    make_target = "android-arm64-release CFLAGS=-DBGFX_CONFIG_MULTITHREADED=0"
+    make_target = "android-arm64 CFLAGS=-DBGFX_CONFIG_MULTITHREADED=0"
   else
     trace
     throw Error( "[INTERNAL] TODO: build BGFX for $."(platform) )
   endIf
 
-  contingent
-    sufficient rebuild
-    necessary File( make_folder ).exists
-  unsatisfied
-    rebuild = true
-  endContingent
+  if (not File(make_folder).exists or not .is_bgfx_built(platform)) rebuild = true
 
   if (rebuild)
     # https://bkaradzic.github.io/bgfx/build.html
-    banner "Building BGFX library"
+    banner "Building BGFX library for $"(platform)
+
+    local base_name = File( make_folder ).filename
+    local existing_files = Files( File("."/make_folder).parent, base_name+"*", &include_folders )
+    existing_files.add( "projects/*$*"(base_name), &include_folders )
+
+    if (existing_files.count)
+      print_cmd( "Delete existing build products" )
+      existing_files.delete( &verbose )
+    endIf
+
+    if (platform == "Android")
+      .configure_bgfx_android  # Android build files need patching
+    endIf
+
     #execute "cd Libraries/bgfx && ../bx/tools/bin/darwin/genie --with-tools --gcc=osx-x64 gmake"
-    execute( "cd Libraries/bgfx && make $"(make_target) )
+    local cmd = "cd Libraries/bgfx && make $"(make_target)
+    if (platform == "iOS")
+      cmd = ''export SDKROOT="$(xcrun --sdk iphoneos --show-sdk-path)" && '' + cmd
+    endIf
+
+    execute cmd
   endIf
 
   if (platform == "Android") .sync_bgfx_android_libs
@@ -479,9 +586,9 @@ routine .configure_bgfx_android
   local android_makefile = File( "Libraries/bgfx/.build/projects/gmake-android-arm64/bgfx-shared-lib.make" )
   if (android_makefile.exists) return
 
-  execute @|cd Libraries/bgfx && ../bx/tools/bin/darwin/genie --gcc=android-arm64 --with-combined-examples --with-shared-lib gmake
+  execute @|cd Libraries/bgfx && ../bx/tools/bin/darwin/genie --gcc=android-arm64 --with-shared-lib gmake
 
-  print_cmd "Patching BGFX Android makefile '-dynamiclib' -> '-staticlib'."
+  print_cmd "Patching BGFX Android makefile '-dynamiclib' -> '-shared'."
   local content = String( android_makefile )
   content .= replacing( " -dynamiclib ", " -shared " )
   android_makefile.save( content )
@@ -613,9 +720,17 @@ routine rogo_android
   build( "Android" )
 endRoutine
 
+routine rogo_android_open
+  execute @|open -a "Android Studio" Platforms/Android
+endRoutine
+
 routine rogo_and
   # SYNTAX: rogo and [rebuild|release]
   build( "Android" )
+endRoutine
+
+routine rogo_and_open
+  rogo_android_open
 endRoutine
 
 routine rogo_ios

@@ -92,7 +92,10 @@ class WarlockController
       if (Warlock.dev_mode)
         Log.println "Restoring $"(save_path)
       endIf
+trace save_path
+trace File(save_path).exists
       AppData.data = load_state( save_path ) || @{}
+trace AppData.data
       AppData.data .= xorint_encoded  # internally converts Int->XorInt to hide vars from runtime memory scanners
       on_restore_state
 

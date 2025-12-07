@@ -37,6 +37,9 @@ class BGFX : Renderer [singleton]
       @|bgfx::PlatformData pd;
        |#if defined(ROGUE_TARGET_APPLE)
        |  pd.nwh = SDL_Metal_GetLayer( $window->native_metal_view );
+       |#elif defined(ROGUE_TARGET_ANDROID)
+       |  SDL_PropertiesID props = SDL_GetWindowProperties( $window->sdl_window );
+       |  pd.nwh = SDL_GetPointerProperty( props, SDL_PROP_WINDOW_ANDROID_WINDOW_POINTER, 0 );
        |#else
        |  #error Must implement Native Window Handle retrieval in BGFX.configure_bgfx() for current platform.
        |#endif
@@ -61,16 +64,17 @@ class BGFX : Renderer [singleton]
        |init.resolution.reset = BGFX_RESET_VSYNC;
        |init.debug = false;
        |
-       |bgfx::PlatformData platform_data{};
        |#if defined(ROGUE_TARGET_APPLE)
-       |    $window->native_metal_view = SDL_Metal_CreateView( $window->sdl_window );
-       |    platform_data.nwh = SDL_Metal_GetLayer( $window->native_metal_view );
-       |    $this->previous_native_window_handle = (RogueInt64) platform_data.nwh;
+       |  $window->native_metal_view = SDL_Metal_CreateView( $window->sdl_window );
+       |  init.platformData.nwh = SDL_Metal_GetLayer( $window->native_metal_view );
+       |  $this->previous_native_window_handle = (RogueInt64) init.platformData.nwh;
+       |#elif defined(ROGUE_TARGET_ANDROID)
+       |  init.type = bgfx::RendererType::OpenGLES;
+       |  SDL_PropertiesID props = SDL_GetWindowProperties( $window->sdl_window );
+       |  init.platformData.nwh = SDL_GetPointerProperty( props, SDL_PROP_WINDOW_ANDROID_WINDOW_POINTER, 0 );
        |#else
-       |  #error Must implement Native Window Handle retrieval in BGFX.configure_bgfx() for current platform.
+       |  #error [BGFX.rogue] Must implement Native Window Handle retrieval in BGFX.configure_bgfx() for current platform.
        |#endif
-       |init.platformData = platform_data;
-       |
 
       if (not native("bgfx::init(init)")->Logical)
         println "[Warlock] Failed to initialize BGFX."
@@ -450,7 +454,7 @@ augment ShaderProgram
       native @|$this->bgfx_program = BGFX_INVALID_HANDLE;
 
       if local shaders_path = Warlock.find_asset( "Assets/Shaders" )
-        local listing = File(shaders_path).listing( "*$*"(filename) )
+        local listing = Warlock.asset_listing("Assets/Shaders/*$*"(filename) )
         if (listing.count > 2)
           local min_count = 0
           min_count .= or_larger( (forEach in listing).count )

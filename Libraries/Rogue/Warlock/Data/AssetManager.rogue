@@ -14,6 +14,13 @@ class AssetManager [singleton]
     method init
       load
 
+    method asset_listing( pattern:FilePattern )->String[]
+      local results = String[]
+      forEach (entry in asset_manifest.entries)
+        if (entry.key.matches_pattern(pattern)) results.add( entry.value )
+      endForEach
+      return results
+
     method load
       if (is_loaded) return
       is_loaded = true

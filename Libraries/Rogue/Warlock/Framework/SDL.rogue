@@ -66,7 +66,7 @@ class SDL : Framework [singleton]
     method create_window( window:Window )->Logical
       native @|SDL_WindowFlags flags = 0;
       native @|flags |= SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY;
-      if (System.is_apple) native @|flags |= SDL_WINDOW_METAL;
+      if (System.is_apple)   native @|flags |= SDL_WINDOW_METAL;
 
       native
       @|$window->sdl_window =

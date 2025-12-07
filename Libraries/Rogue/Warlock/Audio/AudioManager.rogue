@@ -66,8 +66,10 @@ class AudioManager [singleton]
          |ma_result result = ma_engine_init( NULL, &$this->engine);
          |$success = (result == MA_SUCCESS);
 
-         if (success and $target("iOS"))
-           success = .ios_set_audio_session_active  # reapply exclusivity after MiniAudio start
+         if ($target("iOS"))
+           if (success)
+             success = .ios_set_audio_session_active  # reapply exclusivity after MiniAudio start
+           endIf
          endIf
       endIf
 
