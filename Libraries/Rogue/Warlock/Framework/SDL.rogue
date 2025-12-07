@@ -67,6 +67,7 @@ class SDL : Framework [singleton]
       native @|SDL_WindowFlags flags = 0;
       native @|flags |= SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY;
       if (System.is_apple)   native @|flags |= SDL_WINDOW_METAL;
+      if (System.is_mobile)  native @|flags |= SDL_WINDOW_FULLSCREEN;
 
       native
       @|$window->sdl_window =

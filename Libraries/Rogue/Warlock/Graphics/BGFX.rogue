@@ -150,6 +150,9 @@ class BGFX : Renderer [singleton]
 
       native @|bgfx::touch( $window->id );
 
+    method handle_app_resume( window:Window ) [override]
+      on_window_resized( window )
+
     method on_begin_render( render_target:RenderTarget ) [override]
       prior.on_begin_render( render_target )
 
