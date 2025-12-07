@@ -15,10 +15,13 @@ class Sound
     volume           = 1.0  # volume when sound first starts playing
     current_volume   : Real # dynamically adjusted volume from fades etc.
     saved_position   : Real # used when music is suspended, unloaded, reloaded
-    native "ma_sound sound;"
+    native "ma_sound   sound;"
+    native "ma_decoder decoder;"
 
-    next_in_pool   : Sound
-    rate_limit     : Timer # shared with pool, if present
+    next_in_pool     : Sound
+    rate_limit       : Timer # shared with pool, if present
+
+    data             : Byte[]
 
   METHODS
     method init( filepath, pool_count=1:Int )
@@ -152,32 +155,34 @@ class Sound
       local manager = AudioManager
       if (not manager.configure) return false
 
-      if local file = Warlock.find_audio_file( filepath )
-        local bytes = Byte[]( file )
+      if (not data)
+        if local file = Warlock.find_audio_file( filepath )
+          data = Byte[]( file )
+          .propagate_data
+        endIf
+      endIf
 
+      if (data)
         native
         @|ma_result result;
-         |ma_decoder decoder;
          |ma_decoder_config config;
          |
-         |size_t audioDataSize = (size_t) $bytes->count;
+         |size_t audioDataSize = (size_t) $data->count;
          |
          |config = ma_decoder_config_init( ma_format_f32, 2, 48000 );
-         |result = ma_decoder_init_memory( $bytes->as_bytes, audioDataSize, &config, &decoder );
+         |result = ma_decoder_init_memory( $data->as_bytes, audioDataSize, &config, &$this->decoder );
          |
          |if (result == MA_SUCCESS)
          |{
          |  result = ma_sound_init_from_data_source(
          |    &$manager->engine,
-         |    &decoder,
+         |    &$this->decoder,
          |    MA_SOUND_FLAG_NO_PITCH | MA_SOUND_FLAG_NO_SPATIALIZATION,
          |    NULL,
          |    &$this->sound
          |  );
          |
          |  $is_prepared = (result == MA_SUCCESS);
-         |
-         |  ma_decoder_uninit( &decoder );
          |}
 
          if (not is_prepared)
@@ -190,6 +195,11 @@ class Sound
       if (is_prepared) position = saved_position  # defaults to 0.0
 
       return is_prepared
+
+    method .propagate_data
+      if (next_in_pool)
+        next_in_pool.[ data=data, .propagate_data ]
+      endIf
 
     method reload
       local _position = position
@@ -266,6 +276,7 @@ class Sound
 
         is_prepared = false
         native @|ma_sound_uninit( &$this->sound );
+                |ma_decoder_uninit( &$this->decoder );
                 |memset( &$this->sound, 0, sizeof(ma_sound) );
       endIf
       is_configured = false
