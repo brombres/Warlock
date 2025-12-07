@@ -18,7 +18,19 @@ class SDL : Framework [singleton]
     nativeCode
     @|bool WarlockSDL_event_filter( void* data, SDL_Event* event )
      |{
-     |  //if (event->type == SDL_EVENT_WILL_ENTER_BACKGROUND) printf("----will enter BG----\n");
+     |  switch (event->type)
+     |  {
+     |    case SDL_EVENT_WILL_ENTER_BACKGROUND:
+     |    case SDL_EVENT_WINDOW_MINIMIZED:
+     |      // Have to handle BG event here, otherwise Android won't get it until after the
+     |      // app suspends and resumes.
+     |      RogueWarlockSDL__on_suspend();
+     |      break;
+     |    case SDL_EVENT_DID_ENTER_BACKGROUND:
+     |      RogueWarlockSDL__on_suspended();
+     |      break;
+     |  }
+     |
      |  int is_window_moved = (event->type == SDL_EVENT_WINDOW_MOVED);
      |  if (event->type == SDL_EVENT_WINDOW_RESIZED || is_window_moved)
      |  {
@@ -29,6 +41,17 @@ class SDL : Framework [singleton]
      |}
 
   GLOBAL METHODS
+    method on_suspend [api]
+      if (not Warlock.is_suspended)
+        Framework.clear_pending_touch_events
+        Warlock.controller.handle_app_pause
+        Warlock.is_suspended = true
+      endIf
+
+    method on_suspended [api]
+      AudioManager.suspend( &backgrounded )
+      Pointer.clear
+
     method on_window_resized( window_id:Int ) [api]
       if local window = Warlock.find_window( &native_id=window_id )
         SDL.update_window_size( window )
@@ -333,22 +356,6 @@ class SDL : Framework [singleton]
             endBlock
       native
       @|    break;
-       |  case SDL_EVENT_WILL_ENTER_BACKGROUND:
-       |  case SDL_EVENT_WINDOW_MINIMIZED:
-            block
-              if (not Warlock.is_suspended)
-                Framework.clear_pending_touch_events
-                Warlock.controller.handle_app_pause
-                Warlock.is_suspended = true
-              endIf
-            endBlock
-      native
-      @|    break;
-       |  case SDL_EVENT_DID_ENTER_BACKGROUND:
-            AudioManager.suspend( &backgrounded )
-            Pointer.clear
-      native
-      @|    break;
        |  case SDL_EVENT_DID_ENTER_FOREGROUND:
        |  case SDL_EVENT_WINDOW_RESTORED:
             block
@@ -395,7 +402,6 @@ class SDL : Framework [singleton]
       else
         precise_mouse_event_info.add( PreciseMouseEventInfo(delta, in_progress, is_momentum) )
       endIf
-
 
     method recover_from_bad_state_on_ios( window:Window )
       native @|#if defined(ROGUE_TARGET_IOS)
@@ -450,6 +456,15 @@ class SDL : Framework [singleton]
        |$window->pixel_size.x = w;
        |$window->pixel_size.y = h;
        |$window->density = SDL_GetWindowPixelDensity( $window->sdl_window );
+
+      window.dpi = Android.dpi
+      if ($target("Android"))
+        # Map dpi to a density roughly equivalent to iOS devices.
+        if (window.dpi >= 400)     window.density = 3
+        elseIf (window.dpi >= 200) window.density = 2
+        else                       window.density = 1
+      endIf
+
       window.update_size
 
       Renderer.update_display_order( window )

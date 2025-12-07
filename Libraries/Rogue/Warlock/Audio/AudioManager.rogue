@@ -210,7 +210,7 @@ class AudioManager [singleton]
     method resume( &backgrounded )
       if (backgrounded)
         if (not is_backgrounded) return
-        is_backgrounded = true
+        is_backgrounded = false
         this.reconfigure
       else
         if (not is_suspended) return
@@ -265,6 +265,7 @@ class AudioManager [singleton]
       if (backgrounded)
         if (is_backgrounded) return
         is_backgrounded = true
+        if ($target("Android")) instant = true
       else
         if (is_suspended) return
         is_suspended = true

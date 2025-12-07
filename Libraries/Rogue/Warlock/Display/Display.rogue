@@ -23,6 +23,7 @@ class Display [singleton]
     scale_to_fit_size : XY?
     fixed_size        : XY?
     density           = 1.0  # May be 2 or 3 (etc.) for Retina and other HD displays.
+    dpi               : Real # Dots (pixels) Per Inch - only valid on Android
     magnitude         : Real # Same as size.magnitude (use to avoid sqrt with every access to size.magnitude)
 
     projection_mode = ProjectionMode2DX : ProjectionMode
@@ -116,6 +117,21 @@ class Display [singleton]
       return size.x >= size.y
 
     method is_tablet->Logical
+      if ($target("Android"))
+        local diagonal_squared = (size.x/dpi)^2 + (size.y/dpi)^2
+        if (diagonal_squared >= 6.5*6.5)
+          # screen 6.5" or bigger
+          if (diagonal_squared >= 7.0*7.0)
+            return true  # 7" or larger is definitely a tablet
+          else
+            # Could be a large, thin phone. Require aspect ratio under 3:2 (1.5) such as 4:3 (1.33).
+            return size.max/size.min <= 3.0/2.0
+          endIf
+        else
+          return false
+        endIf
+      endIf
+
       return System.is_tablet
 
     method notify( id:GlobalID, arg=undefined:Variant )

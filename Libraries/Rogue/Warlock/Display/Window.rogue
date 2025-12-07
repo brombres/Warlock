@@ -242,7 +242,7 @@ class Window : Display [singleton]
       endIf
 
     method safe_area->Box [override]
-      if (System.is_ios) return iOS.safe_area
+      if ($target("iOS")) return iOS.safe_area
       return bounds
 
     method scene->SceneState
