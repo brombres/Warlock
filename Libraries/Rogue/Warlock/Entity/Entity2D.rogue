@@ -13,6 +13,7 @@ augment Entity::Entity2D
 
     method draw( position:XY )
       if (attributes.invisible) return
+
       use Display.transform_stack
         .begin_draw
 
