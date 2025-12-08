@@ -73,6 +73,29 @@ class SDL : Framework [singleton]
       native @|SDL_SetHint( SDL_HINT_MAC_SCROLL_MOMENTUM, "1" );
               |SDL_SetHint( SDL_HINT_TOUCH_MOUSE_EVENTS, "0" );
 
+      local orientations = String[]
+      if (System.is_tablet)
+        if (Warlock.controller.tablet_orientations.portrait)
+          orientations.add( "Portrait" )
+          orientations.add( "PortraitUpsideDown" )
+        endIf
+        if (Warlock.controller.tablet_orientations.landscape)
+          orientations.add( "LandscapeLeft" )
+          orientations.add( "LandscapeRight" )
+        endIf
+      else
+        if (Warlock.controller.phone_orientations.portrait)
+          orientations.add( "Portrait" )
+        endIf
+        if (Warlock.controller.phone_orientations.landscape)
+          orientations.add( "LandscapeLeft" )
+          orientations.add( "LandscapeRight" )
+        endIf
+      endIf
+
+      local hint = orientations.join( ' ' )
+      native @|SDL_SetHint( SDL_HINT_ORIENTATIONS, $hint->data->as_utf8 );
+
       if (not native("SDL_Init(SDL_INIT_VIDEO)")->Logical)
         println "[WARLOCK] Failed to initialize SDL: $."(error)
         return
@@ -457,8 +480,9 @@ class SDL : Framework [singleton]
        |$window->pixel_size.y = h;
        |$window->density = SDL_GetWindowPixelDensity( $window->sdl_window );
 
-      window.dpi = Android.dpi
       if ($target("Android"))
+        window.dpi = Android.dpi
+
         # Map dpi to a density roughly equivalent to iOS devices.
         if (window.dpi >= 400)     window.density = 3
         elseIf (window.dpi >= 200) window.density = 2

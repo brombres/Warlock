@@ -1,9 +1,20 @@
 library Warlock
 
+enum DeviceOrientation [bitflags]
+  CATEGORIES
+    LANDSCAPE  # landscape left and right on both phone and tablet.
+    PORTRAIT   # portrait and upside down portrait on tablet, portrait only on phone.
+    ALL = PORTRAIT|LANDSCAPE
+endEnum
+
+
 class WarlockController
   PROPERTIES
-    app_name     = "Warlock"  # redefine in extended WarlockController
-    launch_state = State()    # redefine in extended WarlockController
+    # You can redefine any of the following properties in an extended WarlockController
+    app_name            = "Warlock"
+    launch_state        = State()
+    phone_orientations  = DeviceOrientation.ALL : DeviceOrientation
+    tablet_orientations = DeviceOrientation.ALL : DeviceOrientation
 
   METHODS
     method configure

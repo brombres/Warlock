@@ -118,18 +118,7 @@ class Display [singleton]
 
     method is_tablet->Logical
       if ($target("Android"))
-        local diagonal_squared = (size.x/dpi)^2 + (size.y/dpi)^2
-        if (diagonal_squared >= 6.5*6.5)
-          # screen 6.5" or bigger
-          if (diagonal_squared >= 7.0*7.0)
-            return true  # 7" or larger is definitely a tablet
-          else
-            # Could be a large, thin phone. Require aspect ratio under 3:2 (1.5) such as 4:3 (1.33).
-            return size.max/size.min <= 3.0/2.0
-          endIf
-        else
-          return false
-        endIf
+        return Android.is_tablet
       endIf
 
       return System.is_tablet
