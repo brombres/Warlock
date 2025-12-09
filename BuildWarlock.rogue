@@ -789,7 +789,6 @@ if (stdlib.any_newer_than(output_source_folder/source_filename)) rebuild = true 
       cmd .= appending( "Warlock" )
       cmd .= appending( "Warlock/Framework/SDL" )
       cmd .= appending( "Warlock/Graphics/BGFX" )
-      if (platform == "Android") cmd .= appending( "Warlock/OS/Android" )
 
       #cmd .= appending( "Warlock/Platform/$.rogue"(platform) )
       if (debug) cmd .= appending( "--debug" )
