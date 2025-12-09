@@ -4,7 +4,7 @@ class ImageComponent : Component
   PROPERTIES
     image             : Image
     dropshadow_color  = Color( 0x66000000 )
-    dropshadow_offset : XY   # proportional to smallest dimension of Display.magnitude
+    dropshadow_offset : XY   # proportion of the screen height
 
   METHODS
     method init( image, &aspect_fit )
@@ -41,7 +41,7 @@ class ImageComponent : Component
         temporarily image.opacity = opacity
           if (dropshadow_offset != XY(0,0))
             temporarily image.color = dropshadow_color
-              image.draw( display_bounds + dropshadow_offset * Display.magnitude )
+              image.draw( display_bounds + dropshadow_offset * Display.size.y )
             endTemporarily
           endIf
 
