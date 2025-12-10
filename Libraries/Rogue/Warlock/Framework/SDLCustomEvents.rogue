@@ -1,0 +1,5 @@
+library Warlock
+
+enum SDLCustomEvents
+  DEEP_LINK = 55136
+endEnum

@@ -1,0 +1,38 @@
+augment Rogue::File
+  METHODS
+    method exists->Logical [insert]
+      if ($target("Android"))
+        local filepath = resolved.filepath
+        if (filepath.begins_with("Assets/"))
+          local result : Logical
+
+          native
+          @|SDL_IOStream* io = SDL_IOFromFile( (char*)$filepath->data->as_utf8, "rb" );
+           |if (io)
+           |{
+           |  $result = (RogueLogical) 1;
+           |  SDL_CloseIO(io);
+           |}
+
+           return result
+        endIf
+      endIf
+
+    method size->Int64 [insert]
+      if ($target("Android"))
+        local filepath = resolved.filepath
+        if (filepath.begins_with("Assets/"))
+          local size : Int64
+
+          native
+          @|SDL_IOStream* io = SDL_IOFromFile( (char*)$filepath->data->as_utf8, "rb" );
+           |if (io)
+           |{
+           |  $size = (%Ns%RogueInt64) SDL_GetIOSize( io );
+           |  SDL_CloseIO(io);
+           |}
+
+          return size
+        endIf
+      endIf
+endAugment

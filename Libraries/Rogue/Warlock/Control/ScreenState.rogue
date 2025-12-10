@@ -1,0 +1,8 @@
+library Warlock
+
+class ScreenState : ControlState<< ScreenState, <screen> >>
+  METHODS
+    method change_screen( next_screen:ScreenState )
+      change( next_screen )
+
+endClass

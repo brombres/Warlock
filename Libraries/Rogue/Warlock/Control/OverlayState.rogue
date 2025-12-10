@@ -1,0 +1,8 @@
+library Warlock
+
+class OverlayState : ControlState<< OverlayState, <overlay> >>
+  METHODS
+    method change_overlay( next_overlay:OverlayState )
+      change( next_overlay )
+
+endClass

@@ -1,0 +1,22 @@
+$include Warlock/OS/NativeAndroid [target("Android")]
+
+class Native [singleton]
+  PROPERTIES
+    message_handlers = [String:Function(Variant)->Variant]
+
+  METHODS
+    method on_message( id:String, handler:Function(Variant)->Variant )
+      message_handlers[id] = handler
+
+    method receive_message( message:Variant )->Variant
+      if local handler = message_handlers[ message//id ]
+        return handler( message )
+      else
+        return undefined
+
+      endIf
+
+    method send_message( message:Variant )->Variant
+      println "Native.send_message() is not defined for $."(System.os)
+      return undefined
+endClass

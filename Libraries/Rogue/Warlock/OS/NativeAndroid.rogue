@@ -1,0 +1,91 @@
+library Warlock
+
+class NativeAndroid : Native [essential singleton]
+  NATIVE
+    nativeHeader
+    @|#include <SDL3/SDL_system.h>
+     |#include <jni.h>
+
+    nativeCode
+    @|extern "C" JNIEXPORT jstring JNICALL
+     |Java_com_perilousquest_warlock_MainActivity_sendMessage(
+     |  JNIEnv* env, jobject obj, jstring json_arg )
+     |{
+     |  const char* json_utf8 = env->GetStringUTFChars( json_arg, 0 );
+     |  RogueString* json = RogueString_create( json_utf8 );
+     |  env->ReleaseStringUTFChars( json_arg, json_utf8 );
+     |
+     |  ROGUE_RETAIN( json );
+     |
+     |  RogueString* result = RogueWarlockNativeAndroid__receive_message__RogueString(
+     |    ROGUE_SINGLETON(RogueWarlockNativeAndroid),
+     |    json
+     |  );
+     |  jstring jresult = env->NewStringUTF( result->data->as_utf8 );
+     |
+     |  ROGUE_RELEASE( json );
+     |  return jresult;
+     |}
+
+  METHODS
+    method init_object
+      Native = this
+
+    method receive_message( message:String )->String [essential]
+      return receive_message( JSON.parse(message,&error_log=Log) )->JSON
+
+    method send_message( message:Variant )->Variant [override]
+      local result_json : String
+
+      local arg_json = message->JSON
+
+      native
+      @|JNIEnv* env = (JNIEnv*)SDL_GetAndroidJNIEnv();
+       |jclass  activityClass = 0;
+       |jstring jArg    = 0;
+       |jstring jResult = 0;
+       |
+       |for (;;)
+       |{
+       |  if ( !env ) break;
+       |
+       |  jobject activity = (jobject)SDL_GetAndroidActivity();
+       |  if ( !activity ) break;
+       |
+       |  // Get the Activity class
+       |  activityClass = env->GetObjectClass( activity );
+       |  if ( !activityClass ) break;
+       |
+       |  // Find the method: String receiveMessage(String)
+       |  jmethodID method_id = env->GetMethodID(
+       |      activityClass,
+       |      "receiveMessage",
+       |      "(Ljava/lang/String;)Ljava/lang/String;"
+       |  );
+       |  if ( !method_id ) break;
+       |
+       |  // Convert C UTF-8 -> Java String
+       |  jArg = env->NewStringUTF( $arg_json->data->as_utf8 );
+       |  if ( !jArg ) break;
+       |
+       |  // Call activity.receiveMessage(arg)
+       |  jResult = (jstring)env->CallObjectMethod( activity, method_id, jArg );
+       |  if ( !jResult ) break;
+       |
+       |  // Convert Java String -> UTF-8 char*
+       |  const char* result_utf8 = env->GetStringUTFChars( jResult, NULL );
+       |  if ( !result_utf8 ) break;
+       |
+       |  $result_json = RogueString_create( result_utf8 );
+       |
+       |  break;
+       |}
+       |
+       |if (jResult) env->DeleteLocalRef( jResult );
+       |if (jArg)    env->DeleteLocalRef( jArg );
+       |if (activityClass) env->DeleteLocalRef( activityClass );
+
+      if (not result_json) return undefined
+      return JSON.parse( result_json, &error_log=Log )
+
+endClass

@@ -1,0 +1,80 @@
+augment Rogue::FileReader
+  GLOBAL METHODS
+    method create( filepath:String )->FileReader [insert]
+      if ($target("Android") and filepath.begins_with("Assets/"))
+        return SDLAssetFileReader( filepath )
+      endIf
+endAugment
+
+class SDLAssetFileReader : FileReader
+  METHODS
+    method init( filepath:String )
+      if (not open(filepath))
+        Global.error.println( "Unable to open $ for reading." (filepath) )
+        error = true
+      endIf
+
+    method close
+      buffer_position = 0
+      position = 0
+      count = 0
+
+    method open( filepath )->Logical
+      close
+      error = false
+
+      native
+      @|SDL_IOStream* io = SDL_IOFromFile( (char*)$filepath->data->as_utf8, "rb" );
+       |if (io)
+       |{
+       |  $this->count = (%Ns%RogueInt) SDL_GetIOSize( io );
+
+          buffer.resize( count )
+
+      native
+      @|  char* dest = (char*)$buffer->as_bytes;
+       |  size_t n_remaining = (size_t) $this->count;
+       |  while (n_remaining > 0)
+       |  {
+       |    size_t n_read = SDL_ReadIO( io, dest, n_remaining );
+       |    if (n_read == 0) break;
+       |    dest        += n_read;
+       |    n_remaining -= n_read;
+       |  }
+       |  SDL_CloseIO(io);
+       |}
+
+      return true
+
+    method peek->Byte
+      if (position == count) return 0
+      return buffer[ buffer_position ]
+
+    method read( result:Byte[], limit:Int )->Int
+      if (position == count) return 0
+      result.reserve( limit )
+
+      # Read up to the end of our internal buffer
+      local total_read = 0
+      local n = (buffer.count - buffer_position).or_smaller( limit )
+      if (n > 0)
+        native @|memcpy( $result->as_bytes + $result->count, $buffer->as_bytes+$buffer_position, $n );
+        result.count += n
+        buffer_position += n
+        position += n
+        total_read += n
+        limit -= n
+      endIf
+
+      return total_read
+
+    method reset
+      seek( 0 )
+
+    method seek( pos:Int )
+      if (pos < 0) pos = 0
+      if (pos > count) pos = count
+
+      position = pos
+      buffer_position = pos
+endClass

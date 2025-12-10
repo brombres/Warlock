@@ -1,0 +1,8 @@
+library Warlock
+
+class SceneState : ControlState<< SceneState, <scene> >>
+  METHODS
+    method change_scene( next_scene:SceneState )
+      change( next_scene )
+
+endClass

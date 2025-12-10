@@ -1,0 +1,8 @@
+library Warlock
+
+class BackgroundState : ControlState<< BackgroundState, <background> >>
+  METHODS
+    method change_background( next_background:BackgroundState )
+      change( next_background )
+
+endClass

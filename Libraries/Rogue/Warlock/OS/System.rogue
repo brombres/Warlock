@@ -1,0 +1,5 @@
+augment Rogue::System
+  GLOBAL METHODS
+    method is_tablet->Logical [insert]
+      if ($target("Android")) return Android.is_tablet
+endAugment
