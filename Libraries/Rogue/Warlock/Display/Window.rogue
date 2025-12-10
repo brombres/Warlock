@@ -101,22 +101,32 @@ class Window : Display [singleton]
       Framework.close_window( this )
 
     method dispatch( e:KeyEvent, to_state=Window.control_states.top_layer:ControlState )
+      if (e.is_consumed) return
+
       if (to_state) to_state.handle( e )
       else          handle( e )
 
     method dispatch( e:MultitouchEvent, to_state=Window.control_states.top_layer:ControlState )
+      if (e.is_consumed) return
+
       if (to_state) to_state.handle( e )
       else          handle( e )
 
     method dispatch( e:PointerEvent, to_state=Window.control_states.top_layer:ControlState )
+      if (e.is_consumed or e.ignore_sequence) return
+
       if (to_state) to_state.handle( e )
       else          handle( e )
 
     method dispatch( e:ScrollEvent, to_state=Window.control_states.top_layer:ControlState )
+      if (e.is_consumed) return
+
       if (to_state) to_state.handle( e )
       else          handle( e )
 
     method dispatch( e:TextEvent, to_state=Window.control_states.top_layer:ControlState )
+      if (e.is_consumed) return
+
       if (to_state) to_state.handle( e )
       else          handle( e )
 
