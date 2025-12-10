@@ -3,7 +3,7 @@ $input v_color0, v_texcoord0, v_normal
 #include <bgfx_shader.sh>
 #include "defs.sh"
 
-SAMPLER2D(s_texture,0);
+SAMPLER2D(s_texture_0,0);
 
 void main()
 {
@@ -13,7 +13,7 @@ void main()
   vec3 ambient  = vec3(0.4226,0.4226,0.4226);
   vec3 lighting = vec3( light_factor, light_factor, light_factor ) + ambient;
 
-  vec4 texColor = texture2D( s_texture, v_texcoord0 );
+  vec4 texColor = texture2D( s_texture_0, v_texcoord0 );
   texColor += v_color0;
   gl_FragColor = vec4(texColor.rgb * lighting, texColor.a);
 }

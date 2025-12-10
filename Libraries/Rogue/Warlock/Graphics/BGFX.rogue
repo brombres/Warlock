@@ -12,7 +12,7 @@ class BGFX : Renderer [singleton]
 
     native @|bgfx::DynamicVertexBufferHandle bgfx_vertex_buffer;
     native @|bgfx::DynamicIndexBufferHandle  bgfx_index_buffer;
-    native @|bgfx::UniformHandle bgfx_uniform_texColor;
+    native @|bgfx::UniformHandle bgfx_texture_samplers[8];
 
     auto_clear_while_resizing : Logical
 
@@ -93,7 +93,11 @@ class BGFX : Renderer [singleton]
        |$this->bgfx_vertex_buffer = bgfx::createDynamicVertexBuffer( 6144, vertex_layout, BGFX_BUFFER_ALLOW_RESIZE );
        |$this->bgfx_index_buffer  = bgfx::createDynamicIndexBuffer( 6144, BGFX_BUFFER_ALLOW_RESIZE );
 
-      native @|$this->bgfx_uniform_texColor = bgfx::createUniform( "s_texColor", bgfx::UniformType::Sampler );
+       forEach (i in 1..<7)
+         native @|$this->bgfx_texture_samplers[$i].idx = BGFX_INVALID_HANDLE;
+       endForEach
+
+      native @|$this->bgfx_texture_samplers[0] = bgfx::createUniform( "s_texture_0", bgfx::UniformType::Sampler );
 
       Shader.ALPHA_COLOR                  = Shader( "AlphaColor" )
       Shader.ALPHA_TEXTURE_COLOR_MULTIPLY = Shader( "AlphaTextureColorMultiply" )
@@ -306,11 +310,21 @@ class BGFX : Renderer [singleton]
          |bgfx::setIndexBuffer( $this->bgfx_index_buffer, (uint32_t)$batch.first_index, (uint32_t)$batch.index_count );
 
         if (batch.texture)
-          native @|bgfx::setTexture( 0, $this->bgfx_uniform_texColor, $batch.texture->bgfx_texture );
+          native @|bgfx::setTexture( 0, $this->bgfx_texture_samplers[0], $batch.texture->bgfx_texture );
+
         elseIf (batch.textures)
           forEach (texture at i in batch.textures)
             if (texture)
-              native @|bgfx::setTexture( $i, $this->bgfx_uniform_texColor, $texture->bgfx_texture );
+              if (native("!bgfx::isValid($this->bgfx_texture_samplers[(size_t)$i])")->Logical)
+                use buffer = StringPool
+                buffer.print "s_texture_"
+                buffer.print i
+                native
+                @|$this->bgfx_texture_samplers[(size_t)$i] =
+                 |  bgfx::createUniform( $buffer->data->as_utf8, bgfx::UniformType::Sampler );
+              endIf
+
+              native @|bgfx::setTexture( $i, $this->bgfx_texture_samplers[$i], $texture->bgfx_texture );
             endIf
           endForEach
         endIf
