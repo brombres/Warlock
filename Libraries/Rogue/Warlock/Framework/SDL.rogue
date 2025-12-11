@@ -155,7 +155,7 @@ class SDL : Framework [singleton]
        |  case SDL_EVENT_FINGER_DOWN:
        |  case SDL_EVENT_FINGER_UP:
        |  case SDL_EVENT_FINGER_CANCELED:
-            block
+            if (not Apple.is_ios_app_on_mac)
               if local window = Warlock.find_window( &native_id=native("event.tfinger.windowID")->Int )
                 Window = window
                 local display_size = Display.size
@@ -174,7 +174,7 @@ class SDL : Framework [singleton]
                   queue_touch_event( pointer_event )
                 endUse
               endIf
-            endBlock
+            endIf
       native
       @|    break;
        |  case SDL_EVENT_FINGER_MOTION:
@@ -284,6 +284,8 @@ class SDL : Framework [singleton]
                 local x = native("event.wheel.x")->Int * window.density
                 local y = -native("event.wheel.y")->Int * window.density
                 local is_flipped = native("event.wheel.direction == SDL_MOUSEWHEEL_FLIPPED")->Logical
+                if (Apple.is_ios_app_on_mac) is_flipped = not is_flipped
+                if (is_flipped) y = -y
 
                 use scroll_event = RecyclePool<<ScrollEvent>>
                   local delta = XY( x, y )
