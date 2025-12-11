@@ -2,18 +2,30 @@ $include Warlock/OS/NativeAndroid [target("Android")]
 
 class Native [singleton]
   PROPERTIES
-    message_handlers = [String:Function(Variant)->Variant]
+    message_handlers          = [String:Function(Variant)->Variant]
+    one_time_message_handlers = [String:Function(Variant)->Variant]
 
   METHODS
-    method on_message( id:String, handler:Function(Variant)->Variant )
-      message_handlers[id] = handler
+    method on_message( id:String, handler:Function(Variant)->Variant, &once )
+      if (once)
+        one_time_message_handlers[id] = handler
+      else
+        message_handlers[id] = handler
+      endIf
+
+    method on_response( id:String, handler:Function(Variant) )
+      on_message( id, (arg)=>handler(arg); return null, &once )
 
     method receive_message( message:Variant )->Variant
       if local handler = message_handlers[ message//id ]
         return handler( message )
       else
-        return undefined
-
+        if local entry = one_time_message_handlers.find( message//id )
+          one_time_message_handlers.remove( entry )
+          return entry.value( message )
+        else
+          return undefined
+        endIf
       endIf
 
     method send_message( message:Variant )->Variant

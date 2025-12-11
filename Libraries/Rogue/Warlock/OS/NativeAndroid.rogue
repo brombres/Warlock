@@ -9,7 +9,7 @@ class NativeAndroid : Native [essential singleton]
     nativeCode
     @|extern "C" JNIEXPORT jstring JNICALL
      |Java_com_perilousquest_warlock_MainActivity_sendMessage(
-     |  JNIEnv* env, jobject obj, jstring json_arg )
+     |  JNIEnv* env, jclass cls, jstring json_arg )
      |{
      |  const char* json_utf8 = env->GetStringUTFChars( json_arg, 0 );
      |  RogueString* json = RogueString_create( json_utf8 );
