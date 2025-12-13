@@ -377,6 +377,7 @@ class SDL : Framework [singleton]
               if local window = Warlock.find_window( &native_id=native("event.window.windowID")->Int )
                 Window = window
                 Warlock.controller.handle_focus_lost( window )
+                Pointer.clear
               endIf
             endBlock
       native
