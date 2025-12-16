@@ -11,9 +11,14 @@ class NativeAndroid : Native [essential singleton]
      |Java_com_perilousquest_warlock_MainActivity_sendMessage(
      |  JNIEnv* env, jclass cls, jstring json_arg )
      |{
-     |  const char* json_utf8 = env->GetStringUTFChars( json_arg, 0 );
-     |  RogueString* json = RogueString_create( json_utf8 );
-     |  env->ReleaseStringUTFChars( json_arg, json_utf8 );
+     |  RogueString* json = 0;
+     |
+     |  if (json_arg)
+     |  {
+     |    const char* json_utf8 = env->GetStringUTFChars( json_arg, 0 );
+     |    json = RogueString_create( json_utf8 );
+     |    env->ReleaseStringUTFChars( json_arg, json_utf8 );
+     |  }
      |
      |  ROGUE_RETAIN( json );
      |
@@ -21,7 +26,9 @@ class NativeAndroid : Native [essential singleton]
      |    ROGUE_SINGLETON(RogueWarlockNativeAndroid),
      |    json
      |  );
-     |  jstring jresult = env->NewStringUTF( result->data->as_utf8 );
+     |
+     |  jstring jresult = 0;
+     |  if (result) jresult = env->NewStringUTF( result->data->as_utf8 );
      |
      |  ROGUE_RELEASE( json );
      |  return jresult;
