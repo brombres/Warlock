@@ -2,33 +2,63 @@ $include Warlock/OS/NativeAndroid [target("Android")]
 
 class Native [singleton]
   PROPERTIES
-    message_handlers          = [String:Function(Variant)->Variant]
-    one_time_message_handlers = [String:Function(Variant)->Variant]
+    message_handlers          = [String:Function(Variant)]
+    one_time_message_handlers = [String:Function(Variant)]
+    next_response_id          : Int
 
   METHODS
-    method on_message( id:String, handler:Function(Variant)->Variant, &once )
+    method on_message( id:String, handler:Function(Variant), &once )
       if (once)
         one_time_message_handlers[id] = handler
       else
         message_handlers[id] = handler
       endIf
 
-    method on_response( id:String, handler:Function(Variant) )
-      on_message( id, (arg)=>handler(arg); return null, &once )
+    method on_message( id:String, handler:Function, &once )
+      if (once)
+        one_time_message_handlers[id] = (args) => handler()
+      else
+        message_handlers[id] = (args) => handler()
+      endIf
 
-    method receive_message( message:Variant )->Variant
+    method on_response( id:String, handler:Function(Variant) )
+      on_message( id, handler, &once )
+
+    method receive_message( message:Variant )
       if local handler = message_handlers[ message//id ]
-        return handler( message )
+        handler( message )
       else
         if local entry = one_time_message_handlers.find( message//id )
           one_time_message_handlers.remove( entry )
-          return entry.value( message )
+          entry.value( message )
         else
-          return undefined
+          Log.print   "Native no native message handler for "
+          Log.println message//id
         endIf
       endIf
 
-    method send_message( message:Variant )->Variant
-      println "Native.send_message() is not defined for $."(System.os)
-      return undefined
+    method send_message( message:Variant )
+      println "Native.send_message(Variant) is not defined for $."(System.os)
+
+    method send_message( id:String, message:Variant, on_response:Function(Variant) )
+      message//id = id
+
+      if (on_response)
+        ++next_response_id
+        local response_id = "$.response.$"(id,next_response_id)
+        message//response_id = response_id
+        this.on_response( response_id, on_response )
+      endIf
+
+      send_message( message )
+
+    method send_message( id:String )
+      send_message( id, @{}, null )
+
+    method send_message( id:String, message:Variant )
+      send_message( id, message, null )
+
+    method send_message( id:String, on_response:Function(Variant) )
+      send_message( id, @{}, on_response )
+
 endClass

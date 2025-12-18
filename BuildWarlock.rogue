@@ -780,11 +780,11 @@ if (stdlib.any_newer_than(output_source_folder/source_filename)) rebuild = true 
 
   if (rebuild or files.any_newer_than(output_source_folder/source_filename))
     block cmd = "roguec Source/Main.rogue"
-      local target_specific = "Source/Target-$.rogue"(platform)
-      if (File(target_specific).exists)
-        cmd .= appending( target_specific )
+      local platform_specific = "Source/Platform-$.rogue"(platform)
+      if (File(platform_specific).exists)
+        cmd .= appending( platform_specific )
       else
-        println "Note: if you create $ it will be automatically included with $ builds."(target_specific,platform)
+        println "Note: if you create $ it will be automatically included with $ builds."(platform_specific,platform)
       endIf
       cmd .= appending( "Warlock" )
       cmd .= appending( "Warlock/Framework/SDL" )

@@ -2,3 +2,8 @@ $macro AUTO_ID
   PROPERTIES
     id = IDManager.obtain_id( this ) : Int
 $endMacro
+
+nativeHeader
+@|#if !defined(RogueStringFunction)
+ |  #define RogueStringFunction RogueOPARENFunctionOPARENRogueStringCPARENCPAREN
+ |#endif

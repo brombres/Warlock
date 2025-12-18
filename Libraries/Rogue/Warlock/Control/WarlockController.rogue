@@ -18,6 +18,8 @@ class WarlockController
 
   METHODS
     method configure
+      Platform.configure
+
       AssetManager.load
       AudioManager.configure
 

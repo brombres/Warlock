@@ -76,6 +76,8 @@ class BGFX : Renderer [singleton]
        |  #error [BGFX.rogue] Must implement Native Window Handle retrieval in BGFX.configure_bgfx() for current platform.
        |#endif
 
+       localize window.pixel_size
+
       if (not native("bgfx::init(init)")->Logical)
         println "[Warlock] Failed to initialize BGFX."
         return
@@ -121,6 +123,11 @@ class BGFX : Renderer [singleton]
       RenderMode.LIT_TEXTURE_COLOR_ADD_WRITE_Z = RenderModeLitTextureColorAddWriteZ
 
       is_initialized = true
+
+      if (window.pixel_size != pixel_size)
+        # Window resized during initialization
+        on_window_resized( window )
+      endIf
 
     method configure_render_target( render_target:RenderTarget )
       local image   = render_target.image

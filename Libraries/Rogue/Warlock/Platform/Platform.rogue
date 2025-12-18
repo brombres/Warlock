@@ -1,2 +1,8 @@
 $include Platform/iOS
 $include Platform/macOS
+
+class Platform [singleton]
+  METHODS
+    method configure
+      noAction
+endClass

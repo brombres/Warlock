@@ -7,7 +7,7 @@ class NativeAndroid : Native [essential singleton]
      |#include <jni.h>
 
     nativeCode
-    @|extern "C" JNIEXPORT jstring JNICALL
+    @|extern "C" JNIEXPORT void JNICALL
      |Java_com_perilousquest_warlock_MainActivity_sendMessage(
      |  JNIEnv* env, jclass cls, jstring json_arg )
      |{
@@ -22,16 +22,12 @@ class NativeAndroid : Native [essential singleton]
      |
      |  ROGUE_RETAIN( json );
      |
-     |  RogueString* result = RogueWarlockNativeAndroid__receive_message__RogueString(
+     |  RogueWarlockNativeAndroid__receive_message__RogueString(
      |    ROGUE_SINGLETON(RogueWarlockNativeAndroid),
      |    json
      |  );
      |
-     |  jstring jresult = 0;
-     |  if (result) jresult = env->NewStringUTF( result->data->as_utf8 );
-     |
      |  ROGUE_RELEASE( json );
-     |  return jresult;
      |}
 
   METHODS
@@ -39,11 +35,9 @@ class NativeAndroid : Native [essential singleton]
       Native = this
 
     method receive_message( message:String )->String [essential]
-      return receive_message( JSON.parse(message,&error_log=Log) )->JSON
+      receive_message( JSON.parse(message,&error_log=Log) )
 
-    method send_message( message:Variant )->Variant [override]
-      local result_json : String
-
+    method send_message( message:Variant ) [override]
       local arg_json = message->JSON
 
       native
@@ -67,7 +61,7 @@ class NativeAndroid : Native [essential singleton]
        |  jmethodID method_id = env->GetMethodID(
        |      activityClass,
        |      "receiveMessage",
-       |      "(Ljava/lang/String;)Ljava/lang/String;"
+       |      "(Ljava/lang/String;)V"
        |  );
        |  if ( !method_id ) break;
        |
@@ -76,14 +70,7 @@ class NativeAndroid : Native [essential singleton]
        |  if ( !jArg ) break;
        |
        |  // Call activity.receiveMessage(arg)
-       |  jResult = (jstring)env->CallObjectMethod( activity, method_id, jArg );
-       |  if ( !jResult ) break;
-       |
-       |  // Convert Java String -> UTF-8 char*
-       |  const char* result_utf8 = env->GetStringUTFChars( jResult, NULL );
-       |  if ( !result_utf8 ) break;
-       |
-       |  $result_json = RogueString_create( result_utf8 );
+       |  env->CallVoidMethod( activity, method_id, jArg );
        |
        |  break;
        |}
@@ -91,8 +78,5 @@ class NativeAndroid : Native [essential singleton]
        |if (jResult) env->DeleteLocalRef( jResult );
        |if (jArg)    env->DeleteLocalRef( jArg );
        |if (activityClass) env->DeleteLocalRef( activityClass );
-
-      if (not result_json) return undefined
-      return JSON.parse( result_json, &error_log=Log )
 
 endClass
