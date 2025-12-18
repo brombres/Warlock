@@ -1,0 +1,54 @@
+augment Rogue::iOS
+  METHODS
+    method bundle_id->String
+      local result : String
+
+      native
+      @|#if ROGUE_TARGET_IOS
+       |  NSString* current_version = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+       |  $result = Rogue_ns_string_to_string( current_version );
+       |#endif
+
+       return result
+
+    method get_live_app_store_version( bundle_id:String, on_result:Function(String) )
+      if ($target("iOS"))
+        on_result?.retain_object
+
+        native
+        @|Warlock_get_live_app_store_version( Rogue_string_to_ns_string($bundle_id), $on_result );
+        endIf
+
+  GLOBAL METHODS
+    method on_live_app_store_version( version:String, on_result:RogueVoidPointer ) [api]
+      if (on_result)
+        local fn = native("(RogueStringFunction*)$on_result.value")->Function(String)
+        fn( version )
+        fn.release_object
+      endIf
+
+  NATIVE
+    nativeHeader
+    @|#if ROGUE_TARGET_IOS
+     |  void Warlock_get_live_app_store_version( NSString* bundle_id, void* callback );
+     |#endif
+
+    nativeCode
+    @|#if ROGUE_TARGET_IOS
+     |  void Warlock_get_live_app_store_version( NSString* bundle_id, void* callback )
+     |  {
+     |    AppStoreCheck* checker = [[AppStoreCheck alloc] init];
+     |    [checker
+     |      checkIfAppIsLiveWithBundleId:bundle_id
+     |      completion:^(NSString * _Nullable version) {
+     |        RogueiOS__on_live_app_store_version__RogueString_RogueVoidPointer(
+     |          Rogue_ns_string_to_string(version),
+     |          ROGUE_COMPOUND(RogueVoidPointer){callback}
+     |        );
+     |      }
+     |    ];
+     |  }
+     |#endif
+
+
+endAugment
