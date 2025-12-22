@@ -128,8 +128,9 @@ class Texture
           mesh.add( t.a+i0, t.b+i0, t.c+i0 )
         endForEach
       else
-        println "[Warlock] Texture.polygon_mesh() tessellation failed"
-        println polygon
+        Log.println "[Warlock] Texture.polygon_mesh() tessellation failed"
+        Log.println polygon
+        return null
       endIf
 
       return mesh

@@ -4,7 +4,6 @@ class Native [singleton]
   PROPERTIES
     message_handlers          = [String:Function(Variant)]
     one_time_message_handlers = [String:Function(Variant)]
-    next_response_id          : Int
 
   METHODS
     method on_message( id:String, handler:Function(Variant), &once )
@@ -32,7 +31,7 @@ class Native [singleton]
           one_time_message_handlers.remove( entry )
           entry.value( message )
         else
-          Log.print   "Native no native message handler for "
+          Log.print   "No native message handler for "
           Log.println message//id
         endIf
       endIf
@@ -44,8 +43,7 @@ class Native [singleton]
       message//id = id
 
       if (on_response)
-        ++next_response_id
-        local response_id = "$.response.$"(id,next_response_id)
+        local response_id = "$.response"(id)
         message//response_id = response_id
         this.on_response( response_id, on_response )
       endIf
