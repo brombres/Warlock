@@ -49,7 +49,7 @@ class AssetManager [singleton]
         endIf
 
         if (file)
-          forEach (asset_name in LineReader(file.value).[disable_recycled_buffer])
+          forEach (asset_name in LineReader(file.value))
             local asset_filepath = assets_parent / asset_name
             asset_manifest[asset_name] = asset_filepath
           endForEach
