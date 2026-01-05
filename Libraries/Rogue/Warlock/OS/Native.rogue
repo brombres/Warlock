@@ -43,7 +43,7 @@ class Native [singleton]
       message//id = id
 
       if (on_response)
-        local response_id = "$.response"(id)
+        local response_id = message//response_id || Variant("$.response"(id))
         message//response_id = response_id
         this.on_response( response_id, on_response )
       endIf
