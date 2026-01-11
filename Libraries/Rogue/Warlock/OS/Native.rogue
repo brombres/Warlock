@@ -4,6 +4,7 @@ class Native [singleton]
   PROPERTIES
     message_handlers          = [String:Function(Variant)]
     one_time_message_handlers = [String:Function(Variant)]
+    response_serial_number    : Int
 
   METHODS
     method on_message( id:String, handler:Function(Variant), &once )
@@ -39,17 +40,23 @@ class Native [singleton]
     method send_message( message:Variant )
       println "Native.send_message(Variant) is not defined for $."(System.os)
 
-    method send_message( id:String, message:Variant, on_response:Function(Variant) )
+    method send_message( id:String, message:Variant, on_response:Function(Variant) ) [preferred]
       message//id = id
 
       if (on_response)
         local response_id = message//response_id
-        if (not response_id) response_id = Variant("$.response.$"(id,Random.int32))
+        if (not response_id)
+          ++response_serial_number
+          response_id = Variant("$.response.$"(id,response_serial_number))
+        endIf
         message//response_id = response_id
         this.on_response( response_id, on_response )
       endIf
 
       send_message( message )
+
+    method send_message( id:String, message:Variant, on_response:Function )
+      send_message( id, message, (response) => on_response() )
 
     method send_message( id:String )
       send_message( id, @{}, null )
@@ -57,7 +64,10 @@ class Native [singleton]
     method send_message( id:String, message:Variant )
       send_message( id, message, null )
 
-    method send_message( id:String, on_response:Function(Variant) )
+    method send_message( id:String, on_response:Function(Variant) ) [preferred]
       send_message( id, @{}, on_response )
+
+    method send_message( id:String, on_response:Function )
+      send_message( id, @{}, (response) => on_response() )
 
 endClass
