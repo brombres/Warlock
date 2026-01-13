@@ -1,18 +1,11 @@
-# Declare an abstract parent so common pods can be shared
 abstract_target 'WarlockPods' do
   use_frameworks!
 
-  # Shared pods across all platforms (if any)
-  # pod 'SomeSharedPod'
+  target 'Warlock-iOS' do
+    platform :ios, '15.6'
+  end
 
-  # Uncomment the following for Backendless support
-  #target 'Warlock-iOS' do
-  #  platform :ios, '15.6'
-  #  pod 'BackendlessSwift'
-  #end
-
-  #target 'Warlock-macOS' do
-  #  platform :macos, '14.6'
-  #  pod 'BackendlessSwift'
-  #end
+  target 'Warlock-macOS' do
+    platform :macos, '14.6'
+  end
 end

@@ -7,7 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		26C9488E87BD53251DA278EC /* Pods_WarlockPods_Warlock_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3715D23F63860DD341C80019 /* Pods_WarlockPods_Warlock_macOS.framework */; };
 		3001F8482E8EC41D00E356BF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3021A66F2E2D9429002E6394 /* Assets.xcassets */; };
+		300BADD42E8383B4008E8531 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 300BADD22E8383B4008E8531 /* Localizable.strings */; };
+		300BADD52E8383B4008E8531 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 300BADD22E8383B4008E8531 /* Localizable.strings */; };
 		3021A62A2E2D9015002E6394 /* Utilities.c in Sources */ = {isa = PBXBuildFile; fileRef = 3021A6292E2D9015002E6394 /* Utilities.c */; };
 		3021A62B2E2D9015002E6394 /* stb_image.h in Headers */ = {isa = PBXBuildFile; fileRef = 3021A6262E2D9015002E6394 /* stb_image.h */; };
 		3021A62C2E2D9015002E6394 /* stb_image_resize2.h in Headers */ = {isa = PBXBuildFile; fileRef = 3021A6272E2D9015002E6394 /* stb_image_resize2.h */; };
@@ -15,19 +18,6 @@
 		3021A62E2E2D9015002E6394 /* Utilities.c in Sources */ = {isa = PBXBuildFile; fileRef = 3021A6292E2D9015002E6394 /* Utilities.c */; };
 		3021A62F2E2D902F002E6394 /* libUtilities-iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3021A60B2E2D8FA5002E6394 /* libUtilities-iOS.a */; };
 		3021A6302E2D9036002E6394 /* libUtilities-macOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3021A6212E2D8FDB002E6394 /* libUtilities-macOS.a */; };
-		3021A64B2E2D9162002E6394 /* libbimg_decodeRelease.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30639A772E2D55EE004ECAC9 /* libbimg_decodeRelease.a */; };
-		3021A64C2E2D9162002E6394 /* libbgfxRelease.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30639A762E2D55EE004ECAC9 /* libbgfxRelease.a */; };
-		3021A64D2E2D9162002E6394 /* libbxRelease.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30639A792E2D55EE004ECAC9 /* libbxRelease.a */; };
-		3021A64E2E2D9162002E6394 /* libbimgRelease.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30639A782E2D55EE004ECAC9 /* libbimgRelease.a */; };
-		3021A65C2E2D934C002E6394 /* libspirv-optRelease.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30639B352E2D55EE004ECAC9 /* libspirv-optRelease.a */; settings = {ATTRIBUTES = (Required, ); }; };
-		3021A65D2E2D934C002E6394 /* libfcppRelease.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30639B2D2E2D55EE004ECAC9 /* libfcppRelease.a */; settings = {ATTRIBUTES = (Required, ); }; };
-		3021A65E2E2D934C002E6394 /* libspirv-crossRelease.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30639B332E2D55EE004ECAC9 /* libspirv-crossRelease.a */; settings = {ATTRIBUTES = (Required, ); }; };
-		3021A65F2E2D934C002E6394 /* libglslangRelease.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30639B312E2D55EE004ECAC9 /* libglslangRelease.a */; settings = {ATTRIBUTES = (Required, ); }; };
-		3021A6602E2D934C002E6394 /* libbxRelease.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30639B272E2D55EE004ECAC9 /* libbxRelease.a */; settings = {ATTRIBUTES = (Required, ); }; };
-		3021A6612E2D934C002E6394 /* libglsl-optimizerRelease.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30639B2F2E2D55EE004ECAC9 /* libglsl-optimizerRelease.a */; settings = {ATTRIBUTES = (Required, ); }; };
-		3021A6632E2D934C002E6394 /* libbimg_decodeRelease.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30639B212E2D55EE004ECAC9 /* libbimg_decodeRelease.a */; settings = {ATTRIBUTES = (Required, ); }; };
-		3021A6642E2D934C002E6394 /* libbgfxRelease.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30639B1F2E2D55EE004ECAC9 /* libbgfxRelease.a */; settings = {ATTRIBUTES = (Required, ); }; };
-		3021A6652E2D934C002E6394 /* libbimgRelease.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30639B252E2D55EE004ECAC9 /* libbimgRelease.a */; settings = {ATTRIBUTES = (Required, ); }; };
 		3021A6672E2D9386002E6394 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3021A6662E2D9386002E6394 /* Metal.framework */; };
 		3021A6692E2D93C0002E6394 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3021A6682E2D93C0002E6394 /* AppKit.framework */; };
 		3021A66B2E2D93E7002E6394 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3021A66A2E2D93E7002E6394 /* QuartzCore.framework */; };
@@ -39,12 +29,6 @@
 		3021A9912E2DBE0E002E6394 /* Assets in Resources */ = {isa = PBXBuildFile; fileRef = 3021A9902E2DBDE3002E6394 /* Assets */; };
 		3021A9AA2E2DC98C002E6394 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3021A9A92E2DC98C002E6394 /* UIKit.framework */; };
 		3021A9AC2E2DCB19002E6394 /* SDL3.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3021A6192E2D8FA5002E6394 /* SDL3.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		3021A9B12E32D279002E6394 /* RogueInterface.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3063D2762E2D8D17004ECAC9 /* RogueInterface.mm */; };
-		3021A9B22E32D279002E6394 /* RogueInterface.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3063D2762E2D8D17004ECAC9 /* RogueInterface.mm */; };
-		3021A9B32E32D28B002E6394 /* WarlockInterface.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3063D2782E2D8D17004ECAC9 /* WarlockInterface.mm */; };
-		3021A9B42E32D28B002E6394 /* WarlockInterface.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3063D2782E2D8D17004ECAC9 /* WarlockInterface.mm */; };
-		3021A9B52E32D2AB002E6394 /* RogueProgram-iOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3021A8CA2E2DB9FE002E6394 /* RogueProgram-iOS.mm */; };
-		3021A9B62E32D2BD002E6394 /* RogueProgram-macOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3021A8CD2E2DBA21002E6394 /* RogueProgram-macOS.mm */; };
 		3063991C2E2D0E69004ECAC9 /* dict.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399052E2D0E69004ECAC9 /* dict.c */; };
 		3063991D2E2D0E69004ECAC9 /* tess.c in Sources */ = {isa = PBXBuildFile; fileRef = 3063990F2E2D0E69004ECAC9 /* tess.c */; };
 		3063991E2E2D0E69004ECAC9 /* geom.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399072E2D0E69004ECAC9 /* geom.c */; };
@@ -195,19 +179,19 @@
 		30639A5F2E2D54C5004ECAC9 /* AttachmentLoader.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399B62E2D54C5004ECAC9 /* AttachmentLoader.c */; };
 		3063D2312E2D67FB004ECAC9 /* miniaudio.m in Sources */ = {isa = PBXBuildFile; fileRef = 3063D2272E2D6187004ECAC9 /* miniaudio.m */; };
 		3063D2322E2D67FB004ECAC9 /* miniaudio.m in Sources */ = {isa = PBXBuildFile; fileRef = 3063D2272E2D6187004ECAC9 /* miniaudio.m */; };
-		3063D2342E2D69EF004ECAC9 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3063D2332E2D69EF004ECAC9 /* AVFoundation.framework */; };
 		3063D2362E2D6A70004ECAC9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3063D2352E2D6A70004ECAC9 /* Foundation.framework */; };
 		3063D24E2E2D6E78004ECAC9 /* miniaudio.m in Sources */ = {isa = PBXBuildFile; fileRef = 3063D24D2E2D6E78004ECAC9 /* miniaudio.m */; };
 		3063D24F2E2D6E78004ECAC9 /* miniaudio.m in Sources */ = {isa = PBXBuildFile; fileRef = 3063D24D2E2D6E78004ECAC9 /* miniaudio.m */; };
 		3063D2512E2D6E8E004ECAC9 /* miniaudio.h in Headers */ = {isa = PBXBuildFile; fileRef = 3063D2502E2D6E8E004ECAC9 /* miniaudio.h */; };
 		3063D2532E2D6F0B004ECAC9 /* libMiniAudio-macOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3063D2492E2D6C9D004ECAC9 /* libMiniAudio-macOS.a */; };
 		3063D2542E2D6F0B004ECAC9 /* libSpine-macOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3063997B2E2D54A8004ECAC9 /* libSpine-macOS.a */; };
-		3063D2562E2D6F15004ECAC9 /* libMiniAudio-iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3063D23B2E2D6C79004ECAC9 /* libMiniAudio-iOS.a */; };
 		3063D2572E2D6F15004ECAC9 /* libSpine-iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3063996D2E2D543C004ECAC9 /* libSpine-iOS.a */; };
 		3084FE722E2C66B1003DBBBC /* SDL3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3084FE712E2C66B1003DBBBC /* SDL3.framework */; };
-		308AF4D12E9AC907000BE42C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 308AF4D02E9AC907000BE42C /* Localizable.strings */; };
-		308AF4D22E9AC907000BE42C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 308AF4D02E9AC907000BE42C /* Localizable.strings */; };
-		30AF47D12EA30B0900F8D6B4 /* SDLViewControllerModifications.m in Sources */ = {isa = PBXBuildFile; fileRef = 30AF47D02EA30B0900F8D6B4 /* SDLViewControllerModifications.m */; };
+		3092E4862EB2D26F00FA1D75 /* SDLDeepLinkEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 3092E4852EB2D26500FA1D75 /* SDLDeepLinkEvent.m */; };
+		3092E4872EB2D26F00FA1D75 /* SDLDeepLinkEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 3092E4852EB2D26500FA1D75 /* SDLDeepLinkEvent.m */; };
+		30AF47CB2EA3056400F8D6B4 /* SDLViewControllerModifications.m in Sources */ = {isa = PBXBuildFile; fileRef = 30AF47C92EA3056400F8D6B4 /* SDLViewControllerModifications.m */; };
+		30BBB99F2ED0D6EC0008F0CA /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30BBB99E2ED0D6EC0008F0CA /* StoreKit.framework */; };
+		3ECEB00B80F164FAC165B710 /* Pods_WarlockPods_Warlock_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6282222B0D666D5DE89835F4 /* Pods_WarlockPods_Warlock_iOS.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -271,6 +255,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		300BADD32E8383B4008E8531 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3021A60B2E2D8FA5002E6394 /* libUtilities-iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libUtilities-iOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3021A6212E2D8FDB002E6394 /* libUtilities-macOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libUtilities-macOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3021A6262E2D9015002E6394 /* stb_image.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = stb_image.h; sourceTree = "<group>"; };
@@ -285,12 +270,11 @@
 		3021A6712E2D9429002E6394 /* Main.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Main.mm; sourceTree = "<group>"; };
 		3021A6722E2D9429002E6394 /* Warlock.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Warlock.entitlements; sourceTree = "<group>"; };
 		3021A8C42E2D97B0002E6394 /* Assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Assets; path = ../../../../Build/macOS/Assets; sourceTree = "<group>"; };
-		3021A8C92E2DB9FE002E6394 /* RogueProgram-iOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "RogueProgram-iOS.h"; path = "/Users/abe/Projects/Games/TombSweeper/Build/iOS/Source/RogueProgram-iOS.h"; sourceTree = "<absolute>"; };
-		3021A8CA2E2DB9FE002E6394 /* RogueProgram-iOS.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = "RogueProgram-iOS.mm"; path = "/Users/abe/Projects/Games/TombSweeper/Build/iOS/Source/RogueProgram-iOS.mm"; sourceTree = "<absolute>"; };
-		3021A8CC2E2DBA21002E6394 /* RogueProgram-macOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "RogueProgram-macOS.h"; path = "/Users/abe/Projects/Games/TombSweeper/Build/macOS/Source/RogueProgram-macOS.h"; sourceTree = "<absolute>"; };
-		3021A8CD2E2DBA21002E6394 /* RogueProgram-macOS.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = "RogueProgram-macOS.mm"; path = "/Users/abe/Projects/Games/TombSweeper/Build/macOS/Source/RogueProgram-macOS.mm"; sourceTree = "<absolute>"; };
 		3021A9902E2DBDE3002E6394 /* Assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Assets; path = ../../../../Build/iOS/Assets; sourceTree = "<group>"; };
 		3021A9A92E2DC98C002E6394 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.2.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
+		3046FDD42F01868800E5FB74 /* FBSDKCoreKit.xcframework */ = {isa = PBXFileReference; expectedSignature = "AppleDeveloperProgram:V9WTTPBFK9:Meta Platforms, Inc."; lastKnownFileType = wrapper.xcframework; name = FBSDKCoreKit.xcframework; path = Pods/FBSDKCoreKit/XCFrameworks/FBSDKCoreKit.xcframework; sourceTree = "<group>"; };
+		3046FDD62F0186AC00E5FB74 /* FBSDKCoreKit_Basics.xcframework */ = {isa = PBXFileReference; expectedSignature = "AppleDeveloperProgram:V9WTTPBFK9:Meta Platforms, Inc."; lastKnownFileType = wrapper.xcframework; name = FBSDKCoreKit_Basics.xcframework; path = Pods/FBSDKCoreKit_Basics/XCFrameworks/FBSDKCoreKit_Basics.xcframework; sourceTree = "<group>"; };
+		3046FDD82F0186BB00E5FB74 /* FBSDKLoginKit.xcframework */ = {isa = PBXFileReference; expectedSignature = "AppleDeveloperProgram:V9WTTPBFK9:Meta Platforms, Inc."; lastKnownFileType = wrapper.xcframework; name = FBSDKLoginKit.xcframework; path = Pods/FBSDKLoginKit/XCFrameworks/FBSDKLoginKit.xcframework; sourceTree = "<group>"; };
 		306398EB2E2D0E3E004ECAC9 /* libTess2-iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libTess2-iOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		306399002E2D0E69004ECAC9 /* tesselator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tesselator.h; sourceTree = "<group>"; };
 		306399022E2D0E69004ECAC9 /* bucketalloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bucketalloc.h; sourceTree = "<group>"; };
@@ -400,121 +384,6 @@
 		306399D72E2D54C5004ECAC9 /* TransformConstraintData.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = TransformConstraintData.c; sourceTree = "<group>"; };
 		306399D82E2D54C5004ECAC9 /* Triangulator.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Triangulator.c; sourceTree = "<group>"; };
 		306399D92E2D54C5004ECAC9 /* VertexAttachment.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = VertexAttachment.c; sourceTree = "<group>"; };
-		30639A762E2D55EE004ECAC9 /* libbgfxRelease.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libbgfxRelease.a; sourceTree = "<group>"; };
-		30639A772E2D55EE004ECAC9 /* libbimg_decodeRelease.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libbimg_decodeRelease.a; sourceTree = "<group>"; };
-		30639A782E2D55EE004ECAC9 /* libbimgRelease.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libbimgRelease.a; sourceTree = "<group>"; };
-		30639A792E2D55EE004ECAC9 /* libbxRelease.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libbxRelease.a; sourceTree = "<group>"; };
-		30639B1F2E2D55EE004ECAC9 /* libbgfxRelease.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libbgfxRelease.a; sourceTree = "<group>"; };
-		30639B212E2D55EE004ECAC9 /* libbimg_decodeRelease.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libbimg_decodeRelease.a; sourceTree = "<group>"; };
-		30639B252E2D55EE004ECAC9 /* libbimgRelease.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libbimgRelease.a; sourceTree = "<group>"; };
-		30639B272E2D55EE004ECAC9 /* libbxRelease.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libbxRelease.a; sourceTree = "<group>"; };
-		30639B2D2E2D55EE004ECAC9 /* libfcppRelease.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libfcppRelease.a; sourceTree = "<group>"; };
-		30639B2F2E2D55EE004ECAC9 /* libglsl-optimizerRelease.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libglsl-optimizerRelease.a"; sourceTree = "<group>"; };
-		30639B312E2D55EE004ECAC9 /* libglslangRelease.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libglslangRelease.a; sourceTree = "<group>"; };
-		30639B332E2D55EE004ECAC9 /* libspirv-crossRelease.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libspirv-crossRelease.a"; sourceTree = "<group>"; };
-		30639B352E2D55EE004ECAC9 /* libspirv-optRelease.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libspirv-optRelease.a"; sourceTree = "<group>"; };
-		3063B2B62E2D55EE004ECAC9 /* bgfx.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bgfx.h; sourceTree = "<group>"; };
-		3063B2B82E2D55EE004ECAC9 /* bgfx.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bgfx.h; sourceTree = "<group>"; };
-		3063B2B92E2D55EE004ECAC9 /* defines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = defines.h; sourceTree = "<group>"; };
-		3063B2BA2E2D55EE004ECAC9 /* embedded_shader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = embedded_shader.h; sourceTree = "<group>"; };
-		3063B2BB2E2D55EE004ECAC9 /* platform.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = platform.h; sourceTree = "<group>"; };
-		3063B4292E2D55EE004ECAC9 /* bimg.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bimg.h; sourceTree = "<group>"; };
-		3063B42A2E2D55EE004ECAC9 /* decode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = decode.h; sourceTree = "<group>"; };
-		3063B42B2E2D55EE004ECAC9 /* encode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = encode.h; sourceTree = "<group>"; };
-		3063B4582E2D55EE004ECAC9 /* allocator.inl */ = {isa = PBXFileReference; lastKnownFileType = text; path = allocator.inl; sourceTree = "<group>"; };
-		3063B4592E2D55EE004ECAC9 /* bounds.inl */ = {isa = PBXFileReference; lastKnownFileType = text; path = bounds.inl; sourceTree = "<group>"; };
-		3063B45A2E2D55EE004ECAC9 /* bx.inl */ = {isa = PBXFileReference; lastKnownFileType = text; path = bx.inl; sourceTree = "<group>"; };
-		3063B45B2E2D55EE004ECAC9 /* cpu.inl */ = {isa = PBXFileReference; lastKnownFileType = text; path = cpu.inl; sourceTree = "<group>"; };
-		3063B45C2E2D55EE004ECAC9 /* easing.inl */ = {isa = PBXFileReference; lastKnownFileType = text; path = easing.inl; sourceTree = "<group>"; };
-		3063B45D2E2D55EE004ECAC9 /* endian.inl */ = {isa = PBXFileReference; lastKnownFileType = text; path = endian.inl; sourceTree = "<group>"; };
-		3063B45E2E2D55EE004ECAC9 /* error.inl */ = {isa = PBXFileReference; lastKnownFileType = text; path = error.inl; sourceTree = "<group>"; };
-		3063B45F2E2D55EE004ECAC9 /* float4x4_t.inl */ = {isa = PBXFileReference; lastKnownFileType = text; path = float4x4_t.inl; sourceTree = "<group>"; };
-		3063B4602E2D55EE004ECAC9 /* handlealloc.inl */ = {isa = PBXFileReference; lastKnownFileType = text; path = handlealloc.inl; sourceTree = "<group>"; };
-		3063B4612E2D55EE004ECAC9 /* hash.inl */ = {isa = PBXFileReference; lastKnownFileType = text; path = hash.inl; sourceTree = "<group>"; };
-		3063B4622E2D55EE004ECAC9 /* math.inl */ = {isa = PBXFileReference; lastKnownFileType = text; path = math.inl; sourceTree = "<group>"; };
-		3063B4632E2D55EE004ECAC9 /* mpscqueue.inl */ = {isa = PBXFileReference; lastKnownFileType = text; path = mpscqueue.inl; sourceTree = "<group>"; };
-		3063B4642E2D55EE004ECAC9 /* mutex.inl */ = {isa = PBXFileReference; lastKnownFileType = text; path = mutex.inl; sourceTree = "<group>"; };
-		3063B4652E2D55EE004ECAC9 /* os.inl */ = {isa = PBXFileReference; lastKnownFileType = text; path = os.inl; sourceTree = "<group>"; };
-		3063B4662E2D55EE004ECAC9 /* pixelformat.inl */ = {isa = PBXFileReference; lastKnownFileType = text; path = pixelformat.inl; sourceTree = "<group>"; };
-		3063B4672E2D55EE004ECAC9 /* readerwriter.inl */ = {isa = PBXFileReference; lastKnownFileType = text; path = readerwriter.inl; sourceTree = "<group>"; };
-		3063B4682E2D55EE004ECAC9 /* ringbuffer.inl */ = {isa = PBXFileReference; lastKnownFileType = text; path = ringbuffer.inl; sourceTree = "<group>"; };
-		3063B4692E2D55EE004ECAC9 /* rng.inl */ = {isa = PBXFileReference; lastKnownFileType = text; path = rng.inl; sourceTree = "<group>"; };
-		3063B46A2E2D55EE004ECAC9 /* simd_ni.inl */ = {isa = PBXFileReference; lastKnownFileType = text; path = simd_ni.inl; sourceTree = "<group>"; };
-		3063B46B2E2D55EE004ECAC9 /* simd128_langext.inl */ = {isa = PBXFileReference; lastKnownFileType = text; path = simd128_langext.inl; sourceTree = "<group>"; };
-		3063B46C2E2D55EE004ECAC9 /* simd128_neon.inl */ = {isa = PBXFileReference; lastKnownFileType = text; path = simd128_neon.inl; sourceTree = "<group>"; };
-		3063B46D2E2D55EE004ECAC9 /* simd128_ref.inl */ = {isa = PBXFileReference; lastKnownFileType = text; path = simd128_ref.inl; sourceTree = "<group>"; };
-		3063B46E2E2D55EE004ECAC9 /* simd128_sse.inl */ = {isa = PBXFileReference; lastKnownFileType = text; path = simd128_sse.inl; sourceTree = "<group>"; };
-		3063B46F2E2D55EE004ECAC9 /* simd128_swizzle.inl */ = {isa = PBXFileReference; lastKnownFileType = text; path = simd128_swizzle.inl; sourceTree = "<group>"; };
-		3063B4702E2D55EE004ECAC9 /* simd256_avx.inl */ = {isa = PBXFileReference; lastKnownFileType = text; path = simd256_avx.inl; sourceTree = "<group>"; };
-		3063B4712E2D55EE004ECAC9 /* simd256_ref.inl */ = {isa = PBXFileReference; lastKnownFileType = text; path = simd256_ref.inl; sourceTree = "<group>"; };
-		3063B4722E2D55EE004ECAC9 /* sort.inl */ = {isa = PBXFileReference; lastKnownFileType = text; path = sort.inl; sourceTree = "<group>"; };
-		3063B4732E2D55EE004ECAC9 /* spscqueue.inl */ = {isa = PBXFileReference; lastKnownFileType = text; path = spscqueue.inl; sourceTree = "<group>"; };
-		3063B4742E2D55EE004ECAC9 /* string.inl */ = {isa = PBXFileReference; lastKnownFileType = text; path = string.inl; sourceTree = "<group>"; };
-		3063B4752E2D55EE004ECAC9 /* typetraits.inl */ = {isa = PBXFileReference; lastKnownFileType = text; path = typetraits.inl; sourceTree = "<group>"; };
-		3063B4762E2D55EE004ECAC9 /* uint32_t.inl */ = {isa = PBXFileReference; lastKnownFileType = text; path = uint32_t.inl; sourceTree = "<group>"; };
-		3063B4782E2D55EE004ECAC9 /* allocator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = allocator.h; sourceTree = "<group>"; };
-		3063B4792E2D55EE004ECAC9 /* bounds.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bounds.h; sourceTree = "<group>"; };
-		3063B47A2E2D55EE004ECAC9 /* bx.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bx.h; sourceTree = "<group>"; };
-		3063B47B2E2D55EE004ECAC9 /* commandline.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = commandline.h; sourceTree = "<group>"; };
-		3063B47C2E2D55EE004ECAC9 /* config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
-		3063B47D2E2D55EE004ECAC9 /* constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = constants.h; sourceTree = "<group>"; };
-		3063B47E2E2D55EE004ECAC9 /* cpu.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cpu.h; sourceTree = "<group>"; };
-		3063B47F2E2D55EE004ECAC9 /* debug.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = debug.h; sourceTree = "<group>"; };
-		3063B4802E2D55EE004ECAC9 /* easing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = easing.h; sourceTree = "<group>"; };
-		3063B4812E2D55EE004ECAC9 /* endian.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = endian.h; sourceTree = "<group>"; };
-		3063B4822E2D55EE004ECAC9 /* error.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = error.h; sourceTree = "<group>"; };
-		3063B4832E2D55EE004ECAC9 /* file.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = file.h; sourceTree = "<group>"; };
-		3063B4842E2D55EE004ECAC9 /* filepath.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = filepath.h; sourceTree = "<group>"; };
-		3063B4852E2D55EE004ECAC9 /* float4x4_t.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = float4x4_t.h; sourceTree = "<group>"; };
-		3063B4862E2D55EE004ECAC9 /* handlealloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = handlealloc.h; sourceTree = "<group>"; };
-		3063B4872E2D55EE004ECAC9 /* hash.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = hash.h; sourceTree = "<group>"; };
-		3063B4882E2D55EE004ECAC9 /* macros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = macros.h; sourceTree = "<group>"; };
-		3063B4892E2D55EE004ECAC9 /* math.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = math.h; sourceTree = "<group>"; };
-		3063B48A2E2D55EE004ECAC9 /* mpscqueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mpscqueue.h; sourceTree = "<group>"; };
-		3063B48B2E2D55EE004ECAC9 /* mutex.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mutex.h; sourceTree = "<group>"; };
-		3063B48C2E2D55EE004ECAC9 /* os.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = os.h; sourceTree = "<group>"; };
-		3063B48D2E2D55EE004ECAC9 /* pixelformat.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pixelformat.h; sourceTree = "<group>"; };
-		3063B48E2E2D55EE004ECAC9 /* platform.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = platform.h; sourceTree = "<group>"; };
-		3063B48F2E2D55EE004ECAC9 /* process.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = process.h; sourceTree = "<group>"; };
-		3063B4902E2D55EE004ECAC9 /* readerwriter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = readerwriter.h; sourceTree = "<group>"; };
-		3063B4912E2D55EE004ECAC9 /* ringbuffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ringbuffer.h; sourceTree = "<group>"; };
-		3063B4922E2D55EE004ECAC9 /* rng.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = rng.h; sourceTree = "<group>"; };
-		3063B4932E2D55EE004ECAC9 /* semaphore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = semaphore.h; sourceTree = "<group>"; };
-		3063B4942E2D55EE004ECAC9 /* settings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = settings.h; sourceTree = "<group>"; };
-		3063B4952E2D55EE004ECAC9 /* simd_t.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = simd_t.h; sourceTree = "<group>"; };
-		3063B4962E2D55EE004ECAC9 /* sort.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sort.h; sourceTree = "<group>"; };
-		3063B4972E2D55EE004ECAC9 /* spscqueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = spscqueue.h; sourceTree = "<group>"; };
-		3063B4982E2D55EE004ECAC9 /* string.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = string.h; sourceTree = "<group>"; };
-		3063B4992E2D55EE004ECAC9 /* thread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = thread.h; sourceTree = "<group>"; };
-		3063B49A2E2D55EE004ECAC9 /* timer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = timer.h; sourceTree = "<group>"; };
-		3063B49B2E2D55EE004ECAC9 /* typetraits.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = typetraits.h; sourceTree = "<group>"; };
-		3063B49C2E2D55EE004ECAC9 /* uint32_t.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = uint32_t.h; sourceTree = "<group>"; };
-		3063B49D2E2D55EE004ECAC9 /* url.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = url.h; sourceTree = "<group>"; };
-		3063B49F2E2D55EE004ECAC9 /* dirent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = dirent.h; sourceTree = "<group>"; };
-		3063B4A02E2D55EE004ECAC9 /* malloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = malloc.h; sourceTree = "<group>"; };
-		3063B4A12E2D55EE004ECAC9 /* signal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = signal.h; sourceTree = "<group>"; };
-		3063B4A32E2D55EE004ECAC9 /* malloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = malloc.h; sourceTree = "<group>"; };
-		3063B4A52E2D55EE004ECAC9 /* sal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sal.h; sourceTree = "<group>"; };
-		3063B4A72E2D55EE004ECAC9 /* dirent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = dirent.h; sourceTree = "<group>"; };
-		3063B4A82E2D55EE004ECAC9 /* sal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sal.h; sourceTree = "<group>"; };
-		3063B4A92E2D55EE004ECAC9 /* salieri.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = salieri.h; sourceTree = "<group>"; };
-		3063B4AA2E2D55EE004ECAC9 /* specstrings_strict.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = specstrings_strict.h; sourceTree = "<group>"; };
-		3063B4AB2E2D55EE004ECAC9 /* specstrings_undef.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = specstrings_undef.h; sourceTree = "<group>"; };
-		3063B4AD2E2D55EE004ECAC9 /* dirent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = dirent.h; sourceTree = "<group>"; };
-		3063B4AF2E2D55EE004ECAC9 /* malloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = malloc.h; sourceTree = "<group>"; };
-		3063B4B22E2D55EE004ECAC9 /* allocator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = allocator.h; sourceTree = "<group>"; };
-		3063B4B32E2D55EE004ECAC9 /* buffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = buffer.h; sourceTree = "<group>"; };
-		3063B4B42E2D55EE004ECAC9 /* hash.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = hash.h; sourceTree = "<group>"; };
-		3063B4B52E2D55EE004ECAC9 /* hash_base.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = hash_base.h; sourceTree = "<group>"; };
-		3063B4B62E2D55EE004ECAC9 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
-		3063B4B72E2D55EE004ECAC9 /* new.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = new.h; sourceTree = "<group>"; };
-		3063B4B82E2D55EE004ECAC9 /* stddef.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = stddef.h; sourceTree = "<group>"; };
-		3063B4B92E2D55EE004ECAC9 /* string.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = string.h; sourceTree = "<group>"; };
-		3063B4BA2E2D55EE004ECAC9 /* string_view.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = string_view.h; sourceTree = "<group>"; };
-		3063B4BB2E2D55EE004ECAC9 /* traits.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = traits.h; sourceTree = "<group>"; };
-		3063B4BC2E2D55EE004ECAC9 /* unordered_map.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = unordered_map.h; sourceTree = "<group>"; };
-		3063B4BD2E2D55EE004ECAC9 /* unordered_set.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = unordered_set.h; sourceTree = "<group>"; };
-		3063B4BE2E2D55EE004ECAC9 /* vector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vector.h; sourceTree = "<group>"; };
 		3063D2272E2D6187004ECAC9 /* miniaudio.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = miniaudio.m; path = MiniAudio/miniaudio.m; sourceTree = "<group>"; };
 		3063D22F2E2D6220004ECAC9 /* miniaudio.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = miniaudio.h; path = /Users/abe/Projects/Games/TombSweeper/Libraries/miniaudio/miniaudio.h; sourceTree = "<absolute>"; };
 		3063D2332E2D69EF004ECAC9 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.2.sdk/System/Library/Frameworks/AVFoundation.framework; sourceTree = DEVELOPER_DIR; };
@@ -525,16 +394,20 @@
 		3063D2502E2D6E8E004ECAC9 /* miniaudio.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = miniaudio.h; path = /Users/abe/Projects/Games/TombSweeper/Libraries/miniaudio/miniaudio.h; sourceTree = "<absolute>"; };
 		3063D25B2E2D71FE004ECAC9 /* Warlock-macOS-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Warlock-macOS-Bridging-Header.h"; sourceTree = "<group>"; };
 		3063D25C2E2D71FE004ECAC9 /* Warlock-iOS-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Warlock-iOS-Bridging-Header.h"; sourceTree = "<group>"; };
-		3063D2752E2D8D17004ECAC9 /* RogueInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = RogueInterface.h; path = /Users/abe/Projects/Games/TombSweeper/Libraries/Warlock/Libraries/Framework/ObjC/RogueInterface.h; sourceTree = "<absolute>"; };
-		3063D2762E2D8D17004ECAC9 /* RogueInterface.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = RogueInterface.mm; path = /Users/abe/Projects/Games/TombSweeper/Libraries/Warlock/Libraries/Framework/ObjC/RogueInterface.mm; sourceTree = "<absolute>"; };
-		3063D2772E2D8D17004ECAC9 /* WarlockInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = WarlockInterface.h; path = /Users/abe/Projects/Games/TombSweeper/Libraries/Warlock/Libraries/Framework/ObjC/WarlockInterface.h; sourceTree = "<absolute>"; };
-		3063D2782E2D8D17004ECAC9 /* WarlockInterface.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = WarlockInterface.mm; path = /Users/abe/Projects/Games/TombSweeper/Libraries/Warlock/Libraries/Framework/ObjC/WarlockInterface.mm; sourceTree = "<absolute>"; };
 		3084FE712E2C66B1003DBBBC /* SDL3.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL3.framework; path = "../../../../SDL-fcavmlxxzlphfmgluybaxcovnstx/Build/Products/Release-iphoneos/SDL3.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
-		308AF4D02E9AC907000BE42C /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
-		30A8CA6A2E2C626700203E31 /* Warlock-macOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Warlock-macOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3092E4842EB2CB2600FA1D75 /* Warlock-macOS-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Warlock-macOS-Info.plist"; sourceTree = "<group>"; };
+		3092E4852EB2D26500FA1D75 /* SDLDeepLinkEvent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SDLDeepLinkEvent.m; sourceTree = "<group>"; };
+		30A8CA6A2E2C626700203E31 /* Warlock.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Warlock.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		30A8CA8A2E2C656E00203E31 /* SDL.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SDL.xcodeproj; path = ../../Libraries/SDL/Xcode/SDL/SDL.xcodeproj; sourceTree = SOURCE_ROOT; };
-		30AF47D02EA30B0900F8D6B4 /* SDLViewControllerModifications.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SDLViewControllerModifications.m; sourceTree = "<group>"; };
+		30AF47C92EA3056400F8D6B4 /* SDLViewControllerModifications.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SDLViewControllerModifications.m; sourceTree = "<group>"; };
+		30BBB99E2ED0D6EC0008F0CA /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.1.sdk/System/Library/Frameworks/StoreKit.framework; sourceTree = DEVELOPER_DIR; };
 		30F185012E6BD0ED00B0061D /* Warlock-iOS-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Warlock-iOS-Info.plist"; sourceTree = "<group>"; };
+		3715D23F63860DD341C80019 /* Pods_WarlockPods_Warlock_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WarlockPods_Warlock_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6282222B0D666D5DE89835F4 /* Pods_WarlockPods_Warlock_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WarlockPods_Warlock_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		737A5A36744BAA56D1894777 /* Pods-WarlockPods-Warlock-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WarlockPods-Warlock-macOS.release.xcconfig"; path = "Target Support Files/Pods-WarlockPods-Warlock-macOS/Pods-WarlockPods-Warlock-macOS.release.xcconfig"; sourceTree = "<group>"; };
+		A0EB06497C69B6AF1576FBD7 /* Pods-WarlockPods-Warlock-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WarlockPods-Warlock-iOS.debug.xcconfig"; path = "Target Support Files/Pods-WarlockPods-Warlock-iOS/Pods-WarlockPods-Warlock-iOS.debug.xcconfig"; sourceTree = "<group>"; };
+		B0A2811E6B36F7D6027A2FEE /* Pods-WarlockPods-Warlock-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WarlockPods-Warlock-macOS.debug.xcconfig"; path = "Target Support Files/Pods-WarlockPods-Warlock-macOS/Pods-WarlockPods-Warlock-macOS.debug.xcconfig"; sourceTree = "<group>"; };
+		D6954D5A4AA485407629EB1C /* Pods-WarlockPods-Warlock-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WarlockPods-Warlock-iOS.release.xcconfig"; path = "Target Support Files/Pods-WarlockPods-Warlock-iOS/Pods-WarlockPods-Warlock-iOS.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -571,17 +444,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				3021A9AA2E2DC98C002E6394 /* UIKit.framework in Frameworks */,
+				30BBB99F2ED0D6EC0008F0CA /* StoreKit.framework in Frameworks */,
 				3021A62F2E2D902F002E6394 /* libUtilities-iOS.a in Frameworks */,
-				3063D2562E2D6F15004ECAC9 /* libMiniAudio-iOS.a in Frameworks */,
 				3063D2572E2D6F15004ECAC9 /* libSpine-iOS.a in Frameworks */,
-				3021A64B2E2D9162002E6394 /* libbimg_decodeRelease.a in Frameworks */,
-				3021A64C2E2D9162002E6394 /* libbgfxRelease.a in Frameworks */,
-				3021A64D2E2D9162002E6394 /* libbxRelease.a in Frameworks */,
-				3021A64E2E2D9162002E6394 /* libbimgRelease.a in Frameworks */,
 				3063D2362E2D6A70004ECAC9 /* Foundation.framework in Frameworks */,
-				3063D2342E2D69EF004ECAC9 /* AVFoundation.framework in Frameworks */,
 				306399682E2D5385004ECAC9 /* libTess2-iOS.a in Frameworks */,
 				306399612E2D5362004ECAC9 /* SDL3.framework in Frameworks */,
+				3ECEB00B80F164FAC165B710 /* Pods_WarlockPods_Warlock_iOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -622,18 +491,10 @@
 				3021A6672E2D9386002E6394 /* Metal.framework in Frameworks */,
 				3021A6302E2D9036002E6394 /* libUtilities-macOS.a in Frameworks */,
 				3063D2532E2D6F0B004ECAC9 /* libMiniAudio-macOS.a in Frameworks */,
-				3021A65C2E2D934C002E6394 /* libspirv-optRelease.a in Frameworks */,
-				3021A65D2E2D934C002E6394 /* libfcppRelease.a in Frameworks */,
-				3021A65E2E2D934C002E6394 /* libspirv-crossRelease.a in Frameworks */,
-				3021A65F2E2D934C002E6394 /* libglslangRelease.a in Frameworks */,
-				3021A6602E2D934C002E6394 /* libbxRelease.a in Frameworks */,
-				3021A6612E2D934C002E6394 /* libglsl-optimizerRelease.a in Frameworks */,
-				3021A6632E2D934C002E6394 /* libbimg_decodeRelease.a in Frameworks */,
-				3021A6642E2D934C002E6394 /* libbgfxRelease.a in Frameworks */,
-				3021A6652E2D934C002E6394 /* libbimgRelease.a in Frameworks */,
 				3063D2542E2D6F0B004ECAC9 /* libSpine-macOS.a in Frameworks */,
 				3063995C2E2D529A004ECAC9 /* libTess2-macOS.a in Frameworks */,
 				3084FE722E2C66B1003DBBBC /* SDL3.framework in Frameworks */,
+				26C9488E87BD53251DA278EC /* Pods_WarlockPods_Warlock_macOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -662,7 +523,8 @@
 		3021A6742E2D9429002E6394 /* Warlock */ = {
 			isa = PBXGroup;
 			children = (
-				30AF47D02EA30B0900F8D6B4 /* SDLViewControllerModifications.m */,
+				3092E4852EB2D26500FA1D75 /* SDLDeepLinkEvent.m */,
+				30AF47C92EA3056400F8D6B4 /* SDLViewControllerModifications.m */,
 				3021A6812E2D943F002E6394 /* iOS */,
 				3021A6822E2D9449002E6394 /* macOS */,
 				3021A66D2E2D9429002E6394 /* Preview Content */,
@@ -731,6 +593,10 @@
 		3063995A2E2D5294004ECAC9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3046FDD82F0186BB00E5FB74 /* FBSDKLoginKit.xcframework */,
+				3046FDD62F0186AC00E5FB74 /* FBSDKCoreKit_Basics.xcframework */,
+				3046FDD42F01868800E5FB74 /* FBSDKCoreKit.xcframework */,
+				30BBB99E2ED0D6EC0008F0CA /* StoreKit.framework */,
 				3021A9A92E2DC98C002E6394 /* UIKit.framework */,
 				3021A66A2E2D93E7002E6394 /* QuartzCore.framework */,
 				3021A6682E2D93C0002E6394 /* AppKit.framework */,
@@ -739,6 +605,8 @@
 				3063D2272E2D6187004ECAC9 /* miniaudio.m */,
 				3063D2352E2D6A70004ECAC9 /* Foundation.framework */,
 				3063D2332E2D69EF004ECAC9 /* AVFoundation.framework */,
+				6282222B0D666D5DE89835F4 /* Pods_WarlockPods_Warlock_iOS.framework */,
+				3715D23F63860DD341C80019 /* Pods_WarlockPods_Warlock_macOS.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -872,323 +740,6 @@
 			path = "/Users/abe/Projects/Games/TombSweeper/Libraries/spine-runtimes/spine-c/spine-c";
 			sourceTree = "<absolute>";
 		};
-		30639A7A2E2D55EE004ECAC9 /* bin */ = {
-			isa = PBXGroup;
-			children = (
-				30639A762E2D55EE004ECAC9 /* libbgfxRelease.a */,
-				30639A772E2D55EE004ECAC9 /* libbimg_decodeRelease.a */,
-				30639A782E2D55EE004ECAC9 /* libbimgRelease.a */,
-				30639A792E2D55EE004ECAC9 /* libbxRelease.a */,
-			);
-			path = bin;
-			sourceTree = "<group>";
-		};
-		30639B192E2D55EE004ECAC9 /* ios-arm64 */ = {
-			isa = PBXGroup;
-			children = (
-				30639A7A2E2D55EE004ECAC9 /* bin */,
-			);
-			path = "ios-arm64";
-			sourceTree = "<group>";
-		};
-		30639B3C2E2D55EE004ECAC9 /* bin */ = {
-			isa = PBXGroup;
-			children = (
-				30639B1F2E2D55EE004ECAC9 /* libbgfxRelease.a */,
-				30639B212E2D55EE004ECAC9 /* libbimg_decodeRelease.a */,
-				30639B252E2D55EE004ECAC9 /* libbimgRelease.a */,
-				30639B272E2D55EE004ECAC9 /* libbxRelease.a */,
-				30639B2D2E2D55EE004ECAC9 /* libfcppRelease.a */,
-				30639B2F2E2D55EE004ECAC9 /* libglsl-optimizerRelease.a */,
-				30639B312E2D55EE004ECAC9 /* libglslangRelease.a */,
-				30639B332E2D55EE004ECAC9 /* libspirv-crossRelease.a */,
-				30639B352E2D55EE004ECAC9 /* libspirv-optRelease.a */,
-			);
-			path = bin;
-			sourceTree = "<group>";
-		};
-		3063A52C2E2D55EE004ECAC9 /* osx-arm64 */ = {
-			isa = PBXGroup;
-			children = (
-				30639B3C2E2D55EE004ECAC9 /* bin */,
-			);
-			path = "osx-arm64";
-			sourceTree = "<group>";
-		};
-		3063A55A2E2D55EE004ECAC9 /* .build */ = {
-			isa = PBXGroup;
-			children = (
-				30639B192E2D55EE004ECAC9 /* ios-arm64 */,
-				3063A52C2E2D55EE004ECAC9 /* osx-arm64 */,
-			);
-			path = .build;
-			sourceTree = "<group>";
-		};
-		3063B2B72E2D55EE004ECAC9 /* c99 */ = {
-			isa = PBXGroup;
-			children = (
-				3063B2B62E2D55EE004ECAC9 /* bgfx.h */,
-			);
-			path = c99;
-			sourceTree = "<group>";
-		};
-		3063B2BC2E2D55EE004ECAC9 /* bgfx */ = {
-			isa = PBXGroup;
-			children = (
-				3063B2B72E2D55EE004ECAC9 /* c99 */,
-				3063B2B82E2D55EE004ECAC9 /* bgfx.h */,
-				3063B2B92E2D55EE004ECAC9 /* defines.h */,
-				3063B2BA2E2D55EE004ECAC9 /* embedded_shader.h */,
-				3063B2BB2E2D55EE004ECAC9 /* platform.h */,
-			);
-			path = bgfx;
-			sourceTree = "<group>";
-		};
-		3063B2BD2E2D55EE004ECAC9 /* include */ = {
-			isa = PBXGroup;
-			children = (
-				3063B2BC2E2D55EE004ECAC9 /* bgfx */,
-			);
-			path = include;
-			sourceTree = "<group>";
-		};
-		3063B3642E2D55EE004ECAC9 /* bgfx */ = {
-			isa = PBXGroup;
-			children = (
-				3063A55A2E2D55EE004ECAC9 /* .build */,
-				3063B2BD2E2D55EE004ECAC9 /* include */,
-			);
-			name = bgfx;
-			path = /Users/abe/Projects/Games/TombSweeper/Libraries/bgfx;
-			sourceTree = "<absolute>";
-		};
-		3063B42C2E2D55EE004ECAC9 /* bimg */ = {
-			isa = PBXGroup;
-			children = (
-				3063B4292E2D55EE004ECAC9 /* bimg.h */,
-				3063B42A2E2D55EE004ECAC9 /* decode.h */,
-				3063B42B2E2D55EE004ECAC9 /* encode.h */,
-			);
-			path = bimg;
-			sourceTree = "<group>";
-		};
-		3063B42D2E2D55EE004ECAC9 /* include */ = {
-			isa = PBXGroup;
-			children = (
-				3063B42C2E2D55EE004ECAC9 /* bimg */,
-			);
-			path = include;
-			sourceTree = "<group>";
-		};
-		3063B44B2E2D55EE004ECAC9 /* bimg */ = {
-			isa = PBXGroup;
-			children = (
-				3063B42D2E2D55EE004ECAC9 /* include */,
-			);
-			name = bimg;
-			path = /Users/abe/Projects/Games/TombSweeper/Libraries/bimg;
-			sourceTree = "<absolute>";
-		};
-		3063B4772E2D55EE004ECAC9 /* inline */ = {
-			isa = PBXGroup;
-			children = (
-				3063B4582E2D55EE004ECAC9 /* allocator.inl */,
-				3063B4592E2D55EE004ECAC9 /* bounds.inl */,
-				3063B45A2E2D55EE004ECAC9 /* bx.inl */,
-				3063B45B2E2D55EE004ECAC9 /* cpu.inl */,
-				3063B45C2E2D55EE004ECAC9 /* easing.inl */,
-				3063B45D2E2D55EE004ECAC9 /* endian.inl */,
-				3063B45E2E2D55EE004ECAC9 /* error.inl */,
-				3063B45F2E2D55EE004ECAC9 /* float4x4_t.inl */,
-				3063B4602E2D55EE004ECAC9 /* handlealloc.inl */,
-				3063B4612E2D55EE004ECAC9 /* hash.inl */,
-				3063B4622E2D55EE004ECAC9 /* math.inl */,
-				3063B4632E2D55EE004ECAC9 /* mpscqueue.inl */,
-				3063B4642E2D55EE004ECAC9 /* mutex.inl */,
-				3063B4652E2D55EE004ECAC9 /* os.inl */,
-				3063B4662E2D55EE004ECAC9 /* pixelformat.inl */,
-				3063B4672E2D55EE004ECAC9 /* readerwriter.inl */,
-				3063B4682E2D55EE004ECAC9 /* ringbuffer.inl */,
-				3063B4692E2D55EE004ECAC9 /* rng.inl */,
-				3063B46A2E2D55EE004ECAC9 /* simd_ni.inl */,
-				3063B46B2E2D55EE004ECAC9 /* simd128_langext.inl */,
-				3063B46C2E2D55EE004ECAC9 /* simd128_neon.inl */,
-				3063B46D2E2D55EE004ECAC9 /* simd128_ref.inl */,
-				3063B46E2E2D55EE004ECAC9 /* simd128_sse.inl */,
-				3063B46F2E2D55EE004ECAC9 /* simd128_swizzle.inl */,
-				3063B4702E2D55EE004ECAC9 /* simd256_avx.inl */,
-				3063B4712E2D55EE004ECAC9 /* simd256_ref.inl */,
-				3063B4722E2D55EE004ECAC9 /* sort.inl */,
-				3063B4732E2D55EE004ECAC9 /* spscqueue.inl */,
-				3063B4742E2D55EE004ECAC9 /* string.inl */,
-				3063B4752E2D55EE004ECAC9 /* typetraits.inl */,
-				3063B4762E2D55EE004ECAC9 /* uint32_t.inl */,
-			);
-			path = inline;
-			sourceTree = "<group>";
-		};
-		3063B49E2E2D55EE004ECAC9 /* bx */ = {
-			isa = PBXGroup;
-			children = (
-				3063B4772E2D55EE004ECAC9 /* inline */,
-				3063B4782E2D55EE004ECAC9 /* allocator.h */,
-				3063B4792E2D55EE004ECAC9 /* bounds.h */,
-				3063B47A2E2D55EE004ECAC9 /* bx.h */,
-				3063B47B2E2D55EE004ECAC9 /* commandline.h */,
-				3063B47C2E2D55EE004ECAC9 /* config.h */,
-				3063B47D2E2D55EE004ECAC9 /* constants.h */,
-				3063B47E2E2D55EE004ECAC9 /* cpu.h */,
-				3063B47F2E2D55EE004ECAC9 /* debug.h */,
-				3063B4802E2D55EE004ECAC9 /* easing.h */,
-				3063B4812E2D55EE004ECAC9 /* endian.h */,
-				3063B4822E2D55EE004ECAC9 /* error.h */,
-				3063B4832E2D55EE004ECAC9 /* file.h */,
-				3063B4842E2D55EE004ECAC9 /* filepath.h */,
-				3063B4852E2D55EE004ECAC9 /* float4x4_t.h */,
-				3063B4862E2D55EE004ECAC9 /* handlealloc.h */,
-				3063B4872E2D55EE004ECAC9 /* hash.h */,
-				3063B4882E2D55EE004ECAC9 /* macros.h */,
-				3063B4892E2D55EE004ECAC9 /* math.h */,
-				3063B48A2E2D55EE004ECAC9 /* mpscqueue.h */,
-				3063B48B2E2D55EE004ECAC9 /* mutex.h */,
-				3063B48C2E2D55EE004ECAC9 /* os.h */,
-				3063B48D2E2D55EE004ECAC9 /* pixelformat.h */,
-				3063B48E2E2D55EE004ECAC9 /* platform.h */,
-				3063B48F2E2D55EE004ECAC9 /* process.h */,
-				3063B4902E2D55EE004ECAC9 /* readerwriter.h */,
-				3063B4912E2D55EE004ECAC9 /* ringbuffer.h */,
-				3063B4922E2D55EE004ECAC9 /* rng.h */,
-				3063B4932E2D55EE004ECAC9 /* semaphore.h */,
-				3063B4942E2D55EE004ECAC9 /* settings.h */,
-				3063B4952E2D55EE004ECAC9 /* simd_t.h */,
-				3063B4962E2D55EE004ECAC9 /* sort.h */,
-				3063B4972E2D55EE004ECAC9 /* spscqueue.h */,
-				3063B4982E2D55EE004ECAC9 /* string.h */,
-				3063B4992E2D55EE004ECAC9 /* thread.h */,
-				3063B49A2E2D55EE004ECAC9 /* timer.h */,
-				3063B49B2E2D55EE004ECAC9 /* typetraits.h */,
-				3063B49C2E2D55EE004ECAC9 /* uint32_t.h */,
-				3063B49D2E2D55EE004ECAC9 /* url.h */,
-			);
-			path = bx;
-			sourceTree = "<group>";
-		};
-		3063B4A22E2D55EE004ECAC9 /* freebsd */ = {
-			isa = PBXGroup;
-			children = (
-				3063B49F2E2D55EE004ECAC9 /* dirent.h */,
-				3063B4A02E2D55EE004ECAC9 /* malloc.h */,
-				3063B4A12E2D55EE004ECAC9 /* signal.h */,
-			);
-			path = freebsd;
-			sourceTree = "<group>";
-		};
-		3063B4A42E2D55EE004ECAC9 /* ios */ = {
-			isa = PBXGroup;
-			children = (
-				3063B4A32E2D55EE004ECAC9 /* malloc.h */,
-			);
-			path = ios;
-			sourceTree = "<group>";
-		};
-		3063B4A62E2D55EE004ECAC9 /* linux */ = {
-			isa = PBXGroup;
-			children = (
-				3063B4A52E2D55EE004ECAC9 /* sal.h */,
-			);
-			path = linux;
-			sourceTree = "<group>";
-		};
-		3063B4AC2E2D55EE004ECAC9 /* mingw */ = {
-			isa = PBXGroup;
-			children = (
-				3063B4A72E2D55EE004ECAC9 /* dirent.h */,
-				3063B4A82E2D55EE004ECAC9 /* sal.h */,
-				3063B4A92E2D55EE004ECAC9 /* salieri.h */,
-				3063B4AA2E2D55EE004ECAC9 /* specstrings_strict.h */,
-				3063B4AB2E2D55EE004ECAC9 /* specstrings_undef.h */,
-			);
-			path = mingw;
-			sourceTree = "<group>";
-		};
-		3063B4AE2E2D55EE004ECAC9 /* msvc */ = {
-			isa = PBXGroup;
-			children = (
-				3063B4AD2E2D55EE004ECAC9 /* dirent.h */,
-			);
-			path = msvc;
-			sourceTree = "<group>";
-		};
-		3063B4B02E2D55EE004ECAC9 /* osx */ = {
-			isa = PBXGroup;
-			children = (
-				3063B4AF2E2D55EE004ECAC9 /* malloc.h */,
-			);
-			path = osx;
-			sourceTree = "<group>";
-		};
-		3063B4B12E2D55EE004ECAC9 /* compat */ = {
-			isa = PBXGroup;
-			children = (
-				3063B4A22E2D55EE004ECAC9 /* freebsd */,
-				3063B4A42E2D55EE004ECAC9 /* ios */,
-				3063B4A62E2D55EE004ECAC9 /* linux */,
-				3063B4AC2E2D55EE004ECAC9 /* mingw */,
-				3063B4AE2E2D55EE004ECAC9 /* msvc */,
-				3063B4B02E2D55EE004ECAC9 /* osx */,
-			);
-			path = compat;
-			sourceTree = "<group>";
-		};
-		3063B4BF2E2D55EE004ECAC9 /* tinystl */ = {
-			isa = PBXGroup;
-			children = (
-				3063B4B22E2D55EE004ECAC9 /* allocator.h */,
-				3063B4B32E2D55EE004ECAC9 /* buffer.h */,
-				3063B4B42E2D55EE004ECAC9 /* hash.h */,
-				3063B4B52E2D55EE004ECAC9 /* hash_base.h */,
-				3063B4B62E2D55EE004ECAC9 /* LICENSE */,
-				3063B4B72E2D55EE004ECAC9 /* new.h */,
-				3063B4B82E2D55EE004ECAC9 /* stddef.h */,
-				3063B4B92E2D55EE004ECAC9 /* string.h */,
-				3063B4BA2E2D55EE004ECAC9 /* string_view.h */,
-				3063B4BB2E2D55EE004ECAC9 /* traits.h */,
-				3063B4BC2E2D55EE004ECAC9 /* unordered_map.h */,
-				3063B4BD2E2D55EE004ECAC9 /* unordered_set.h */,
-				3063B4BE2E2D55EE004ECAC9 /* vector.h */,
-			);
-			path = tinystl;
-			sourceTree = "<group>";
-		};
-		3063B4C02E2D55EE004ECAC9 /* include */ = {
-			isa = PBXGroup;
-			children = (
-				3063B49E2E2D55EE004ECAC9 /* bx */,
-				3063B4B12E2D55EE004ECAC9 /* compat */,
-				3063B4BF2E2D55EE004ECAC9 /* tinystl */,
-			);
-			path = include;
-			sourceTree = "<group>";
-		};
-		3063B5232E2D55EE004ECAC9 /* bx */ = {
-			isa = PBXGroup;
-			children = (
-				3063B4C02E2D55EE004ECAC9 /* include */,
-			);
-			name = bx;
-			path = /Users/abe/Projects/Games/TombSweeper/Libraries/bx;
-			sourceTree = "<absolute>";
-		};
-		3063D2172E2D5E4A004ECAC9 /* BGFX */ = {
-			isa = PBXGroup;
-			children = (
-				3063B3642E2D55EE004ECAC9 /* bgfx */,
-				3063B44B2E2D55EE004ECAC9 /* bimg */,
-				3063B5232E2D55EE004ECAC9 /* bx */,
-			);
-			path = BGFX;
-			sourceTree = "<group>";
-		};
 		3063D2282E2D6187004ECAC9 /* MiniAudio */ = {
 			isa = PBXGroup;
 			children = (
@@ -1198,30 +749,14 @@
 			path = MiniAudio;
 			sourceTree = "<group>";
 		};
-		3063D25D2E2D8ABD004ECAC9 /* Rogue */ = {
-			isa = PBXGroup;
-			children = (
-				3021A8CC2E2DBA21002E6394 /* RogueProgram-macOS.h */,
-				3021A8CD2E2DBA21002E6394 /* RogueProgram-macOS.mm */,
-				3021A8C92E2DB9FE002E6394 /* RogueProgram-iOS.h */,
-				3021A8CA2E2DB9FE002E6394 /* RogueProgram-iOS.mm */,
-				3063D2752E2D8D17004ECAC9 /* RogueInterface.h */,
-				3063D2762E2D8D17004ECAC9 /* RogueInterface.mm */,
-				3063D2772E2D8D17004ECAC9 /* WarlockInterface.h */,
-				3063D2782E2D8D17004ECAC9 /* WarlockInterface.mm */,
-			);
-			path = Rogue;
-			sourceTree = "<group>";
-		};
 		30A8CA612E2C626700203E31 = {
 			isa = PBXGroup;
 			children = (
-				308AF4D02E9AC907000BE42C /* Localizable.strings */,
+				3092E4842EB2CB2600FA1D75 /* Warlock-macOS-Info.plist */,
+				300BADD22E8383B4008E8531 /* Localizable.strings */,
 				30F185012E6BD0ED00B0061D /* Warlock-iOS-Info.plist */,
 				3021A6742E2D9429002E6394 /* Warlock */,
-				3063D25D2E2D8ABD004ECAC9 /* Rogue */,
 				3021A6252E2D8FEE002E6394 /* Utilities */,
-				3063D2172E2D5E4A004ECAC9 /* BGFX */,
 				306399DC2E2D54C5004ECAC9 /* spine-c */,
 				3063991B2E2D0E69004ECAC9 /* libtess2 */,
 				30A8CA8A2E2C656E00203E31 /* SDL.xcodeproj */,
@@ -1238,7 +773,7 @@
 		30A8CA6B2E2C626700203E31 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				30A8CA6A2E2C626700203E31 /* Warlock-macOS.app */,
+				30A8CA6A2E2C626700203E31 /* Warlock.app */,
 				306398EB2E2D0E3E004ECAC9 /* libTess2-iOS.a */,
 				306399392E2D113C004ECAC9 /* libTess2-macOS.a */,
 				306399662E2D5362004ECAC9 /* Warlock-iOS.app */,
@@ -1263,6 +798,10 @@
 		9BC9047E7149F705EAFA5FC1 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
+				A0EB06497C69B6AF1576FBD7 /* Pods-WarlockPods-Warlock-iOS.debug.xcconfig */,
+				D6954D5A4AA485407629EB1C /* Pods-WarlockPods-Warlock-iOS.release.xcconfig */,
+				B0A2811E6B36F7D6027A2FEE /* Pods-WarlockPods-Warlock-macOS.debug.xcconfig */,
+				737A5A36744BAA56D1894777 /* Pods-WarlockPods-Warlock-macOS.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -1424,6 +963,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 306399632E2D5362004ECAC9 /* Build configuration list for PBXNativeTarget "Warlock-iOS" */;
 			buildPhases = (
+				3E1D2FA59DDCD28FD37416B6 /* [CP] Check Pods Manifest.lock */,
 				3021A9B72E32D2DB002E6394 /* Compile Rogue */,
 				3063995E2E2D5362004ECAC9 /* Sources */,
 				3063995F2E2D5362004ECAC9 /* Frameworks */,
@@ -1511,6 +1051,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 30A8CA792E2C626800203E31 /* Build configuration list for PBXNativeTarget "Warlock-macOS" */;
 			buildPhases = (
+				DC526C14766AA58C9B31A3DE /* [CP] Check Pods Manifest.lock */,
 				3021A9B02E32D1F7002E6394 /* Compile Rogue */,
 				30A8CA662E2C626700203E31 /* Sources */,
 				30A8CA672E2C626700203E31 /* Frameworks */,
@@ -1522,7 +1063,7 @@
 			);
 			name = "Warlock-macOS";
 			productName = Warlock;
-			productReference = 30A8CA6A2E2C626700203E31 /* Warlock-macOS.app */;
+			productReference = 30A8CA6A2E2C626700203E31 /* Warlock.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -1624,7 +1165,7 @@
 			files = (
 				3021A9912E2DBE0E002E6394 /* Assets in Resources */,
 				3001F8482E8EC41D00E356BF /* Assets.xcassets in Resources */,
-				308AF4D22E9AC907000BE42C /* Localizable.strings in Resources */,
+				300BADD52E8383B4008E8531 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1633,7 +1174,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3021A6782E2D9429002E6394 /* Preview Assets.xcassets in Resources */,
-				308AF4D12E9AC907000BE42C /* Localizable.strings in Resources */,
+				300BADD42E8383B4008E8531 /* Localizable.strings in Resources */,
 				3021A67A2E2D9429002E6394 /* Assets.xcassets in Resources */,
 				3021A8C52E2D97B9002E6394 /* Assets in Resources */,
 			);
@@ -1679,6 +1220,50 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "cd ../..\nenv -i PATH=/opt/morlock/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin HOME=$HOME IDE=true rogo ios\n";
+		};
+		3E1D2FA59DDCD28FD37416B6 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-WarlockPods-Warlock-iOS-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		DC526C14766AA58C9B31A3DE /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-WarlockPods-Warlock-macOS-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1731,12 +1316,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3021A9B52E32D2AB002E6394 /* RogueProgram-iOS.mm in Sources */,
 				3063D2312E2D67FB004ECAC9 /* miniaudio.m in Sources */,
-				30AF47D12EA30B0900F8D6B4 /* SDLViewControllerModifications.m in Sources */,
-				3021A9B22E32D279002E6394 /* RogueInterface.mm in Sources */,
+				30AF47CB2EA3056400F8D6B4 /* SDLViewControllerModifications.m in Sources */,
 				3021A67F2E2D9429002E6394 /* Main.mm in Sources */,
-				3021A9B42E32D28B002E6394 /* WarlockInterface.mm in Sources */,
+				3092E4862EB2D26F00FA1D75 /* SDLDeepLinkEvent.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1859,14 +1442,23 @@
 			buildActionMask = 2147483647;
 			files = (
 				3063D2322E2D67FB004ECAC9 /* miniaudio.m in Sources */,
-				3021A9B12E32D279002E6394 /* RogueInterface.mm in Sources */,
 				3021A6762E2D9429002E6394 /* Main.mm in Sources */,
-				3021A9B32E32D28B002E6394 /* WarlockInterface.mm in Sources */,
-				3021A9B62E32D2BD002E6394 /* RogueProgram-macOS.mm in Sources */,
+				3092E4872EB2D26F00FA1D75 /* SDLDeepLinkEvent.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		300BADD22E8383B4008E8531 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				300BADD32E8383B4008E8531 /* en */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		3021A6112E2D8FA5002E6394 /* Debug */ = {
@@ -2002,19 +1594,42 @@
 		};
 		306399642E2D5362004ECAC9 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A0EB06497C69B6AF1576FBD7 /* Pods-WarlockPods-Warlock-iOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Warlock/Warlock.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_ASSET_PATHS = "\"Warlock/Preview Content\"";
-				DEVELOPMENT_TEAM = AFP6SAXN8A;
+				DEVELOPMENT_TEAM = 2289R74T57;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AppAuth-iOS\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AppCheckCore\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/BackendlessSwift-iOS\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GTMAppAuth\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GTMSessionFetcher\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Google-Mobile-Ads-SDK\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GoogleSignIn\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GoogleUtilities\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/PromisesObjC\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Socket.IO-Client-Swift-iOS\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Starscream-iOS\"",
+					"\"${PODS_ROOT}/Google-Mobile-Ads-SDK/Frameworks/GoogleMobileAdsFramework\"",
+					"\"${PODS_ROOT}/GoogleUserMessagingPlatform/Frameworks/Release\"",
+					"\"${PODS_XCFRAMEWORKS_BUILD_DIR}/Google-Mobile-Ads-SDK\"",
+					"\"${PODS_XCFRAMEWORKS_BUILD_DIR}/GoogleUserMessagingPlatform\"",
+				);
 				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+				);
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = (
 					../../Libraries/miniaudio,
@@ -2026,6 +1641,8 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = "Warlock-iOS-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = Warlock;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.puzzle-games";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -2056,14 +1673,15 @@
 					"$(inherited)",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.6;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.runegate.Warlock;
+				MARKETING_VERSION = 1.2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.perilousquest.warlock;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Warlock-iOS-Bridging-Header.h";
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "$(TARGET_NAME)-Swift.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2073,18 +1691,41 @@
 		};
 		306399652E2D5362004ECAC9 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D6954D5A4AA485407629EB1C /* Pods-WarlockPods-Warlock-iOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Warlock/Warlock.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_ASSET_PATHS = "\"Warlock/Preview Content\"";
-				DEVELOPMENT_TEAM = AFP6SAXN8A;
+				DEVELOPMENT_TEAM = 2289R74T57;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AppAuth-iOS\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AppCheckCore\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/BackendlessSwift-iOS\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GTMAppAuth\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GTMSessionFetcher\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Google-Mobile-Ads-SDK\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GoogleSignIn\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GoogleUtilities\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/PromisesObjC\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Socket.IO-Client-Swift-iOS\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Starscream-iOS\"",
+					"\"${PODS_ROOT}/Google-Mobile-Ads-SDK/Frameworks/GoogleMobileAdsFramework\"",
+					"\"${PODS_ROOT}/GoogleUserMessagingPlatform/Frameworks/Release\"",
+					"\"${PODS_XCFRAMEWORKS_BUILD_DIR}/Google-Mobile-Ads-SDK\"",
+					"\"${PODS_XCFRAMEWORKS_BUILD_DIR}/GoogleUserMessagingPlatform\"",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+				);
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = (
 					../../Libraries/miniaudio,
@@ -2096,6 +1737,8 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = "Warlock-iOS-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = Warlock;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.puzzle-games";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -2126,16 +1769,18 @@
 					"$(inherited)",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.6;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.runegate.Warlock;
+				MARKETING_VERSION = 1.2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.perilousquest.warlock;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Warlock-iOS-Bridging-Header.h";
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "$(TARGET_NAME)-Swift.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
 				XROS_DEPLOYMENT_TARGET = 2.2;
 			};
 			name = Release;
@@ -2380,20 +2025,25 @@
 		};
 		30A8CA7A2E2C626800203E31 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B0A2811E6B36F7D6027A2FEE /* Pods-WarlockPods-Warlock-macOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Warlock/Warlock.entitlements;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Warlock/Preview Content\"";
-				DEVELOPMENT_TEAM = AFP6SAXN8A;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+				);
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = (
 					../../Libraries/miniaudio,
@@ -2403,6 +2053,9 @@
 					"../../Libraries/spine-runtimes/spine-c/spine-c/include",
 					"$(inherited)",
 				);
+				INFOPLIST_FILE = "Warlock-macOS-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = Warlock;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.games";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -2428,14 +2081,16 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.runegate.Warlock;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.perilousquest.warlock;
+				PRODUCT_NAME = Warlock;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = macosx;
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_INCLUDE_PATHS = "$(inherited) \"${PODS_CONFIGURATION_BUILD_DIR}/BackendlessSwift-macOS\"";
 				SWIFT_OBJC_BRIDGING_HEADER = "Warlock-macOS-Bridging-Header.h";
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "$(TARGET_NAME)-Swift.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				XROS_DEPLOYMENT_TARGET = 2.2;
@@ -2444,19 +2099,24 @@
 		};
 		30A8CA7B2E2C626800203E31 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 737A5A36744BAA56D1894777 /* Pods-WarlockPods-Warlock-macOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Warlock/Warlock.entitlements;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Warlock/Preview Content\"";
-				DEVELOPMENT_TEAM = AFP6SAXN8A;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+				);
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = (
 					../../Libraries/miniaudio,
@@ -2466,6 +2126,9 @@
 					"../../Libraries/spine-runtimes/spine-c/spine-c/include",
 					"$(inherited)",
 				);
+				INFOPLIST_FILE = "Warlock-macOS-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = Warlock;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.games";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -2491,14 +2154,16 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.runegate.Warlock;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.perilousquest.warlock;
+				PRODUCT_NAME = Warlock;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = macosx;
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_INCLUDE_PATHS = "$(inherited) \"${PODS_CONFIGURATION_BUILD_DIR}/BackendlessSwift-macOS\"";
 				SWIFT_OBJC_BRIDGING_HEADER = "Warlock-macOS-Bridging-Header.h";
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "$(TARGET_NAME)-Swift.h";
 				SWIFT_VERSION = 5.0;
 				XROS_DEPLOYMENT_TARGET = 2.2;
 			};

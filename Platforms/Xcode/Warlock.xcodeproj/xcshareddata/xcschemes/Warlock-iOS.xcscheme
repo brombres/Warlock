@@ -74,6 +74,7 @@
    </AnalyzeAction>
    <ArchiveAction
       buildConfiguration = "Release"
+      customArchiveName = "TombSweeper-iOS"
       revealArchiveInOrganizer = "YES">
    </ArchiveAction>
 </Scheme>
