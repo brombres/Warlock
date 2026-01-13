@@ -1,0 +1,530 @@
+# To run this build file, install Rogue from github.com/brombres/Rogue then cd
+# to this folder and type "rogo" at the command line, or "rogo help" for a list
+# of supported commands.
+
+$requireRogue "2.34.3"
+
+#$ DEPENDENCIES = Libraries/Warlock/BuildWarlock.rogue
+
+$define DEFAULT_WARLOCK "https://github.com/brombres/Warlock.git#develop"
+
+uses Utility/GitRepo
+
+augment Build
+  PROPERTIES
+    platform_lookup = [String:String]{
+      "android" : "Android",
+      "and"     : "Android",
+      "ios"     : "iOS",
+      "linux"   : "Linux",
+      "macos"   : "macOS",
+      "windows" : "Windows"
+    }
+
+  METHODS
+    method resolve_platform( name:String )->String
+      if (String.exists(name))
+        if local platform = platform_lookup[ name.to_lowercase ]
+          return platform
+        else
+          throw Error( "Unsupported platform '$'."(name) )
+        endIf
+      else
+        return System.os
+      endIf
+
+    method resolve_platform( args:String[] )->String
+      forEach (arg in args)
+        local platform = platform_lookup[arg.to_lowercase]
+        if (platform)
+          args.remove( arg )
+          return platform
+        endIf
+      endForEach
+      return System.os
+
+endAugment
+
+routine rogo_default
+  rogo_deps
+  rogo_help
+endRoutine
+
+routine rogo_deps( platform=null:String )
+  platform = Build.resolve_platform( platform )
+
+  if (not File("Libraries/Warlock").exists)
+    rogo_update
+    rogo_update_buildcore( &!exit )
+    banner "Warlock library installed. Re-run 'rogo' to continue installation."
+    System.exit
+  endIf
+endRoutine
+
+routine rogo_update_buildcore
+  local current_buildfile = File( "BuildCore.rogue" )
+  local newest_buildfile  = File( "Libraries/Warlock/BuildCore.rogue" )
+  if (newest_buildfile.exists and newest_buildfile.is_different_than(current_buildfile))
+    newest_buildfile.copy_to( current_buildfile, &verbose )
+  endIf
+
+endRoutine
+
+routine rogo_update
+  if (not File("Libraries/Warlock").exists)
+    banner "Warlock library does not exist at Libraries/Warlock"
+    rogo_install_warlock
+
+  else
+    #{
+    if (not Process.run("cd Libraries/Plasmacore && git diff-index --quiet HEAD",&env).exit_code and
+        not Process.run("cd Libraries/Plasmacore && git rev-list @{u}..",&env).exit_code)
+      # Plasmacore folder is clean & up to date with remote. Pull any changes.
+      println "Pulling changes to Libraries/Plasmacore"
+      local cmd = "cd Libraries/Plasmacore && git pull"
+      println "> " + cmd
+      local result = Process.run( cmd, &env )
+      println result->String
+      if (result.exit_code)
+        error_exit "Unable to pull changes to Libraries/Plasmacore"
+      endIf
+    else
+      println "=" * Console.width.or_smaller(80)
+      println "WARNING"
+      local mesg = "Plasmacore repo has local changes. Aborting update."
+      mesg = mesg.word_wrapped((Console.width-2).or_smaller(78)).indented(2)
+      println mesg
+      println "=" * Console.width.or_smaller(80)
+      System.exit 1
+    endIf
+    }#
+
+    rogo_update_buildcore
+
+  endIf
+
+  #{
+  local version_filepath = "Libraries/Rogue/Plasmacore/PlasmacoreVersion.rogue"
+  if (File(version_filepath).exists)
+    throw Error( "The Plasmacore repo cannot update itself. Aborting." )
+  endIf
+
+  local repo_v = plasmacore_version
+  local installed_v = ProjectSettings//PLASMACORE_VERSION
+  if (repo_v != installed_v)
+    ProjectSettings//PLASMACORE_VERSION = repo_v
+    if (String.exists(installed_v))
+      println "Updating Plasmacore library v$ -> v$" (installed_v,repo_v)
+    else
+      println "Configuring project with Plasmacore library v$" (repo_v)
+    endIf
+  endIf
+
+  # Copy over any new BuildCore.rogue and then relaunch to complete the update
+  sync( "BuildCore.rogue" )
+  execute "rogo install update"
+  }#
+endRoutine
+
+routine rogo_install_warlock( url_and_branch="":String )
+  if (not String.exists(url_and_branch))
+    println "Enter Git URL#branch for Warlock - can specify URL only or #branch only."
+    println "[default: $] " (DEFAULT_WARLOCK)
+    url_and_branch = Console.input( "> " )
+    if (url_and_branch == "")
+      url_and_branch = DEFAULT_WARLOCK
+      println url_and_branch
+    elseIf (not url_and_branch.contains('#'))
+      url_and_branch += DEFAULT_WARLOCK.from_first('#')
+    elseIf (url_and_branch.begins_with('#'))
+      url_and_branch = DEFAULT_WARLOCK.before_first('#') + url_and_branch
+    endIf
+  endIf
+
+  # Clone repo
+  local url = url_and_branch.before_first( '#' )
+  local branch = url_and_branch.after_first( '#' )
+  if (branch == "") branch = null
+  local repo = GitRepo( url, "Libraries/Warlock" )
+  repo.clone( branch, &verbose )
+endRoutine
+
+#-------------------------------------------------------------------------------
+# Utility routines
+#-------------------------------------------------------------------------------
+routine sync( pattern:String, exclude=undefined:Variant, &keep_unused, &missing_only )
+  local update_folder = "Libraries/Warlock"
+
+  local src_filepath = (File(update_folder) / pattern).filepath
+  if (File(src_filepath).exists and not File(src_filepath).is_folder)
+    # Handle a single specific file separately
+    local dest_filepath = pattern
+    if (File(src_filepath).is_different_than(File(dest_filepath)))
+      println "Copying $ -> $" (src_filepath,dest_filepath)
+      File( src_filepath ).copy_to( File(dest_filepath) )
+    endIf
+    return
+  endIf
+
+  local source_folder = update_folder
+  local dest_folder = "."
+  if (pattern != "*")
+    dest_folder = pattern.before_last( '/' )
+    source_folder = (File(source_folder) / dest_folder).filepath
+    pattern = pattern.after_last( '/' )
+  endIf
+
+  local files = Files( source_folder, pattern )
+  if (exclude.count)
+    files.remove( (File(update_folder)/((forEach in exclude)->String)).filepath )
+  endIf
+
+  files.sync_to( dest_folder, &=keep_unused, &verbose, &=missing_only )
+endRoutine
+
+routine ensure_folder( folder:File )
+  if (not folder.exists)
+    print_cmd "Create $/"(folder)
+    folder.create_folder
+  endIf
+endRoutine
+
+routine banner( content:String, w=Console.width:Int, &skip )->Logical
+  if (skip) return true
+
+  if w == 0 then w = 80
+
+  local n = w.or_smaller(100)
+  content .= word_wrapped( n-2 )
+
+  println "┌$┐" ("─"*(n-2))
+  forEach (line in content.split('\n'))
+    println "│$$│"(line," "*(n-(line.count+2)))
+  endForEach
+  println "└$┘" ("─"*(n-2))
+
+  return true
+endRoutine
+
+routine print_cmd( cmd:String )
+  ConsoleStyle.set<<FG_LIGHT_GREEN>>
+  print( "> " )
+  println( cmd )
+  ConsoleStyle.set<<FG_DEFAULT>>
+endRoutine
+
+routine execute( commands:String, error_message=null:String, &suppress_error, &quiet )->Logical
+  forEach (cmd in LineReader(commands))
+    if (not quiet) print_cmd( cmd )
+    if (0 != System.run(cmd))
+      if (suppress_error)
+        return false
+      else
+        if (not error_message) error_message = "Build failed."
+        throw Error( error_message )
+      endIf
+    endIf
+  endForEach
+  return true
+endRoutine
+
+
+#-------------------------------------------------------------------------------
+# Introspection-based Launcher Framework
+#-------------------------------------------------------------------------------
+# Rogo is a "build your own build system" facilitator. At its core Rogo just
+# recompiles build files if needed and then runs the build executable while
+# forwarding any command line arguments. This file contains a default framework
+# which uses introspection to turn command line arguments into parameterized
+# routine calls.
+
+# Example: to handle the command "rogo abc xyz 5", define
+# "routine rogo_abc_xyz( n:Int32 )".
+
+# "rogo_default" will run in the absence of any other command line argument.
+
+# The following "comment directives" can be used in this file to control how
+# RogueC compiles it and to manage automatic dependency installation and
+# linking.
+
+# Each of the following should be on a line beginning with the characters #$
+# (preceding whitespace is fine). Sample args are given.
+
+#   ROGUEC       = roguec       # Path to roguec to compile this file with
+#   ROGUEC_ARGS  = --whatever   # Additional options to pass to RogueC
+#   CC           = gcc -Wall -fno-strict-aliasing
+#   CC_ARGS      = -a -b -c          # Additional C args
+#   LINK         = -lalpha -lbeta    # Link this build file with these options
+#   LINK(macOS)  = ...               # Options applying only to
+#                                    # System.os=="macOS" (use with any OS and
+#                                    # any comment directive)
+#   LINK_LIBS    = true              # Links following LIBRARIES with this Build
+#                                    # file (otherwise just installs them)
+#   LINK_LIBS    = false             # Linking turned off for following
+#                                    # LIBRARIES - info can still be obtained
+#                                    # from $LIBRARY_FLAGS or $LIBRARIES(libname,...)
+#   LIBRARIES    = libalpha
+#   LIBRARIES    = libbeta(library-name)
+#   LIBRARIES    = libfreetype6-dev(freetype2)
+#   DEPENDENCIES = Library/Rogue/**/*.rogue
+#
+#   LIBRARIES    = name(package)
+#   LIBRARIES    = name(
+#                    exe:<which-name>
+#                    exists-cmd:<exists-cmd>
+#                    flags:<library-flags>
+#                    ignore-exe-only:<setting>
+#                    info:<info-name>
+#                    info-cmd:<get-info-cmd>
+#                    install:<install-name>
+#                    install-cmd:<install-cmd>
+#                    link:<setting>
+#                    package:<package-name>
+#                  )
+#
+# The following macro is replaced within this file (Build.rogue) - the libraries
+# should normally also be declared in #$ LIBRARIES:
+#
+#   $LIBRARY_FLAGS(lib1,lib2)                              # sample macro
+#     ->
+#   -Ipath/to/lib1/include -Lpath/to/lib1/library -I ...   # sample replacement
+
+routine syntax( command:String, text:String )
+  Build.rogo_syntax[ command ] = text
+endRoutine
+
+routine description( command:String, text:String )
+  Build.rogo_descriptions[ command ] = text
+endRoutine
+
+routine help( command:String, description_text=null:String, syntax_text=null:String )
+  if (description_text) description( command, description_text )
+  if (syntax_text)      syntax( command, syntax_text )
+endRoutine
+
+try
+  Build.launch
+catch (err:Error)
+  Build.rogo_error = err
+  Build.on_error
+endTry
+
+class Build [singleton]
+  PROPERTIES
+    rogo_syntax         = [String:String]
+    rogo_descriptions   = [String:String]
+    rogo_prefix         = "rogo_"
+    rogo_command        = "default"
+    rogo_args           = @[]
+    rogo_error          : Error
+
+    LOCAL_SETTINGS_FILE = "Local.rogo"
+
+  METHODS
+    method launch
+      rogo_args.add( forEach in System.command_line_arguments )
+      read_defs
+      on_launch
+      parse_args
+      dispatch_command
+
+    method dispatch_command
+      local m = find_command( rogo_command )
+      if (not m) throw Error( "No such routine rogo_$()" (rogo_command) )
+
+      local args = @[]
+      forEach (arg in rogo_args)
+        which (arg)
+          case "true":  args.add( true )
+          case "false": args.add( false )
+          case "null":  args.add( null )
+          others:       args.add( arg )
+        endWhich
+      endForEach
+      m( args )
+
+    method find_command( name:String )->MethodInfo
+      return <<Routine>>.find_global_method( rogo_prefix + name )
+
+    method on_error
+      local w = Console.width.or_smaller( 80 )
+      Console.error.println "=" * w
+      Console.error.println rogo_error->String.word_wrapped(w)
+      Console.error.println "=" * w
+      on_exit
+      System.exit 1
+
+    method on_command_found
+      noAction
+
+    method on_command_not_found
+      local w = Console.width.or_smaller( 80 )
+      println "=" * w
+      println "ERROR: No such command '$'." (rogo_args.first)
+      println "=" * w
+      println
+      rogo_command = "help"
+      rogo_args.clear
+      on_command_found
+
+    method on_launch
+      noAction
+
+    method on_exit
+      noAction
+
+    method parse_args
+      block
+        if (rogo_args.count)
+          local parts = String[]
+          parts.add( forEach in rogo_args )
+          rogo_args.clear
+
+          while (parts.count)
+            local cmd = parts.join("_")
+            if (find_command(cmd))
+              rogo_command = cmd
+              on_command_found
+              escapeBlock
+            endIf
+            rogo_args.insert( parts.remove_last )
+          endWhile
+
+          on_command_not_found
+        endIf
+
+        # Use default command
+        on_command_found
+      endBlock
+
+    method read_defs
+      read_defs( LOCAL_SETTINGS_FILE )
+
+    method read_defs( defs_filepath:String )
+      # Attempt to read defs from Local.rogo
+      local overrides = String[]
+      if (File(defs_filepath).exists)
+        forEach (line in LineReader(File(defs_filepath)))
+          if (line.contains("="))
+            local name  = line.before_first('=').trimmed
+            local rhs   = line.after_first('=').trimmed
+            local value : Variant
+            if (rhs.begins_with('"') or rhs.begins_with('\''))
+              value = rhs.leftmost(-1).rightmost(-1)
+            elseIf (rhs.begins_with('{') or rhs.begins_with('['))
+              value = JSON.parse( rhs )
+            else
+              value = rhs
+            endIf
+            local p = <<Build>>.find_property( name )
+            if (p)
+              overrides.add( "$ = $" (name,value) )
+              p.set_value( this, value )
+            endIf
+          endIf
+        endForEach
+      endIf
+
+    method _join( value:Variant )->String
+      local args = String[]
+      args.add( forEach in value )
+      return args.join( "_" )
+endClass
+
+
+routine rogo_help( command="":String )
+  # SYNTAX: rogo help [command]
+  # Displays help for a specified command or else all build commands.
+  command = Build._join( Build.rogo_args )
+  if (command.count)
+    local syntax = get_syntax( command )
+    local success = false
+    if (syntax)
+      println "SYNTAX"
+      println "  " + syntax
+      println
+      success = true
+    endIf
+    local description = get_description( command )
+    if (description)
+      description .= replacing("<br>","\n")
+      local max_w = Console.width - 2
+      println "DESCRIPTION"
+      forEach (line in LineReader(description.word_wrapped(max_w)))
+        print( "  " )
+        println( line )
+      endForEach
+      println
+      success = true
+    endIf
+    if (success)
+      return
+    else
+      local w = Console.width.or_smaller( 80 )
+      println "=" * w
+      println "ERROR: No such command '$'." (command)
+      println "=" * w
+      println
+    endIf
+  endIf
+
+  println "USAGE"
+  local entries = CommandInfo[]
+  local max_len = 0
+  forEach (m in <<Routine>>.global_methods)
+    if (m.name.begins_with(Build.rogo_prefix))
+      local name = m.name.after_first( Build.rogo_prefix )
+      local entry = CommandInfo( name, get_syntax(name), get_description(name) )
+      max_len .= or_larger( entry.syntax.count )
+      entries.add entry
+    endIf
+  endForEach
+
+  entries.sort( $1.name < $2.name )
+  max_len += 4
+
+  local max_w = Console.width
+  forEach (entry in entries)
+    print "  " + entry.syntax
+    if (entry.@description)
+      local description = entry.@description.before_first( '\n' )
+      loop ((max_len - entry.syntax.count) - 2) print ' '
+      contingent
+        sufficient (max_len + description.count <= max_w)
+        if (description.contains(". "))
+          description = description.before_first( ". " ) + "."
+          sufficient (max_len + description.count <= max_w)
+        endIf
+        necessary (max_len + 10 <= max_w)
+        description = description.unright( (description.count - (max_w - max_len))+5 ) + "..."
+      satisfied
+        print description
+      endContingent
+    endIf
+    println
+  endForEach
+  println
+endRoutine
+
+routine get_syntax( m_name:String )->String
+  if (Build.rogo_syntax.contains(m_name))
+    return "rogo " + Build.rogo_syntax[ m_name ]
+  else
+    local m = <<Routine>>.find_global_method( Build.rogo_prefix + m_name )
+    if (not m) return null
+    local line = "rogo $" (m_name.replacing('_',' '))
+    line += " <$>" ((forEach in m.parameters).name)
+    return line
+  endIf
+endRoutine
+
+
+routine get_description( m_name:String )->String
+  if (Build.rogo_descriptions.contains(m_name))
+    return Build.rogo_descriptions[ m_name ]
+  else
+    return null
+  endIf
+endRoutine
+
+class CommandInfo( name:String, syntax:String, description:String );

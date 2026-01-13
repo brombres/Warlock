@@ -242,7 +242,7 @@ routine deps( platform:String, args:String[], &update, &rebuild, &reinstall )
 
   update_gitignore
 
-  #if (platform == "Android") .check_android_configuration
+  if (platform == "Android") .check_android_deps
 
   ensure_folder( File("Assets/Audio") )
   ensure_folder( File("Assets/Data") )
@@ -474,6 +474,10 @@ routine deps( platform:String, args:String[], &update, &rebuild, &reinstall )
     endIf
   endIf
 
+endRoutine
+
+routine .check_android_deps
+  trace "TODO"
 endRoutine
 
 #{
