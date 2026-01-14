@@ -55,7 +55,7 @@ routine rogo_deps( platform=null:String )
 
   if (not File("Libraries/Warlock").exists)
     rogo_update
-    rogo_update_buildcore( &!exit )
+    rogo_update_buildcore
     banner "Warlock library installed. Re-run 'rogo' to continue installation."
     System.exit
   endIf
