@@ -252,8 +252,24 @@ class Window : Display [singleton]
       endIf
 
     method safe_area->Box [override]
-      if ($target("iOS")) return iOS.safe_area
-      return bounds
+      if ($target("iOS"))
+        return iOS.safe_area
+      else
+        local display_id = native_display_id
+
+        native
+        @|SDL_Rect area;
+         |SDL_GetWindowSafeArea( $this->sdl_window, &area );
+
+        local result = Box(
+          native("area.x")->Int,
+          native("area.y")->Int,
+          native("area.w")->Int,
+          native("area.h")->Int
+        )
+
+        return result
+      endIf
 
     method scene->SceneState
       return control_states//scene->(as SceneState)
