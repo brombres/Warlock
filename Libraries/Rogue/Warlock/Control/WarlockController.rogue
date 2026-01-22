@@ -179,6 +179,9 @@ class WarlockController
       Window.end_render
 
     method end_tick
+      if ($target("Android"))
+        Native.send_message( "MainActivity.tick" )
+      endIf
       ++Warlock.ticks
 
 
