@@ -26,6 +26,10 @@ class Tessellator [singleton]
 
     method tessellate( polygon:XY[] )->Logical
       # If result is true, tessellated info will be in .vertex_positions and .triangle_indices.
+      vertex_positions.clear
+      vertex_indices.clear
+      triangle_indices.clear
+
       if (not native("$this->tess")->Logical)
         native @|$this->tess = tessNewTess( 0 );
         if (not native("$this->tess")->Logical)
@@ -49,6 +53,8 @@ class Tessellator [singleton]
 
       if (not success)
        println "Error tessellating polygon."
+       native @|tessDeleteTess( $this->tess );
+               |$this->tess = 0;
        return false
       endIf
 
@@ -61,9 +67,9 @@ class Tessellator [singleton]
        |$vertex_count   = tessGetVertexCount( $this->tess );
        |$triangle_count = tessGetElementCount( $this->tess );
 
-      vertex_positions.[clear].reserve( vertex_count )
-      vertex_indices.[clear].reserve( vertex_count )
-      triangle_indices.[clear].reserve( triangle_count )
+      vertex_positions.reserve( vertex_count )
+      vertex_indices.reserve( vertex_count )
+      triangle_indices.reserve( triangle_count )
 
       forEach (i in 0..<vertex_count*2 step 2)
         vertex_positions.add( XY(native("tess_vertices[$i]")->Real32, native("tess_vertices[$i+1]")->Real32) )
