@@ -5,6 +5,9 @@ class NativeAndroid : Native [essential singleton]
     nativeHeader
     @|#include <SDL3/SDL_system.h>
      |#include <jni.h>
+     |#include <string.h>
+     |#include <ctype.h>
+
 
     nativeCode
     @|extern "C" JNIEXPORT void JNICALL
@@ -33,6 +36,48 @@ class NativeAndroid : Native [essential singleton]
   METHODS
     method init_object
       Native = this
+
+    method generate_uuid->String
+      local result = String( "01234567-89AB-CDEF-0123-456789ABCDEF" ) # default result which will be overwritten on success
+
+      native
+      @|JNIEnv* env = (JNIEnv*)SDL_GetAndroidJNIEnv();
+       |
+       |for (;;)
+       |{
+       |  // Get the UUID class
+       |  jclass uuidClass = env->FindClass( "java/util/UUID" );
+       |  if (uuidClass == NULL) break;
+       |
+       |  // Get the static randomUUID() method
+       |  jmethodID randomUUIDMethod = env->GetStaticMethodID( uuidClass, "randomUUID", "()Ljava/util/UUID;" );
+       |  if (randomUUIDMethod == NULL) break;
+       |
+       |  // Call UUID.randomUUID()
+       |  jobject uuidObject = env->CallStaticObjectMethod( uuidClass, randomUUIDMethod );
+       |  if (uuidObject == NULL) break;
+       |
+       |  // Get the toString() method
+       |  jmethodID toStringMethod = env->GetMethodID( uuidClass, "toString", "()Ljava/lang/String;" );
+       |  if (toStringMethod == NULL) break;
+       |
+       |  // Call toString() on the UUID object
+       |  jstring javaString = (jstring)env->CallObjectMethod( uuidObject, toStringMethod );
+       |  if (javaString == NULL) break;
+       |
+       |  // Convert Java string to C string
+       |  const char* utf8String = env->GetStringUTFChars( javaString, NULL );
+       |  if (utf8String == NULL) break;
+       |
+       |  strcpy( $result->data->as_utf8, utf8String );
+       |
+       |  // Release the Java string
+       |  env->ReleaseStringUTFChars( javaString, utf8String );
+       |
+       |  break;
+       |}
+
+     return result.to_uppercase
 
     method receive_message( message:String )->String [essential]
       receive_message( JSON.parse(message,&error_log=Log) )
