@@ -32,8 +32,12 @@ uses Graphics
 uses Graphics/BitmapIO
 uses Utility/GitIgnorePatcher
 
+on_exit( Build=>save_config )
+
 augment Build
   PROPERTIES
+    config : Variant
+
     shader_name_pairs =
     @[
       ["-vs","-fs"],
@@ -45,6 +49,10 @@ augment Build
       ["_vert","_frag"],
       ["vert_","frag_"]
     ]
+
+  METHODS
+    method save_config
+      trace
 endAugment
 
 routine rogo_clean( platform=null:String )
@@ -242,7 +250,7 @@ routine deps( platform:String, args:String[], &update, &rebuild, &reinstall )
 
   update_gitignore
 
-  if (platform == "Android") .check_android_deps
+  update_platforms( platform, args, &=update, &=rebuild, &=reinstall )
 
   ensure_folder( File("Assets/Audio") )
   ensure_folder( File("Assets/Data") )
@@ -693,6 +701,11 @@ routine update_gitignore
   patcher.add( "Xcode", "xcuserdata" )
 
   patcher.save( &verbose )
+endRoutine
+
+routine update_platforms( platform:String, args:String[], &update, &rebuild, &reinstall )
+
+  #if (platform == "Android") .check_android_deps
 endRoutine
 
 routine create_default_asset_config

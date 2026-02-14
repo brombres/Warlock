@@ -1,0 +1,94 @@
+import javax.inject.Inject
+import org.gradle.process.ExecOperations
+
+plugins {
+    alias(libs.plugins.android.application)
+}
+
+android {
+    namespace = 'com.developer.appname'
+    compileSdk {
+        version = release(36)
+    }
+
+    defaultConfig {
+        applicationId "com.developer.appname"
+        minSdk 26
+        targetSdk 36
+        versionCode 27
+        versionName "1.3"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        ndk {
+            abiFilters "arm64-v8a"
+        }
+
+        externalNativeBuild {
+            cmake {
+                cppFlags "-std=c++17"
+            }
+        }
+    }
+
+    buildTypes {
+        debug {
+        }
+
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    externalNativeBuild {
+        cmake {
+            path file('src/main/cpp/CMakeLists.txt')
+            version = '3.22.1'
+        }
+    }
+
+    buildFeatures {
+        viewBinding = true
+        prefab = true
+    }
+}
+
+dependencies {
+  implementation libs.appcompat
+  implementation libs.material
+  implementation libs.constraintlayout
+  testImplementation libs.junit
+  androidTestImplementation libs.ext.junit
+  androidTestImplementation libs.espresso.core
+  implementation files("libs/SDL3-3.2.26.aar")
+}
+
+abstract class RogoTask extends DefaultTask {
+    private ExecOperations execOperations
+
+    @Inject //@javax.inject.Inject
+    RogoTask(ExecOperations execOperations) {
+        this.execOperations = execOperations
+    }
+
+    @TaskAction
+    void doTaskAction() {
+        def HOME = System.getenv("HOME")
+
+        execOperations.exec {
+          commandLine "/bin/sh", "-lc", "cd ../../.. && env -i PATH=/opt/morlock/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin HOME=${HOME} IDE=true rogo android"
+        }
+    }
+}
+
+tasks.register( "rogo", RogoTask )
+
+tasks.named("preBuild") {
+  dependsOn("rogo")
+}
