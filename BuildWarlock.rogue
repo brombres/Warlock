@@ -53,6 +53,7 @@ augment Build
   METHODS
     method init [insert]
       if (not config//rogue_source_folder) config//rogue_source_folder = ""
+      configure_project_id
 
     method config_file->File
       return File( "Config.json" )
@@ -239,15 +240,28 @@ routine find_shader( filepaths:String[], filepath:String, replace_old:String, re
   endIf
 endRoutine
 
+routine configure_project_id
+  if (not Build.config//project_id)
+    Build.config//project_id = @{}
+
+    local xcode_id = Console.input( "Enter Xcode Bundle ID (default com.developer.warlockapp): " )
+    if (not String.exists(xcode_id)) xcode_id = "com.developer.warlockapp"
+    Build.config//project_id//xcode = xcode_id
+
+    local android_id = Console.input( "Enter Android Package ID (default $): "(xcode_id) )
+    if (not String.exists(android_id)) android_id = xcode_id
+    Build.config//project_id//android = android_id
+  endIf
+
+endRoutine
+
+routine project_id( platform:String )->String
+  return Build.config//project_id[platform]
+endRoutine
+
 routine rogo_deps( platform:String ) [append]
   # SYNTAX: rogo deps [platform] [update|rebuild|reinstall] [<libs>]*
   # Where <libs> is any combination of: [bgfx bimg bx miniaudio sdl spine stb tess2]
-  if (not Build.config//package_id)
-    local id = Console.input( "Enter Bundle ID/Package ID (default com.developer.warlockapp): " )
-    if (not String.exists(id)) id = "com.developer.warlockapp"
-    Build.config//package_id = id
-  endIf
-
   local args = System.command_line_arguments.cloned
 
   if (platform) args.remove( platform.to_lowercase )
@@ -806,8 +820,18 @@ routine copy_file( from_file:File, to_file:File, base_folder:String, &header_sho
     if (not from_file.is_different_than(to_file)) return header_shown
   endIf
 
-  local package_id   = Build.config//package_id->String
-  local package_path = package_id.replacing( '.', '/' )
+  local platform : String
+  if (to_file.filepath.contains("Android"))
+    platform = "android"
+  elseIf (to_file.filepath.contains("Xcode"))
+    platform = "xcode"
+  else
+    trace
+    throw Error( "TODO: support platform " + to_file.filepath )
+  endIf
+
+  localize project_id( platform )
+  local package_path = project_id.replacing( '.', '/' )
   local placeholder_id   = "com.developer.warlockapp"
   local placeholder_path = "com/developer/warlockapp"
 
@@ -825,7 +849,7 @@ routine copy_file( from_file:File, to_file:File, base_folder:String, &header_sho
 
   local content = String( from_file )
   if (content.contains(placeholder_id))
-    content .= replacing( placeholder_id, package_id )
+    content .= replacing( placeholder_id, project_id )
   endIf
 
   if (not to_file.exists or String(to_file) != content)
