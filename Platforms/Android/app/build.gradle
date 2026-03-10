@@ -6,13 +6,13 @@ plugins {
 }
 
 android {
-    namespace = 'com.developer.appname'
+    namespace = 'com.developer.warlockapp'
     compileSdk {
         version = release(36)
     }
 
     defaultConfig {
-        applicationId "com.developer.appname"
+        applicationId "com.developer.warlockapp"
         minSdk 26
         targetSdk 36
         versionCode 27

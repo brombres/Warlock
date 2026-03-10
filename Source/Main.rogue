@@ -1,0 +1,44 @@
+uses Warlock
+
+Warlock.controller = WarlockController() subclass
+  PROPERTIES
+    app_name     = "Warlock App"
+    launch_state = LaunchState()
+
+    phone_orientations  = DeviceOrientation.PORTRAIT : DeviceOrientation
+    tablet_orientations = DeviceOrientation.ALL      : DeviceOrientation
+
+  METHODS
+    method on_app_resume [override]
+      Log.println "on_app_resume"
+
+    method on_focus_gained [override]
+      on_app_resume
+
+    method on_restore_state
+      # AppData has been restored from storage. Restore game state from AppData.
+
+    method on_save_state
+      # Store current game state in AppData.
+
+    method on_resize
+      Log.println "on_resize"
+
+    method create_default_window( initial_state:State ) [override]
+      # This only has an effect on desktop platforms.
+      Window( "Landscape 16:9", 1600, 900, initial_state )
+endSubclass
+
+class LaunchState : State
+  METHODS
+    method on_start
+      Window.background = BlackBackground()
+      trace "Hello Warlock"
+endClass
+
+class BlackBackground : BackgroundState
+  METHODS
+    method on_draw
+      Display.clear( Color.BLACK )
+endClass
+

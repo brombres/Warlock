@@ -1,9 +1,4 @@
-//
 //  Main.swift
-//  Warlock
-//
-//  Created by Abe Pralle on 7/19/25.
-//
 #include <cstdio>
 #include <cstdlib>
 using namespace std;

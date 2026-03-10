@@ -1,4 +1,4 @@
-package com.developer.appname;
+package com.developer.warlockapp;
 
 import android.content.*;
 import android.content.pm.*;

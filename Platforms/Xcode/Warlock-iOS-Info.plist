@@ -364,11 +364,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
-	<key>CFBundlePackageType</key>
-	<string>APPL</string>
-	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>Used only by third-party advertising SDKs; this game does not use Bluetooth.</string>
-	<key>NSCameraUsageDescription</key>
-	<string>Used only by third-party advertising SDKs; this game does not use the camera.</string>
 </dict>
 </plist>

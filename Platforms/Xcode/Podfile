@@ -2,7 +2,7 @@ abstract_target 'WarlockPods' do
   use_frameworks!
 
   target 'Warlock-iOS' do
-    platform :ios, '15.6'
+    platform :ios, '16.6'
   end
 
   target 'Warlock-macOS' do
