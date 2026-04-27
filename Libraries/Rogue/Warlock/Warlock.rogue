@@ -6,6 +6,7 @@ uses Control/State [export]
 uses Entity        [export]
 uses Geometry      [export]
 uses Graphics      [export]
+uses Introspection
 uses Math/Matrix   [export]
 uses UI            [export]
 uses Utility/Timer [export]

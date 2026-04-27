@@ -2,10 +2,11 @@ library Warlock
 
 class Texture
   PROPERTIES
-    size     : XY
-    uv       : Quad     # .a/b/c/d = tl/tr/br/bl; corners orthogonal, maybe rotated 90º/180º/270º.
-    source   : Texture  # if non-null, the original texture this is a subset of.
-    filepath : String
+    size       : XY
+    uv         : Quad     # .a/b/c/d = tl/tr/br/bl; corners orthogonal, maybe rotated 90º/180º/270º.
+    source     : Texture  # if non-null, the original texture this is a subset of.
+    filepath   : String
+    is_managed : Logical  # Was retained by an AssetLoadingState
 
   GLOBAL METHODS
     method is_cached( file:File )->Logical
@@ -22,7 +23,7 @@ class Texture
 
     method create( file:File, texels:Color[], image_size:XY, texture_size=null:XY?, &mipmaps, &wrap )->Texture
       if local cached = AssetManager.textures[file]
-        return cached
+        return cached.object
       endIf
 
       Log.println "Loading " + file
@@ -33,12 +34,14 @@ class Texture
         texture = Texture( texture, Box(image_size) )
       endIf
 
-      AssetManager.textures[file] = texture
+      AssetManager.textures[file] = WeakReference<<Texture>>( texture )
+      texture.filepath = file.filepath
+
       return texture
 
     method create( file:File, &mipmaps=true, &wrap )->Texture
       if local cached = AssetManager.textures[file]
-        return cached
+        return cached.object
       endIf
 
       if (not file.exists)
@@ -48,7 +51,8 @@ class Texture
 
       Log.println "Loading " + file
       local texture = Texture( Bitmap(file), &=mipmaps, &=wrap )
-      AssetManager.textures[file] = texture
+      AssetManager.textures[file] = WeakReference<<Texture>>( texture )
+      texture.filepath = file.filepath
       return texture
 
   METHODS
@@ -136,8 +140,7 @@ class Texture
       return mesh
 
     method recycle
-      # Kludgy, texture can never be reloaded without clearing AssetManager cache.
-      # Improve someday.
+      if (filepath) AssetManager.textures.remove( filepath )
       on_cleanup
 
     method split( columns:Int, rows:Int )->Texture[]
@@ -157,5 +160,8 @@ class Texture
     method subset( bounds:Box )->Texture
       # Bounds should be in texel (pixel) coordinates
       return Texture( this, bounds )
+
+    method unload
+      on_cleanup
 
 endClass

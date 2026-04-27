@@ -5,7 +5,7 @@ class AssetManager [singleton]
     scanner           : Scanner
     texture_filepaths = String[]
     texture_info      = [String:TextureInfo]
-    textures          = [File:Texture]
+    textures          = [File:WeakReference<<Texture>>]
     assets            = [String:AssetInfo]
     is_loaded         : Logical
     asset_manifest    = [String:String]

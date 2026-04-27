@@ -7,6 +7,8 @@ class AssetLoadingState : State
     loaded_asset_count   : Int
     total_asset_count    : Int
 
+    unused_textures      = Texture[]
+
     max_jobs             = System.cpu_core_count : Int
     image_decode_jobs    = ImageDecodeJob[]
 
@@ -28,15 +30,20 @@ class AssetLoadingState : State
       endIf
 
     method exclude( audio:Music[] )
+      if (not audio) return
       exclude( forEach in audio )
 
     method exclude( audio:Sound[] )
+      if (not audio) return
       exclude( forEach in audio )
 
     method exclude( audio:SoundVariants )
+      if (not audio) return
       exclude( forEach in audio )
 
     method exclude( font:Font )
+      if (not font) return
+
       forEach (ch in font.character_lookup)
         exclude( ch.image )
       endForEach
@@ -57,10 +64,16 @@ class AssetLoadingState : State
       endIf
 
     method exclude( images:Image[] )
+      if (not images) return
       exclude( forEach in images )
 
     method exclude( patch_image:PatchImage )
+      if (not patch_image) return
       exclude( forEach in patch_image.patches )
+
+    method include( assets:AssetGroup )
+      if (not assets) return
+      assets.load( this )
 
     method include( audio:Sound )
       if (not audio) return
@@ -71,15 +84,20 @@ class AssetLoadingState : State
       endIf
 
     method include( audio:Music[] )
+      if (not audio) return
       include( forEach in audio )
 
     method include( audio:Sound[] )
+      if (not audio) return
       include( forEach in audio )
 
     method include( audio:SoundVariants )
+      if (not audio) return
       include( forEach in audio )
 
     method include( font:Font )
+      if (not font) return
+
       forEach (ch in font.character_lookup)
         include( ch.image )
       endForEach
@@ -101,9 +119,11 @@ class AssetLoadingState : State
       endIf
 
     method include( images:Image[] )
+      if (not images) return
       include( forEach in images )
 
     method include( patch_image:PatchImage )
+      if (not patch_image) return
       include( forEach in patch_image.patches )
 
     method loading_progress->Real
@@ -114,11 +134,32 @@ class AssetLoadingState : State
         if (not audio.is_prepared) pending_audio.add( audio )
       endForEach
 
+      # Assume all existing textures will be unused
+      unused_textures.clear
+      forEach (ref in AssetManager.textures)
+        if (ref.exists) unused_textures.add( ref.object )
+      endForEach
+
+      # Remove pending textures from unused_textures
       forEach (texture_info in AssetManager.texture_info.to_list)
         if local filepath = Warlock.find_asset( texture_info.filepath )
-          if (not AssetManager.textures[filepath])
+          if local texture = AssetManager.textures[filepath].object
+            unused_textures.remove( texture )
+            if (not texture.is_managed)
+              texture.is_managed = true
+              texture.retain_object
+            endIf
+          else
             pending_textures.add( texture_info )
           endIf
+        endIf
+      endForEach
+
+      # Release managed unused_textures prior to loading new ones
+      forEach (texture in unused_textures)
+        if (texture.is_managed)
+          texture.is_managed = false
+          texture.release_object
         endIf
       endForEach
 
@@ -147,7 +188,9 @@ class AssetLoadingState : State
           if (job.is_finished)
             image_decode_jobs.remove_at( index )
             local info = job.texture_info
-            Texture( File(job.filepath), job.texture_pixels, info.size, &mipmaps=info.mipmaps, &wrap=info.wrap )
+            local texture = Texture( File(job.filepath), job.texture_pixels, info.size, &mipmaps=info.mipmaps, &wrap=info.wrap )
+            texture.is_managed = true
+            texture.retain_object
             ++loaded_asset_count
           endIf
         endForEach
@@ -159,6 +202,11 @@ class AssetLoadingState : State
           local texture_info = pending_textures.remove_last
           local file = Warlock.find_asset( texture_info.filepath )
           if (file and Texture.is_cached(file.value))
+            local texture = AssetManager.textures[file.value].object
+            if (not texture.is_managed)
+              texture.is_managed = true
+              texture.retain_object
+            endIf
             ++loaded_asset_count
           else
             image_decode_jobs.add( ImageDecodeJob(texture_info) )

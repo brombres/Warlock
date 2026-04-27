@@ -33,8 +33,18 @@ class Image : Drawable2D
         subdivisions
       )
 
+    method is_loaded->Logical
+      return true
+
     method load
       # Ensures image is fully loaded.
+      noAction
+
+    method load( &async )
+      if (async) load_async
+      else       load
+
+    method load_async
       noAction
 
     method recycle
@@ -44,6 +54,9 @@ class Image : Drawable2D
 
     method texture->Texture
       return null
+
+    method unload
+      noAction
 
 endClass
 
@@ -128,5 +141,8 @@ augment Image[]
 
     method set_subdivisions( subdivisions:XY )
       (forEach as Image in this).subdivisions = subdivisions
+
+    method unload
+      (forEach as Image in this).unload
 
 endAugment
