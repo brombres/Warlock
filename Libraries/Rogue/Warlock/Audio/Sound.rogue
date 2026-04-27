@@ -11,6 +11,7 @@ class Sound
     is_paused        : Logical
     is_suspended     : Logical
     is_backgrounded  : Logical
+    is_used          : Logical
     configuration_id : Int  # must match AudioManager.configuraton_id or else reload()
     volume           = 1.0  # volume when sound first starts playing
     current_volume   : Real # dynamically adjusted volume from fades etc.
@@ -224,6 +225,8 @@ class Sound
       @is_looping = setting
       if (is_playing) native @|ma_sound_set_looping( &$this->sound, $is_looping );
 
+    method set_is_used( @is_used )
+
     method set_volume( @volume )
       if (is_prepared) current_volume = volume
       next_in_pool?.set_volume( volume )
@@ -280,6 +283,9 @@ class Sound
                 |memset( &$this->sound, 0, sizeof(ma_sound) );
       endIf
       is_configured = false
+
+    method unload_unused
+      if (not is_used) unload
 
     method .effective_volume->Real
       return AudioManager.master_volume * AudioManager.sound_volume * current_volume

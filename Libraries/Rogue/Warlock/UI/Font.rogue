@@ -40,6 +40,7 @@ augment UI::Font
 
     render_mode        : RenderMode
     is_loaded          : Logical
+    is_used            : Logical
 
   METHODS
     method init_instance( asset_name, snap=false, &snug )
@@ -298,12 +299,22 @@ augment UI::Font
     method set_height( new_height:Real )
       @scale = XY( new_height / internal_height ) * XY( width_scale, 1.0 )
 
+    method set_is_used( @is_used )
+
     method set_width_scale( new_factor:Real )
       if local old_factor = @width_scale
         @scale = XY( (@scale.x/old_factor) * new_factor, @scale.y )
       else
         @scale = XY( new_factor, @scale.y )
       endIf
+
+    method unload
+      if (not is_loaded) return
+      is_loaded = false
+      (forEach in character_lookup).image?.unload
+
+    method unload_unused
+      if (not is_used) unload
 
 endAugment
 

@@ -9,6 +9,7 @@ class Image : Drawable2D
     asset        : AssetInfo
     opacity      = 1.0
     subdivisions = XY(0,0)  # for shader effects - XY(4,0) would draw a mesh composed of 16x1 quads
+    is_used      : Logical
 
   METHODS
     method init
@@ -50,6 +51,8 @@ class Image : Drawable2D
     method recycle
       noAction
 
+    method set_is_used( @is_used )
+
     method set_opacity( @opacity )
 
     method texture->Texture
@@ -57,6 +60,9 @@ class Image : Drawable2D
 
     method unload
       noAction
+
+    method unload_unused
+      if (not is_used) unload
 
 endClass
 
@@ -115,6 +121,9 @@ augment Image[]
     method set_colors( colors:Quad<<Color>> )
       (forEach as Image in this).colors = colors
 
+    method set_is_used( setting:Logical )
+      (forEach as Image in this).set_is_used( setting )
+
     method set_natural_size( natural_size:XY )
       (forEach as Image in this).natural_size = natural_size
 
@@ -144,5 +153,8 @@ augment Image[]
 
     method unload
       (forEach as Image in this).unload
+
+    method unload_unused
+      (forEach as Image in this).unload_unused
 
 endAugment

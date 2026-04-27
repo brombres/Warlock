@@ -2,7 +2,7 @@ library Warlock
 
 class AssetGroup
   METHODS
-    method load( loader:AssetLoadingState )
+    method load( loader:AssetLoadingState ) [critical]
       local properties = this.type_info.properties
       forEach (p in properties)
         local type = p->TypeID
@@ -27,5 +27,79 @@ class AssetGroup
         endIf
       endForEach
 
-    method unload
+    method set_is_used( setting:Logical )
+      local properties = this.type_info.properties
+      forEach (p in properties)
+        local type = p->TypeID
+        if (type.instance_of(<<AssetGroup>>))
+          (p.get_value( this )->AssetGroup).set_is_used( setting )
+        elseIf (type.instance_of(<<Sound>>))
+          (p.get_value( this )->Sound).set_is_used( setting )
+        elseIf (type.instance_of(<<Music[]>>))
+          (p.get_value( this )->Music[]).set_is_used( setting )
+        elseIf (type.instance_of(<<Sound[]>>))
+          (p.get_value( this )->Sound[]).set_is_used( setting )
+        elseIf (type.instance_of(<<SoundVariants>>))
+          (p.get_value( this )->SoundVariants).set_is_used( setting )
+        elseIf (type.instance_of(<<Font>>))
+          (p.get_value( this )->Font).set_is_used( setting )
+        elseIf (type.instance_of(<<Image>>))
+          (p.get_value( this )->Image).set_is_used( setting )
+        elseIf (type.instance_of(<<Image[]>>))
+          (p.get_value( this )->Image[]).set_is_used( setting )
+        elseIf (type.instance_of(<<PatchImage>>))
+          (p.get_value( this )->PatchImage).set_is_used( setting )
+        endIf
+      endForEach
+
+    method unload [critical]
+      local properties = this.type_info.properties
+      forEach (p in properties)
+        local type = p->TypeID
+        if (type.instance_of(<<AssetGroup>>))
+          (p.get_value( this )->AssetGroup).unload
+        elseIf (type.instance_of(<<Sound>>))
+          (p.get_value( this )->Sound).unload
+        elseIf (type.instance_of(<<Music[]>>))
+          (p.get_value( this )->Music[]).unload
+        elseIf (type.instance_of(<<Sound[]>>))
+          (p.get_value( this )->Sound[]).unload
+        elseIf (type.instance_of(<<SoundVariants>>))
+          (p.get_value( this )->SoundVariants).unload
+        elseIf (type.instance_of(<<Font>>))
+          (p.get_value( this )->Font).unload
+        elseIf (type.instance_of(<<Image>>))
+          (p.get_value( this )->Image).unload
+        elseIf (type.instance_of(<<Image[]>>))
+          (p.get_value( this )->Image[]).unload
+        elseIf (type.instance_of(<<PatchImage>>))
+          (p.get_value( this )->PatchImage).unload
+        endIf
+      endForEach
+
+    method unload_unused [critical]
+      local properties = this.type_info.properties
+      forEach (p in properties)
+        local type = p->TypeID
+        if (type.instance_of(<<AssetGroup>>))
+          (p.get_value( this )->AssetGroup).unload_unused
+        elseIf (type.instance_of(<<Sound>>))
+          (p.get_value( this )->Sound).unload_unused
+        elseIf (type.instance_of(<<Music[]>>))
+          (p.get_value( this )->Music[]).unload_unused
+        elseIf (type.instance_of(<<Sound[]>>))
+          (p.get_value( this )->Sound[]).unload_unused
+        elseIf (type.instance_of(<<SoundVariants>>))
+          (p.get_value( this )->SoundVariants).unload_unused
+        elseIf (type.instance_of(<<Font>>))
+          (p.get_value( this )->Font).unload_unused
+        elseIf (type.instance_of(<<Image>>))
+          (p.get_value( this )->Image).unload_unused
+        elseIf (type.instance_of(<<Image[]>>))
+          (p.get_value( this )->Image[]).unload_unused
+        elseIf (type.instance_of(<<PatchImage>>))
+          (p.get_value( this )->PatchImage).unload_unused
+        endIf
+      endForEach
+
 endClass

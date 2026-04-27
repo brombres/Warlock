@@ -55,6 +55,9 @@ class AudioCollection [aspect]
     method set_is_looping( setting:Logical )
       (forEach in this).is_looping = setting
 
+    method set_is_used( setting:Logical )
+      (forEach in this).set_is_used( setting )
+
     method set_position( seconds:Real )
       (forEach in this).position = seconds
 
@@ -63,6 +66,12 @@ class AudioCollection [aspect]
 
     method stop
       (forEach in this).stop
+
+    method unload
+      (forEach in this).unload
+
+    method unload_unused
+      (forEach in this).unload_unused
 
 endClass
 

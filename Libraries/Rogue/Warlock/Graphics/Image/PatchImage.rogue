@@ -324,5 +324,7 @@ class PatchImage : Image
     method truncate_right
       .truncate_right = true
 
+    method unload
+      (forEach in patches).unload
 
 endClass

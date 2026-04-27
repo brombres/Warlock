@@ -16,6 +16,21 @@ class AssetLoadingState : State
     update_timer         = Timer()
 
   METHODS
+    method init
+      clear
+
+      forEach (audio in AudioManager.all_audio)
+        if (not audio.is_prepared) pending_audio.add( audio )
+      endForEach
+
+      forEach (texture_info in AssetManager.texture_info.to_list)
+        if local filepath = Warlock.find_asset( texture_info.filepath )
+          if (not AssetManager.textures[filepath])
+            pending_textures.add( texture_info )
+          endIf
+        endIf
+      endForEach
+
     method clear
       pending_audio.clear
       pending_textures.clear
@@ -130,27 +145,21 @@ class AssetLoadingState : State
       return loaded_asset_count->Real / total_asset_count
 
     method on_start [critical]
-      forEach (audio in AudioManager.all_audio)
-        if (not audio.is_prepared) pending_audio.add( audio )
-      endForEach
-
       # Assume all existing textures will be unused
       unused_textures.clear
       forEach (ref in AssetManager.textures)
         if (ref.exists) unused_textures.add( ref.object )
       endForEach
 
-      # Remove pending textures from unused_textures
-      forEach (texture_info in AssetManager.texture_info.to_list)
+      forEach (texture_info in pending_textures step -1)
         if local filepath = Warlock.find_asset( texture_info.filepath )
-          if local texture = AssetManager.textures[filepath].object
-            unused_textures.remove( texture )
+          if local texture = AssetManager.textures[filepath]?.object
+            pending_textures.remove( texture_info )  # already loaded
+            unused_textures.remove( texture ) # still in use
             if (not texture.is_managed)
               texture.is_managed = true
               texture.retain_object
             endIf
-          else
-            pending_textures.add( texture_info )
           endIf
         endIf
       endForEach
@@ -164,6 +173,8 @@ class AssetLoadingState : State
       endForEach
 
       total_asset_count = pending_audio.count + pending_textures.count
+
+      System.request_gc
 
     method on_loading_finished
       exit
