@@ -217,6 +217,22 @@ class Window : Display [singleton]
       Framework.handle_app_resume( this )
       Renderer.handle_app_resume( this )
 
+    method max_size->XY
+      if (System.is_mobile)
+        local result : XY
+        native
+        @|SDL_DisplayID display_id = SDL_GetPrimaryDisplay();
+         |const SDL_DisplayMode* mode = SDL_GetCurrentDisplayMode(display_id);
+         |if (mode)
+         |{
+         |  $result.x = (RogueReal)(mode->w * mode->pixel_density);
+         |  $result.y = (RogueReal)(mode->h * mode->pixel_density);
+         |}
+        return result
+      else
+        return XY(5120,2880)
+      endIf
+
     method native_id->Int
       noAction  # defined by extended Platform, e.g. SDL
 
