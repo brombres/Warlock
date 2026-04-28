@@ -539,8 +539,8 @@ augment Warlock::Texture
       native @|$this->bgfx_texture = BGFX_INVALID_HANDLE;
 
   METHODS
-    method set( bitmap:Bitmap, &mipmaps=true, &wrap )
-      filepath = bitmap.filepath
+    method set( bitmap:Bitmap, info:TextureInfo )
+      filepath = info.filepath
 
       local mipmap = bitmap.cloned
       mipmap.expand_to_power_of_2
@@ -550,7 +550,7 @@ augment Warlock::Texture
 
       local texels : Color[]
 
-      if (mipmaps)
+      if (info.mipmaps)
         local mip_w = mipmap.width
         local mip_h = mipmap.height
         local mipmap_pixel_count = 1   # final 1x1
@@ -574,19 +574,20 @@ augment Warlock::Texture
         texels = bitmap.pixels
       endIf
 
-      set( texels, size, &=mipmaps, &=wrap )
+      info.size = size
+      set( texels, info )
 
-    method set( texels:Color[], size:XY, &mipmaps, &wrap )
-      this.size = size
+    method set( texels:Color[], info:TextureInfo )
+      this.size = info.size
       uv = Quad( XY(0,0), XY(1,0), XY(1,1), XY(0,1) )
 
       native
       @|uint32_t sampler_flags = BGFX_SAMPLER_MIN_ANISOTROPIC | BGFX_SAMPLER_MAG_ANISOTROPIC;
-       |if ( !$wrap ) sampler_flags |= BGFX_SAMPLER_UVW_CLAMP;
+       |if ( !$info.wrap ) sampler_flags |= BGFX_SAMPLER_UVW_CLAMP;
        |
        |$this->bgfx_texture = bgfx::createTexture2D(
-       |  static_cast<uint16_t>($size.x), static_cast<uint16_t>($size.y),
-       |  $mipmaps,
+       |  static_cast<uint16_t>($info.size.x), static_cast<uint16_t>($info.size.y),
+       |  $info.mipmaps,
        |  1,
        |  bgfx::TextureFormat::RGBA8,
        |  sampler_flags,

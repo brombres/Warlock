@@ -208,7 +208,8 @@ class AssetLoadingState : State
           if (job.is_finished)
             image_decode_jobs.remove_at( index )
             local info = job.texture_info
-            local texture = Texture( File(job.filepath), job.texture_pixels, info.size, &mipmaps=info.mipmaps, &wrap=info.wrap )
+            info.filepath = job.filepath
+            local texture = Texture( info, job.texture_pixels, info.size )
             texture.is_managed = true
             texture.retain_object
             ++loaded_asset_count

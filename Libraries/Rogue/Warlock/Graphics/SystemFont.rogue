@@ -27,7 +27,9 @@ class SystemFont : Font [singleton]
       is_loaded = true
 
       local bitmap = Bitmap.decode( png_data )
-      local texture = Texture( bitmap )
+      local info : TextureInfo
+      info.mipmaps = true
+      local texture = Texture( bitmap, info )
       forEach (unicode at i in ' '..'~')
         local placement = Box( placements[i], fixed_width, internal_height )
         local font_ch = ascii_characters[unicode]

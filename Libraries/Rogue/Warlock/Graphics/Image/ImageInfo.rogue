@@ -10,8 +10,13 @@ class ImageInfo( texture_index:Int, bounds:Box, wrap:Logical ) [compound]
       endIf
 
     method texture( &mipmaps=true )->Texture
-      if local texture_filepath = Warlock.find_asset( AssetManager.texture_filepaths[texture_index] )
-        return Texture( Texture(texture_filepath,&=mipmaps,&=wrap), bounds )
+      local relative_filepath = AssetManager.texture_filepaths[texture_index]
+      if local texture_filepath = Warlock.find_asset( relative_filepath )
+        local info = AssetManager.texture_info[ relative_filepath ]
+        info.filepath = texture_filepath.filepath
+        info.mipmaps = mipmaps
+        info.wrap    = wrap
+        return Texture( Texture(info), bounds )
       else
         return Texture()
       endIf

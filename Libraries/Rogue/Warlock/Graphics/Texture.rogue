@@ -12,8 +12,8 @@ class Texture
     method is_cached( file:File )->Logical
       return AssetManager.textures[file]?
 
-    method create( bitmap:Bitmap, &mipmaps=true, &wrap )->Texture
-      local texture = Texture().[ set(bitmap,&=mipmaps,&=wrap) ]
+    method create( bitmap:Bitmap, info:TextureInfo )->Texture
+      local texture = Texture().[ set(bitmap,info) ]
       if (texture.size != bitmap.size)
         # Texture size was expanded to power of 2; return a subset texture.
         return Texture( texture, Box(bitmap.size) )
@@ -21,25 +21,28 @@ class Texture
         return texture
       endIf
 
-    method create( file:File, texels:Color[], image_size:XY, texture_size=null:XY?, &mipmaps, &wrap )->Texture
+    method create( info:TextureInfo, texels:Color[], image_size:XY, texture_size=null:XY? )->Texture
+      local file = File( info.filepath )
       if local cached = AssetManager.textures[file]
         return cached.object
       endIf
 
       Log.println "Loading " + file
       if (not texture_size) texture_size = image_size
-      local texture = Texture().[ set(texels,texture_size.value,&=mipmaps,&=wrap) ]
+      info.size = texture_size.value
+      local texture = Texture().[ set(texels,info) ]
       if (texture_size.value != image_size)
         # Texture size was expanded to power of 2; return a subset texture.
         texture = Texture( texture, Box(image_size) )
       endIf
 
       AssetManager.textures[file] = WeakReference<<Texture>>( texture )
-      texture.filepath = file.filepath
+      texture.filepath = info.filepath
 
       return texture
 
-    method create( file:File, &mipmaps=true, &wrap )->Texture
+    method create( info:TextureInfo )->Texture
+      local file = File( info.filepath )
       if local cached = AssetManager.textures[file]
         return cached.object
       endIf
@@ -50,9 +53,9 @@ class Texture
       endIf
 
       Log.println "Loading " + file
-      local texture = Texture( Bitmap(file), &=mipmaps, &=wrap )
+      local texture = Texture( Bitmap(file), info )
       AssetManager.textures[file] = WeakReference<<Texture>>( texture )
-      texture.filepath = file.filepath
+      texture.filepath = info.filepath
       return texture
 
   METHODS
