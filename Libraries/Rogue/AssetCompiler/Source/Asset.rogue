@@ -26,6 +26,7 @@ class Asset
     image_mipmaps       : Logical
     image_patch_count   : Int
     texture_wrap        : Logical
+    dynamic_size        = -1
 
     font_characters     : String
     font_info           : Variant
@@ -35,7 +36,11 @@ class Asset
   METHODS
     method init( filepath, rule )
       is_standalone = rule?.find_attribute( "standalone" )?
-      if (is_standalone) group = AssetGroup()
+      if (rule) dynamic_size = AssetGroup.parse_dynamic_size_attribute( rule.attributes )
+      if (is_standalone)
+        group = AssetGroup()
+        group.dynamic_size = dynamic_size
+      endIf
 
     method bitmap->Bitmap
       if (@bitmap) return @bitmap

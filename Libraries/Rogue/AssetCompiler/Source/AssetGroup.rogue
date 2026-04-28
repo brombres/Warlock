@@ -10,6 +10,23 @@ class AssetGroup
     attributes  : AttributeList
     is_modified : Logical
     atlas_padding     = 8
+    dynamic_size      = -1
+
+  GLOBAL METHODS
+    method parse_dynamic_size_attribute( attributes:AttributeList )->Int
+      if (attributes is null) return -1
+      forEach (attribute in attributes)
+        if (attribute.name == "fixed_size") return 0
+        if (attribute.name.count >= 2 and attribute.name[0] == 'x')
+          local rest = attribute.name.from(1)
+          local digits_only = true
+          forEach (ch in rest)
+            if (ch < '0' or ch > '9') digits_only = false
+          endForEach
+          if (digits_only) return rest->Int
+        endIf
+      endForEach
+      return -1
 
   METHODS
     method configure_id
@@ -125,6 +142,8 @@ class AssetGroup
       if local attr = attributes.find( "atlas_padding" )
         atlas_padding = attr.value->Int
       endIf
+      local dyn = AssetGroup.parse_dynamic_size_attribute( attributes )
+      if (dyn != -1) dynamic_size = dyn
 
     method to->String
       return assets->String
@@ -153,7 +172,8 @@ class AssetGroup
                build_filepath:page.build_filepath,
                size:page.size,
                mipmaps:page.uses_mipmaps,
-               wrap:page.uses_texture_wrap
+               wrap:page.uses_texture_wrap,
+               dynamic_size:dynamic_size
              }
           )
         endForEach

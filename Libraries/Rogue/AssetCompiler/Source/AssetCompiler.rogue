@@ -86,16 +86,26 @@ class AssetCompiler [singleton]
 
       block
         # Ungrouped, non-standalone assets are assigned to a common group.
-        # Separate groups for Graphics, Audio, and Data
+        # Separate groups for Graphics, Audio, and Data. Graphics groups are
+        # further partitioned by dynamic_size: the first asset's dynamic_size
+        # establishes a group's value, then only assets with a matching
+        # dynamic_size are added; remaining assets get new groups.
         local default_audio    : AssetGroup
         local default_data     : AssetGroup
-        local default_graphics : AssetGroup
+        local default_graphics_by_size = [Int:AssetGroup]
         forEach (asset in assets)
           if (not asset.group)
             if (not asset.is_standalone)
               which (asset.type)
                 case <Image>, <Font>
-                  asset.group = ensure<<default_graphics>>
+                  local dyn = asset.dynamic_size
+                  local group = default_graphics_by_size[dyn]
+                  if (not group)
+                    group = AssetGroup()
+                    group.dynamic_size = dyn
+                    default_graphics_by_size[dyn] = group
+                  endIf
+                  asset.group = group
                 case <Sound>, <Music>
                   asset.group = ensure<<default_audio>>
                 case <Binary>, <JSON>
@@ -146,6 +156,7 @@ class AssetCompiler [singleton]
       texture_info.clear
       forEach (group in all_groups)
         forEach (info in group.page_info)
+          info//dynamic_size = group.dynamic_size
           texture_info[info//asset_filepath] = info
           existing_textures.remove( info//build_filepath->String )
         endForEach
@@ -189,7 +200,10 @@ class AssetCompiler [singleton]
       forEach (info in texture_info)
         manifest.print "$ $ "(info//size//x->Int.format("4"),info//size//y->Int.format("4"))
         manifest.print "mipmaps $ wrap $ "(info//mipmaps->String.justified(5),info//wrap->String.justified(5))
-        manifest.println info//asset_filepath
+        manifest.print info//asset_filepath
+        local dyn = info//dynamic_size->Int
+        if (dyn < 0) dyn = 0
+        manifest.println " dynamic_size $"(dyn)
       endForEach
       manifest.println
 
