@@ -1,8 +1,14 @@
 library Warlock
 
 class AssetGroup
+  PROPERTIES
+    load_on_demand : Logical
+    # If true, assets will not be automatically loaded for this group.
+
   METHODS
     method load( loader:AssetLoadingState ) [critical]
+      if (load_on_demand) return
+
       local properties = this.type_info.properties
       forEach (p in properties)
         local type = p->TypeID
@@ -28,6 +34,8 @@ class AssetGroup
       endForEach
 
     method set_is_used( setting:Logical )
+      if (load_on_demand and setting) return
+
       local properties = this.type_info.properties
       forEach (p in properties)
         local type = p->TypeID

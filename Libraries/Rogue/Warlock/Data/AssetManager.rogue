@@ -2,13 +2,14 @@ library Warlock
 
 class AssetManager [singleton]
   PROPERTIES
-    scanner           : Scanner
-    texture_filepaths = String[]
-    texture_info      = [String:TextureInfo]
-    textures          = [File:WeakReference<<Texture>>]
-    assets            = [String:AssetInfo]
-    is_loaded         : Logical
-    asset_manifest    = [String:String]
+    scanner             : Scanner
+    texture_filepaths   = String[]
+    texture_info        = [String:TextureInfo]
+    textures            = [File:WeakReference<<Texture>>]
+    assets              = [String:AssetInfo]
+    is_loaded           : Logical
+    asset_manifest      = [String:String]
+    active_asset_groups = AssetGroup[]
 
   METHODS
     method init

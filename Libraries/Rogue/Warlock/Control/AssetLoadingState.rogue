@@ -7,7 +7,7 @@ class AssetLoadingState : State
     loaded_asset_count   : Int
     total_asset_count    : Int
 
-    unused_textures      = Texture[]
+    active_asset_groups  = AssetGroup[]
 
     max_jobs             = System.cpu_core_count : Int
     image_decode_jobs    = ImageDecodeJob[]
@@ -88,6 +88,7 @@ class AssetLoadingState : State
 
     method include( assets:AssetGroup )
       if (not assets) return
+      if (not active_asset_groups.contains(assets)) active_asset_groups.add( assets )
       assets.load( this )
 
     method include( audio:Sound )
@@ -146,10 +147,16 @@ class AssetLoadingState : State
 
     method on_start [critical]
       # Assume all existing textures will be unused
-      unused_textures.clear
+      local unused_textures = Texture[]
       forEach (ref in AssetManager.textures)
         if (ref.exists) unused_textures.add( ref.object )
       endForEach
+
+      local old_groups = AssetManager.active_asset_groups
+      AssetManager.active_asset_groups = this.active_asset_groups
+      (forEach in old_groups).is_used = false
+      (forEach in active_asset_groups).is_used = true
+      active_asset_groups = AssetGroup[]
 
       forEach (texture_info in pending_textures step -1)
         if local filepath = Warlock.find_asset( texture_info.filepath )
@@ -163,6 +170,8 @@ class AssetLoadingState : State
           endIf
         endIf
       endForEach
+
+      (forEach in old_groups).unload_unused
 
       # Release managed unused_textures prior to loading new ones
       forEach (texture in unused_textures)
