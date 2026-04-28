@@ -177,9 +177,15 @@ class AssetManager [singleton]
         local wrap = true
         .consume_ws
         if (.consume_id("wrap")) wrap = .scan_logical
-        local filepath = scanner.read_line
+        local line = scanner.read_line
+        local filepath = line
+        local dynamic_size = 0
+        if local pos = line.locate_last( " dynamic_size " )
+          filepath = line.before( pos )
+          dynamic_size = line.from( pos + 14 ).trimmed->Int
+        endIf
         texture_filepaths.add( filepath )
-        texture_info[filepath] = TextureInfo( texture_filepaths.last, XY(w,h), &=mipmaps, &=wrap )
+        texture_info[filepath] = TextureInfo( texture_filepaths.last, XY(w,h), &=mipmaps, &=wrap, &=dynamic_size )
       endLoop
 
     method .load_another_asset->Logical
@@ -297,5 +303,5 @@ class AssetManager [singleton]
 
 endClass
 
-class TextureInfo( filepath:String, size:XY, mipmaps:Logical, wrap:Logical ) [compound]
+class TextureInfo( filepath:String, size:XY, mipmaps:Logical, wrap:Logical, dynamic_size:Int ) [compound]
 endClass
