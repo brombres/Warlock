@@ -7,6 +7,48 @@ class Window : Display [singleton]
     old_size       : XY  # used to detect size changes in WarlockController.tick(Window)
     actions        : Action
 
+  GLOBAL METHODS
+    method max_size->XY
+      # Returns the largest size of any available display, in true (Retina) pixels.
+      # On mobile, queries the primary/current display.
+      # On desktop, enumerates all displays and returns the size of the one whose
+      # largest dimension is the largest among them.
+      local result : XY
+      if (System.is_mobile)
+        native
+        @|SDL_DisplayID display_id = SDL_GetPrimaryDisplay();
+         |const SDL_DisplayMode* mode = SDL_GetCurrentDisplayMode(display_id);
+         |if (mode)
+         |{
+         |  $result.x = (RogueReal)(mode->w * mode->pixel_density);
+         |  $result.y = (RogueReal)(mode->h * mode->pixel_density);
+         |}
+      else
+        native
+        @|int count = 0;
+         |SDL_DisplayID* displays = SDL_GetDisplays(&count);
+         |if (displays)
+         |{
+         |  RogueReal best_max_dim = 0;
+         |  for (int i = 0; i < count; ++i)
+         |  {
+         |    const SDL_DisplayMode* mode = SDL_GetCurrentDisplayMode(displays[i]);
+         |    if (!mode) continue;
+         |    RogueReal w = (RogueReal)(mode->w * mode->pixel_density);
+         |    RogueReal h = (RogueReal)(mode->h * mode->pixel_density);
+         |    RogueReal max_dim = (w > h) ? w : h;
+         |    if (max_dim > best_max_dim)
+         |    {
+         |      best_max_dim = max_dim;
+         |      $result.x = w;
+         |      $result.y = h;
+         |    }
+         |  }
+         |  SDL_free(displays);
+         |}
+      endIf
+      return result
+
   METHODS
     method init( title, width:Int, height:Int, state=State():State )
       Window = this
@@ -216,22 +258,6 @@ class Window : Display [singleton]
     method handle_app_resume
       Framework.handle_app_resume( this )
       Renderer.handle_app_resume( this )
-
-    method max_size->XY
-      if (System.is_mobile)
-        local result : XY
-        native
-        @|SDL_DisplayID display_id = SDL_GetPrimaryDisplay();
-         |const SDL_DisplayMode* mode = SDL_GetCurrentDisplayMode(display_id);
-         |if (mode)
-         |{
-         |  $result.x = (RogueReal)(mode->w * mode->pixel_density);
-         |  $result.y = (RogueReal)(mode->h * mode->pixel_density);
-         |}
-        return result
-      else
-        return XY(5120,2880)
-      endIf
 
     method native_id->Int
       noAction  # defined by extended Platform, e.g. SDL

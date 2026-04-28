@@ -13,6 +13,8 @@ class Texture
       return AssetManager.textures[file]?
 
     method create( bitmap:Bitmap, info:TextureInfo )->Texture
+      local scale = info.scale_factor
+      if (scale > 1) bitmap = bitmap.resized( bitmap.size / scale )
       local texture = Texture().[ set(bitmap,info) ]
       if (texture.size != bitmap.size)
         # Texture size was expanded to power of 2; return a subset texture.
@@ -22,6 +24,9 @@ class Texture
       endIf
 
     method create( info:TextureInfo, texels:Color[], image_size:XY, texture_size=null:XY? )->Texture
+      # 'texels' is assumed to already be sized for info.scale_factor (e.g.,
+      # ImageDecodeJob applies the scale before filling the buffer); only the
+      # logical sizes need to be scaled here.
       local file = File( info.filepath )
       if local cached = AssetManager.textures[file]
         return cached.object
@@ -29,9 +34,17 @@ class Texture
 
       Log.println "Loading " + file
       if (not texture_size) texture_size = image_size
-      info.size = texture_size.value
+      local size = texture_size.value
+
+      local scale = info.scale_factor
+      if (scale > 1)
+        image_size /= scale
+        size /= scale
+      endIf
+
+      info.size = size
       local texture = Texture().[ set(texels,info) ]
-      if (texture_size.value != image_size)
+      if (size != image_size)
         # Texture size was expanded to power of 2; return a subset texture.
         texture = Texture( texture, Box(image_size) )
       endIf

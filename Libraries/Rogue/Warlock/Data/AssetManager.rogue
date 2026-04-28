@@ -256,7 +256,10 @@ class AssetManager [singleton]
         .consume_ws
         local h = scanner.scan_int
         .consume_ws( &eols )
-        asset.images.add( ImageInfo(i, Box(x,y,w,h), &wrap=asset.texture_wrap) )
+        local bounds = Box(x,y,w,h)
+        local scale = texture_info[ texture_filepaths[i] ].scale_factor
+        if (scale > 1) bounds = Box( bounds.position/scale, bounds.size/scale )
+        asset.images.add( ImageInfo(i, bounds, &wrap=asset.texture_wrap) )
       endLoop
 
       return true
@@ -301,4 +304,17 @@ class AssetManager [singleton]
 endClass
 
 class TextureInfo( filepath:String, size:XY, mipmaps:Logical, wrap:Logical, dynamic_size:Int ) [compound]
+  METHODS
+    method scale_factor->Int
+      # Largest power of 2 'S' such that Window.max_size.max * S <= dynamic_size.
+      # Returns 1 (no scaling) if dynamic_size is non-positive or the window
+      # query is unavailable.
+      if (dynamic_size <= 0) return 1
+      local max_window = Window.max_size.max->Int
+      if (max_window <= 0) return 1
+      local scale = 1
+      while (max_window * scale * 2 <= dynamic_size)
+        scale *= 2
+      endWhile
+      return scale
 endClass

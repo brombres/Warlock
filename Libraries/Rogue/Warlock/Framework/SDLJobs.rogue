@@ -8,6 +8,7 @@ class ImageDecodeJob
     texture_width  : Int
     texture_height : Int
     texture_pixels : Color[]
+    scale_factor   : Int
     on_result      : Function(TextureInfo,Color[])
     native "SDL_AtomicInt is_finished;"
 
@@ -22,8 +23,12 @@ class ImageDecodeJob
 
       image_bytes = Byte[]( File(filepath) )
 
-      local w = texture_info.size.x->Int
-      local h = texture_info.size.y->Int
+      scale_factor = texture_info.scale_factor
+
+      local w = (texture_info.size.x->Int) / scale_factor
+      local h = (texture_info.size.y->Int) / scale_factor
+      if (w < 1) w = 1
+      if (h < 1) h = 1
       local mipmap_data_count = 1  # counts final 1x1 image
       while (w > 1 or h > 1)
         mipmap_data_count += w * h
@@ -56,6 +61,19 @@ class ImageDecodeJob
      |  unsigned char* bitmap_data = Warlock_decode_image( bytes, byte_size, &width, &height, &channels );
      |  if (bitmap_data)
      |  {
+     |    if (job->scale_factor > 1)
+     |    {
+     |      int target_w = width / job->scale_factor;
+     |      int target_h = height / job->scale_factor;
+     |      if (target_w < 1) target_w = 1;
+     |      if (target_h < 1) target_h = 1;
+     |      unsigned char* scaled = (unsigned char*) malloc( (size_t)(target_w * target_h * 4) );
+     |      Warlock_resize_image( bitmap_data, width, height, scaled, target_w, target_h );
+     |      free( bitmap_data );
+     |      bitmap_data = scaled;
+     |      width  = target_w;
+     |      height = target_h;
+     |    }
      |    job->texture_width  = (RogueInt) width;
      |    job->texture_height = (RogueInt) height;
      |    memcpy( job->texture_pixels->data, bitmap_data, width*height*4 );
