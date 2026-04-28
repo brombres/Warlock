@@ -200,10 +200,10 @@ class AssetCompiler [singleton]
       forEach (info in texture_info)
         manifest.print "$ $ "(info//size//x->Int.format("4"),info//size//y->Int.format("4"))
         manifest.print "mipmaps $ wrap $ "(info//mipmaps->String.justified(5),info//wrap->String.justified(5))
-        manifest.print info//asset_filepath
         local dyn = info//dynamic_size->Int
         if (dyn < 0) dyn = 0
-        manifest.println " dynamic_size $"(dyn)
+        manifest.print "$ "(dyn)
+        manifest.println info//asset_filepath
       endForEach
       manifest.println
 
