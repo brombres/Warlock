@@ -28,6 +28,11 @@ class Asset
     texture_wrap        : Logical
     dynamic_size        = -1
 
+    has_resize          : Logical
+    resize_scale        : Real  # >0: uniform scale factor; 0: derive from resize_w/resize_h
+    resize_w            : Int   # >0: explicit pixel width;  0: derive from height/scale
+    resize_h            : Int   # >0: explicit pixel height; 0: derive from width/scale
+
     font_characters     : String
     font_info           : Variant
     font_height         : Int
@@ -41,6 +46,7 @@ class Asset
         group = AssetGroup()
         group.dynamic_size = dynamic_size
       endIf
+      .parse_resize_attribute
 
     method bitmap->Bitmap
       if (@bitmap) return @bitmap
@@ -327,6 +333,42 @@ class Asset
           endIf
       endWhich
 
+      apply_resize_to_placements
+
+    method apply_resize_to_placements
+      if (not has_resize) return
+      if (placements.is_empty) return
+
+      local scales = resize_scales
+      if (scales.x == 1.0 and scales.y == 1.0) return
+
+      forEach (placement in placements)
+        local new_w = (placement.size.x * scales.x)->Int
+        local new_h = (placement.size.y * scales.y)->Int
+        if (new_w < 1) new_w = 1
+        if (new_h < 1) new_h = 1
+        placement.bitmap = placement.bitmap.resized( XY(new_w, new_h) )
+        placement.size = XY( new_w, new_h )
+      endForEach
+
+    method resize_scales->XY
+      if (not has_resize) return XY(1,1)
+      if (resize_scale > 0) return XY(resize_scale, resize_scale)
+
+      local sx = 1.0
+      local sy = 1.0
+      if (resize_w > 0 and resize_h > 0)
+        sx = resize_w->Real / image_size.x
+        sy = resize_h->Real / image_size.y
+      elseIf (resize_w > 0)
+        sx = resize_w->Real / image_size.x
+        sy = sx
+      elseIf (resize_h > 0)
+        sy = resize_h->Real / image_size.y
+        sx = sy
+      endIf
+      return XY(sx, sy)
+
     method image_padding->Int?
       if local padding_attribute = rule.find_attribute( "atlas_padding" )
         .require_value(
@@ -377,11 +419,12 @@ class Asset
       @placement_info = @[]
 
       forEach (placement in placements)
+        local original = placement.original
         @placement_info.add(
           @{
-            atlas_filepath:placement.original.atlas_filepath,
-            position:{x:placement.position.x->Int,y:placement.position.y->Int},
-            size:{x:placement.size.x->Int,y:placement.size.y->Int}
+            atlas_filepath:original.atlas_filepath,
+            position:{x:original.position.x->Int,y:original.position.y->Int},
+            size:{x:original.size.x->Int,y:original.size.y->Int}
           }
         )
       endForEach
@@ -439,9 +482,16 @@ class Asset
     method write( manifest:Manifest )
       which (type)
         case <Image>
+          local out_w = image_size.x->Int
+          local out_h = image_size.y->Int
+          if (has_resize)
+            local scales = resize_scales
+            out_w = (image_size.x * scales.x)->Int
+            out_h = (image_size.y * scales.y)->Int
+          endIf
           manifest.print ''"$"''(filepath)
           manifest.print " image"
-          manifest.print " $ $" (image_size.x->Int,image_size.y->Int)
+          manifest.print " $ $" (out_w,out_h)
           if (image_patch_count)
             manifest.print " patch "
             manifest.print "$ $ $" (image_patch_count,image_split.x->Int,image_split.y->Int)
@@ -458,17 +508,25 @@ class Asset
           manifest.println
           write_placements( manifest )
         case <Font>
+          local s = which{ has_resize:resize_scales.x || 1.0 }
+          local out_font_height = which{ s == 1.0:font_height || (font_height * s)->Int }
           manifest.print ''"$"''(filepath)
           manifest.print " font"
-          manifest.print " $"(font_height)
+          manifest.print " $"(out_font_height)
           if (font_width == -1) manifest.print " variable"
-          else                  manifest.print " $"(font_width)
+          else                  manifest.print " $"((font_width * s)->Int)
           manifest.print '' "$"''(font_characters.to_escaped_unicode("\""))
           manifest.println
           if (font_info.is_table)
-            manifest.println "  offset  $"(font_info//offset)
-            manifest.println "  advance $"(font_info//advance)
-            manifest.println "  kerning $"(font_info//kerning->JSON)
+            if (s == 1.0)
+              manifest.println "  offset  $"(font_info//offset)
+              manifest.println "  advance $"(font_info//advance)
+              manifest.println "  kerning $"(font_info//kerning->JSON)
+            else
+              manifest.println "  offset  $"(.scaled_int_list(font_info//offset,s))
+              manifest.println "  advance $"(.scaled_int_list(font_info//advance,s))
+              manifest.println "  kerning $"(.scaled_kerning(font_info//kerning,s)->JSON)
+            endIf
             manifest.println "  monospace $"(font_info//monospace_width->Int)
           endIf
           write_placements( manifest )
@@ -488,7 +546,56 @@ class Asset
       endIf
       font_width = bitmap.width / font_characters.count
 
+    method .parse_resize_attribute
+      if (rule is null) return
+      if local attr = rule.find_attribute( "resize" )
+        if (not attr.value)
+          throw attr.t.error(
+            "Expected e.g. 'resize:0.5', 'resize:1/3', 'resize:2', 'resize:100x200', 'resize:100x', or 'resize:x200'."
+          )
+        endIf
+        local spec = attr.value.value
+        if (spec.contains('x'))
+          local x_pos = spec.locate('x').value
+          local left  = spec.leftmost(x_pos)
+          local right = spec.from(x_pos+1)
+          if (left.count == 0 and right.count == 0)
+            throw attr.t.error( "Invalid 'resize:$' value."(spec) )
+          endIf
+          if (left.count > 0)  resize_w = left->Int
+          if (right.count > 0) resize_h = right->Int
+        elseIf (spec.contains('/'))
+          local slash_pos = spec.locate('/').value
+          local num_str   = spec.leftmost(slash_pos)
+          local denom_str = spec.from(slash_pos+1)
+          local denom = denom_str->Real
+          if (denom == 0) throw attr.t.error( "Invalid 'resize:$' fraction."(spec) )
+          resize_scale = num_str->Real / denom
+        else
+          resize_scale = spec->Real
+        endIf
+        has_resize = true
+      endIf
+
     method .require_value( attribute:Attribute, error_message:String )
       if (not attribute.value) throw attribute.t.error( error_message )
+
+    method .scaled_int_list( list:Variant, scale:Real )->Variant
+      local result = @[]
+      forEach (v in list)
+        result.add( (v->Int * scale)->Int )
+      endForEach
+      return result
+
+    method .scaled_kerning( kerning:Variant, scale:Real )->Variant
+      local result = @{}
+      forEach (entry in kerning.entries)
+        local inner = @{}
+        forEach (sub in entry.value.entries)
+          inner[sub.key] = (sub.value->Int * scale)->Int
+        endForEach
+        result[entry.key] = inner
+      endForEach
+      return result
 
 endClass
