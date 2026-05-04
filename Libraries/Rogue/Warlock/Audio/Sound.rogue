@@ -164,6 +164,8 @@ class Sound
       endIf
 
       if (data)
+        if (filepath) Log.println "Loading " + filepath
+
         native
         @|ma_result result;
          |ma_decoder_config config;
@@ -226,6 +228,7 @@ class Sound
       if (is_playing) native @|ma_sound_set_looping( &$this->sound, $is_looping );
 
     method set_is_used( @is_used )
+      next_in_pool?.set_is_used( is_used )
 
     method set_volume( @volume )
       if (is_prepared) current_volume = volume
@@ -274,6 +277,8 @@ class Sound
     method unload
       if (is_prepared)
         # Stop while keeping in the active_music list
+        if (filepath) Log.println "Unloading " + filepath
+
         pause
         is_paused = false
 
