@@ -820,14 +820,15 @@ routine copy_file( from_file:File, to_file:File, base_folder:String, &header_sho
     if (not from_file.is_different_than(to_file)) return header_shown
   endIf
 
+  local replace_project_id = false
+
   local platform : String
   if (to_file.filepath.contains("Android"))
     platform = "android"
+    replace_project_id = true
   elseIf (to_file.filepath.contains("Xcode"))
     platform = "xcode"
-  else
-    trace
-    throw Error( "TODO: support platform " + to_file.filepath )
+    replace_project_id = true
   endIf
 
   localize project_id( platform )
@@ -837,7 +838,7 @@ routine copy_file( from_file:File, to_file:File, base_folder:String, &header_sho
 
   local mesg : String
 
-  if (to_file->String.contains(placeholder_path))
+  if (replace_project_id and to_file->String.contains(placeholder_path))
     local adjusted_file = File( to_file->String.replacing(placeholder_path,package_path) )
     mesg = "  $ -> $"(to_file->String.after_first(base_folder),adjusted_file->String.after_first(base_folder))
     to_file = adjusted_file
@@ -848,7 +849,7 @@ routine copy_file( from_file:File, to_file:File, base_folder:String, &header_sho
   to_file.parent.create_folder
 
   local content = String( from_file )
-  if (content.contains(placeholder_id))
+  if (replace_project_id and content.contains(placeholder_id))
     content .= replacing( placeholder_id, project_id )
   endIf
 
