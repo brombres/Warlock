@@ -6,7 +6,8 @@ $requireRogue "2.34.3"
 
 #$ DEPENDENCIES = Libraries/Warlock/BuildWarlock.rogue
 
-$define DEFAULT_WARLOCK "https://github.com/brombres/Warlock.git#develop"
+#$define DEFAULT_WARLOCK_REPO "https://github.com/brombres/Warlock.git#develop"
+$define DEFAULT_WARLOCK_REPO "git@github.com:brombres/Warlock.git#develop"
 
 uses Utility/GitRepo
 
@@ -129,15 +130,15 @@ endRoutine
 routine rogo_install_warlock( url_and_branch="":String )
   if (not String.exists(url_and_branch))
     println "Enter Git URL#branch for Warlock - can specify URL only or #branch only."
-    println "[default: $] " (DEFAULT_WARLOCK)
+    println "[default: $] " (DEFAULT_WARLOCK_REPO)
     url_and_branch = Console.input( "> " )
     if (url_and_branch == "")
-      url_and_branch = DEFAULT_WARLOCK
+      url_and_branch = DEFAULT_WARLOCK_REPO
       println url_and_branch
     elseIf (not url_and_branch.contains('#'))
-      url_and_branch += DEFAULT_WARLOCK.from_first('#')
+      url_and_branch += DEFAULT_WARLOCK_REPO.from_first('#')
     elseIf (url_and_branch.begins_with('#'))
-      url_and_branch = DEFAULT_WARLOCK.before_first('#') + url_and_branch
+      url_and_branch = DEFAULT_WARLOCK_REPO.before_first('#') + url_and_branch
     endIf
   endIf
 
