@@ -56,43 +56,69 @@ class Spine [essential singleton]
   NATIVE
     nativeHeader
     @|#include <spine/spine.h>
-     |#include <spine/extension.h>
-     |#include <spine/SkeletonBinary.h>
-     |#include <spine/SkeletonJson.h>
-     |//extern RogueReal64 Rogue_spine_skeleton_scale;
+     |
+     |// Helpers defined in Spine's nativeCode, forward-declared here so other
+     |// Warlock Spine classes can call them regardless of emission order.
+     |spine::TextureLoader*  Warlock_spine_texture_loader();
+     |spine::RenderCommand*  Warlock_spine_render( spine::Skeleton* skeleton );
 
     nativeCode
-    @|//RogueReal64  Rogue_spine_skeleton_scale = 0;  // used to scale when used with different texture sizes
-     |
-     |extern "C" void _spAtlasPage_createTexture( spAtlasPage* self, const char* path )
+    @|// spine-cpp requires the engine to provide a TextureLoader (atlas page
+     |// textures) and a SpineExtension (file I/O + allocation). These replace the
+     |// old spine-c _spAtlasPage_createTexture / _spUtil_readFile callbacks.
+     |namespace
      |{
-     |  printf( "Load Spine texture: %s\n", path );
-     |  RogueWarlockImage* img = (RogueWarlockImage*) RogueWarlockSpine__load_atlas_image__RogueString( RogueString_create(path) );
-     |  self->rendererObject = img;
+     |  class WarlockTextureLoader : public spine::TextureLoader
+     |  {
+     |  public:
+     |    void load( spine::AtlasPage &page, const spine::String &path ) override
+     |    {
+     |      printf( "Load Spine texture: %s\n", path.buffer() );
+     |      RogueWarlockImage* img = (RogueWarlockImage*)
+     |        RogueWarlockSpine__load_atlas_image__RogueString( RogueString_create(path.buffer()) );
+     |      page.texture = img;
+     |      // Don't set page.width/height: that would corrupt the UV coordinates.
+     |      // Instead ensure the atlas dimensions are powers of two.
+     |    }
      |
-     |  //Rogue_spine_skeleton_scale = img->size.x / (RogueReal64) self->width;
+     |    void unload( void *texture ) override
+     |    {
+     |      // The Image is owned/cached by Spine.atlas_images; nothing to do here.
+     |    }
+     |  };
      |
-     |  // Don't set self->width and height as described in the Spine technical documentation.
-     |  // Setting them screws up the UV coordinates. Instead ensure the atlas dimensions are
-     |  // powers of two.
-     |  //int w = 1;
-     |  //while (w < self->width) w <<= 1;
-     |  //int h = 1;
-     |  //while (h < self->height) h <<= 1;
-     |  //self->width = w;
-     |  //self->height = h;
+     |  class WarlockSpineExtension : public spine::DefaultSpineExtension
+     |  {
+     |  protected:
+     |    char* _readFile( const spine::String &path, int *length ) override
+     |    {
+     |      // Resolve the logical asset name to a real filepath via Warlock, then
+     |      // read it with the default (stdio) implementation.
+     |      RogueString* resolved =
+     |        RogueWarlockSpine__data_filepath__RogueString( RogueString_create(path.buffer()) );
+     |      printf( "Loading Spine data: %s\n", path.buffer() );
+     |      return spine::DefaultSpineExtension::_readFile(
+     |        spine::String((const char*)resolved->data->as_utf8), length );
+     |    }
+     |  };
      |}
      |
-     |extern "C" void _spAtlasPage_disposeTexture( spAtlasPage* self )
+     |spine::TextureLoader* Warlock_spine_texture_loader()
      |{
-     | //RogueWarlockSpine__unload_atlas_image__WarlockImage( (RogueWarlockImage*) self->rendererObject );
+     |  static WarlockTextureLoader loader;
+     |  return &loader;
      |}
      |
-     |extern "C" char* _spUtil_readFile( const char* path, int* length )
+     |spine::RenderCommand* Warlock_spine_render( spine::Skeleton* skeleton )
      |{
-     |  char* filepath = (char*) RogueWarlockSpine__data_filepath__RogueString( RogueString_create(path) )->data->as_utf8;
-     |  printf( "Loading Spine skeleton: %s\n", path );
-     |  return _spReadFile( filepath, length );
+     |  static spine::SkeletonRenderer* renderer = nullptr;
+     |  if ( !renderer ) renderer = new spine::SkeletonRenderer();
+     |  return renderer->render( *skeleton );
+     |}
+     |
+     |spine::SpineExtension* spine::getDefaultExtension()
+     |{
+     |  return new WarlockSpineExtension();
      |}
 endClass
 
@@ -103,7 +129,7 @@ class SpineAtlas
     error : Logical
     #scale : Real
 
-    native "spAtlas *atlas;"
+    native "spine::Atlas* atlas;"
 
   GLOBAL METHODS
     method create( name:String )->SpineAtlas
@@ -123,16 +149,14 @@ class SpineAtlas
 
   METHODS
     method init( name, new_instance:Logical )
-      native @|$this->atlas = spAtlas_createFromFile( $name->data->as_utf8, 0 );
-      if (native("!$this->atlas")->Logical)
+      native @|$this->atlas = new spine::Atlas( $name->data->as_utf8, Warlock_spine_texture_loader() );
+      if (native("$this->atlas->getPages().size() == 0")->Logical)
         error = true
         println "ERROR loading Spine atlas " + name
       endIf
 
-      #scale = native( "Rogue_spine_skeleton_scale" )->Real
-
     method on_cleanup
-      native @|if ($this->atlas) spAtlas_dispose( $this->atlas );
+      native @|if ($this->atlas) delete $this->atlas;
               |$this->atlas = 0;
 endClass
 
@@ -146,8 +170,8 @@ class SpineDefinition
     scale  = 1.0
     animation_names : String[]
 
-    native "spSkeletonData*       skeleton_data;"
-    native "spAnimationStateData* animation_state_definition;"
+    native "spine::SkeletonData*       skeleton_data;"
+    native "spine::AnimationStateData* animation_state_definition;"
 
   GLOBAL METHODS
     method create( skeleton_name:String, atlas=null:SpineAtlas )->SpineDefinition
@@ -207,39 +231,36 @@ class SpineDefinition
 
       if (is_json)
         native
-        @|spSkeletonJson* json_reader = spSkeletonJson_create( $this->atlas->atlas );
-         |$this->skeleton_data = spSkeletonJson_readSkeletonDataFile( json_reader, $skeleton_name->data->as_utf8 );
+        @|spine::SkeletonJson json_reader( *($this->atlas->atlas) );
+         |$this->skeleton_data = json_reader.readSkeletonDataFile( $skeleton_name->data->as_utf8 );
          |if ($this->skeleton_data)
          |{
-         |  $w = $this->skeleton_data->width;
-         |  $h = $this->skeleton_data->height;
+         |  $w = $this->skeleton_data->getWidth();
+         |  $h = $this->skeleton_data->getHeight();
          |}
          |else
          |{
          |  printf( "[ERROR] Error loading Spine skeleton %s\n", $skeleton_name->data->as_utf8 );
-         |  if (json_reader->error) printf( "[ERROR] %s\n", json_reader->error );
+         |  if (!json_reader.getError().isEmpty()) printf( "[ERROR] %s\n", json_reader.getError().buffer() );
          |}
-         |spSkeletonJson_dispose( json_reader );
       else
         local bytes = Byte[]( Warlock.find_data_file(skeleton_name).value )
         native
-        @|spSkeletonBinary* binary_reader = spSkeletonBinary_create( $this->atlas->atlas );
-         |$this->skeleton_data = spSkeletonBinary_readSkeletonData(
-         |  binary_reader,
+        @|spine::SkeletonBinary binary_reader( *($this->atlas->atlas) );
+         |$this->skeleton_data = binary_reader.readSkeletonData(
          |  (const unsigned char*)$bytes->as_utf8,
          |  (int)$bytes->count
          |);
          |if ($this->skeleton_data)
          |{
-         |  $w = $this->skeleton_data->width;
-         |  $h = $this->skeleton_data->height;
+         |  $w = $this->skeleton_data->getWidth();
+         |  $h = $this->skeleton_data->getHeight();
          |}
          |else
          |{
          |  printf( "[ERROR] Error loading Spine skeleton %s\n", $skeleton_name->data->as_utf8 );
-         |  if (binary_reader->error) printf( "[ERROR] %s\n", binary_reader->error );
+         |  if (!binary_reader.getError().isEmpty()) printf( "[ERROR] %s\n", binary_reader.getError().buffer() );
          |}
-         |spSkeletonBinary_dispose( binary_reader );
       endIf
 
       size = XY(w,h)
@@ -249,7 +270,7 @@ class SpineDefinition
         println error
 
       else
-        native @|$this->animation_state_definition = spAnimationStateData_create( $this->skeleton_data );
+        native @|$this->animation_state_definition = new spine::AnimationStateData( *($this->skeleton_data) );
         set_default_mix_time
 
       endIf
@@ -261,11 +282,11 @@ class SpineDefinition
       if (@animation_names) return @animation_names
 
       if (error) return String[]
-      native @|spSkeletonData* skeleton = $this->skeleton_data;
-      local n = native( "skeleton->animationsCount" )->Int32
+      native @|spine::SkeletonData* skeleton = $this->skeleton_data;
+      local n = native( "(RogueInt32) skeleton->getAnimations().size()" )->Int32
       local result = String[]( n )
       forEach (i in 0..<n)
-        result.add( native("RogueString_create(skeleton->animations[$i]->name)")->String )
+        result.add( native("RogueString_create(skeleton->getAnimations()[$i]->getName().buffer())")->String )
       endForEach
 
       @animation_names = result
@@ -274,7 +295,7 @@ class SpineDefinition
     method set_default_mix_time( seconds=0.5:Real )->this
       native @|if ($this->animation_state_definition)
               |{
-              |  $this->animation_state_definition->defaultMix = (float) $seconds;
+              |  $this->animation_state_definition->setDefaultMix( (float) $seconds );
               |}
       return this
 
@@ -291,7 +312,7 @@ class SpineDefinition
           println "ERROR setting Spine mix time " + entry
           println ''Expected ["from_state","to_state",seconds]''
         else
-          native @|spAnimationStateData_setMixByName( $this->animation_state_definition, $from_state->data->as_utf8, $to_state->data->as_utf8, (float)$seconds );
+          native @|$this->animation_state_definition->setMix( spine::String($from_state->data->as_utf8), spine::String($to_state->data->as_utf8), (float)$seconds );
         endIf
       endForEach
       return this
@@ -303,8 +324,8 @@ class SpineDefinition
       return set_mix_times( times )
 
     method on_cleanup
-      native @|if ($this->animation_state_definition) spAnimationStateData_dispose( $this->animation_state_definition );
-              |if ($this->skeleton_data) spSkeletonData_dispose( $this->skeleton_data );
+      native @|if ($this->animation_state_definition) delete $this->animation_state_definition;
+              |if ($this->skeleton_data) delete $this->skeleton_data;
               |$this->skeleton_data = 0;
               |$this->animation_state_definition = 0;
 endClass
@@ -320,8 +341,8 @@ endEnum
 
 class SpineAnimationEvent( type:SpineAnimationEventType, state:String, track:Int32, play_id:Int64 ) [compound]
   PROPERTIES
-    native "spTrackEntry* entry;"
-    native "spEvent*      event;"
+    native "spine::TrackEntry* entry;"
+    native "spine::Event*      event;"
 
   METHODS
     method is_complete->Logical
@@ -345,7 +366,7 @@ class SpineAnimationEvent( type:SpineAnimationEventType, state:String, track:Int
     method is_user_event( name:String )->Logical
       if (type != SpineAnimationEventType.EVENT) return false
       local result : Logical
-      native @|$result = (0 == strcmp($this.event->data->name, $name->data->as_utf8));
+      native @|$result = (0 == strcmp($this.event->getData().getName().buffer(), $name->data->as_utf8));
       return result
 
     method operator==( other:SpineAnimationEvent )->Logical
@@ -359,7 +380,7 @@ class SpineAnimationEvent( type:SpineAnimationEventType, state:String, track:Int
 
     method user_event_name->String
       local result : String
-      native @|$result = RogueString_create( $this.event->data->name );
+      native @|$result = RogueString_create( $this.event->getData().getName().buffer() );
       # TODO: implement getters for event->intValue, event->floatValue, event->stringValue
       return result
 endClass
@@ -367,7 +388,6 @@ endClass
 
 class SpineAnimation
   GLOBAL PROPERTIES
-    world_vertex_positions = Real32[]
     mesh_builder = Mesh()
     animation_lookup = Table<<Int64,WeakReference<<SpineAnimation>>>>()
 
@@ -381,29 +401,29 @@ class SpineAnimation
 
   NATIVE
     nativeCode
-    @|void SpineAnimation_listener( spAnimationState* state, spEventType type, spTrackEntry* entry, spEvent* event )
+    @|void SpineAnimation_listener( spine::AnimationState* state, spine::EventType type, spine::TrackEntry* entry, spine::Event* event, void* userData )
      |{
      |   RogueWarlockSpineAnimationEvent rogue_event;
      |   rogue_event.entry = entry;
      |   rogue_event.event = event;
      |   switch (type)
      |   {
-     |     case SP_ANIMATION_COMPLETE:
+     |     case spine::EventType_Complete:
      |       rogue_event.type = RogueWarlockSpineAnimationEventType(0);
      |       break;
-     |     case SP_ANIMATION_DISPOSE:
+     |     case spine::EventType_Dispose:
      |       rogue_event.type = RogueWarlockSpineAnimationEventType(1);
      |       break;
-     |     case SP_ANIMATION_END:
+     |     case spine::EventType_End:
      |       rogue_event.type = RogueWarlockSpineAnimationEventType(2);
      |       break;
-     |     case SP_ANIMATION_EVENT:
+     |     case spine::EventType_Event:
      |       rogue_event.type = RogueWarlockSpineAnimationEventType(3);
      |       break;
-     |     case SP_ANIMATION_INTERRUPT:
+     |     case spine::EventType_Interrupt:
      |       rogue_event.type = RogueWarlockSpineAnimationEventType(4);
      |       break;
-     |     case SP_ANIMATION_START:
+     |     case spine::EventType_Start:
      |       rogue_event.type = RogueWarlockSpineAnimationEventType(5);
      |       break;
      |     default:
@@ -411,8 +431,8 @@ class SpineAnimation
      |       return;
      |   }
      |
-     |   rogue_event.state = RogueString_create( entry->animation->name );
-     |   rogue_event.track = entry->trackIndex;
+     |   rogue_event.state = RogueString_create( entry->getAnimation().getName().buffer() );
+     |   rogue_event.track = entry->getTrackIndex();
      |   rogue_event.play_id = (RogueInt64)(intptr_t)entry;
      |   RogueWarlockSpineAnimation__dispatch__RogueInt64_WarlockSpineAnimationEvent(
      |     (RogueInt64)(intptr_t)state, rogue_event
@@ -434,8 +454,8 @@ class SpineAnimation
     animation_event_handler : Function(SpineAnimationEvent)
     active_states = Table<<Int64,SpineAnimationEvent>>()
     error      : Logical
-    native "spSkeleton*       skeleton;"
-    native "spAnimationState* animation_state;"
+    native "spine::Skeleton*       skeleton;"
+    native "spine::AnimationState* animation_state;"
 
   METHODS
     method init( definition )
@@ -443,19 +463,18 @@ class SpineAnimation
       if (not error)
         scale  = definition.scale
         offset = definition.offset
-        native @|$this->skeleton = spSkeleton_create( $this->definition->skeleton_data );
-                |$this->animation_state = spAnimationState_create( $this->definition->animation_state_definition );
-                |$this->animation_state->listener = SpineAnimation_listener;
+        native @|$this->skeleton = new spine::Skeleton( *($this->definition->skeleton_data) );
+                |$this->animation_state = new spine::AnimationState( *($this->definition->animation_state_definition) );
+                |$this->animation_state->setListener( SpineAnimation_listener, NULL );
         animation_lookup[ object_id ] = WeakReference<<SpineAnimation>>( this )
       endIf
 
 
     method attachment( slot_name:String, attachment_name:String )->SpineAttachment?
       local pointer : Int64
-      native @|spAttachment* attachment = spSkeleton_getAttachmentForSlotName(
-              |  $this->skeleton,
-              |  $slot_name->data->as_utf8,
-              |  $attachment_name->data->as_utf8
+      native @|spine::Attachment* attachment = $this->skeleton->getAttachment(
+              |  spine::String($slot_name->data->as_utf8),
+              |  spine::String($attachment_name->data->as_utf8)
               |);
               |$pointer = (RogueInt64)(intptr_t)attachment;
       if (pointer) return SpineAttachment( this, slot_name, pointer )
@@ -464,10 +483,10 @@ class SpineAnimation
     method clear( track=null:Int32? )
       if (track)
         block track = track.value
-          native @|spAnimationState_clearTrack( $this->animation_state, $track );
+          native @|$this->animation_state->clearTrack( $track );
         endBlock
       else
-        native @|spAnimationState_clearTracks( $this->animation_state );
+        native @|$this->animation_state->clearTracks();
       endIf
 
     method animation_names->String[]
@@ -479,236 +498,66 @@ class SpineAnimation
     method draw( tint=Color.WHITE:Color )
       if (error) return
 
-      local wvp = world_vertex_positions
-      wvp.[clear].reserve( 10 )
-      #Log.println "uv:$ k:$ uv*k:$" (uv,k,uv*k)
+      # Pose the skeleton, then let spine-cpp's SkeletonRenderer batch it into a
+      # linked list of RenderCommands (positions/uvs/colors/indices per texture).
+      native @|spine::Skeleton* skeleton = $this->skeleton;
+              |skeleton->setPosition( (float)$position.x, (float)$position.y );
+              |skeleton->setScaleX( $h_flip ? -(float)$scale : (float)$scale );
+              |skeleton->setScaleY( $v_flip ? (float)$scale : -(float)$scale );
+              |$this->animation_state->apply( *skeleton );
+              |skeleton->updateWorldTransform( spine::Physics_Update );
 
-      local img : Image
-      local vertex_count : Int32
-      native
-      @|spSkeleton* skeleton = $this->skeleton;
-       |skeleton->x = $position.x;
-       |skeleton->y = $position.y;
-       |skeleton->scaleX = $h_flip ? -1*$scale : $scale;
-       |skeleton->scaleY = $v_flip ? $scale : -1*$scale;
-       |spAnimationState_apply( $this->animation_state, skeleton );
-       |
-       |spSkeleton_updateWorldTransform( skeleton, SP_PHYSICS_UPDATE );
-       |
-       |for (int i = 0; i < skeleton->slotsCount; ++i)
-       |{
-       |  spSlot* slot = skeleton->drawOrder[i];
-       |
-       |  // Fetch the currently active attachment, continue
-       |  // with the next slot in the draw order if no
-       |  // attachment is active on the slot
-       |  spAttachment* attachment = slot->attachment;
-       |  if ( !attachment ) continue;
-       |
-       |  // Fetch the blend mode from the slot and
-       |  // translate it to the engine blend mode
-       |  //BlendMode engineBlendMode;
-       |  switch (slot->data->blendMode)
-       |  {
-       |     case SP_BLEND_MODE_NORMAL:
-                Renderer.render_mode = RenderMode.ALPHA_TEXTURE_COLOR_MULTIPLY
-      native
-      @|        break;
-       |     case SP_BLEND_MODE_ADD:
-                Renderer.render_mode = RenderMode.ALPHA_TEXTURE_ADD
-      native
-      @|        break;
-       |     case SP_BLEND_MODE_MULTIPLY:
-                Renderer.render_mode = RenderMode.ALPHA_TEXTURE_COLOR_MULTIPLY
-      native
-      @|        break;
-       |     case SP_BLEND_MODE_SCREEN:
-               @trace "TODO: SP_BLEND_MODE_SCREEN"
-               #mesh_builder.shader = ImageShader.TEXTURE_WITH_COLOR_SCREEN
-               #mesh_builder.render_mode = RenderMode.ALPHA_IMAGE
-      native
-      @|        break;
-       |     default:
-       |       // unknown Spine blend mode, fall back to
-       |       // normal blend mode
-               @trace "TODO: unknown blend mode"
-               #mesh_builder.shader = ImageShader.TEXTURE
-               #mesh_builder.render_mode = RenderMode.ALPHA_IMAGE
-      native
-      @|  }
-       |
-       |  // Calculate the tinting color based on the skeleton's color
-       |  // and the slot's color. Each color channel is given in the
-       |  // range [0-1], you may have to multiply by 255 and cast to
-       |  // and int if your engine uses integer ranges for color channels.
+      local command = native( "(RogueInt64)(intptr_t) Warlock_spine_render( $this->skeleton )" )->Int64
 
-          local color : Color
+      while (command)
+        local num_vertices = native( "((spine::RenderCommand*)(intptr_t)$command)->numVertices" )->Int32
+        local num_indices  = native( "((spine::RenderCommand*)(intptr_t)$command)->numIndices" )->Int32
+        local blend_mode   = native( "(RogueInt32)((spine::RenderCommand*)(intptr_t)$command)->blendMode" )->Int32
 
-      native
-      @|  RogueInt32 a = (RogueInt32) (skeleton->color.a * slot->color.a * 255);
-       |  if (!a) continue;
-       |  RogueInt32 r = (RogueInt32) (skeleton->color.r * slot->color.r * 255);
-       |  RogueInt32 g = (RogueInt32) (skeleton->color.g * slot->color.g * 255);
-       |  RogueInt32 b = (RogueInt32) (skeleton->color.b * slot->color.b * 255);
-       |  $color.argb = (a<<24) | (r<<16) | (g<<8) | b;
+        if (blend_mode == 1)  # spine::BlendMode_Additive
+          Renderer.render_mode = RenderMode.ALPHA_TEXTURE_ADD
+        else                  # Normal / Multiply / Screen
+          Renderer.render_mode = RenderMode.ALPHA_TEXTURE_COLOR_MULTIPLY
+        endIf
 
+        local img : Image
+        native @|$img = (RogueWarlockImage*)(intptr_t) ((spine::RenderCommand*)(intptr_t)$command)->texture;
 
-          local this_color = this.color
-          local a = (((color.argb:>>>:24) & 0xFF) * ((this_color.argb:>>>:24) & 0xFF)) / 255
-          local r = (((color.argb:>>>:16) & 0xFF) * ((this_color.argb:>>>:16) & 0xFF)) / 255
-          local g = (((color.argb:>>>:8) & 0xFF) * ((this_color.argb:>>>:8) & 0xFF)) / 255
-          local b = (((color.argb) & 0xFF) * ((this_color.argb) & 0xFF)) / 255
-          color = Color(r,g,b,a) * tint
+        if (img)
+          img.load
+          local texture = img.texture
+          if (texture)
+            mesh_builder.clear
 
-      native
-      @|  // Fill the vertices array depending on the type of attachment
-       |  //int vertexIndex = 0;
-       |  if (attachment->type == SP_ATTACHMENT_REGION)
-       |  {
-       |    // Cast to an spRegionAttachment so we can get the rendererObject
-       |    // and compute the world vertices
-       |    spRegionAttachment* regionAttachment = (spRegionAttachment*)attachment;
-       |
-       |    // Our engine specific Texture is stored in the spAtlasRegion which was
-       |    // assigned to the attachment on load. It represents the texture atlas
-       |    // page that contains the image the region attachment is mapped to
-       |    $img = (RogueWarlockImage*)((spAtlasRegion*)regionAttachment->rendererObject)->page->rendererObject;
-       |
-       |    // Computed the world vertices positions for the 4 vertices that make up
-       |    // the rectangular region attachment. This assumes the world transform of the
-       |    // bone to which the slot (and hence attachment) is attached has been calculated
-       |    // before rendering via spSkeleton_updateWorldTransform
-       |    spRegionAttachment_computeWorldVertices(regionAttachment, slot, $wvp->as_real32s, 0, 2);
-       |
+            forEach (v in 0..<num_vertices)
+              local color : Color
+              native @|spine::RenderCommand* c = (spine::RenderCommand*)(intptr_t)$command;
+                      |uint32_t sc = c->colors[ $v ];
+                      |RogueInt32 cr = (RogueInt32)((sc >> 24) & 0xFF);
+                      |RogueInt32 cg = (RogueInt32)((sc >> 16) & 0xFF);
+                      |RogueInt32 cb = (RogueInt32)((sc >>  8) & 0xFF);
+                      |RogueInt32 ca = (RogueInt32)( sc        & 0xFF);
+                      |$color.argb = (ca<<24) | (cr<<16) | (cg<<8) | cb;
+              local pos = XY( native("c->positions[$v*2]")->Real, native("c->positions[$v*2+1]")->Real )
+              local uv  = XY( native("c->uvs[$v*2]")->Real, native("c->uvs[$v*2+1]")->Real )
+              mesh_builder.add( Vertex(pos, color * this.color * tint, uv) )
+            endForEach
 
-            if (img)
-              img.load
-              local texture = img.texture
-              if (texture)
-                mesh_builder.clear
-                block
-                  native @|float* uvs = regionAttachment->uvs;
-                  local pos1 = XY( wvp[0], wvp[1] )
-                  local pos2 = XY( wvp[2], wvp[3] )
-                  local pos3 = XY( wvp[4], wvp[5] )
-                  local pos4 = XY( wvp[6], wvp[7] )
-                  mesh_builder.add(
-                    Vertex(
-                      pos1,
-                      color,
-                      XY( native("uvs[0]")->Real, native("uvs[1]")->Real )
-                    )
-                  )
-                  mesh_builder.add(
-                    Vertex(
-                      pos2,
-                      color,
-                      XY( native("uvs[2]")->Real, native("uvs[3]")->Real )
-                    )
-                  )
-                  mesh_builder.add(
-                    Vertex(
-                      pos3,
-                      color,
-                      XY( native("uvs[4]")->Real, native("uvs[5]")->Real )
-                    )
-                  )
-                  mesh_builder.add(
-                    Vertex(
-                      pos4,
-                      color,
-                      XY( native("uvs[6]")->Real, native("uvs[7]")->Real )
-                    )
-                  )
-                  mesh_builder.add( 0, 1, 2 )
-                  mesh_builder.add( 2, 3, 0 )
-                endBlock
+            local t = 0
+            while (t + 2 < num_indices)
+              local i0 = native("(RogueInt32)((spine::RenderCommand*)(intptr_t)$command)->indices[$t]")->Int32
+              local i1 = native("(RogueInt32)((spine::RenderCommand*)(intptr_t)$command)->indices[$t+1]")->Int32
+              local i2 = native("(RogueInt32)((spine::RenderCommand*)(intptr_t)$command)->indices[$t+2]")->Int32
+              mesh_builder.add( i0, i1, i2 )
+              t += 3
+            endWhile
 
-                mesh_builder.draw( img.texture, &shader=Renderer.shader )
-              endIf
-            endIf
+            mesh_builder.draw( texture, &shader=Renderer.shader )
+          endIf
+        endIf
 
-      native
-      @|    // Create 2 triangles, with 3 vertices each from the region's
-       |    // world vertex positions and its UV coordinates (in the range [0-1]).
-       |    //addVertex(worldVerticesPositions[SP_VERTEX_X1], worldVerticesPositions[SP_VERTEX_Y1],
-       |    //       regionAttachment->uvs[SP_VERTEX_X1], regionAttachment->uvs[SP_VERTEX_Y1],
-       |    //       tintR, tintG, tintB, tintA, &vertexIndex);
-       |
-       |    //addVertex(v[0], v[1],
-       |    //       regionAttachment->uvs[0], regionAttachment->uvs[1],
-       |    //       tintR, tintG, tintB, tintA, &vertexIndex);
-       |
-       |    //addVertex(v[2], v[3],
-       |    //       regionAttachment->uvs[2], regionAttachment->uvs[3],
-       |    //       tintR, tintG, tintB, tintA, &vertexIndex);
-       |
-       |    //addVertex(v[4], v[5],
-       |    //       regionAttachment->uvs[4], regionAttachment->uvs[5],
-       |    //       tintR, tintG, tintB, tintA, &vertexIndex);
-       |
-       |    //addVertex(v[6], v[7],
-       |    //       regionAttachment->uvs[6], regionAttachment->uvs[7],
-       |    //       tintR, tintG, tintB, tintA, &vertexIndex);
-       |
-       |    //addVertex(v[0], v[1],
-       |    //       regionAttachment->uvs[0], regionAttachment->uvs[1],
-       |    //       tintR, tintG, tintB, tintA, &vertexIndex);
-       | }
-       | else if (attachment->type == SP_ATTACHMENT_MESH)
-       | {
-       |   // Cast to an spMeshAttachment so we can get the rendererObject
-       |   // and compute the world vertices
-       |   spMeshAttachment* mesh = (spMeshAttachment*)attachment;
-       |
-       |   // Check the number of vertices in the mesh attachment. If it is bigger
-       |   // than our scratch buffer, we don't render the mesh. We do this here
-       |   // for simplicity, in production you want to reallocate the scratch buffer
-       |   // to fit the mesh.
-       |   $vertex_count = (RogueInt32) mesh->super.worldVerticesLength;
-
-           wvp.[clear].reserve( vertex_count*2 )
-
-      native
-      @|   // Our engine specific Texture is stored in the spAtlasRegion which was
-       |   // assigned to the attachment on load. It represents the texture atlas
-       |   // page that contains the image the mesh attachment is mapped to
-       |   $img = (RogueWarlockImage*)((spAtlasRegion*)mesh->rendererObject)->page->rendererObject;
-
-           if (img)
-             local texture = img.texture
-             #local k = img.size / img.size.to_power_of_two
-             if (texture)
-
-      native
-      @|       // Computed the world vertices positions for the vertices that make up
-       |       // the mesh attachment. This assumes the world transform of the
-       |       // bone to which the slot (and hence attachment) is attached has been calculated
-       |       // before rendering via spSkeleton_updateWorldTransform
-       |       spVertexAttachment_computeWorldVertices(SUPER(mesh), slot, 0, $vertex_count, $wvp->as_real32s, 0, 2);
-
-               # Mesh attachments use an array of vertices, and an array of indices to define which
-               # 3 vertices make up each triangle.
-               mesh_builder.clear
-               forEach (t in 0..<native("mesh->trianglesCount")->Int32)
-                 local i = native( "mesh->triangles[$t] << 1" )->Int32
-                 local pos = XY( wvp[i], wvp[i+1] )
-                 local uv  = XY( native( "mesh->uvs[$i]" )->Real, native( "mesh->uvs[$i+1]" )->Real )
-                 mesh_builder.add( Vertex(pos, color, uv), &auto_index )
-               endForEach
-
-               mesh_builder.draw( texture, &shader=Renderer.shader )
-
-      native
-      @|       //addVertex(worldVerticesPositions[index], worldVerticesPositions[index + 1],
-       |       //        mesh->uvs[index], mesh->uvs[index + 1],
-       |       //        tintR, tintG, tintB, tintA, &vertexIndex);
-             endIf
-           endIf
-
-      native
-      @|  }
-       |}
+        command = native( "(RogueInt64)(intptr_t) ((spine::RenderCommand*)(intptr_t)$command)->next" )->Int64
+      endWhile
 
     method handle( e:SpineAnimationEvent )
       # START: creates new entry that can accept COMPLETE, INTERRUPT, DISPOSE
@@ -741,8 +590,8 @@ class SpineAnimation
       noAction
 
     method on_cleanup
-      native @|if ($this->skeleton)        spSkeleton_dispose( $this->skeleton );
-              |if ($this->animation_state) spAnimationState_dispose( $this->animation_state );
+      native @|if ($this->skeleton)        delete $this->skeleton;
+              |if ($this->animation_state) delete $this->animation_state;
               |$this->skeleton = 0;
               |$this->animation_state = 0;
 
@@ -756,16 +605,16 @@ class SpineAnimation
       if (error) return
 
       native...
-       @|auto track_entry = spAnimationState_setAnimationByName( $this->animation_state, $track,
-        |    $state_name->data->as_utf8, $looping );
+       @|spine::TrackEntry* track_entry = &$this->animation_state->setAnimation( $track,
+        |    spine::String($state_name->data->as_utf8), $looping );
         |if ($time_scale != 1.0)
         |{
         |  if ($time_scale < 0)
         |  {
-        |    track_entry->reverse = 1;
+        |    track_entry->setReverse( true );
         |    $time_scale = -$time_scale;
         |  }
-        |  track_entry->timeScale = (float)$time_scale;
+        |  track_entry->setTimeScale((float)$time_scale);
         |}
 
     method add( state_name:String, &looping, track=0:Int32, delay=0:Real, time_scale=1.0:Real )
@@ -779,30 +628,30 @@ class SpineAnimation
       endIf
 
       if (error) return
-      native @|auto track_entry = spAnimationState_addAnimationByName( $this->animation_state, $track,
-              |    $state_name->data->as_utf8, $looping, (float)$delay );
+      native @|spine::TrackEntry* track_entry = &$this->animation_state->addAnimation( $track,
+              |    spine::String($state_name->data->as_utf8), $looping, (float)$delay );
               |if ($time_scale != 1.0)
               |{
               |  if ($time_scale < 0)
               |  {
-              |    track_entry->reverse = 1;
+              |    track_entry->setReverse( true );
               |    $time_scale = -$time_scale;
               |  }
-              |  track_entry->timeScale = (float)$time_scale;
+              |  track_entry->setTimeScale((float)$time_scale);
               |}
 
     method reset( track=null:Int32? )
       if (track)
         block track = track.value
-          native @|spAnimationState_clearTrack( $this->animation_state, $track );
+          native @|$this->animation_state->clearTrack( $track );
         endBlock
       else
-        native @|spAnimationState_clearTracks( $this->animation_state );
+        native @|$this->animation_state->clearTracks();
       endIf
 
     method update( dt:Real )
       if (error) return
-      native @|spAnimationState_update( $this->animation_state, (float)$dt );
+      native @|$this->animation_state->update( (float)$dt );
 
 endClass
 
@@ -810,40 +659,40 @@ class SpineAttachment( animation:SpineAnimation, slot_name:String ) [compound]
   GLOBAL METHODS
     method create( animation:SpineAnimation, slot_name:String, attachment:Int64 )->SpineAttachment
       local result = SpineAttachment( animation, slot_name )
-      native @|$result.attachment = (spAttachment*)(intptr_t)$attachment;
+      native @|$result.attachment = (spine::Attachment*)(intptr_t)$attachment;
       return result
 
   PROPERTIES
-    native "spAttachment* attachment;"
+    native "spine::Attachment* attachment;"
 
   METHODS
     method is_point->Logical
-      local result = native( "($this.attachment->type == SP_ATTACHMENT_POINT)" )->Logical
+      local result = native( "($this.attachment->getRTTI().isExactly( spine::PointAttachment::rtti ))" )->Logical
       return result
 
     method operator==( other:SpineAttachment )->Logical
-      return native( "0 == memcmp( $this.attachment, $other.attachment, sizeof(spAttachment*) )" )->Logical
+      return native( "0 == memcmp( $this.attachment, $other.attachment, sizeof(spine::Attachment*) )" )->Logical
 
     method to->SpinePointAttachment
       local result = SpinePointAttachment( animation, slot_name )
-      native @|$result.attachment = (spPointAttachment*) $this.attachment;
+      native @|$result.attachment = (spine::PointAttachment*) $this.attachment;
       return result
 endClass
 
 class SpinePointAttachment( animation:SpineAnimation, slot_name:String ) [compound]
   PROPERTIES
-    native "spPointAttachment* attachment;"
+    native "spine::PointAttachment* attachment;"
 
   METHODS
     method operator==( other:SpinePointAttachment )->Logical
-      return native( "0 == memcmp( $this.attachment, $other.attachment, sizeof(spPointAttachment*) )" )->Logical
+      return native( "0 == memcmp( $this.attachment, $other.attachment, sizeof(spine::PointAttachment*) )" )->Logical
 
     method position->XY
       local result : XY
-      native @|spSlot* slot = spSkeleton_findSlot( $this.animation->skeleton, $slot_name->data->as_utf8 );
-              |float x = $this.attachment->x;
-              |float y = $this.attachment->y;
-              |spPointAttachment_computeWorldPosition( $this.attachment, slot->bone, &x, &y );
+      native @|spine::Slot* slot = $this.animation->skeleton->findSlot( spine::String($slot_name->data->as_utf8) );
+              |float x = $this.attachment->getX();
+              |float y = $this.attachment->getY();
+              |$this.attachment->computeWorldPosition( slot->getBone().getAppliedPose(), x, y );
               |$result.x = x;
               |$result.y = y;
       return result
