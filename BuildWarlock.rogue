@@ -921,7 +921,11 @@ endRoutine
 routine rogo_ios
   # SYNTAX: rogo ios [rebuild|release]
   build( "iOS" )
-  execute @|xcodebuild -workspace Platforms/Xcode/Warlock.xcworkspace -scheme Warlock-iOS build
+  # Skip xcodebuild when invoked from Xcode's "Compile Rogue" build phase (IDE=true);
+  # otherwise this would recurse into a second concurrent build and lock build.db.
+  if (not String.exists(System.env//IDE))
+    execute @|xcodebuild -workspace Platforms/Xcode/Warlock.xcworkspace -scheme Warlock-iOS build
+  endIf
 endRoutine
 
 routine rogo_ios_open
@@ -931,7 +935,11 @@ endRoutine
 routine rogo_macos
   # SYNTAX: rogo macos [rebuild|release]
   build( "macOS" )
-  execute @|xcodebuild -workspace Platforms/Xcode/Warlock.xcworkspace -scheme Warlock-macOS build
+  # Skip xcodebuild when invoked from Xcode's "Compile Rogue" build phase (IDE=true);
+  # otherwise this would recurse into a second concurrent build and lock build.db.
+  if (not String.exists(System.env//IDE))
+    execute @|xcodebuild -workspace Platforms/Xcode/Warlock.xcworkspace -scheme Warlock-macOS build
+  endIf
 endRoutine
 
 routine rogo_macos_open
