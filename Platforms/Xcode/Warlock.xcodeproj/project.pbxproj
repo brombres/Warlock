@@ -535,7 +535,7 @@
 		3084FE712E2C66B1003DBBBC /* SDL3.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL3.framework; path = "../../../../SDL-fcavmlxxzlphfmgluybaxcovnstx/Build/Products/Release-iphoneos/SDL3.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3092E4842EB2CB2600FA1D75 /* Warlock-macOS-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Warlock-macOS-Info.plist"; sourceTree = "<group>"; };
 		3092E4852EB2D26500FA1D75 /* SDLDeepLinkEvent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SDLDeepLinkEvent.m; sourceTree = "<group>"; };
-		30A8CA6A2E2C626700203E31 /* Tomb Sweeper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Tomb Sweeper.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		30A8CA6A2E2C626700203E31 /* Warlock-macOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Warlock-macOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		30A8CA8A2E2C656E00203E31 /* SDL.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SDL.xcodeproj; path = ../../Libraries/SDL/Xcode/SDL/SDL.xcodeproj; sourceTree = SOURCE_ROOT; };
 		30AF47C92EA3056400F8D6B4 /* SDLViewControllerModifications.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SDLViewControllerModifications.m; sourceTree = "<group>"; };
 		30F185012E6BD0ED00B0061D /* Warlock-iOS-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Warlock-iOS-Info.plist"; sourceTree = "<group>"; };
@@ -1252,7 +1252,7 @@
 		30A8CA6B2E2C626700203E31 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				30A8CA6A2E2C626700203E31 /* Tomb Sweeper.app */,
+				30A8CA6A2E2C626700203E31 /* Warlock-macOS.app */,
 				306398EB2E2D0E3E004ECAC9 /* libTess2-iOS.a */,
 				306399392E2D113C004ECAC9 /* libTess2-macOS.a */,
 				306399662E2D5362004ECAC9 /* Warlock-iOS.app */,
@@ -1542,7 +1542,7 @@
 			);
 			name = "Warlock-macOS";
 			productName = Warlock;
-			productReference = 30A8CA6A2E2C626700203E31 /* Tomb Sweeper.app */;
+			productReference = 30A8CA6A2E2C626700203E31 /* Warlock-macOS.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -2081,6 +2081,13 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A0EB06497C69B6AF1576FBD7 /* Pods-WarlockPods-Warlock-iOS.debug.xcconfig */;
 			buildSettings = {
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-framework",
+					"VideoToolbox",
+					"-framework",
+					"CoreMedia",
+				);
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
@@ -2179,6 +2186,13 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D6954D5A4AA485407629EB1C /* Pods-WarlockPods-Warlock-iOS.release.xcconfig */;
 			buildSettings = {
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-framework",
+					"VideoToolbox",
+					"-framework",
+					"CoreMedia",
+				);
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
@@ -2514,6 +2528,13 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B0A2811E6B36F7D6027A2FEE /* Pods-WarlockPods-Warlock-macOS.debug.xcconfig */;
 			buildSettings = {
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-framework",
+					"VideoToolbox",
+					"-framework",
+					"CoreMedia",
+				);
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
@@ -2570,7 +2591,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.developer.warlockapp;
-				PRODUCT_NAME = "Tomb Sweeper";
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = macosx;
 				SUPPORTS_MACCATALYST = NO;
@@ -2588,6 +2609,13 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 737A5A36744BAA56D1894777 /* Pods-WarlockPods-Warlock-macOS.release.xcconfig */;
 			buildSettings = {
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-framework",
+					"VideoToolbox",
+					"-framework",
+					"CoreMedia",
+				);
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
@@ -2643,7 +2671,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.developer.warlockapp;
-				PRODUCT_NAME = "Tomb Sweeper";
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = macosx;
 				SUPPORTS_MACCATALYST = NO;
