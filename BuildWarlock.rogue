@@ -921,6 +921,7 @@ endRoutine
 routine rogo_ios
   # SYNTAX: rogo ios [rebuild|release]
   build( "iOS" )
+  execute @|xcodebuild -workspace Platforms/Xcode/Warlock.xcworkspace -scheme Warlock-iOS build
 endRoutine
 
 routine rogo_ios_open
@@ -930,6 +931,7 @@ endRoutine
 routine rogo_macos
   # SYNTAX: rogo macos [rebuild|release]
   build( "macOS" )
+  execute @|xcodebuild -workspace Platforms/Xcode/Warlock.xcworkspace -scheme Warlock-macOS build
 endRoutine
 
 routine rogo_macos_open
