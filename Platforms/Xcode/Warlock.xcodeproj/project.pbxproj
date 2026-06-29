@@ -2134,7 +2134,7 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = "Warlock-iOS-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Tomb Sweeper";
+				INFOPLIST_KEY_CFBundleDisplayName = "Warlock App";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.games";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
@@ -2238,7 +2238,7 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = "Warlock-iOS-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Tomb Sweeper";
+				INFOPLIST_KEY_CFBundleDisplayName = "Warlock App";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.games";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
