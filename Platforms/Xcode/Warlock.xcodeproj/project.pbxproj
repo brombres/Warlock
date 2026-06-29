@@ -65,137 +65,6 @@
 		3063995C2E2D529A004ECAC9 /* libTess2-macOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 306399392E2D113C004ECAC9 /* libTess2-macOS.a */; };
 		306399612E2D5362004ECAC9 /* SDL3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3084FE712E2C66B1003DBBBC /* SDL3.framework */; };
 		306399682E2D5385004ECAC9 /* libTess2-iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 306398EB2E2D0E3E004ECAC9 /* libTess2-iOS.a */; platformFilter = ios; };
-		306399DD2E2D54C5004ECAC9 /* PhysicsConstraint.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399C82E2D54C5004ECAC9 /* PhysicsConstraint.c */; };
-		306399DE2E2D54C5004ECAC9 /* SlotData.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399D52E2D54C5004ECAC9 /* SlotData.c */; };
-		306399DF2E2D54C5004ECAC9 /* Debug.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399BC2E2D54C5004ECAC9 /* Debug.c */; };
-		306399E02E2D54C5004ECAC9 /* AnimationState.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399B02E2D54C5004ECAC9 /* AnimationState.c */; };
-		306399E12E2D54C5004ECAC9 /* PhysicsConstraintData.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399C92E2D54C5004ECAC9 /* PhysicsConstraintData.c */; };
-		306399E22E2D54C5004ECAC9 /* Skeleton.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399CD2E2D54C5004ECAC9 /* Skeleton.c */; };
-		306399E32E2D54C5004ECAC9 /* VertexAttachment.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399D92E2D54C5004ECAC9 /* VertexAttachment.c */; };
-		306399E42E2D54C5004ECAC9 /* Atlas.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399B32E2D54C5004ECAC9 /* Atlas.c */; };
-		306399E52E2D54C5004ECAC9 /* Color.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399BB2E2D54C5004ECAC9 /* Color.c */; };
-		306399E62E2D54C5004ECAC9 /* ClippingAttachment.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399BA2E2D54C5004ECAC9 /* ClippingAttachment.c */; };
-		306399E72E2D54C5004ECAC9 /* PointAttachment.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399CA2E2D54C5004ECAC9 /* PointAttachment.c */; };
-		306399E82E2D54C5004ECAC9 /* Attachment.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399B52E2D54C5004ECAC9 /* Attachment.c */; };
-		306399E92E2D54C5004ECAC9 /* Slot.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399D42E2D54C5004ECAC9 /* Slot.c */; };
-		306399EA2E2D54C5004ECAC9 /* Json.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399C32E2D54C5004ECAC9 /* Json.c */; };
-		306399EB2E2D54C5004ECAC9 /* SkeletonBounds.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399CF2E2D54C5004ECAC9 /* SkeletonBounds.c */; };
-		306399EC2E2D54C5004ECAC9 /* Event.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399BD2E2D54C5004ECAC9 /* Event.c */; };
-		306399ED2E2D54C5004ECAC9 /* SkeletonBinary.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399CE2E2D54C5004ECAC9 /* SkeletonBinary.c */; };
-		306399EE2E2D54C5004ECAC9 /* TransformConstraint.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399D62E2D54C5004ECAC9 /* TransformConstraint.c */; };
-		306399EF2E2D54C5004ECAC9 /* EventData.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399BE2E2D54C5004ECAC9 /* EventData.c */; };
-		306399F02E2D54C5004ECAC9 /* IkConstraint.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399C02E2D54C5004ECAC9 /* IkConstraint.c */; };
-		306399F12E2D54C5004ECAC9 /* PathConstraintData.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399C72E2D54C5004ECAC9 /* PathConstraintData.c */; };
-		306399F22E2D54C5004ECAC9 /* AnimationStateData.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399B12E2D54C5004ECAC9 /* AnimationStateData.c */; };
-		306399F32E2D54C5004ECAC9 /* Bone.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399B72E2D54C5004ECAC9 /* Bone.c */; };
-		306399F42E2D54C5004ECAC9 /* SkeletonJson.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399D22E2D54C5004ECAC9 /* SkeletonJson.c */; };
-		306399F52E2D54C5004ECAC9 /* extension.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399BF2E2D54C5004ECAC9 /* extension.c */; };
-		306399F62E2D54C5004ECAC9 /* Skin.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399D32E2D54C5004ECAC9 /* Skin.c */; };
-		306399F72E2D54C5004ECAC9 /* IkConstraintData.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399C12E2D54C5004ECAC9 /* IkConstraintData.c */; };
-		306399F82E2D54C5004ECAC9 /* Triangulator.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399D82E2D54C5004ECAC9 /* Triangulator.c */; };
-		306399F92E2D54C5004ECAC9 /* PathAttachment.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399C52E2D54C5004ECAC9 /* PathAttachment.c */; };
-		306399FA2E2D54C5004ECAC9 /* AtlasAttachmentLoader.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399B42E2D54C5004ECAC9 /* AtlasAttachmentLoader.c */; };
-		306399FB2E2D54C5004ECAC9 /* SkeletonData.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399D12E2D54C5004ECAC9 /* SkeletonData.c */; };
-		306399FC2E2D54C5004ECAC9 /* BoundingBoxAttachment.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399B92E2D54C5004ECAC9 /* BoundingBoxAttachment.c */; };
-		306399FD2E2D54C5004ECAC9 /* MeshAttachment.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399C42E2D54C5004ECAC9 /* MeshAttachment.c */; };
-		306399FE2E2D54C5004ECAC9 /* Array.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399B22E2D54C5004ECAC9 /* Array.c */; };
-		306399FF2E2D54C5004ECAC9 /* Sequence.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399CC2E2D54C5004ECAC9 /* Sequence.c */; };
-		30639A002E2D54C5004ECAC9 /* SkeletonClipping.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399D02E2D54C5004ECAC9 /* SkeletonClipping.c */; };
-		30639A012E2D54C5004ECAC9 /* PathConstraint.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399C62E2D54C5004ECAC9 /* PathConstraint.c */; };
-		30639A022E2D54C5004ECAC9 /* BoneData.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399B82E2D54C5004ECAC9 /* BoneData.c */; };
-		30639A032E2D54C5004ECAC9 /* Animation.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399AF2E2D54C5004ECAC9 /* Animation.c */; };
-		30639A042E2D54C5004ECAC9 /* RegionAttachment.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399CB2E2D54C5004ECAC9 /* RegionAttachment.c */; };
-		30639A052E2D54C5004ECAC9 /* TransformConstraintData.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399D72E2D54C5004ECAC9 /* TransformConstraintData.c */; };
-		30639A062E2D54C5004ECAC9 /* AttachmentLoader.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399B62E2D54C5004ECAC9 /* AttachmentLoader.c */; };
-		30639A072E2D54C5004ECAC9 /* Animation.h in Headers */ = {isa = PBXBuildFile; fileRef = 3063997F2E2D54C5004ECAC9 /* Animation.h */; };
-		30639A082E2D54C5004ECAC9 /* AnimationState.h in Headers */ = {isa = PBXBuildFile; fileRef = 306399802E2D54C5004ECAC9 /* AnimationState.h */; };
-		30639A092E2D54C5004ECAC9 /* Slot.h in Headers */ = {isa = PBXBuildFile; fileRef = 306399A42E2D54C5004ECAC9 /* Slot.h */; };
-		30639A0A2E2D54C5004ECAC9 /* Skeleton.h in Headers */ = {isa = PBXBuildFile; fileRef = 3063999D2E2D54C5004ECAC9 /* Skeleton.h */; };
-		30639A0B2E2D54C5004ECAC9 /* Json.h in Headers */ = {isa = PBXBuildFile; fileRef = 306399C22E2D54C5004ECAC9 /* Json.h */; };
-		30639A0C2E2D54C5004ECAC9 /* RegionAttachment.h in Headers */ = {isa = PBXBuildFile; fileRef = 3063999B2E2D54C5004ECAC9 /* RegionAttachment.h */; };
-		30639A0D2E2D54C5004ECAC9 /* BoneData.h in Headers */ = {isa = PBXBuildFile; fileRef = 306399882E2D54C5004ECAC9 /* BoneData.h */; };
-		30639A0E2E2D54C5004ECAC9 /* Array.h in Headers */ = {isa = PBXBuildFile; fileRef = 306399822E2D54C5004ECAC9 /* Array.h */; };
-		30639A0F2E2D54C5004ECAC9 /* PhysicsConstraintData.h in Headers */ = {isa = PBXBuildFile; fileRef = 306399992E2D54C5004ECAC9 /* PhysicsConstraintData.h */; };
-		30639A102E2D54C5004ECAC9 /* SlotData.h in Headers */ = {isa = PBXBuildFile; fileRef = 306399A52E2D54C5004ECAC9 /* SlotData.h */; };
-		30639A112E2D54C5004ECAC9 /* Physics.h in Headers */ = {isa = PBXBuildFile; fileRef = 306399972E2D54C5004ECAC9 /* Physics.h */; };
-		30639A122E2D54C5004ECAC9 /* PathConstraint.h in Headers */ = {isa = PBXBuildFile; fileRef = 306399952E2D54C5004ECAC9 /* PathConstraint.h */; };
-		30639A132E2D54C5004ECAC9 /* Bone.h in Headers */ = {isa = PBXBuildFile; fileRef = 306399872E2D54C5004ECAC9 /* Bone.h */; };
-		30639A142E2D54C5004ECAC9 /* AttachmentLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = 306399862E2D54C5004ECAC9 /* AttachmentLoader.h */; };
-		30639A152E2D54C5004ECAC9 /* IkConstraintData.h in Headers */ = {isa = PBXBuildFile; fileRef = 306399922E2D54C5004ECAC9 /* IkConstraintData.h */; };
-		30639A162E2D54C5004ECAC9 /* Version.h in Headers */ = {isa = PBXBuildFile; fileRef = 306399AB2E2D54C5004ECAC9 /* Version.h */; };
-		30639A172E2D54C5004ECAC9 /* Color.h in Headers */ = {isa = PBXBuildFile; fileRef = 3063998B2E2D54C5004ECAC9 /* Color.h */; };
-		30639A182E2D54C5004ECAC9 /* MeshAttachment.h in Headers */ = {isa = PBXBuildFile; fileRef = 306399932E2D54C5004ECAC9 /* MeshAttachment.h */; };
-		30639A192E2D54C5004ECAC9 /* spine.h in Headers */ = {isa = PBXBuildFile; fileRef = 306399A62E2D54C5004ECAC9 /* spine.h */; };
-		30639A1A2E2D54C5004ECAC9 /* BoundingBoxAttachment.h in Headers */ = {isa = PBXBuildFile; fileRef = 306399892E2D54C5004ECAC9 /* BoundingBoxAttachment.h */; };
-		30639A1B2E2D54C5004ECAC9 /* Sequence.h in Headers */ = {isa = PBXBuildFile; fileRef = 3063999C2E2D54C5004ECAC9 /* Sequence.h */; };
-		30639A1C2E2D54C5004ECAC9 /* PathAttachment.h in Headers */ = {isa = PBXBuildFile; fileRef = 306399942E2D54C5004ECAC9 /* PathAttachment.h */; };
-		30639A1D2E2D54C5004ECAC9 /* SkeletonJson.h in Headers */ = {isa = PBXBuildFile; fileRef = 306399A22E2D54C5004ECAC9 /* SkeletonJson.h */; };
-		30639A1E2E2D54C5004ECAC9 /* Attachment.h in Headers */ = {isa = PBXBuildFile; fileRef = 306399852E2D54C5004ECAC9 /* Attachment.h */; };
-		30639A1F2E2D54C5004ECAC9 /* TransformConstraintData.h in Headers */ = {isa = PBXBuildFile; fileRef = 306399A92E2D54C5004ECAC9 /* TransformConstraintData.h */; };
-		30639A202E2D54C5004ECAC9 /* TransformConstraint.h in Headers */ = {isa = PBXBuildFile; fileRef = 306399A82E2D54C5004ECAC9 /* TransformConstraint.h */; };
-		30639A212E2D54C5004ECAC9 /* Event.h in Headers */ = {isa = PBXBuildFile; fileRef = 3063998E2E2D54C5004ECAC9 /* Event.h */; };
-		30639A222E2D54C5004ECAC9 /* dll.h in Headers */ = {isa = PBXBuildFile; fileRef = 3063998D2E2D54C5004ECAC9 /* dll.h */; };
-		30639A232E2D54C5004ECAC9 /* PointAttachment.h in Headers */ = {isa = PBXBuildFile; fileRef = 3063999A2E2D54C5004ECAC9 /* PointAttachment.h */; };
-		30639A242E2D54C5004ECAC9 /* AnimationStateData.h in Headers */ = {isa = PBXBuildFile; fileRef = 306399812E2D54C5004ECAC9 /* AnimationStateData.h */; };
-		30639A252E2D54C5004ECAC9 /* EventData.h in Headers */ = {isa = PBXBuildFile; fileRef = 3063998F2E2D54C5004ECAC9 /* EventData.h */; };
-		30639A262E2D54C5004ECAC9 /* SkeletonData.h in Headers */ = {isa = PBXBuildFile; fileRef = 306399A12E2D54C5004ECAC9 /* SkeletonData.h */; };
-		30639A272E2D54C5004ECAC9 /* SkeletonBounds.h in Headers */ = {isa = PBXBuildFile; fileRef = 3063999F2E2D54C5004ECAC9 /* SkeletonBounds.h */; };
-		30639A282E2D54C5004ECAC9 /* AtlasAttachmentLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = 306399842E2D54C5004ECAC9 /* AtlasAttachmentLoader.h */; };
-		30639A292E2D54C5004ECAC9 /* SkeletonBinary.h in Headers */ = {isa = PBXBuildFile; fileRef = 3063999E2E2D54C5004ECAC9 /* SkeletonBinary.h */; };
-		30639A2A2E2D54C5004ECAC9 /* Atlas.h in Headers */ = {isa = PBXBuildFile; fileRef = 306399832E2D54C5004ECAC9 /* Atlas.h */; };
-		30639A2B2E2D54C5004ECAC9 /* PathConstraintData.h in Headers */ = {isa = PBXBuildFile; fileRef = 306399962E2D54C5004ECAC9 /* PathConstraintData.h */; };
-		30639A2C2E2D54C5004ECAC9 /* PhysicsConstraint.h in Headers */ = {isa = PBXBuildFile; fileRef = 306399982E2D54C5004ECAC9 /* PhysicsConstraint.h */; };
-		30639A2D2E2D54C5004ECAC9 /* IkConstraint.h in Headers */ = {isa = PBXBuildFile; fileRef = 306399912E2D54C5004ECAC9 /* IkConstraint.h */; };
-		30639A2E2E2D54C5004ECAC9 /* Skin.h in Headers */ = {isa = PBXBuildFile; fileRef = 306399A32E2D54C5004ECAC9 /* Skin.h */; };
-		30639A2F2E2D54C5004ECAC9 /* TextureRegion.h in Headers */ = {isa = PBXBuildFile; fileRef = 306399A72E2D54C5004ECAC9 /* TextureRegion.h */; };
-		30639A302E2D54C5004ECAC9 /* SkeletonClipping.h in Headers */ = {isa = PBXBuildFile; fileRef = 306399A02E2D54C5004ECAC9 /* SkeletonClipping.h */; };
-		30639A312E2D54C5004ECAC9 /* ClippingAttachment.h in Headers */ = {isa = PBXBuildFile; fileRef = 3063998A2E2D54C5004ECAC9 /* ClippingAttachment.h */; };
-		30639A322E2D54C5004ECAC9 /* VertexAttachment.h in Headers */ = {isa = PBXBuildFile; fileRef = 306399AC2E2D54C5004ECAC9 /* VertexAttachment.h */; };
-		30639A332E2D54C5004ECAC9 /* Triangulator.h in Headers */ = {isa = PBXBuildFile; fileRef = 306399AA2E2D54C5004ECAC9 /* Triangulator.h */; };
-		30639A342E2D54C5004ECAC9 /* Debug.h in Headers */ = {isa = PBXBuildFile; fileRef = 3063998C2E2D54C5004ECAC9 /* Debug.h */; };
-		30639A352E2D54C5004ECAC9 /* extension.h in Headers */ = {isa = PBXBuildFile; fileRef = 306399902E2D54C5004ECAC9 /* extension.h */; };
-		30639A362E2D54C5004ECAC9 /* PhysicsConstraint.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399C82E2D54C5004ECAC9 /* PhysicsConstraint.c */; };
-		30639A372E2D54C5004ECAC9 /* SlotData.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399D52E2D54C5004ECAC9 /* SlotData.c */; };
-		30639A382E2D54C5004ECAC9 /* Debug.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399BC2E2D54C5004ECAC9 /* Debug.c */; };
-		30639A392E2D54C5004ECAC9 /* AnimationState.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399B02E2D54C5004ECAC9 /* AnimationState.c */; };
-		30639A3A2E2D54C5004ECAC9 /* PhysicsConstraintData.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399C92E2D54C5004ECAC9 /* PhysicsConstraintData.c */; };
-		30639A3B2E2D54C5004ECAC9 /* Skeleton.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399CD2E2D54C5004ECAC9 /* Skeleton.c */; };
-		30639A3C2E2D54C5004ECAC9 /* VertexAttachment.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399D92E2D54C5004ECAC9 /* VertexAttachment.c */; };
-		30639A3D2E2D54C5004ECAC9 /* Atlas.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399B32E2D54C5004ECAC9 /* Atlas.c */; };
-		30639A3E2E2D54C5004ECAC9 /* Color.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399BB2E2D54C5004ECAC9 /* Color.c */; };
-		30639A3F2E2D54C5004ECAC9 /* ClippingAttachment.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399BA2E2D54C5004ECAC9 /* ClippingAttachment.c */; };
-		30639A402E2D54C5004ECAC9 /* PointAttachment.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399CA2E2D54C5004ECAC9 /* PointAttachment.c */; };
-		30639A412E2D54C5004ECAC9 /* Attachment.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399B52E2D54C5004ECAC9 /* Attachment.c */; };
-		30639A422E2D54C5004ECAC9 /* Slot.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399D42E2D54C5004ECAC9 /* Slot.c */; };
-		30639A432E2D54C5004ECAC9 /* Json.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399C32E2D54C5004ECAC9 /* Json.c */; };
-		30639A442E2D54C5004ECAC9 /* SkeletonBounds.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399CF2E2D54C5004ECAC9 /* SkeletonBounds.c */; };
-		30639A452E2D54C5004ECAC9 /* Event.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399BD2E2D54C5004ECAC9 /* Event.c */; };
-		30639A462E2D54C5004ECAC9 /* SkeletonBinary.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399CE2E2D54C5004ECAC9 /* SkeletonBinary.c */; };
-		30639A472E2D54C5004ECAC9 /* TransformConstraint.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399D62E2D54C5004ECAC9 /* TransformConstraint.c */; };
-		30639A482E2D54C5004ECAC9 /* EventData.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399BE2E2D54C5004ECAC9 /* EventData.c */; };
-		30639A492E2D54C5004ECAC9 /* IkConstraint.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399C02E2D54C5004ECAC9 /* IkConstraint.c */; };
-		30639A4A2E2D54C5004ECAC9 /* PathConstraintData.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399C72E2D54C5004ECAC9 /* PathConstraintData.c */; };
-		30639A4B2E2D54C5004ECAC9 /* AnimationStateData.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399B12E2D54C5004ECAC9 /* AnimationStateData.c */; };
-		30639A4C2E2D54C5004ECAC9 /* Bone.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399B72E2D54C5004ECAC9 /* Bone.c */; };
-		30639A4D2E2D54C5004ECAC9 /* SkeletonJson.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399D22E2D54C5004ECAC9 /* SkeletonJson.c */; };
-		30639A4E2E2D54C5004ECAC9 /* extension.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399BF2E2D54C5004ECAC9 /* extension.c */; };
-		30639A4F2E2D54C5004ECAC9 /* Skin.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399D32E2D54C5004ECAC9 /* Skin.c */; };
-		30639A502E2D54C5004ECAC9 /* IkConstraintData.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399C12E2D54C5004ECAC9 /* IkConstraintData.c */; };
-		30639A512E2D54C5004ECAC9 /* Triangulator.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399D82E2D54C5004ECAC9 /* Triangulator.c */; };
-		30639A522E2D54C5004ECAC9 /* PathAttachment.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399C52E2D54C5004ECAC9 /* PathAttachment.c */; };
-		30639A532E2D54C5004ECAC9 /* AtlasAttachmentLoader.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399B42E2D54C5004ECAC9 /* AtlasAttachmentLoader.c */; };
-		30639A542E2D54C5004ECAC9 /* SkeletonData.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399D12E2D54C5004ECAC9 /* SkeletonData.c */; };
-		30639A552E2D54C5004ECAC9 /* BoundingBoxAttachment.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399B92E2D54C5004ECAC9 /* BoundingBoxAttachment.c */; };
-		30639A562E2D54C5004ECAC9 /* MeshAttachment.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399C42E2D54C5004ECAC9 /* MeshAttachment.c */; };
-		30639A572E2D54C5004ECAC9 /* Array.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399B22E2D54C5004ECAC9 /* Array.c */; };
-		30639A582E2D54C5004ECAC9 /* Sequence.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399CC2E2D54C5004ECAC9 /* Sequence.c */; };
-		30639A592E2D54C5004ECAC9 /* SkeletonClipping.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399D02E2D54C5004ECAC9 /* SkeletonClipping.c */; };
-		30639A5A2E2D54C5004ECAC9 /* PathConstraint.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399C62E2D54C5004ECAC9 /* PathConstraint.c */; };
-		30639A5B2E2D54C5004ECAC9 /* BoneData.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399B82E2D54C5004ECAC9 /* BoneData.c */; };
-		30639A5C2E2D54C5004ECAC9 /* Animation.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399AF2E2D54C5004ECAC9 /* Animation.c */; };
-		30639A5D2E2D54C5004ECAC9 /* RegionAttachment.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399CB2E2D54C5004ECAC9 /* RegionAttachment.c */; };
-		30639A5E2E2D54C5004ECAC9 /* TransformConstraintData.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399D72E2D54C5004ECAC9 /* TransformConstraintData.c */; };
-		30639A5F2E2D54C5004ECAC9 /* AttachmentLoader.c in Sources */ = {isa = PBXBuildFile; fileRef = 306399B62E2D54C5004ECAC9 /* AttachmentLoader.c */; };
 		3063D2312E2D67FB004ECAC9 /* miniaudio.m in Sources */ = {isa = PBXBuildFile; fileRef = 3063D2272E2D6187004ECAC9 /* miniaudio.m */; };
 		3063D2322E2D67FB004ECAC9 /* miniaudio.m in Sources */ = {isa = PBXBuildFile; fileRef = 3063D2272E2D6187004ECAC9 /* miniaudio.m */; };
 		3063D2362E2D6A70004ECAC9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3063D2352E2D6A70004ECAC9 /* Foundation.framework */; };
@@ -210,6 +79,295 @@
 		3092E4872EB2D26F00FA1D75 /* SDLDeepLinkEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 3092E4852EB2D26500FA1D75 /* SDLDeepLinkEvent.m */; };
 		30AF47CB2EA3056400F8D6B4 /* SDLViewControllerModifications.m in Sources */ = {isa = PBXBuildFile; fileRef = 30AF47C92EA3056400F8D6B4 /* SDLViewControllerModifications.m */; };
 		3ECEB00B80F164FAC165B710 /* Pods_WarlockPods_Warlock_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6282222B0D666D5DE89835F4 /* Pods_WarlockPods_Warlock_iOS.framework */; };
+		30E240E72FF2DD1C00D56D85 /* EventTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E2409A2FF2DD1C00D56D85 /* EventTimeline.cpp */; };
+		30E240E82FF2DD1C00D56D85 /* TextureRegion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240CD2FF2DD1C00D56D85 /* TextureRegion.cpp */; };
+		30E240E92FF2DD1C00D56D85 /* IkConstraintData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E2409D2FF2DD1C00D56D85 /* IkConstraintData.cpp */; };
+		30E240EA2FF2DD1C00D56D85 /* PathConstraintPose.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240AA2FF2DD1C00D56D85 /* PathConstraintPose.cpp */; };
+		30E240EB2FF2DD1C00D56D85 /* SkeletonJson.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240BE2FF2DD1C00D56D85 /* SkeletonJson.cpp */; };
+		30E240EC2FF2DD1C00D56D85 /* SkeletonBounds.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240BB2FF2DD1C00D56D85 /* SkeletonBounds.cpp */; };
+		30E240ED2FF2DD1C00D56D85 /* SkeletonClipping.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240BC2FF2DD1C00D56D85 /* SkeletonClipping.cpp */; };
+		30E240EE2FF2DD1C00D56D85 /* Update.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240D52FF2DD1C00D56D85 /* Update.cpp */; };
+		30E240EF2FF2DD1C00D56D85 /* TransformConstraint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240CF2FF2DD1C00D56D85 /* TransformConstraint.cpp */; };
+		30E240F02FF2DD1C00D56D85 /* PathAttachment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240A62FF2DD1C00D56D85 /* PathAttachment.cpp */; };
+		30E240F12FF2DD1C00D56D85 /* TextureLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240CC2FF2DD1C00D56D85 /* TextureLoader.cpp */; };
+		30E240F22FF2DD1C00D56D85 /* AttachmentLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240852FF2DD1C00D56D85 /* AttachmentLoader.cpp */; };
+		30E240F32FF2DD1C00D56D85 /* SkeletonBinary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240BA2FF2DD1C00D56D85 /* SkeletonBinary.cpp */; };
+		30E240F42FF2DD1C00D56D85 /* TransformConstraintData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240D02FF2DD1C00D56D85 /* TransformConstraintData.cpp */; };
+		30E240F52FF2DD1C00D56D85 /* CurveTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240932FF2DD1C00D56D85 /* CurveTimeline.cpp */; };
+		30E240F62FF2DD1C00D56D85 /* BoneLocal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240892FF2DD1C00D56D85 /* BoneLocal.cpp */; };
+		30E240F72FF2DD1C00D56D85 /* SequenceTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240B72FF2DD1C00D56D85 /* SequenceTimeline.cpp */; };
+		30E240F82FF2DD1C00D56D85 /* Triangulator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240D42FF2DD1C00D56D85 /* Triangulator.cpp */; };
+		30E240F92FF2DD1C00D56D85 /* ScaleTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240B52FF2DD1C00D56D85 /* ScaleTimeline.cpp */; };
+		30E240FA2FF2DD1C00D56D85 /* AnimationStateData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240812FF2DD1C00D56D85 /* AnimationStateData.cpp */; };
+		30E240FB2FF2DD1C00D56D85 /* AtlasAttachmentLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240832FF2DD1C00D56D85 /* AtlasAttachmentLoader.cpp */; };
+		30E240FC2FF2DD1C00D56D85 /* PathConstraintSpacingTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240AC2FF2DD1C00D56D85 /* PathConstraintSpacingTimeline.cpp */; };
+		30E240FD2FF2DD1C00D56D85 /* SliderMixTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240C32FF2DD1C00D56D85 /* SliderMixTimeline.cpp */; };
+		30E240FE2FF2DD1C00D56D85 /* Slot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240C62FF2DD1C00D56D85 /* Slot.cpp */; };
+		30E240FF2FF2DD1C00D56D85 /* PathConstraint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240A72FF2DD1C00D56D85 /* PathConstraint.cpp */; };
+		30E241002FF2DD1C00D56D85 /* SlotCurveTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240C72FF2DD1C00D56D85 /* SlotCurveTimeline.cpp */; };
+		30E241012FF2DD1C00D56D85 /* DrawOrder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240952FF2DD1C00D56D85 /* DrawOrder.cpp */; };
+		30E241022FF2DD1C00D56D85 /* BoneTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E2408B2FF2DD1C00D56D85 /* BoneTimeline.cpp */; };
+		30E241032FF2DD1C00D56D85 /* LinkedMesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240A32FF2DD1C00D56D85 /* LinkedMesh.cpp */; };
+		30E241042FF2DD1C00D56D85 /* TranslateTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240D32FF2DD1C00D56D85 /* TranslateTimeline.cpp */; };
+		30E241052FF2DD1C00D56D85 /* IkConstraint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E2409C2FF2DD1C00D56D85 /* IkConstraint.cpp */; };
+		30E241062FF2DD1C00D56D85 /* ConstraintTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240912FF2DD1C00D56D85 /* ConstraintTimeline.cpp */; };
+		30E241072FF2DD1C00D56D85 /* SpineObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240CB2FF2DD1C00D56D85 /* SpineObject.cpp */; };
+		30E241082FF2DD1C00D56D85 /* PhysicsConstraintTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240B02FF2DD1C00D56D85 /* PhysicsConstraintTimeline.cpp */; };
+		30E241092FF2DD1C00D56D85 /* PathConstraintPositionTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240AB2FF2DD1C00D56D85 /* PathConstraintPositionTimeline.cpp */; };
+		30E2410A2FF2DD1C00D56D85 /* RotateTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240B32FF2DD1C00D56D85 /* RotateTimeline.cpp */; };
+		30E2410B2FF2DD1C00D56D85 /* BoundingBoxAttachment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E2408C2FF2DD1C00D56D85 /* BoundingBoxAttachment.cpp */; };
+		30E2410C2FF2DD1C00D56D85 /* Interpolation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240A12FF2DD1C00D56D85 /* Interpolation.cpp */; };
+		30E2410D2FF2DD1C00D56D85 /* RegionAttachment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240B22FF2DD1C00D56D85 /* RegionAttachment.cpp */; };
+		30E2410E2FF2DD1C00D56D85 /* MathUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240A42FF2DD1C00D56D85 /* MathUtil.cpp */; };
+		30E2410F2FF2DD1C00D56D85 /* ConstraintData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240902FF2DD1C00D56D85 /* ConstraintData.cpp */; };
+		30E241102FF2DD1C00D56D85 /* Timeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240CE2FF2DD1C00D56D85 /* Timeline.cpp */; };
+		30E241112FF2DD1C00D56D85 /* AttachmentTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240862FF2DD1C00D56D85 /* AttachmentTimeline.cpp */; };
+		30E241122FF2DD1C00D56D85 /* RTTI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240B42FF2DD1C00D56D85 /* RTTI.cpp */; };
+		30E241132FF2DD1C00D56D85 /* ConstraintTimeline1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240922FF2DD1C00D56D85 /* ConstraintTimeline1.cpp */; };
+		30E241142FF2DD1C00D56D85 /* IkConstraintTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E2409F2FF2DD1C00D56D85 /* IkConstraintTimeline.cpp */; };
+		30E241152FF2DD1C00D56D85 /* SliderTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240C52FF2DD1C00D56D85 /* SliderTimeline.cpp */; };
+		30E241162FF2DD1C00D56D85 /* PhysicsConstraint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240AD2FF2DD1C00D56D85 /* PhysicsConstraint.cpp */; };
+		30E241172FF2DD1C00D56D85 /* Skin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240C02FF2DD1C00D56D85 /* Skin.cpp */; };
+		30E241182FF2DD1C00D56D85 /* EventData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240992FF2DD1C00D56D85 /* EventData.cpp */; };
+		30E2411A2FF2DD1C00D56D85 /* PhysicsConstraintData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240AE2FF2DD1C00D56D85 /* PhysicsConstraintData.cpp */; };
+		30E2411B2FF2DD1C00D56D85 /* Sequence.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240B62FF2DD1C00D56D85 /* Sequence.cpp */; };
+		30E2411C2FF2DD1C00D56D85 /* SkeletonData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240BD2FF2DD1C00D56D85 /* SkeletonData.cpp */; };
+		30E2411D2FF2DD1C00D56D85 /* Atlas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240822FF2DD1C00D56D85 /* Atlas.cpp */; };
+		30E2411E2FF2DD1C00D56D85 /* Skeleton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240B92FF2DD1C00D56D85 /* Skeleton.cpp */; };
+		30E2411F2FF2DD1C00D56D85 /* SliderPose.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240C42FF2DD1C00D56D85 /* SliderPose.cpp */; };
+		30E241202FF2DD1C00D56D85 /* SkeletonRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240BF2FF2DD1C00D56D85 /* SkeletonRenderer.cpp */; };
+		30E241222FF2DD1C00D56D85 /* Slider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240C12FF2DD1C00D56D85 /* Slider.cpp */; };
+		30E241232FF2DD1C00D56D85 /* MeshAttachment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240A52FF2DD1C00D56D85 /* MeshAttachment.cpp */; };
+		30E241242FF2DD1C00D56D85 /* IkConstraintPose.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E2409E2FF2DD1C00D56D85 /* IkConstraintPose.cpp */; };
+		30E241252FF2DD1C00D56D85 /* ShearTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240B82FF2DD1C00D56D85 /* ShearTimeline.cpp */; };
+		30E241262FF2DD1C00D56D85 /* SlotPose.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240C92FF2DD1C00D56D85 /* SlotPose.cpp */; };
+		30E241272FF2DD1C00D56D85 /* PhysicsConstraintPose.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240AF2FF2DD1C00D56D85 /* PhysicsConstraintPose.cpp */; };
+		30E241282FF2DD1C00D56D85 /* TransformConstraintPose.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240D12FF2DD1C00D56D85 /* TransformConstraintPose.cpp */; };
+		30E241292FF2DD1C00D56D85 /* Json.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240A22FF2DD1C00D56D85 /* Json.cpp */; };
+		30E2412A2FF2DD1C00D56D85 /* DrawOrderFolderTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240962FF2DD1C00D56D85 /* DrawOrderFolderTimeline.cpp */; };
+		30E2412B2FF2DD1C00D56D85 /* PathConstraintMixTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240A92FF2DD1C00D56D85 /* PathConstraintMixTimeline.cpp */; };
+		30E2412C2FF2DD1C00D56D85 /* Extension.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E2409B2FF2DD1C00D56D85 /* Extension.cpp */; };
+		30E2412D2FF2DD1C00D56D85 /* Animation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E2407F2FF2DD1C00D56D85 /* Animation.cpp */; };
+		30E2412E2FF2DD1C00D56D85 /* DeformTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240942FF2DD1C00D56D85 /* DeformTimeline.cpp */; };
+		30E2412F2FF2DD1C00D56D85 /* SlotData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240C82FF2DD1C00D56D85 /* SlotData.cpp */; };
+		30E241302FF2DD1C00D56D85 /* Bone.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240872FF2DD1C00D56D85 /* Bone.cpp */; };
+		30E241312FF2DD1C00D56D85 /* BoneData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240882FF2DD1C00D56D85 /* BoneData.cpp */; };
+		30E241322FF2DD1C00D56D85 /* Attachment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240842FF2DD1C00D56D85 /* Attachment.cpp */; };
+		30E241332FF2DD1C00D56D85 /* SlotTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240CA2FF2DD1C00D56D85 /* SlotTimeline.cpp */; };
+		30E241342FF2DD1C00D56D85 /* BonePose.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E2408A2FF2DD1C00D56D85 /* BonePose.cpp */; };
+		30E241352FF2DD1C00D56D85 /* ClippingAttachment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E2408D2FF2DD1C00D56D85 /* ClippingAttachment.cpp */; };
+		30E241362FF2DD1C00D56D85 /* PathConstraintData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240A82FF2DD1C00D56D85 /* PathConstraintData.cpp */; };
+		30E241372FF2DD1C00D56D85 /* Constraint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E2408F2FF2DD1C00D56D85 /* Constraint.cpp */; };
+		30E241382FF2DD1C00D56D85 /* VertexAttachment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240D62FF2DD1C00D56D85 /* VertexAttachment.cpp */; };
+		30E241392FF2DD1C00D56D85 /* TransformConstraintTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240D22FF2DD1C00D56D85 /* TransformConstraintTimeline.cpp */; };
+		30E2413A2FF2DD1C00D56D85 /* Event.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240982FF2DD1C00D56D85 /* Event.cpp */; };
+		30E2413B2FF2DD1C00D56D85 /* AnimationState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240802FF2DD1C00D56D85 /* AnimationState.cpp */; };
+		30E2413C2FF2DD1C00D56D85 /* SliderData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240C22FF2DD1C00D56D85 /* SliderData.cpp */; };
+		30E2413D2FF2DD1C00D56D85 /* DrawOrderTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240972FF2DD1C00D56D85 /* DrawOrderTimeline.cpp */; };
+		30E2413E2FF2DD1C00D56D85 /* PointAttachment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240B12FF2DD1C00D56D85 /* PointAttachment.cpp */; };
+		30E2413F2FF2DD1C00D56D85 /* InheritTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240A02FF2DD1C00D56D85 /* InheritTimeline.cpp */; };
+		30E241402FF2DD1C00D56D85 /* ColorTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E2408E2FF2DD1C00D56D85 /* ColorTimeline.cpp */; };
+		30E241412FF2DD1C00D56D85 /* Extension.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240302FF2DD1C00D56D85 /* Extension.h */; };
+		30E241422FF2DD1C00D56D85 /* IkConstraintPose.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240352FF2DD1C00D56D85 /* IkConstraintPose.h */; };
+		30E241432FF2DD1C00D56D85 /* Update.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E2407A2FF2DD1C00D56D85 /* Update.h */; };
+		30E241442FF2DD1C00D56D85 /* Constraint.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240222FF2DD1C00D56D85 /* Constraint.h */; };
+		30E241452FF2DD1C00D56D85 /* ShearTimeline.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E2405A2FF2DD1C00D56D85 /* ShearTimeline.h */; };
+		30E241462FF2DD1C00D56D85 /* TransformConstraintTimeline.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240772FF2DD1C00D56D85 /* TransformConstraintTimeline.h */; };
+		30E241472FF2DD1C00D56D85 /* BoneLocal.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E2401B2FF2DD1C00D56D85 /* BoneLocal.h */; };
+		30E241482FF2DD1C00D56D85 /* BlockAllocator.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240182FF2DD1C00D56D85 /* BlockAllocator.h */; };
+		30E241492FF2DD1C00D56D85 /* SkeletonRenderer.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240612FF2DD1C00D56D85 /* SkeletonRenderer.h */; };
+		30E2414A2FF2DD1C00D56D85 /* IkConstraintData.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240342FF2DD1C00D56D85 /* IkConstraintData.h */; };
+		30E2414B2FF2DD1C00D56D85 /* HasRendererObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240322FF2DD1C00D56D85 /* HasRendererObject.h */; };
+		30E2414C2FF2DD1C00D56D85 /* AttachmentType.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240162FF2DD1C00D56D85 /* AttachmentType.h */; };
+		30E2414D2FF2DD1C00D56D85 /* PathConstraintMixTimeline.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240422FF2DD1C00D56D85 /* PathConstraintMixTimeline.h */; };
+		30E2414E2FF2DD1C00D56D85 /* BoneData.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E2401A2FF2DD1C00D56D85 /* BoneData.h */; };
+		30E241502FF2DD1C00D56D85 /* Sequence.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240582FF2DD1C00D56D85 /* Sequence.h */; };
+		30E241512FF2DD1C00D56D85 /* EventTimeline.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E2402F2FF2DD1C00D56D85 /* EventTimeline.h */; };
+		30E241522FF2DD1C00D56D85 /* AtlasAttachmentLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240122FF2DD1C00D56D85 /* AtlasAttachmentLoader.h */; };
+		30E241532FF2DD1C00D56D85 /* dll.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240292FF2DD1C00D56D85 /* dll.h */; };
+		30E241542FF2DD1C00D56D85 /* PathAttachment.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E2403F2FF2DD1C00D56D85 /* PathAttachment.h */; };
+		30E241552FF2DD1C00D56D85 /* Slot.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240682FF2DD1C00D56D85 /* Slot.h */; };
+		30E241562FF2DD1C00D56D85 /* Version.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E2407B2FF2DD1C00D56D85 /* Version.h */; };
+		30E241572FF2DD1C00D56D85 /* BoundingBoxAttachment.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E2401E2FF2DD1C00D56D85 /* BoundingBoxAttachment.h */; };
+		30E241582FF2DD1C00D56D85 /* EventData.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E2402E2FF2DD1C00D56D85 /* EventData.h */; };
+		30E241592FF2DD1C00D56D85 /* DrawOrderTimeline.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E2402C2FF2DD1C00D56D85 /* DrawOrderTimeline.h */; };
+		30E2415A2FF2DD1C00D56D85 /* SkeletonClipping.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E2405E2FF2DD1C00D56D85 /* SkeletonClipping.h */; };
+		30E2415B2FF2DD1C00D56D85 /* TextureLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240712FF2DD1C00D56D85 /* TextureLoader.h */; };
+		30E2415C2FF2DD1C00D56D85 /* PhysicsConstraintPose.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240492FF2DD1C00D56D85 /* PhysicsConstraintPose.h */; };
+		30E2415D2FF2DD1C00D56D85 /* SequenceTimeline.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240592FF2DD1C00D56D85 /* SequenceTimeline.h */; };
+		30E2415E2FF2DD1C00D56D85 /* RTTI.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240562FF2DD1C00D56D85 /* RTTI.h */; };
+		30E2415F2FF2DD1C00D56D85 /* Array.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E2400F2FF2DD1C00D56D85 /* Array.h */; };
+		30E241602FF2DD1C00D56D85 /* PathConstraint.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240402FF2DD1C00D56D85 /* PathConstraint.h */; };
+		30E241612FF2DD1C00D56D85 /* IkConstraintTimeline.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240362FF2DD1C00D56D85 /* IkConstraintTimeline.h */; };
+		30E241622FF2DD1C00D56D85 /* ClippingAttachment.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E2401F2FF2DD1C00D56D85 /* ClippingAttachment.h */; };
+		30E241632FF2DD1C00D56D85 /* Timeline.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240732FF2DD1C00D56D85 /* Timeline.h */; };
+		30E241642FF2DD1C00D56D85 /* BonePose.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E2401C2FF2DD1C00D56D85 /* BonePose.h */; };
+		30E241652FF2DD1C00D56D85 /* RotateMode.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240542FF2DD1C00D56D85 /* RotateMode.h */; };
+		30E241662FF2DD1C00D56D85 /* AnimationStateData.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E2400E2FF2DD1C00D56D85 /* AnimationStateData.h */; };
+		30E241672FF2DD1C00D56D85 /* SkeletonData.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E2405F2FF2DD1C00D56D85 /* SkeletonData.h */; };
+		30E241682FF2DD1C00D56D85 /* SpineString.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240702FF2DD1C00D56D85 /* SpineString.h */; };
+		30E241692FF2DD1C00D56D85 /* Physics.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240462FF2DD1C00D56D85 /* Physics.h */; };
+		30E2416A2FF2DD1C00D56D85 /* VertexAttachment.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E2407C2FF2DD1C00D56D85 /* VertexAttachment.h */; };
+		30E2416B2FF2DD1C00D56D85 /* TransformConstraint.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240742FF2DD1C00D56D85 /* TransformConstraint.h */; };
+		30E2416C2FF2DD1C00D56D85 /* Atlas.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240112FF2DD1C00D56D85 /* Atlas.h */; };
+		30E2416D2FF2DD1C00D56D85 /* AnimationState.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E2400D2FF2DD1C00D56D85 /* AnimationState.h */; };
+		30E2416E2FF2DD1C00D56D85 /* Inherit.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240372FF2DD1C00D56D85 /* Inherit.h */; };
+		30E2416F2FF2DD1C00D56D85 /* PosedData.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240502FF2DD1C00D56D85 /* PosedData.h */; };
+		30E241702FF2DD1C00D56D85 /* IkConstraint.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240332FF2DD1C00D56D85 /* IkConstraint.h */; };
+		30E241712FF2DD1C00D56D85 /* Triangulator.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240792FF2DD1C00D56D85 /* Triangulator.h */; };
+		30E241722FF2DD1C00D56D85 /* TransformConstraintData.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240752FF2DD1C00D56D85 /* TransformConstraintData.h */; };
+		30E241732FF2DD1C00D56D85 /* SliderMixTimeline.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240652FF2DD1C00D56D85 /* SliderMixTimeline.h */; };
+		30E241742FF2DD1C00D56D85 /* PathConstraintSpacingTimeline.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240452FF2DD1C00D56D85 /* PathConstraintSpacingTimeline.h */; };
+		30E241752FF2DD1C00D56D85 /* Pose.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E2404D2FF2DD1C00D56D85 /* Pose.h */; };
+		30E241762FF2DD1C00D56D85 /* Slider.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240632FF2DD1C00D56D85 /* Slider.h */; };
+		30E241772FF2DD1C00D56D85 /* TranslateTimeline.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240782FF2DD1C00D56D85 /* TranslateTimeline.h */; };
+		30E241782FF2DD1C00D56D85 /* Map.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E2403C2FF2DD1C00D56D85 /* Map.h */; };
+		30E241792FF2DD1C00D56D85 /* PathConstraintPose.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240432FF2DD1C00D56D85 /* PathConstraintPose.h */; };
+		30E2417A2FF2DD1C00D56D85 /* PhysicsConstraintData.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240482FF2DD1C00D56D85 /* PhysicsConstraintData.h */; };
+		30E2417B2FF2DD1C00D56D85 /* InheritTimeline.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240382FF2DD1C00D56D85 /* InheritTimeline.h */; };
+		30E2417C2FF2DD1C00D56D85 /* PhysicsConstraintTimeline.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E2404A2FF2DD1C00D56D85 /* PhysicsConstraintTimeline.h */; };
+		30E2417D2FF2DD1C00D56D85 /* spine.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E2406E2FF2DD1C00D56D85 /* spine.h */; };
+		30E2417E2FF2DD1C00D56D85 /* BlendMode.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240172FF2DD1C00D56D85 /* BlendMode.h */; };
+		30E2417F2FF2DD1C00D56D85 /* SpacingMode.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E2406D2FF2DD1C00D56D85 /* SpacingMode.h */; };
+		30E241802FF2DD1C00D56D85 /* HashMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240312FF2DD1C00D56D85 /* HashMap.h */; };
+		30E241812FF2DD1C00D56D85 /* ConstraintTimeline1.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240252FF2DD1C00D56D85 /* ConstraintTimeline1.h */; };
+		30E241822FF2DD1C00D56D85 /* Pool.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E2404C2FF2DD1C00D56D85 /* Pool.h */; };
+		30E241832FF2DD1C00D56D85 /* ArrayUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240102FF2DD1C00D56D85 /* ArrayUtils.h */; };
+		30E241842FF2DD1C00D56D85 /* CurveTimeline.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240262FF2DD1C00D56D85 /* CurveTimeline.h */; };
+		30E241852FF2DD1C00D56D85 /* SkeletonBounds.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E2405D2FF2DD1C00D56D85 /* SkeletonBounds.h */; };
+		30E241862FF2DD1C00D56D85 /* MeshAttachment.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E2403E2FF2DD1C00D56D85 /* MeshAttachment.h */; };
+		30E241872FF2DD1C00D56D85 /* SkeletonJson.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240602FF2DD1C00D56D85 /* SkeletonJson.h */; };
+		30E241882FF2DD1C00D56D85 /* Skeleton.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E2405B2FF2DD1C00D56D85 /* Skeleton.h */; };
+		30E241892FF2DD1C00D56D85 /* PosedActive.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E2404F2FF2DD1C00D56D85 /* PosedActive.h */; };
+		30E2418A2FF2DD1C00D56D85 /* PointAttachment.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E2404B2FF2DD1C00D56D85 /* PointAttachment.h */; };
+		30E2418B2FF2DD1C00D56D85 /* BoneTimeline.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E2401D2FF2DD1C00D56D85 /* BoneTimeline.h */; };
+		30E2418C2FF2DD1C00D56D85 /* AttachmentTimeline.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240152FF2DD1C00D56D85 /* AttachmentTimeline.h */; };
+		30E2418D2FF2DD1C00D56D85 /* ConstraintTimeline.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240242FF2DD1C00D56D85 /* ConstraintTimeline.h */; };
+		30E2418E2FF2DD1C00D56D85 /* Json.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E2403A2FF2DD1C00D56D85 /* Json.h */; };
+		30E2418F2FF2DD1C00D56D85 /* Animation.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E2400C2FF2DD1C00D56D85 /* Animation.h */; };
+		30E241902FF2DD1C00D56D85 /* AttachmentLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240142FF2DD1C00D56D85 /* AttachmentLoader.h */; };
+		30E241912FF2DD1C00D56D85 /* SpineObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E2406F2FF2DD1C00D56D85 /* SpineObject.h */; };
+		30E241922FF2DD1C00D56D85 /* DrawOrderFolderTimeline.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E2402B2FF2DD1C00D56D85 /* DrawOrderFolderTimeline.h */; };
+		30E241932FF2DD1C00D56D85 /* SlotTimeline.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E2406C2FF2DD1C00D56D85 /* SlotTimeline.h */; };
+		30E241942FF2DD1C00D56D85 /* SliderPose.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240662FF2DD1C00D56D85 /* SliderPose.h */; };
+		30E241952FF2DD1C00D56D85 /* PhysicsConstraint.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240472FF2DD1C00D56D85 /* PhysicsConstraint.h */; };
+		30E241962FF2DD1C00D56D85 /* SliderData.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240642FF2DD1C00D56D85 /* SliderData.h */; };
+		30E241972FF2DD1C00D56D85 /* SlotCurveTimeline.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240692FF2DD1C00D56D85 /* SlotCurveTimeline.h */; };
+		30E241982FF2DD1C00D56D85 /* Skin.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240622FF2DD1C00D56D85 /* Skin.h */; };
+		30E241992FF2DD1C00D56D85 /* Interpolation.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240392FF2DD1C00D56D85 /* Interpolation.h */; };
+		30E2419A2FF2DD1C00D56D85 /* TransformConstraintPose.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240762FF2DD1C00D56D85 /* TransformConstraintPose.h */; };
+		30E2419B2FF2DD1C00D56D85 /* SliderTimeline.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240672FF2DD1C00D56D85 /* SliderTimeline.h */; };
+		30E2419C2FF2DD1C00D56D85 /* ScaleTimeline.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240572FF2DD1C00D56D85 /* ScaleTimeline.h */; };
+		30E2419D2FF2DD1C00D56D85 /* Debug.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240272FF2DD1C00D56D85 /* Debug.h */; };
+		30E2419E2FF2DD1C00D56D85 /* Bone.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240192FF2DD1C00D56D85 /* Bone.h */; };
+		30E2419F2FF2DD1C00D56D85 /* PathConstraintData.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240412FF2DD1C00D56D85 /* PathConstraintData.h */; };
+		30E241A02FF2DD1C00D56D85 /* Posed.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E2404E2FF2DD1C00D56D85 /* Posed.h */; };
+		30E241A12FF2DD1C00D56D85 /* RotateTimeline.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240552FF2DD1C00D56D85 /* RotateTimeline.h */; };
+		30E241A22FF2DD1C00D56D85 /* Event.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E2402D2FF2DD1C00D56D85 /* Event.h */; };
+		30E241A32FF2DD1C00D56D85 /* Attachment.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240132FF2DD1C00D56D85 /* Attachment.h */; };
+		30E241A42FF2DD1C00D56D85 /* PathConstraintPositionTimeline.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240442FF2DD1C00D56D85 /* PathConstraintPositionTimeline.h */; };
+		30E241A52FF2DD1C00D56D85 /* MathUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E2403D2FF2DD1C00D56D85 /* MathUtil.h */; };
+		30E241A62FF2DD1C00D56D85 /* SkeletonBinary.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E2405C2FF2DD1C00D56D85 /* SkeletonBinary.h */; };
+		30E241A72FF2DD1C00D56D85 /* SlotData.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E2406A2FF2DD1C00D56D85 /* SlotData.h */; };
+		30E241A82FF2DD1C00D56D85 /* RegionAttachment.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240532FF2DD1C00D56D85 /* RegionAttachment.h */; };
+		30E241A92FF2DD1C00D56D85 /* TextureRegion.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240722FF2DD1C00D56D85 /* TextureRegion.h */; };
+		30E241AA2FF2DD1C00D56D85 /* DeformTimeline.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240282FF2DD1C00D56D85 /* DeformTimeline.h */; };
+		30E241AB2FF2DD1C00D56D85 /* SlotPose.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E2406B2FF2DD1C00D56D85 /* SlotPose.h */; };
+		30E241AC2FF2DD1C00D56D85 /* Property.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240522FF2DD1C00D56D85 /* Property.h */; };
+		30E241AD2FF2DD1C00D56D85 /* PositionMode.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240512FF2DD1C00D56D85 /* PositionMode.h */; };
+		30E241AE2FF2DD1C00D56D85 /* ColorTimeline.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240212FF2DD1C00D56D85 /* ColorTimeline.h */; };
+		30E241AF2FF2DD1C00D56D85 /* Color.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240202FF2DD1C00D56D85 /* Color.h */; };
+		30E241B02FF2DD1C00D56D85 /* LinkedMesh.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E2403B2FF2DD1C00D56D85 /* LinkedMesh.h */; };
+		30E241B12FF2DD1C00D56D85 /* ConstraintData.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E240232FF2DD1C00D56D85 /* ConstraintData.h */; };
+		30E241B22FF2DD1C00D56D85 /* DrawOrder.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E2402A2FF2DD1C00D56D85 /* DrawOrder.h */; };
+		30E241B42FF2DD1C00D56D85 /* EventTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E2409A2FF2DD1C00D56D85 /* EventTimeline.cpp */; };
+		30E241B52FF2DD1C00D56D85 /* TextureRegion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240CD2FF2DD1C00D56D85 /* TextureRegion.cpp */; };
+		30E241B62FF2DD1C00D56D85 /* IkConstraintData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E2409D2FF2DD1C00D56D85 /* IkConstraintData.cpp */; };
+		30E241B72FF2DD1C00D56D85 /* PathConstraintPose.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240AA2FF2DD1C00D56D85 /* PathConstraintPose.cpp */; };
+		30E241B82FF2DD1C00D56D85 /* SkeletonJson.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240BE2FF2DD1C00D56D85 /* SkeletonJson.cpp */; };
+		30E241B92FF2DD1C00D56D85 /* SkeletonBounds.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240BB2FF2DD1C00D56D85 /* SkeletonBounds.cpp */; };
+		30E241BA2FF2DD1C00D56D85 /* SkeletonClipping.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240BC2FF2DD1C00D56D85 /* SkeletonClipping.cpp */; };
+		30E241BB2FF2DD1C00D56D85 /* Update.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240D52FF2DD1C00D56D85 /* Update.cpp */; };
+		30E241BC2FF2DD1C00D56D85 /* TransformConstraint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240CF2FF2DD1C00D56D85 /* TransformConstraint.cpp */; };
+		30E241BD2FF2DD1C00D56D85 /* PathAttachment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240A62FF2DD1C00D56D85 /* PathAttachment.cpp */; };
+		30E241BE2FF2DD1C00D56D85 /* TextureLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240CC2FF2DD1C00D56D85 /* TextureLoader.cpp */; };
+		30E241BF2FF2DD1C00D56D85 /* AttachmentLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240852FF2DD1C00D56D85 /* AttachmentLoader.cpp */; };
+		30E241C02FF2DD1C00D56D85 /* SkeletonBinary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240BA2FF2DD1C00D56D85 /* SkeletonBinary.cpp */; };
+		30E241C12FF2DD1C00D56D85 /* TransformConstraintData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240D02FF2DD1C00D56D85 /* TransformConstraintData.cpp */; };
+		30E241C22FF2DD1C00D56D85 /* CurveTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240932FF2DD1C00D56D85 /* CurveTimeline.cpp */; };
+		30E241C32FF2DD1C00D56D85 /* BoneLocal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240892FF2DD1C00D56D85 /* BoneLocal.cpp */; };
+		30E241C42FF2DD1C00D56D85 /* SequenceTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240B72FF2DD1C00D56D85 /* SequenceTimeline.cpp */; };
+		30E241C52FF2DD1C00D56D85 /* Triangulator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240D42FF2DD1C00D56D85 /* Triangulator.cpp */; };
+		30E241C62FF2DD1C00D56D85 /* ScaleTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240B52FF2DD1C00D56D85 /* ScaleTimeline.cpp */; };
+		30E241C72FF2DD1C00D56D85 /* AnimationStateData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240812FF2DD1C00D56D85 /* AnimationStateData.cpp */; };
+		30E241C82FF2DD1C00D56D85 /* AtlasAttachmentLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240832FF2DD1C00D56D85 /* AtlasAttachmentLoader.cpp */; };
+		30E241C92FF2DD1C00D56D85 /* PathConstraintSpacingTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240AC2FF2DD1C00D56D85 /* PathConstraintSpacingTimeline.cpp */; };
+		30E241CA2FF2DD1C00D56D85 /* SliderMixTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240C32FF2DD1C00D56D85 /* SliderMixTimeline.cpp */; };
+		30E241CB2FF2DD1C00D56D85 /* Slot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240C62FF2DD1C00D56D85 /* Slot.cpp */; };
+		30E241CC2FF2DD1C00D56D85 /* PathConstraint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240A72FF2DD1C00D56D85 /* PathConstraint.cpp */; };
+		30E241CD2FF2DD1C00D56D85 /* SlotCurveTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240C72FF2DD1C00D56D85 /* SlotCurveTimeline.cpp */; };
+		30E241CE2FF2DD1C00D56D85 /* DrawOrder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240952FF2DD1C00D56D85 /* DrawOrder.cpp */; };
+		30E241CF2FF2DD1C00D56D85 /* BoneTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E2408B2FF2DD1C00D56D85 /* BoneTimeline.cpp */; };
+		30E241D02FF2DD1C00D56D85 /* LinkedMesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240A32FF2DD1C00D56D85 /* LinkedMesh.cpp */; };
+		30E241D12FF2DD1C00D56D85 /* TranslateTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240D32FF2DD1C00D56D85 /* TranslateTimeline.cpp */; };
+		30E241D22FF2DD1C00D56D85 /* IkConstraint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E2409C2FF2DD1C00D56D85 /* IkConstraint.cpp */; };
+		30E241D32FF2DD1C00D56D85 /* ConstraintTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240912FF2DD1C00D56D85 /* ConstraintTimeline.cpp */; };
+		30E241D42FF2DD1C00D56D85 /* SpineObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240CB2FF2DD1C00D56D85 /* SpineObject.cpp */; };
+		30E241D52FF2DD1C00D56D85 /* PhysicsConstraintTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240B02FF2DD1C00D56D85 /* PhysicsConstraintTimeline.cpp */; };
+		30E241D62FF2DD1C00D56D85 /* PathConstraintPositionTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240AB2FF2DD1C00D56D85 /* PathConstraintPositionTimeline.cpp */; };
+		30E241D72FF2DD1C00D56D85 /* RotateTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240B32FF2DD1C00D56D85 /* RotateTimeline.cpp */; };
+		30E241D82FF2DD1C00D56D85 /* BoundingBoxAttachment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E2408C2FF2DD1C00D56D85 /* BoundingBoxAttachment.cpp */; };
+		30E241D92FF2DD1C00D56D85 /* Interpolation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240A12FF2DD1C00D56D85 /* Interpolation.cpp */; };
+		30E241DA2FF2DD1C00D56D85 /* RegionAttachment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240B22FF2DD1C00D56D85 /* RegionAttachment.cpp */; };
+		30E241DB2FF2DD1C00D56D85 /* MathUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240A42FF2DD1C00D56D85 /* MathUtil.cpp */; };
+		30E241DC2FF2DD1C00D56D85 /* ConstraintData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240902FF2DD1C00D56D85 /* ConstraintData.cpp */; };
+		30E241DD2FF2DD1C00D56D85 /* Timeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240CE2FF2DD1C00D56D85 /* Timeline.cpp */; };
+		30E241DE2FF2DD1C00D56D85 /* AttachmentTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240862FF2DD1C00D56D85 /* AttachmentTimeline.cpp */; };
+		30E241DF2FF2DD1C00D56D85 /* RTTI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240B42FF2DD1C00D56D85 /* RTTI.cpp */; };
+		30E241E02FF2DD1C00D56D85 /* ConstraintTimeline1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240922FF2DD1C00D56D85 /* ConstraintTimeline1.cpp */; };
+		30E241E12FF2DD1C00D56D85 /* IkConstraintTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E2409F2FF2DD1C00D56D85 /* IkConstraintTimeline.cpp */; };
+		30E241E22FF2DD1C00D56D85 /* SliderTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240C52FF2DD1C00D56D85 /* SliderTimeline.cpp */; };
+		30E241E32FF2DD1C00D56D85 /* PhysicsConstraint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240AD2FF2DD1C00D56D85 /* PhysicsConstraint.cpp */; };
+		30E241E42FF2DD1C00D56D85 /* Skin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240C02FF2DD1C00D56D85 /* Skin.cpp */; };
+		30E241E52FF2DD1C00D56D85 /* EventData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240992FF2DD1C00D56D85 /* EventData.cpp */; };
+		30E241E72FF2DD1C00D56D85 /* PhysicsConstraintData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240AE2FF2DD1C00D56D85 /* PhysicsConstraintData.cpp */; };
+		30E241E82FF2DD1C00D56D85 /* Sequence.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240B62FF2DD1C00D56D85 /* Sequence.cpp */; };
+		30E241E92FF2DD1C00D56D85 /* SkeletonData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240BD2FF2DD1C00D56D85 /* SkeletonData.cpp */; };
+		30E241EA2FF2DD1C00D56D85 /* Atlas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240822FF2DD1C00D56D85 /* Atlas.cpp */; };
+		30E241EB2FF2DD1C00D56D85 /* Skeleton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240B92FF2DD1C00D56D85 /* Skeleton.cpp */; };
+		30E241EC2FF2DD1C00D56D85 /* SliderPose.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240C42FF2DD1C00D56D85 /* SliderPose.cpp */; };
+		30E241ED2FF2DD1C00D56D85 /* SkeletonRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240BF2FF2DD1C00D56D85 /* SkeletonRenderer.cpp */; };
+		30E241EF2FF2DD1C00D56D85 /* Slider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240C12FF2DD1C00D56D85 /* Slider.cpp */; };
+		30E241F02FF2DD1C00D56D85 /* MeshAttachment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240A52FF2DD1C00D56D85 /* MeshAttachment.cpp */; };
+		30E241F12FF2DD1C00D56D85 /* IkConstraintPose.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E2409E2FF2DD1C00D56D85 /* IkConstraintPose.cpp */; };
+		30E241F22FF2DD1C00D56D85 /* ShearTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240B82FF2DD1C00D56D85 /* ShearTimeline.cpp */; };
+		30E241F32FF2DD1C00D56D85 /* SlotPose.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240C92FF2DD1C00D56D85 /* SlotPose.cpp */; };
+		30E241F42FF2DD1C00D56D85 /* PhysicsConstraintPose.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240AF2FF2DD1C00D56D85 /* PhysicsConstraintPose.cpp */; };
+		30E241F52FF2DD1C00D56D85 /* TransformConstraintPose.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240D12FF2DD1C00D56D85 /* TransformConstraintPose.cpp */; };
+		30E241F62FF2DD1C00D56D85 /* Json.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240A22FF2DD1C00D56D85 /* Json.cpp */; };
+		30E241F72FF2DD1C00D56D85 /* DrawOrderFolderTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240962FF2DD1C00D56D85 /* DrawOrderFolderTimeline.cpp */; };
+		30E241F82FF2DD1C00D56D85 /* PathConstraintMixTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240A92FF2DD1C00D56D85 /* PathConstraintMixTimeline.cpp */; };
+		30E241F92FF2DD1C00D56D85 /* Extension.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E2409B2FF2DD1C00D56D85 /* Extension.cpp */; };
+		30E241FA2FF2DD1C00D56D85 /* Animation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E2407F2FF2DD1C00D56D85 /* Animation.cpp */; };
+		30E241FB2FF2DD1C00D56D85 /* DeformTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240942FF2DD1C00D56D85 /* DeformTimeline.cpp */; };
+		30E241FC2FF2DD1C00D56D85 /* SlotData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240C82FF2DD1C00D56D85 /* SlotData.cpp */; };
+		30E241FD2FF2DD1C00D56D85 /* Bone.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240872FF2DD1C00D56D85 /* Bone.cpp */; };
+		30E241FE2FF2DD1C00D56D85 /* BoneData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240882FF2DD1C00D56D85 /* BoneData.cpp */; };
+		30E241FF2FF2DD1C00D56D85 /* Attachment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240842FF2DD1C00D56D85 /* Attachment.cpp */; };
+		30E242002FF2DD1C00D56D85 /* SlotTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240CA2FF2DD1C00D56D85 /* SlotTimeline.cpp */; };
+		30E242012FF2DD1C00D56D85 /* BonePose.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E2408A2FF2DD1C00D56D85 /* BonePose.cpp */; };
+		30E242022FF2DD1C00D56D85 /* ClippingAttachment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E2408D2FF2DD1C00D56D85 /* ClippingAttachment.cpp */; };
+		30E242032FF2DD1C00D56D85 /* PathConstraintData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240A82FF2DD1C00D56D85 /* PathConstraintData.cpp */; };
+		30E242042FF2DD1C00D56D85 /* Constraint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E2408F2FF2DD1C00D56D85 /* Constraint.cpp */; };
+		30E242052FF2DD1C00D56D85 /* VertexAttachment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240D62FF2DD1C00D56D85 /* VertexAttachment.cpp */; };
+		30E242062FF2DD1C00D56D85 /* TransformConstraintTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240D22FF2DD1C00D56D85 /* TransformConstraintTimeline.cpp */; };
+		30E242072FF2DD1C00D56D85 /* Event.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240982FF2DD1C00D56D85 /* Event.cpp */; };
+		30E242082FF2DD1C00D56D85 /* AnimationState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240802FF2DD1C00D56D85 /* AnimationState.cpp */; };
+		30E242092FF2DD1C00D56D85 /* SliderData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240C22FF2DD1C00D56D85 /* SliderData.cpp */; };
+		30E2420A2FF2DD1C00D56D85 /* DrawOrderTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240972FF2DD1C00D56D85 /* DrawOrderTimeline.cpp */; };
+		30E2420B2FF2DD1C00D56D85 /* PointAttachment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240B12FF2DD1C00D56D85 /* PointAttachment.cpp */; };
+		30E2420C2FF2DD1C00D56D85 /* InheritTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240A02FF2DD1C00D56D85 /* InheritTimeline.cpp */; };
+		30E2420D2FF2DD1C00D56D85 /* ColorTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E2408E2FF2DD1C00D56D85 /* ColorTimeline.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -314,95 +472,6 @@
 		306399662E2D5362004ECAC9 /* Warlock-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Warlock-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3063996D2E2D543C004ECAC9 /* libSpine-iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libSpine-iOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3063997B2E2D54A8004ECAC9 /* libSpine-macOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libSpine-macOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		3063997F2E2D54C5004ECAC9 /* Animation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Animation.h; sourceTree = "<group>"; };
-		306399802E2D54C5004ECAC9 /* AnimationState.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AnimationState.h; sourceTree = "<group>"; };
-		306399812E2D54C5004ECAC9 /* AnimationStateData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AnimationStateData.h; sourceTree = "<group>"; };
-		306399822E2D54C5004ECAC9 /* Array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Array.h; sourceTree = "<group>"; };
-		306399832E2D54C5004ECAC9 /* Atlas.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Atlas.h; sourceTree = "<group>"; };
-		306399842E2D54C5004ECAC9 /* AtlasAttachmentLoader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AtlasAttachmentLoader.h; sourceTree = "<group>"; };
-		306399852E2D54C5004ECAC9 /* Attachment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Attachment.h; sourceTree = "<group>"; };
-		306399862E2D54C5004ECAC9 /* AttachmentLoader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AttachmentLoader.h; sourceTree = "<group>"; };
-		306399872E2D54C5004ECAC9 /* Bone.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Bone.h; sourceTree = "<group>"; };
-		306399882E2D54C5004ECAC9 /* BoneData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoneData.h; sourceTree = "<group>"; };
-		306399892E2D54C5004ECAC9 /* BoundingBoxAttachment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoundingBoxAttachment.h; sourceTree = "<group>"; };
-		3063998A2E2D54C5004ECAC9 /* ClippingAttachment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ClippingAttachment.h; sourceTree = "<group>"; };
-		3063998B2E2D54C5004ECAC9 /* Color.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Color.h; sourceTree = "<group>"; };
-		3063998C2E2D54C5004ECAC9 /* Debug.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Debug.h; sourceTree = "<group>"; };
-		3063998D2E2D54C5004ECAC9 /* dll.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = dll.h; sourceTree = "<group>"; };
-		3063998E2E2D54C5004ECAC9 /* Event.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
-		3063998F2E2D54C5004ECAC9 /* EventData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EventData.h; sourceTree = "<group>"; };
-		306399902E2D54C5004ECAC9 /* extension.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = extension.h; sourceTree = "<group>"; };
-		306399912E2D54C5004ECAC9 /* IkConstraint.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IkConstraint.h; sourceTree = "<group>"; };
-		306399922E2D54C5004ECAC9 /* IkConstraintData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IkConstraintData.h; sourceTree = "<group>"; };
-		306399932E2D54C5004ECAC9 /* MeshAttachment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MeshAttachment.h; sourceTree = "<group>"; };
-		306399942E2D54C5004ECAC9 /* PathAttachment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PathAttachment.h; sourceTree = "<group>"; };
-		306399952E2D54C5004ECAC9 /* PathConstraint.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PathConstraint.h; sourceTree = "<group>"; };
-		306399962E2D54C5004ECAC9 /* PathConstraintData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PathConstraintData.h; sourceTree = "<group>"; };
-		306399972E2D54C5004ECAC9 /* Physics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Physics.h; sourceTree = "<group>"; };
-		306399982E2D54C5004ECAC9 /* PhysicsConstraint.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhysicsConstraint.h; sourceTree = "<group>"; };
-		306399992E2D54C5004ECAC9 /* PhysicsConstraintData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhysicsConstraintData.h; sourceTree = "<group>"; };
-		3063999A2E2D54C5004ECAC9 /* PointAttachment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PointAttachment.h; sourceTree = "<group>"; };
-		3063999B2E2D54C5004ECAC9 /* RegionAttachment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RegionAttachment.h; sourceTree = "<group>"; };
-		3063999C2E2D54C5004ECAC9 /* Sequence.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sequence.h; sourceTree = "<group>"; };
-		3063999D2E2D54C5004ECAC9 /* Skeleton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Skeleton.h; sourceTree = "<group>"; };
-		3063999E2E2D54C5004ECAC9 /* SkeletonBinary.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SkeletonBinary.h; sourceTree = "<group>"; };
-		3063999F2E2D54C5004ECAC9 /* SkeletonBounds.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SkeletonBounds.h; sourceTree = "<group>"; };
-		306399A02E2D54C5004ECAC9 /* SkeletonClipping.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SkeletonClipping.h; sourceTree = "<group>"; };
-		306399A12E2D54C5004ECAC9 /* SkeletonData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SkeletonData.h; sourceTree = "<group>"; };
-		306399A22E2D54C5004ECAC9 /* SkeletonJson.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SkeletonJson.h; sourceTree = "<group>"; };
-		306399A32E2D54C5004ECAC9 /* Skin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Skin.h; sourceTree = "<group>"; };
-		306399A42E2D54C5004ECAC9 /* Slot.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Slot.h; sourceTree = "<group>"; };
-		306399A52E2D54C5004ECAC9 /* SlotData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SlotData.h; sourceTree = "<group>"; };
-		306399A62E2D54C5004ECAC9 /* spine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = spine.h; sourceTree = "<group>"; };
-		306399A72E2D54C5004ECAC9 /* TextureRegion.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TextureRegion.h; sourceTree = "<group>"; };
-		306399A82E2D54C5004ECAC9 /* TransformConstraint.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TransformConstraint.h; sourceTree = "<group>"; };
-		306399A92E2D54C5004ECAC9 /* TransformConstraintData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TransformConstraintData.h; sourceTree = "<group>"; };
-		306399AA2E2D54C5004ECAC9 /* Triangulator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Triangulator.h; sourceTree = "<group>"; };
-		306399AB2E2D54C5004ECAC9 /* Version.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Version.h; sourceTree = "<group>"; };
-		306399AC2E2D54C5004ECAC9 /* VertexAttachment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VertexAttachment.h; sourceTree = "<group>"; };
-		306399AF2E2D54C5004ECAC9 /* Animation.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Animation.c; sourceTree = "<group>"; };
-		306399B02E2D54C5004ECAC9 /* AnimationState.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = AnimationState.c; sourceTree = "<group>"; };
-		306399B12E2D54C5004ECAC9 /* AnimationStateData.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = AnimationStateData.c; sourceTree = "<group>"; };
-		306399B22E2D54C5004ECAC9 /* Array.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Array.c; sourceTree = "<group>"; };
-		306399B32E2D54C5004ECAC9 /* Atlas.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Atlas.c; sourceTree = "<group>"; };
-		306399B42E2D54C5004ECAC9 /* AtlasAttachmentLoader.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = AtlasAttachmentLoader.c; sourceTree = "<group>"; };
-		306399B52E2D54C5004ECAC9 /* Attachment.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Attachment.c; sourceTree = "<group>"; };
-		306399B62E2D54C5004ECAC9 /* AttachmentLoader.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = AttachmentLoader.c; sourceTree = "<group>"; };
-		306399B72E2D54C5004ECAC9 /* Bone.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Bone.c; sourceTree = "<group>"; };
-		306399B82E2D54C5004ECAC9 /* BoneData.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = BoneData.c; sourceTree = "<group>"; };
-		306399B92E2D54C5004ECAC9 /* BoundingBoxAttachment.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = BoundingBoxAttachment.c; sourceTree = "<group>"; };
-		306399BA2E2D54C5004ECAC9 /* ClippingAttachment.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ClippingAttachment.c; sourceTree = "<group>"; };
-		306399BB2E2D54C5004ECAC9 /* Color.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Color.c; sourceTree = "<group>"; };
-		306399BC2E2D54C5004ECAC9 /* Debug.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Debug.c; sourceTree = "<group>"; };
-		306399BD2E2D54C5004ECAC9 /* Event.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Event.c; sourceTree = "<group>"; };
-		306399BE2E2D54C5004ECAC9 /* EventData.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = EventData.c; sourceTree = "<group>"; };
-		306399BF2E2D54C5004ECAC9 /* extension.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = extension.c; sourceTree = "<group>"; };
-		306399C02E2D54C5004ECAC9 /* IkConstraint.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = IkConstraint.c; sourceTree = "<group>"; };
-		306399C12E2D54C5004ECAC9 /* IkConstraintData.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = IkConstraintData.c; sourceTree = "<group>"; };
-		306399C22E2D54C5004ECAC9 /* Json.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Json.h; sourceTree = "<group>"; };
-		306399C32E2D54C5004ECAC9 /* Json.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Json.c; sourceTree = "<group>"; };
-		306399C42E2D54C5004ECAC9 /* MeshAttachment.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = MeshAttachment.c; sourceTree = "<group>"; };
-		306399C52E2D54C5004ECAC9 /* PathAttachment.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = PathAttachment.c; sourceTree = "<group>"; };
-		306399C62E2D54C5004ECAC9 /* PathConstraint.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = PathConstraint.c; sourceTree = "<group>"; };
-		306399C72E2D54C5004ECAC9 /* PathConstraintData.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = PathConstraintData.c; sourceTree = "<group>"; };
-		306399C82E2D54C5004ECAC9 /* PhysicsConstraint.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = PhysicsConstraint.c; sourceTree = "<group>"; };
-		306399C92E2D54C5004ECAC9 /* PhysicsConstraintData.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = PhysicsConstraintData.c; sourceTree = "<group>"; };
-		306399CA2E2D54C5004ECAC9 /* PointAttachment.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = PointAttachment.c; sourceTree = "<group>"; };
-		306399CB2E2D54C5004ECAC9 /* RegionAttachment.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = RegionAttachment.c; sourceTree = "<group>"; };
-		306399CC2E2D54C5004ECAC9 /* Sequence.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Sequence.c; sourceTree = "<group>"; };
-		306399CD2E2D54C5004ECAC9 /* Skeleton.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Skeleton.c; sourceTree = "<group>"; };
-		306399CE2E2D54C5004ECAC9 /* SkeletonBinary.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = SkeletonBinary.c; sourceTree = "<group>"; };
-		306399CF2E2D54C5004ECAC9 /* SkeletonBounds.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = SkeletonBounds.c; sourceTree = "<group>"; };
-		306399D02E2D54C5004ECAC9 /* SkeletonClipping.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = SkeletonClipping.c; sourceTree = "<group>"; };
-		306399D12E2D54C5004ECAC9 /* SkeletonData.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = SkeletonData.c; sourceTree = "<group>"; };
-		306399D22E2D54C5004ECAC9 /* SkeletonJson.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = SkeletonJson.c; sourceTree = "<group>"; };
-		306399D32E2D54C5004ECAC9 /* Skin.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Skin.c; sourceTree = "<group>"; };
-		306399D42E2D54C5004ECAC9 /* Slot.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Slot.c; sourceTree = "<group>"; };
-		306399D52E2D54C5004ECAC9 /* SlotData.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = SlotData.c; sourceTree = "<group>"; };
-		306399D62E2D54C5004ECAC9 /* TransformConstraint.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = TransformConstraint.c; sourceTree = "<group>"; };
-		306399D72E2D54C5004ECAC9 /* TransformConstraintData.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = TransformConstraintData.c; sourceTree = "<group>"; };
-		306399D82E2D54C5004ECAC9 /* Triangulator.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Triangulator.c; sourceTree = "<group>"; };
-		306399D92E2D54C5004ECAC9 /* VertexAttachment.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = VertexAttachment.c; sourceTree = "<group>"; };
 		30639A762E2D55EE004ECAC9 /* libbgfxRelease.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libbgfxRelease.a; sourceTree = "<group>"; };
 		30639A772E2D55EE004ECAC9 /* libbimg_decodeRelease.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libbimg_decodeRelease.a; sourceTree = "<group>"; };
 		30639A782E2D55EE004ECAC9 /* libbimgRelease.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libbimgRelease.a; sourceTree = "<group>"; };
@@ -545,6 +614,207 @@
 		A0EB06497C69B6AF1576FBD7 /* Pods-WarlockPods-Warlock-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WarlockPods-Warlock-iOS.debug.xcconfig"; path = "Target Support Files/Pods-WarlockPods-Warlock-iOS/Pods-WarlockPods-Warlock-iOS.debug.xcconfig"; sourceTree = "<group>"; };
 		B0A2811E6B36F7D6027A2FEE /* Pods-WarlockPods-Warlock-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WarlockPods-Warlock-macOS.debug.xcconfig"; path = "Target Support Files/Pods-WarlockPods-Warlock-macOS/Pods-WarlockPods-Warlock-macOS.debug.xcconfig"; sourceTree = "<group>"; };
 		D6954D5A4AA485407629EB1C /* Pods-WarlockPods-Warlock-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WarlockPods-Warlock-iOS.release.xcconfig"; path = "Target Support Files/Pods-WarlockPods-Warlock-iOS/Pods-WarlockPods-Warlock-iOS.release.xcconfig"; sourceTree = "<group>"; };
+		30E2400C2FF2DD1C00D56D85 /* Animation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Animation.h; sourceTree = "<group>"; };
+		30E2400D2FF2DD1C00D56D85 /* AnimationState.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AnimationState.h; sourceTree = "<group>"; };
+		30E2400E2FF2DD1C00D56D85 /* AnimationStateData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AnimationStateData.h; sourceTree = "<group>"; };
+		30E2400F2FF2DD1C00D56D85 /* Array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Array.h; sourceTree = "<group>"; };
+		30E240102FF2DD1C00D56D85 /* ArrayUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ArrayUtils.h; sourceTree = "<group>"; };
+		30E240112FF2DD1C00D56D85 /* Atlas.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Atlas.h; sourceTree = "<group>"; };
+		30E240122FF2DD1C00D56D85 /* AtlasAttachmentLoader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AtlasAttachmentLoader.h; sourceTree = "<group>"; };
+		30E240132FF2DD1C00D56D85 /* Attachment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Attachment.h; sourceTree = "<group>"; };
+		30E240142FF2DD1C00D56D85 /* AttachmentLoader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AttachmentLoader.h; sourceTree = "<group>"; };
+		30E240152FF2DD1C00D56D85 /* AttachmentTimeline.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AttachmentTimeline.h; sourceTree = "<group>"; };
+		30E240162FF2DD1C00D56D85 /* AttachmentType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AttachmentType.h; sourceTree = "<group>"; };
+		30E240172FF2DD1C00D56D85 /* BlendMode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BlendMode.h; sourceTree = "<group>"; };
+		30E240182FF2DD1C00D56D85 /* BlockAllocator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BlockAllocator.h; sourceTree = "<group>"; };
+		30E240192FF2DD1C00D56D85 /* Bone.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Bone.h; sourceTree = "<group>"; };
+		30E2401A2FF2DD1C00D56D85 /* BoneData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoneData.h; sourceTree = "<group>"; };
+		30E2401B2FF2DD1C00D56D85 /* BoneLocal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoneLocal.h; sourceTree = "<group>"; };
+		30E2401C2FF2DD1C00D56D85 /* BonePose.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BonePose.h; sourceTree = "<group>"; };
+		30E2401D2FF2DD1C00D56D85 /* BoneTimeline.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoneTimeline.h; sourceTree = "<group>"; };
+		30E2401E2FF2DD1C00D56D85 /* BoundingBoxAttachment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoundingBoxAttachment.h; sourceTree = "<group>"; };
+		30E2401F2FF2DD1C00D56D85 /* ClippingAttachment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ClippingAttachment.h; sourceTree = "<group>"; };
+		30E240202FF2DD1C00D56D85 /* Color.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Color.h; sourceTree = "<group>"; };
+		30E240212FF2DD1C00D56D85 /* ColorTimeline.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ColorTimeline.h; sourceTree = "<group>"; };
+		30E240222FF2DD1C00D56D85 /* Constraint.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constraint.h; sourceTree = "<group>"; };
+		30E240232FF2DD1C00D56D85 /* ConstraintData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConstraintData.h; sourceTree = "<group>"; };
+		30E240242FF2DD1C00D56D85 /* ConstraintTimeline.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConstraintTimeline.h; sourceTree = "<group>"; };
+		30E240252FF2DD1C00D56D85 /* ConstraintTimeline1.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConstraintTimeline1.h; sourceTree = "<group>"; };
+		30E240262FF2DD1C00D56D85 /* CurveTimeline.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CurveTimeline.h; sourceTree = "<group>"; };
+		30E240272FF2DD1C00D56D85 /* Debug.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Debug.h; sourceTree = "<group>"; };
+		30E240282FF2DD1C00D56D85 /* DeformTimeline.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DeformTimeline.h; sourceTree = "<group>"; };
+		30E240292FF2DD1C00D56D85 /* dll.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = dll.h; sourceTree = "<group>"; };
+		30E2402A2FF2DD1C00D56D85 /* DrawOrder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DrawOrder.h; sourceTree = "<group>"; };
+		30E2402B2FF2DD1C00D56D85 /* DrawOrderFolderTimeline.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DrawOrderFolderTimeline.h; sourceTree = "<group>"; };
+		30E2402C2FF2DD1C00D56D85 /* DrawOrderTimeline.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DrawOrderTimeline.h; sourceTree = "<group>"; };
+		30E2402D2FF2DD1C00D56D85 /* Event.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
+		30E2402E2FF2DD1C00D56D85 /* EventData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EventData.h; sourceTree = "<group>"; };
+		30E2402F2FF2DD1C00D56D85 /* EventTimeline.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EventTimeline.h; sourceTree = "<group>"; };
+		30E240302FF2DD1C00D56D85 /* Extension.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Extension.h; sourceTree = "<group>"; };
+		30E240312FF2DD1C00D56D85 /* HashMap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HashMap.h; sourceTree = "<group>"; };
+		30E240322FF2DD1C00D56D85 /* HasRendererObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HasRendererObject.h; sourceTree = "<group>"; };
+		30E240332FF2DD1C00D56D85 /* IkConstraint.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IkConstraint.h; sourceTree = "<group>"; };
+		30E240342FF2DD1C00D56D85 /* IkConstraintData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IkConstraintData.h; sourceTree = "<group>"; };
+		30E240352FF2DD1C00D56D85 /* IkConstraintPose.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IkConstraintPose.h; sourceTree = "<group>"; };
+		30E240362FF2DD1C00D56D85 /* IkConstraintTimeline.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IkConstraintTimeline.h; sourceTree = "<group>"; };
+		30E240372FF2DD1C00D56D85 /* Inherit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Inherit.h; sourceTree = "<group>"; };
+		30E240382FF2DD1C00D56D85 /* InheritTimeline.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InheritTimeline.h; sourceTree = "<group>"; };
+		30E240392FF2DD1C00D56D85 /* Interpolation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Interpolation.h; sourceTree = "<group>"; };
+		30E2403A2FF2DD1C00D56D85 /* Json.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Json.h; sourceTree = "<group>"; };
+		30E2403B2FF2DD1C00D56D85 /* LinkedMesh.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LinkedMesh.h; sourceTree = "<group>"; };
+		30E2403C2FF2DD1C00D56D85 /* Map.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Map.h; sourceTree = "<group>"; };
+		30E2403D2FF2DD1C00D56D85 /* MathUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MathUtil.h; sourceTree = "<group>"; };
+		30E2403E2FF2DD1C00D56D85 /* MeshAttachment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MeshAttachment.h; sourceTree = "<group>"; };
+		30E2403F2FF2DD1C00D56D85 /* PathAttachment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PathAttachment.h; sourceTree = "<group>"; };
+		30E240402FF2DD1C00D56D85 /* PathConstraint.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PathConstraint.h; sourceTree = "<group>"; };
+		30E240412FF2DD1C00D56D85 /* PathConstraintData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PathConstraintData.h; sourceTree = "<group>"; };
+		30E240422FF2DD1C00D56D85 /* PathConstraintMixTimeline.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PathConstraintMixTimeline.h; sourceTree = "<group>"; };
+		30E240432FF2DD1C00D56D85 /* PathConstraintPose.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PathConstraintPose.h; sourceTree = "<group>"; };
+		30E240442FF2DD1C00D56D85 /* PathConstraintPositionTimeline.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PathConstraintPositionTimeline.h; sourceTree = "<group>"; };
+		30E240452FF2DD1C00D56D85 /* PathConstraintSpacingTimeline.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PathConstraintSpacingTimeline.h; sourceTree = "<group>"; };
+		30E240462FF2DD1C00D56D85 /* Physics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Physics.h; sourceTree = "<group>"; };
+		30E240472FF2DD1C00D56D85 /* PhysicsConstraint.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhysicsConstraint.h; sourceTree = "<group>"; };
+		30E240482FF2DD1C00D56D85 /* PhysicsConstraintData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhysicsConstraintData.h; sourceTree = "<group>"; };
+		30E240492FF2DD1C00D56D85 /* PhysicsConstraintPose.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhysicsConstraintPose.h; sourceTree = "<group>"; };
+		30E2404A2FF2DD1C00D56D85 /* PhysicsConstraintTimeline.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhysicsConstraintTimeline.h; sourceTree = "<group>"; };
+		30E2404B2FF2DD1C00D56D85 /* PointAttachment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PointAttachment.h; sourceTree = "<group>"; };
+		30E2404C2FF2DD1C00D56D85 /* Pool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Pool.h; sourceTree = "<group>"; };
+		30E2404D2FF2DD1C00D56D85 /* Pose.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Pose.h; sourceTree = "<group>"; };
+		30E2404E2FF2DD1C00D56D85 /* Posed.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Posed.h; sourceTree = "<group>"; };
+		30E2404F2FF2DD1C00D56D85 /* PosedActive.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PosedActive.h; sourceTree = "<group>"; };
+		30E240502FF2DD1C00D56D85 /* PosedData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PosedData.h; sourceTree = "<group>"; };
+		30E240512FF2DD1C00D56D85 /* PositionMode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PositionMode.h; sourceTree = "<group>"; };
+		30E240522FF2DD1C00D56D85 /* Property.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Property.h; sourceTree = "<group>"; };
+		30E240532FF2DD1C00D56D85 /* RegionAttachment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RegionAttachment.h; sourceTree = "<group>"; };
+		30E240542FF2DD1C00D56D85 /* RotateMode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RotateMode.h; sourceTree = "<group>"; };
+		30E240552FF2DD1C00D56D85 /* RotateTimeline.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RotateTimeline.h; sourceTree = "<group>"; };
+		30E240562FF2DD1C00D56D85 /* RTTI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTTI.h; sourceTree = "<group>"; };
+		30E240572FF2DD1C00D56D85 /* ScaleTimeline.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ScaleTimeline.h; sourceTree = "<group>"; };
+		30E240582FF2DD1C00D56D85 /* Sequence.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sequence.h; sourceTree = "<group>"; };
+		30E240592FF2DD1C00D56D85 /* SequenceTimeline.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SequenceTimeline.h; sourceTree = "<group>"; };
+		30E2405A2FF2DD1C00D56D85 /* ShearTimeline.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShearTimeline.h; sourceTree = "<group>"; };
+		30E2405B2FF2DD1C00D56D85 /* Skeleton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Skeleton.h; sourceTree = "<group>"; };
+		30E2405C2FF2DD1C00D56D85 /* SkeletonBinary.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SkeletonBinary.h; sourceTree = "<group>"; };
+		30E2405D2FF2DD1C00D56D85 /* SkeletonBounds.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SkeletonBounds.h; sourceTree = "<group>"; };
+		30E2405E2FF2DD1C00D56D85 /* SkeletonClipping.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SkeletonClipping.h; sourceTree = "<group>"; };
+		30E2405F2FF2DD1C00D56D85 /* SkeletonData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SkeletonData.h; sourceTree = "<group>"; };
+		30E240602FF2DD1C00D56D85 /* SkeletonJson.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SkeletonJson.h; sourceTree = "<group>"; };
+		30E240612FF2DD1C00D56D85 /* SkeletonRenderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SkeletonRenderer.h; sourceTree = "<group>"; };
+		30E240622FF2DD1C00D56D85 /* Skin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Skin.h; sourceTree = "<group>"; };
+		30E240632FF2DD1C00D56D85 /* Slider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Slider.h; sourceTree = "<group>"; };
+		30E240642FF2DD1C00D56D85 /* SliderData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SliderData.h; sourceTree = "<group>"; };
+		30E240652FF2DD1C00D56D85 /* SliderMixTimeline.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SliderMixTimeline.h; sourceTree = "<group>"; };
+		30E240662FF2DD1C00D56D85 /* SliderPose.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SliderPose.h; sourceTree = "<group>"; };
+		30E240672FF2DD1C00D56D85 /* SliderTimeline.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SliderTimeline.h; sourceTree = "<group>"; };
+		30E240682FF2DD1C00D56D85 /* Slot.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Slot.h; sourceTree = "<group>"; };
+		30E240692FF2DD1C00D56D85 /* SlotCurveTimeline.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SlotCurveTimeline.h; sourceTree = "<group>"; };
+		30E2406A2FF2DD1C00D56D85 /* SlotData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SlotData.h; sourceTree = "<group>"; };
+		30E2406B2FF2DD1C00D56D85 /* SlotPose.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SlotPose.h; sourceTree = "<group>"; };
+		30E2406C2FF2DD1C00D56D85 /* SlotTimeline.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SlotTimeline.h; sourceTree = "<group>"; };
+		30E2406D2FF2DD1C00D56D85 /* SpacingMode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SpacingMode.h; sourceTree = "<group>"; };
+		30E2406E2FF2DD1C00D56D85 /* spine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = spine.h; sourceTree = "<group>"; };
+		30E2406F2FF2DD1C00D56D85 /* SpineObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SpineObject.h; sourceTree = "<group>"; };
+		30E240702FF2DD1C00D56D85 /* SpineString.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SpineString.h; sourceTree = "<group>"; };
+		30E240712FF2DD1C00D56D85 /* TextureLoader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TextureLoader.h; sourceTree = "<group>"; };
+		30E240722FF2DD1C00D56D85 /* TextureRegion.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TextureRegion.h; sourceTree = "<group>"; };
+		30E240732FF2DD1C00D56D85 /* Timeline.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Timeline.h; sourceTree = "<group>"; };
+		30E240742FF2DD1C00D56D85 /* TransformConstraint.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TransformConstraint.h; sourceTree = "<group>"; };
+		30E240752FF2DD1C00D56D85 /* TransformConstraintData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TransformConstraintData.h; sourceTree = "<group>"; };
+		30E240762FF2DD1C00D56D85 /* TransformConstraintPose.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TransformConstraintPose.h; sourceTree = "<group>"; };
+		30E240772FF2DD1C00D56D85 /* TransformConstraintTimeline.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TransformConstraintTimeline.h; sourceTree = "<group>"; };
+		30E240782FF2DD1C00D56D85 /* TranslateTimeline.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TranslateTimeline.h; sourceTree = "<group>"; };
+		30E240792FF2DD1C00D56D85 /* Triangulator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Triangulator.h; sourceTree = "<group>"; };
+		30E2407A2FF2DD1C00D56D85 /* Update.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Update.h; sourceTree = "<group>"; };
+		30E2407B2FF2DD1C00D56D85 /* Version.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Version.h; sourceTree = "<group>"; };
+		30E2407C2FF2DD1C00D56D85 /* VertexAttachment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VertexAttachment.h; sourceTree = "<group>"; };
+		30E2407F2FF2DD1C00D56D85 /* Animation.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Animation.cpp; sourceTree = "<group>"; };
+		30E240802FF2DD1C00D56D85 /* AnimationState.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = AnimationState.cpp; sourceTree = "<group>"; };
+		30E240812FF2DD1C00D56D85 /* AnimationStateData.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = AnimationStateData.cpp; sourceTree = "<group>"; };
+		30E240822FF2DD1C00D56D85 /* Atlas.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Atlas.cpp; sourceTree = "<group>"; };
+		30E240832FF2DD1C00D56D85 /* AtlasAttachmentLoader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = AtlasAttachmentLoader.cpp; sourceTree = "<group>"; };
+		30E240842FF2DD1C00D56D85 /* Attachment.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Attachment.cpp; sourceTree = "<group>"; };
+		30E240852FF2DD1C00D56D85 /* AttachmentLoader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = AttachmentLoader.cpp; sourceTree = "<group>"; };
+		30E240862FF2DD1C00D56D85 /* AttachmentTimeline.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = AttachmentTimeline.cpp; sourceTree = "<group>"; };
+		30E240872FF2DD1C00D56D85 /* Bone.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Bone.cpp; sourceTree = "<group>"; };
+		30E240882FF2DD1C00D56D85 /* BoneData.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = BoneData.cpp; sourceTree = "<group>"; };
+		30E240892FF2DD1C00D56D85 /* BoneLocal.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = BoneLocal.cpp; sourceTree = "<group>"; };
+		30E2408A2FF2DD1C00D56D85 /* BonePose.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = BonePose.cpp; sourceTree = "<group>"; };
+		30E2408B2FF2DD1C00D56D85 /* BoneTimeline.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = BoneTimeline.cpp; sourceTree = "<group>"; };
+		30E2408C2FF2DD1C00D56D85 /* BoundingBoxAttachment.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = BoundingBoxAttachment.cpp; sourceTree = "<group>"; };
+		30E2408D2FF2DD1C00D56D85 /* ClippingAttachment.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ClippingAttachment.cpp; sourceTree = "<group>"; };
+		30E2408E2FF2DD1C00D56D85 /* ColorTimeline.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ColorTimeline.cpp; sourceTree = "<group>"; };
+		30E2408F2FF2DD1C00D56D85 /* Constraint.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Constraint.cpp; sourceTree = "<group>"; };
+		30E240902FF2DD1C00D56D85 /* ConstraintData.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ConstraintData.cpp; sourceTree = "<group>"; };
+		30E240912FF2DD1C00D56D85 /* ConstraintTimeline.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ConstraintTimeline.cpp; sourceTree = "<group>"; };
+		30E240922FF2DD1C00D56D85 /* ConstraintTimeline1.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ConstraintTimeline1.cpp; sourceTree = "<group>"; };
+		30E240932FF2DD1C00D56D85 /* CurveTimeline.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CurveTimeline.cpp; sourceTree = "<group>"; };
+		30E240942FF2DD1C00D56D85 /* DeformTimeline.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = DeformTimeline.cpp; sourceTree = "<group>"; };
+		30E240952FF2DD1C00D56D85 /* DrawOrder.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = DrawOrder.cpp; sourceTree = "<group>"; };
+		30E240962FF2DD1C00D56D85 /* DrawOrderFolderTimeline.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = DrawOrderFolderTimeline.cpp; sourceTree = "<group>"; };
+		30E240972FF2DD1C00D56D85 /* DrawOrderTimeline.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = DrawOrderTimeline.cpp; sourceTree = "<group>"; };
+		30E240982FF2DD1C00D56D85 /* Event.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Event.cpp; sourceTree = "<group>"; };
+		30E240992FF2DD1C00D56D85 /* EventData.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = EventData.cpp; sourceTree = "<group>"; };
+		30E2409A2FF2DD1C00D56D85 /* EventTimeline.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = EventTimeline.cpp; sourceTree = "<group>"; };
+		30E2409B2FF2DD1C00D56D85 /* Extension.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Extension.cpp; sourceTree = "<group>"; };
+		30E2409C2FF2DD1C00D56D85 /* IkConstraint.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = IkConstraint.cpp; sourceTree = "<group>"; };
+		30E2409D2FF2DD1C00D56D85 /* IkConstraintData.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = IkConstraintData.cpp; sourceTree = "<group>"; };
+		30E2409E2FF2DD1C00D56D85 /* IkConstraintPose.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = IkConstraintPose.cpp; sourceTree = "<group>"; };
+		30E2409F2FF2DD1C00D56D85 /* IkConstraintTimeline.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = IkConstraintTimeline.cpp; sourceTree = "<group>"; };
+		30E240A02FF2DD1C00D56D85 /* InheritTimeline.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = InheritTimeline.cpp; sourceTree = "<group>"; };
+		30E240A12FF2DD1C00D56D85 /* Interpolation.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Interpolation.cpp; sourceTree = "<group>"; };
+		30E240A22FF2DD1C00D56D85 /* Json.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Json.cpp; sourceTree = "<group>"; };
+		30E240A32FF2DD1C00D56D85 /* LinkedMesh.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LinkedMesh.cpp; sourceTree = "<group>"; };
+		30E240A42FF2DD1C00D56D85 /* MathUtil.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MathUtil.cpp; sourceTree = "<group>"; };
+		30E240A52FF2DD1C00D56D85 /* MeshAttachment.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MeshAttachment.cpp; sourceTree = "<group>"; };
+		30E240A62FF2DD1C00D56D85 /* PathAttachment.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = PathAttachment.cpp; sourceTree = "<group>"; };
+		30E240A72FF2DD1C00D56D85 /* PathConstraint.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = PathConstraint.cpp; sourceTree = "<group>"; };
+		30E240A82FF2DD1C00D56D85 /* PathConstraintData.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = PathConstraintData.cpp; sourceTree = "<group>"; };
+		30E240A92FF2DD1C00D56D85 /* PathConstraintMixTimeline.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = PathConstraintMixTimeline.cpp; sourceTree = "<group>"; };
+		30E240AA2FF2DD1C00D56D85 /* PathConstraintPose.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = PathConstraintPose.cpp; sourceTree = "<group>"; };
+		30E240AB2FF2DD1C00D56D85 /* PathConstraintPositionTimeline.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = PathConstraintPositionTimeline.cpp; sourceTree = "<group>"; };
+		30E240AC2FF2DD1C00D56D85 /* PathConstraintSpacingTimeline.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = PathConstraintSpacingTimeline.cpp; sourceTree = "<group>"; };
+		30E240AD2FF2DD1C00D56D85 /* PhysicsConstraint.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = PhysicsConstraint.cpp; sourceTree = "<group>"; };
+		30E240AE2FF2DD1C00D56D85 /* PhysicsConstraintData.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = PhysicsConstraintData.cpp; sourceTree = "<group>"; };
+		30E240AF2FF2DD1C00D56D85 /* PhysicsConstraintPose.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = PhysicsConstraintPose.cpp; sourceTree = "<group>"; };
+		30E240B02FF2DD1C00D56D85 /* PhysicsConstraintTimeline.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = PhysicsConstraintTimeline.cpp; sourceTree = "<group>"; };
+		30E240B12FF2DD1C00D56D85 /* PointAttachment.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = PointAttachment.cpp; sourceTree = "<group>"; };
+		30E240B22FF2DD1C00D56D85 /* RegionAttachment.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = RegionAttachment.cpp; sourceTree = "<group>"; };
+		30E240B32FF2DD1C00D56D85 /* RotateTimeline.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = RotateTimeline.cpp; sourceTree = "<group>"; };
+		30E240B42FF2DD1C00D56D85 /* RTTI.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = RTTI.cpp; sourceTree = "<group>"; };
+		30E240B52FF2DD1C00D56D85 /* ScaleTimeline.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ScaleTimeline.cpp; sourceTree = "<group>"; };
+		30E240B62FF2DD1C00D56D85 /* Sequence.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Sequence.cpp; sourceTree = "<group>"; };
+		30E240B72FF2DD1C00D56D85 /* SequenceTimeline.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SequenceTimeline.cpp; sourceTree = "<group>"; };
+		30E240B82FF2DD1C00D56D85 /* ShearTimeline.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ShearTimeline.cpp; sourceTree = "<group>"; };
+		30E240B92FF2DD1C00D56D85 /* Skeleton.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Skeleton.cpp; sourceTree = "<group>"; };
+		30E240BA2FF2DD1C00D56D85 /* SkeletonBinary.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SkeletonBinary.cpp; sourceTree = "<group>"; };
+		30E240BB2FF2DD1C00D56D85 /* SkeletonBounds.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SkeletonBounds.cpp; sourceTree = "<group>"; };
+		30E240BC2FF2DD1C00D56D85 /* SkeletonClipping.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SkeletonClipping.cpp; sourceTree = "<group>"; };
+		30E240BD2FF2DD1C00D56D85 /* SkeletonData.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SkeletonData.cpp; sourceTree = "<group>"; };
+		30E240BE2FF2DD1C00D56D85 /* SkeletonJson.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SkeletonJson.cpp; sourceTree = "<group>"; };
+		30E240BF2FF2DD1C00D56D85 /* SkeletonRenderer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SkeletonRenderer.cpp; sourceTree = "<group>"; };
+		30E240C02FF2DD1C00D56D85 /* Skin.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Skin.cpp; sourceTree = "<group>"; };
+		30E240C12FF2DD1C00D56D85 /* Slider.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Slider.cpp; sourceTree = "<group>"; };
+		30E240C22FF2DD1C00D56D85 /* SliderData.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SliderData.cpp; sourceTree = "<group>"; };
+		30E240C32FF2DD1C00D56D85 /* SliderMixTimeline.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SliderMixTimeline.cpp; sourceTree = "<group>"; };
+		30E240C42FF2DD1C00D56D85 /* SliderPose.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SliderPose.cpp; sourceTree = "<group>"; };
+		30E240C52FF2DD1C00D56D85 /* SliderTimeline.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SliderTimeline.cpp; sourceTree = "<group>"; };
+		30E240C62FF2DD1C00D56D85 /* Slot.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Slot.cpp; sourceTree = "<group>"; };
+		30E240C72FF2DD1C00D56D85 /* SlotCurveTimeline.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SlotCurveTimeline.cpp; sourceTree = "<group>"; };
+		30E240C82FF2DD1C00D56D85 /* SlotData.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SlotData.cpp; sourceTree = "<group>"; };
+		30E240C92FF2DD1C00D56D85 /* SlotPose.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SlotPose.cpp; sourceTree = "<group>"; };
+		30E240CA2FF2DD1C00D56D85 /* SlotTimeline.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SlotTimeline.cpp; sourceTree = "<group>"; };
+		30E240CB2FF2DD1C00D56D85 /* SpineObject.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SpineObject.cpp; sourceTree = "<group>"; };
+		30E240CC2FF2DD1C00D56D85 /* TextureLoader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TextureLoader.cpp; sourceTree = "<group>"; };
+		30E240CD2FF2DD1C00D56D85 /* TextureRegion.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TextureRegion.cpp; sourceTree = "<group>"; };
+		30E240CE2FF2DD1C00D56D85 /* Timeline.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Timeline.cpp; sourceTree = "<group>"; };
+		30E240CF2FF2DD1C00D56D85 /* TransformConstraint.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TransformConstraint.cpp; sourceTree = "<group>"; };
+		30E240D02FF2DD1C00D56D85 /* TransformConstraintData.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TransformConstraintData.cpp; sourceTree = "<group>"; };
+		30E240D12FF2DD1C00D56D85 /* TransformConstraintPose.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TransformConstraintPose.cpp; sourceTree = "<group>"; };
+		30E240D22FF2DD1C00D56D85 /* TransformConstraintTimeline.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TransformConstraintTimeline.cpp; sourceTree = "<group>"; };
+		30E240D32FF2DD1C00D56D85 /* TranslateTimeline.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TranslateTimeline.cpp; sourceTree = "<group>"; };
+		30E240D42FF2DD1C00D56D85 /* Triangulator.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Triangulator.cpp; sourceTree = "<group>"; };
+		30E240D52FF2DD1C00D56D85 /* Update.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Update.cpp; sourceTree = "<group>"; };
+		30E240D62FF2DD1C00D56D85 /* VertexAttachment.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = VertexAttachment.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -755,135 +1025,6 @@
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
-		};
-		306399AD2E2D54C5004ECAC9 /* spine */ = {
-			isa = PBXGroup;
-			children = (
-				3063997F2E2D54C5004ECAC9 /* Animation.h */,
-				306399802E2D54C5004ECAC9 /* AnimationState.h */,
-				306399812E2D54C5004ECAC9 /* AnimationStateData.h */,
-				306399822E2D54C5004ECAC9 /* Array.h */,
-				306399832E2D54C5004ECAC9 /* Atlas.h */,
-				306399842E2D54C5004ECAC9 /* AtlasAttachmentLoader.h */,
-				306399852E2D54C5004ECAC9 /* Attachment.h */,
-				306399862E2D54C5004ECAC9 /* AttachmentLoader.h */,
-				306399872E2D54C5004ECAC9 /* Bone.h */,
-				306399882E2D54C5004ECAC9 /* BoneData.h */,
-				306399892E2D54C5004ECAC9 /* BoundingBoxAttachment.h */,
-				3063998A2E2D54C5004ECAC9 /* ClippingAttachment.h */,
-				3063998B2E2D54C5004ECAC9 /* Color.h */,
-				3063998C2E2D54C5004ECAC9 /* Debug.h */,
-				3063998D2E2D54C5004ECAC9 /* dll.h */,
-				3063998E2E2D54C5004ECAC9 /* Event.h */,
-				3063998F2E2D54C5004ECAC9 /* EventData.h */,
-				306399902E2D54C5004ECAC9 /* extension.h */,
-				306399912E2D54C5004ECAC9 /* IkConstraint.h */,
-				306399922E2D54C5004ECAC9 /* IkConstraintData.h */,
-				306399932E2D54C5004ECAC9 /* MeshAttachment.h */,
-				306399942E2D54C5004ECAC9 /* PathAttachment.h */,
-				306399952E2D54C5004ECAC9 /* PathConstraint.h */,
-				306399962E2D54C5004ECAC9 /* PathConstraintData.h */,
-				306399972E2D54C5004ECAC9 /* Physics.h */,
-				306399982E2D54C5004ECAC9 /* PhysicsConstraint.h */,
-				306399992E2D54C5004ECAC9 /* PhysicsConstraintData.h */,
-				3063999A2E2D54C5004ECAC9 /* PointAttachment.h */,
-				3063999B2E2D54C5004ECAC9 /* RegionAttachment.h */,
-				3063999C2E2D54C5004ECAC9 /* Sequence.h */,
-				3063999D2E2D54C5004ECAC9 /* Skeleton.h */,
-				3063999E2E2D54C5004ECAC9 /* SkeletonBinary.h */,
-				3063999F2E2D54C5004ECAC9 /* SkeletonBounds.h */,
-				306399A02E2D54C5004ECAC9 /* SkeletonClipping.h */,
-				306399A12E2D54C5004ECAC9 /* SkeletonData.h */,
-				306399A22E2D54C5004ECAC9 /* SkeletonJson.h */,
-				306399A32E2D54C5004ECAC9 /* Skin.h */,
-				306399A42E2D54C5004ECAC9 /* Slot.h */,
-				306399A52E2D54C5004ECAC9 /* SlotData.h */,
-				306399A62E2D54C5004ECAC9 /* spine.h */,
-				306399A72E2D54C5004ECAC9 /* TextureRegion.h */,
-				306399A82E2D54C5004ECAC9 /* TransformConstraint.h */,
-				306399A92E2D54C5004ECAC9 /* TransformConstraintData.h */,
-				306399AA2E2D54C5004ECAC9 /* Triangulator.h */,
-				306399AB2E2D54C5004ECAC9 /* Version.h */,
-				306399AC2E2D54C5004ECAC9 /* VertexAttachment.h */,
-			);
-			path = spine;
-			sourceTree = "<group>";
-		};
-		306399AE2E2D54C5004ECAC9 /* include */ = {
-			isa = PBXGroup;
-			children = (
-				306399AD2E2D54C5004ECAC9 /* spine */,
-			);
-			path = include;
-			sourceTree = "<group>";
-		};
-		306399DA2E2D54C5004ECAC9 /* spine */ = {
-			isa = PBXGroup;
-			children = (
-				306399AF2E2D54C5004ECAC9 /* Animation.c */,
-				306399B02E2D54C5004ECAC9 /* AnimationState.c */,
-				306399B12E2D54C5004ECAC9 /* AnimationStateData.c */,
-				306399B22E2D54C5004ECAC9 /* Array.c */,
-				306399B32E2D54C5004ECAC9 /* Atlas.c */,
-				306399B42E2D54C5004ECAC9 /* AtlasAttachmentLoader.c */,
-				306399B52E2D54C5004ECAC9 /* Attachment.c */,
-				306399B62E2D54C5004ECAC9 /* AttachmentLoader.c */,
-				306399B72E2D54C5004ECAC9 /* Bone.c */,
-				306399B82E2D54C5004ECAC9 /* BoneData.c */,
-				306399B92E2D54C5004ECAC9 /* BoundingBoxAttachment.c */,
-				306399BA2E2D54C5004ECAC9 /* ClippingAttachment.c */,
-				306399BB2E2D54C5004ECAC9 /* Color.c */,
-				306399BC2E2D54C5004ECAC9 /* Debug.c */,
-				306399BD2E2D54C5004ECAC9 /* Event.c */,
-				306399BE2E2D54C5004ECAC9 /* EventData.c */,
-				306399BF2E2D54C5004ECAC9 /* extension.c */,
-				306399C02E2D54C5004ECAC9 /* IkConstraint.c */,
-				306399C12E2D54C5004ECAC9 /* IkConstraintData.c */,
-				306399C22E2D54C5004ECAC9 /* Json.h */,
-				306399C32E2D54C5004ECAC9 /* Json.c */,
-				306399C42E2D54C5004ECAC9 /* MeshAttachment.c */,
-				306399C52E2D54C5004ECAC9 /* PathAttachment.c */,
-				306399C62E2D54C5004ECAC9 /* PathConstraint.c */,
-				306399C72E2D54C5004ECAC9 /* PathConstraintData.c */,
-				306399C82E2D54C5004ECAC9 /* PhysicsConstraint.c */,
-				306399C92E2D54C5004ECAC9 /* PhysicsConstraintData.c */,
-				306399CA2E2D54C5004ECAC9 /* PointAttachment.c */,
-				306399CB2E2D54C5004ECAC9 /* RegionAttachment.c */,
-				306399CC2E2D54C5004ECAC9 /* Sequence.c */,
-				306399CD2E2D54C5004ECAC9 /* Skeleton.c */,
-				306399CE2E2D54C5004ECAC9 /* SkeletonBinary.c */,
-				306399CF2E2D54C5004ECAC9 /* SkeletonBounds.c */,
-				306399D02E2D54C5004ECAC9 /* SkeletonClipping.c */,
-				306399D12E2D54C5004ECAC9 /* SkeletonData.c */,
-				306399D22E2D54C5004ECAC9 /* SkeletonJson.c */,
-				306399D32E2D54C5004ECAC9 /* Skin.c */,
-				306399D42E2D54C5004ECAC9 /* Slot.c */,
-				306399D52E2D54C5004ECAC9 /* SlotData.c */,
-				306399D62E2D54C5004ECAC9 /* TransformConstraint.c */,
-				306399D72E2D54C5004ECAC9 /* TransformConstraintData.c */,
-				306399D82E2D54C5004ECAC9 /* Triangulator.c */,
-				306399D92E2D54C5004ECAC9 /* VertexAttachment.c */,
-			);
-			path = spine;
-			sourceTree = "<group>";
-		};
-		306399DB2E2D54C5004ECAC9 /* src */ = {
-			isa = PBXGroup;
-			children = (
-				306399DA2E2D54C5004ECAC9 /* spine */,
-			);
-			path = src;
-			sourceTree = "<group>";
-		};
-		306399DC2E2D54C5004ECAC9 /* spine-c */ = {
-			isa = PBXGroup;
-			children = (
-				306399AE2E2D54C5004ECAC9 /* include */,
-				306399DB2E2D54C5004ECAC9 /* src */,
-			);
-			name = "spine-c";
-			path = "../../Libraries/spine-runtimes/spine-c/spine-c";
-			sourceTree = SOURCE_ROOT;
 		};
 		30639A7A2E2D55EE004ECAC9 /* bin */ = {
 			isa = PBXGroup;
@@ -1236,7 +1377,7 @@
 				3063D25D2E2D8ABD004ECAC9 /* Rogue */,
 				3021A6252E2D8FEE002E6394 /* Utilities */,
 				3063D2172E2D5E4A004ECAC9 /* BGFX */,
-				306399DC2E2D54C5004ECAC9 /* spine-c */,
+				30E240E62FF2DD1C00D56D85 /* spine-cpp */,
 				3063991B2E2D0E69004ECAC9 /* libtess2 */,
 				30A8CA8A2E2C656E00203E31 /* SDL.xcodeproj */,
 				3084FE712E2C66B1003DBBBC /* SDL3.framework */,
@@ -1285,6 +1426,247 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		30E2407D2FF2DD1C00D56D85 /* spine */ = {
+			isa = PBXGroup;
+			children = (
+				30E2400C2FF2DD1C00D56D85 /* Animation.h */,
+				30E2400D2FF2DD1C00D56D85 /* AnimationState.h */,
+				30E2400E2FF2DD1C00D56D85 /* AnimationStateData.h */,
+				30E2400F2FF2DD1C00D56D85 /* Array.h */,
+				30E240102FF2DD1C00D56D85 /* ArrayUtils.h */,
+				30E240112FF2DD1C00D56D85 /* Atlas.h */,
+				30E240122FF2DD1C00D56D85 /* AtlasAttachmentLoader.h */,
+				30E240132FF2DD1C00D56D85 /* Attachment.h */,
+				30E240142FF2DD1C00D56D85 /* AttachmentLoader.h */,
+				30E240152FF2DD1C00D56D85 /* AttachmentTimeline.h */,
+				30E240162FF2DD1C00D56D85 /* AttachmentType.h */,
+				30E240172FF2DD1C00D56D85 /* BlendMode.h */,
+				30E240182FF2DD1C00D56D85 /* BlockAllocator.h */,
+				30E240192FF2DD1C00D56D85 /* Bone.h */,
+				30E2401A2FF2DD1C00D56D85 /* BoneData.h */,
+				30E2401B2FF2DD1C00D56D85 /* BoneLocal.h */,
+				30E2401C2FF2DD1C00D56D85 /* BonePose.h */,
+				30E2401D2FF2DD1C00D56D85 /* BoneTimeline.h */,
+				30E2401E2FF2DD1C00D56D85 /* BoundingBoxAttachment.h */,
+				30E2401F2FF2DD1C00D56D85 /* ClippingAttachment.h */,
+				30E240202FF2DD1C00D56D85 /* Color.h */,
+				30E240212FF2DD1C00D56D85 /* ColorTimeline.h */,
+				30E240222FF2DD1C00D56D85 /* Constraint.h */,
+				30E240232FF2DD1C00D56D85 /* ConstraintData.h */,
+				30E240242FF2DD1C00D56D85 /* ConstraintTimeline.h */,
+				30E240252FF2DD1C00D56D85 /* ConstraintTimeline1.h */,
+				30E240262FF2DD1C00D56D85 /* CurveTimeline.h */,
+				30E240272FF2DD1C00D56D85 /* Debug.h */,
+				30E240282FF2DD1C00D56D85 /* DeformTimeline.h */,
+				30E240292FF2DD1C00D56D85 /* dll.h */,
+				30E2402A2FF2DD1C00D56D85 /* DrawOrder.h */,
+				30E2402B2FF2DD1C00D56D85 /* DrawOrderFolderTimeline.h */,
+				30E2402C2FF2DD1C00D56D85 /* DrawOrderTimeline.h */,
+				30E2402D2FF2DD1C00D56D85 /* Event.h */,
+				30E2402E2FF2DD1C00D56D85 /* EventData.h */,
+				30E2402F2FF2DD1C00D56D85 /* EventTimeline.h */,
+				30E240302FF2DD1C00D56D85 /* Extension.h */,
+				30E240312FF2DD1C00D56D85 /* HashMap.h */,
+				30E240322FF2DD1C00D56D85 /* HasRendererObject.h */,
+				30E240332FF2DD1C00D56D85 /* IkConstraint.h */,
+				30E240342FF2DD1C00D56D85 /* IkConstraintData.h */,
+				30E240352FF2DD1C00D56D85 /* IkConstraintPose.h */,
+				30E240362FF2DD1C00D56D85 /* IkConstraintTimeline.h */,
+				30E240372FF2DD1C00D56D85 /* Inherit.h */,
+				30E240382FF2DD1C00D56D85 /* InheritTimeline.h */,
+				30E240392FF2DD1C00D56D85 /* Interpolation.h */,
+				30E2403A2FF2DD1C00D56D85 /* Json.h */,
+				30E2403B2FF2DD1C00D56D85 /* LinkedMesh.h */,
+				30E2403C2FF2DD1C00D56D85 /* Map.h */,
+				30E2403D2FF2DD1C00D56D85 /* MathUtil.h */,
+				30E2403E2FF2DD1C00D56D85 /* MeshAttachment.h */,
+				30E2403F2FF2DD1C00D56D85 /* PathAttachment.h */,
+				30E240402FF2DD1C00D56D85 /* PathConstraint.h */,
+				30E240412FF2DD1C00D56D85 /* PathConstraintData.h */,
+				30E240422FF2DD1C00D56D85 /* PathConstraintMixTimeline.h */,
+				30E240432FF2DD1C00D56D85 /* PathConstraintPose.h */,
+				30E240442FF2DD1C00D56D85 /* PathConstraintPositionTimeline.h */,
+				30E240452FF2DD1C00D56D85 /* PathConstraintSpacingTimeline.h */,
+				30E240462FF2DD1C00D56D85 /* Physics.h */,
+				30E240472FF2DD1C00D56D85 /* PhysicsConstraint.h */,
+				30E240482FF2DD1C00D56D85 /* PhysicsConstraintData.h */,
+				30E240492FF2DD1C00D56D85 /* PhysicsConstraintPose.h */,
+				30E2404A2FF2DD1C00D56D85 /* PhysicsConstraintTimeline.h */,
+				30E2404B2FF2DD1C00D56D85 /* PointAttachment.h */,
+				30E2404C2FF2DD1C00D56D85 /* Pool.h */,
+				30E2404D2FF2DD1C00D56D85 /* Pose.h */,
+				30E2404E2FF2DD1C00D56D85 /* Posed.h */,
+				30E2404F2FF2DD1C00D56D85 /* PosedActive.h */,
+				30E240502FF2DD1C00D56D85 /* PosedData.h */,
+				30E240512FF2DD1C00D56D85 /* PositionMode.h */,
+				30E240522FF2DD1C00D56D85 /* Property.h */,
+				30E240532FF2DD1C00D56D85 /* RegionAttachment.h */,
+				30E240542FF2DD1C00D56D85 /* RotateMode.h */,
+				30E240552FF2DD1C00D56D85 /* RotateTimeline.h */,
+				30E240562FF2DD1C00D56D85 /* RTTI.h */,
+				30E240572FF2DD1C00D56D85 /* ScaleTimeline.h */,
+				30E240582FF2DD1C00D56D85 /* Sequence.h */,
+				30E240592FF2DD1C00D56D85 /* SequenceTimeline.h */,
+				30E2405A2FF2DD1C00D56D85 /* ShearTimeline.h */,
+				30E2405B2FF2DD1C00D56D85 /* Skeleton.h */,
+				30E2405C2FF2DD1C00D56D85 /* SkeletonBinary.h */,
+				30E2405D2FF2DD1C00D56D85 /* SkeletonBounds.h */,
+				30E2405E2FF2DD1C00D56D85 /* SkeletonClipping.h */,
+				30E2405F2FF2DD1C00D56D85 /* SkeletonData.h */,
+				30E240602FF2DD1C00D56D85 /* SkeletonJson.h */,
+				30E240612FF2DD1C00D56D85 /* SkeletonRenderer.h */,
+				30E240622FF2DD1C00D56D85 /* Skin.h */,
+				30E240632FF2DD1C00D56D85 /* Slider.h */,
+				30E240642FF2DD1C00D56D85 /* SliderData.h */,
+				30E240652FF2DD1C00D56D85 /* SliderMixTimeline.h */,
+				30E240662FF2DD1C00D56D85 /* SliderPose.h */,
+				30E240672FF2DD1C00D56D85 /* SliderTimeline.h */,
+				30E240682FF2DD1C00D56D85 /* Slot.h */,
+				30E240692FF2DD1C00D56D85 /* SlotCurveTimeline.h */,
+				30E2406A2FF2DD1C00D56D85 /* SlotData.h */,
+				30E2406B2FF2DD1C00D56D85 /* SlotPose.h */,
+				30E2406C2FF2DD1C00D56D85 /* SlotTimeline.h */,
+				30E2406D2FF2DD1C00D56D85 /* SpacingMode.h */,
+				30E2406E2FF2DD1C00D56D85 /* spine.h */,
+				30E2406F2FF2DD1C00D56D85 /* SpineObject.h */,
+				30E240702FF2DD1C00D56D85 /* SpineString.h */,
+				30E240712FF2DD1C00D56D85 /* TextureLoader.h */,
+				30E240722FF2DD1C00D56D85 /* TextureRegion.h */,
+				30E240732FF2DD1C00D56D85 /* Timeline.h */,
+				30E240742FF2DD1C00D56D85 /* TransformConstraint.h */,
+				30E240752FF2DD1C00D56D85 /* TransformConstraintData.h */,
+				30E240762FF2DD1C00D56D85 /* TransformConstraintPose.h */,
+				30E240772FF2DD1C00D56D85 /* TransformConstraintTimeline.h */,
+				30E240782FF2DD1C00D56D85 /* TranslateTimeline.h */,
+				30E240792FF2DD1C00D56D85 /* Triangulator.h */,
+				30E2407A2FF2DD1C00D56D85 /* Update.h */,
+				30E2407B2FF2DD1C00D56D85 /* Version.h */,
+				30E2407C2FF2DD1C00D56D85 /* VertexAttachment.h */,
+			);
+			path = spine;
+			sourceTree = "<group>";
+		};
+		30E2407E2FF2DD1C00D56D85 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				30E2407D2FF2DD1C00D56D85 /* spine */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		30E240D72FF2DD1C00D56D85 /* spine */ = {
+			isa = PBXGroup;
+			children = (
+				30E2407F2FF2DD1C00D56D85 /* Animation.cpp */,
+				30E240802FF2DD1C00D56D85 /* AnimationState.cpp */,
+				30E240812FF2DD1C00D56D85 /* AnimationStateData.cpp */,
+				30E240822FF2DD1C00D56D85 /* Atlas.cpp */,
+				30E240832FF2DD1C00D56D85 /* AtlasAttachmentLoader.cpp */,
+				30E240842FF2DD1C00D56D85 /* Attachment.cpp */,
+				30E240852FF2DD1C00D56D85 /* AttachmentLoader.cpp */,
+				30E240862FF2DD1C00D56D85 /* AttachmentTimeline.cpp */,
+				30E240872FF2DD1C00D56D85 /* Bone.cpp */,
+				30E240882FF2DD1C00D56D85 /* BoneData.cpp */,
+				30E240892FF2DD1C00D56D85 /* BoneLocal.cpp */,
+				30E2408A2FF2DD1C00D56D85 /* BonePose.cpp */,
+				30E2408B2FF2DD1C00D56D85 /* BoneTimeline.cpp */,
+				30E2408C2FF2DD1C00D56D85 /* BoundingBoxAttachment.cpp */,
+				30E2408D2FF2DD1C00D56D85 /* ClippingAttachment.cpp */,
+				30E2408E2FF2DD1C00D56D85 /* ColorTimeline.cpp */,
+				30E2408F2FF2DD1C00D56D85 /* Constraint.cpp */,
+				30E240902FF2DD1C00D56D85 /* ConstraintData.cpp */,
+				30E240912FF2DD1C00D56D85 /* ConstraintTimeline.cpp */,
+				30E240922FF2DD1C00D56D85 /* ConstraintTimeline1.cpp */,
+				30E240932FF2DD1C00D56D85 /* CurveTimeline.cpp */,
+				30E240942FF2DD1C00D56D85 /* DeformTimeline.cpp */,
+				30E240952FF2DD1C00D56D85 /* DrawOrder.cpp */,
+				30E240962FF2DD1C00D56D85 /* DrawOrderFolderTimeline.cpp */,
+				30E240972FF2DD1C00D56D85 /* DrawOrderTimeline.cpp */,
+				30E240982FF2DD1C00D56D85 /* Event.cpp */,
+				30E240992FF2DD1C00D56D85 /* EventData.cpp */,
+				30E2409A2FF2DD1C00D56D85 /* EventTimeline.cpp */,
+				30E2409B2FF2DD1C00D56D85 /* Extension.cpp */,
+				30E2409C2FF2DD1C00D56D85 /* IkConstraint.cpp */,
+				30E2409D2FF2DD1C00D56D85 /* IkConstraintData.cpp */,
+				30E2409E2FF2DD1C00D56D85 /* IkConstraintPose.cpp */,
+				30E2409F2FF2DD1C00D56D85 /* IkConstraintTimeline.cpp */,
+				30E240A02FF2DD1C00D56D85 /* InheritTimeline.cpp */,
+				30E240A12FF2DD1C00D56D85 /* Interpolation.cpp */,
+				30E240A22FF2DD1C00D56D85 /* Json.cpp */,
+				30E240A32FF2DD1C00D56D85 /* LinkedMesh.cpp */,
+				30E240A42FF2DD1C00D56D85 /* MathUtil.cpp */,
+				30E240A52FF2DD1C00D56D85 /* MeshAttachment.cpp */,
+				30E240A62FF2DD1C00D56D85 /* PathAttachment.cpp */,
+				30E240A72FF2DD1C00D56D85 /* PathConstraint.cpp */,
+				30E240A82FF2DD1C00D56D85 /* PathConstraintData.cpp */,
+				30E240A92FF2DD1C00D56D85 /* PathConstraintMixTimeline.cpp */,
+				30E240AA2FF2DD1C00D56D85 /* PathConstraintPose.cpp */,
+				30E240AB2FF2DD1C00D56D85 /* PathConstraintPositionTimeline.cpp */,
+				30E240AC2FF2DD1C00D56D85 /* PathConstraintSpacingTimeline.cpp */,
+				30E240AD2FF2DD1C00D56D85 /* PhysicsConstraint.cpp */,
+				30E240AE2FF2DD1C00D56D85 /* PhysicsConstraintData.cpp */,
+				30E240AF2FF2DD1C00D56D85 /* PhysicsConstraintPose.cpp */,
+				30E240B02FF2DD1C00D56D85 /* PhysicsConstraintTimeline.cpp */,
+				30E240B12FF2DD1C00D56D85 /* PointAttachment.cpp */,
+				30E240B22FF2DD1C00D56D85 /* RegionAttachment.cpp */,
+				30E240B32FF2DD1C00D56D85 /* RotateTimeline.cpp */,
+				30E240B42FF2DD1C00D56D85 /* RTTI.cpp */,
+				30E240B52FF2DD1C00D56D85 /* ScaleTimeline.cpp */,
+				30E240B62FF2DD1C00D56D85 /* Sequence.cpp */,
+				30E240B72FF2DD1C00D56D85 /* SequenceTimeline.cpp */,
+				30E240B82FF2DD1C00D56D85 /* ShearTimeline.cpp */,
+				30E240B92FF2DD1C00D56D85 /* Skeleton.cpp */,
+				30E240BA2FF2DD1C00D56D85 /* SkeletonBinary.cpp */,
+				30E240BB2FF2DD1C00D56D85 /* SkeletonBounds.cpp */,
+				30E240BC2FF2DD1C00D56D85 /* SkeletonClipping.cpp */,
+				30E240BD2FF2DD1C00D56D85 /* SkeletonData.cpp */,
+				30E240BE2FF2DD1C00D56D85 /* SkeletonJson.cpp */,
+				30E240BF2FF2DD1C00D56D85 /* SkeletonRenderer.cpp */,
+				30E240C02FF2DD1C00D56D85 /* Skin.cpp */,
+				30E240C12FF2DD1C00D56D85 /* Slider.cpp */,
+				30E240C22FF2DD1C00D56D85 /* SliderData.cpp */,
+				30E240C32FF2DD1C00D56D85 /* SliderMixTimeline.cpp */,
+				30E240C42FF2DD1C00D56D85 /* SliderPose.cpp */,
+				30E240C52FF2DD1C00D56D85 /* SliderTimeline.cpp */,
+				30E240C62FF2DD1C00D56D85 /* Slot.cpp */,
+				30E240C72FF2DD1C00D56D85 /* SlotCurveTimeline.cpp */,
+				30E240C82FF2DD1C00D56D85 /* SlotData.cpp */,
+				30E240C92FF2DD1C00D56D85 /* SlotPose.cpp */,
+				30E240CA2FF2DD1C00D56D85 /* SlotTimeline.cpp */,
+				30E240CB2FF2DD1C00D56D85 /* SpineObject.cpp */,
+				30E240CC2FF2DD1C00D56D85 /* TextureLoader.cpp */,
+				30E240CD2FF2DD1C00D56D85 /* TextureRegion.cpp */,
+				30E240CE2FF2DD1C00D56D85 /* Timeline.cpp */,
+				30E240CF2FF2DD1C00D56D85 /* TransformConstraint.cpp */,
+				30E240D02FF2DD1C00D56D85 /* TransformConstraintData.cpp */,
+				30E240D12FF2DD1C00D56D85 /* TransformConstraintPose.cpp */,
+				30E240D22FF2DD1C00D56D85 /* TransformConstraintTimeline.cpp */,
+				30E240D32FF2DD1C00D56D85 /* TranslateTimeline.cpp */,
+				30E240D42FF2DD1C00D56D85 /* Triangulator.cpp */,
+				30E240D52FF2DD1C00D56D85 /* Update.cpp */,
+				30E240D62FF2DD1C00D56D85 /* VertexAttachment.cpp */,
+			);
+			path = spine;
+			sourceTree = "<group>";
+		};
+		30E240D82FF2DD1C00D56D85 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				30E240D72FF2DD1C00D56D85 /* spine */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		30E240E62FF2DD1C00D56D85 /* spine-cpp */ = {
+			isa = PBXGroup;
+			children = (
+				30E2407E2FF2DD1C00D56D85 /* include */,
+				30E240D82FF2DD1C00D56D85 /* src */,
+			);
+			name = "spine-cpp";
+			path = "../../Libraries/spine-runtimes/spine-cpp";
+			sourceTree = SOURCE_ROOT;
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -1309,53 +1691,119 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				30639A072E2D54C5004ECAC9 /* Animation.h in Headers */,
-				30639A082E2D54C5004ECAC9 /* AnimationState.h in Headers */,
-				30639A092E2D54C5004ECAC9 /* Slot.h in Headers */,
-				30639A0A2E2D54C5004ECAC9 /* Skeleton.h in Headers */,
-				30639A0B2E2D54C5004ECAC9 /* Json.h in Headers */,
-				30639A0C2E2D54C5004ECAC9 /* RegionAttachment.h in Headers */,
-				30639A0D2E2D54C5004ECAC9 /* BoneData.h in Headers */,
-				30639A0E2E2D54C5004ECAC9 /* Array.h in Headers */,
-				30639A0F2E2D54C5004ECAC9 /* PhysicsConstraintData.h in Headers */,
-				30639A102E2D54C5004ECAC9 /* SlotData.h in Headers */,
-				30639A112E2D54C5004ECAC9 /* Physics.h in Headers */,
-				30639A122E2D54C5004ECAC9 /* PathConstraint.h in Headers */,
-				30639A132E2D54C5004ECAC9 /* Bone.h in Headers */,
-				30639A142E2D54C5004ECAC9 /* AttachmentLoader.h in Headers */,
-				30639A152E2D54C5004ECAC9 /* IkConstraintData.h in Headers */,
-				30639A162E2D54C5004ECAC9 /* Version.h in Headers */,
-				30639A172E2D54C5004ECAC9 /* Color.h in Headers */,
-				30639A182E2D54C5004ECAC9 /* MeshAttachment.h in Headers */,
-				30639A192E2D54C5004ECAC9 /* spine.h in Headers */,
-				30639A1A2E2D54C5004ECAC9 /* BoundingBoxAttachment.h in Headers */,
-				30639A1B2E2D54C5004ECAC9 /* Sequence.h in Headers */,
-				30639A1C2E2D54C5004ECAC9 /* PathAttachment.h in Headers */,
-				30639A1D2E2D54C5004ECAC9 /* SkeletonJson.h in Headers */,
-				30639A1E2E2D54C5004ECAC9 /* Attachment.h in Headers */,
-				30639A1F2E2D54C5004ECAC9 /* TransformConstraintData.h in Headers */,
-				30639A202E2D54C5004ECAC9 /* TransformConstraint.h in Headers */,
-				30639A212E2D54C5004ECAC9 /* Event.h in Headers */,
-				30639A222E2D54C5004ECAC9 /* dll.h in Headers */,
-				30639A232E2D54C5004ECAC9 /* PointAttachment.h in Headers */,
-				30639A242E2D54C5004ECAC9 /* AnimationStateData.h in Headers */,
-				30639A252E2D54C5004ECAC9 /* EventData.h in Headers */,
-				30639A262E2D54C5004ECAC9 /* SkeletonData.h in Headers */,
-				30639A272E2D54C5004ECAC9 /* SkeletonBounds.h in Headers */,
-				30639A282E2D54C5004ECAC9 /* AtlasAttachmentLoader.h in Headers */,
-				30639A292E2D54C5004ECAC9 /* SkeletonBinary.h in Headers */,
-				30639A2A2E2D54C5004ECAC9 /* Atlas.h in Headers */,
-				30639A2B2E2D54C5004ECAC9 /* PathConstraintData.h in Headers */,
-				30639A2C2E2D54C5004ECAC9 /* PhysicsConstraint.h in Headers */,
-				30639A2D2E2D54C5004ECAC9 /* IkConstraint.h in Headers */,
-				30639A2E2E2D54C5004ECAC9 /* Skin.h in Headers */,
-				30639A2F2E2D54C5004ECAC9 /* TextureRegion.h in Headers */,
-				30639A302E2D54C5004ECAC9 /* SkeletonClipping.h in Headers */,
-				30639A312E2D54C5004ECAC9 /* ClippingAttachment.h in Headers */,
-				30639A322E2D54C5004ECAC9 /* VertexAttachment.h in Headers */,
-				30639A332E2D54C5004ECAC9 /* Triangulator.h in Headers */,
-				30639A342E2D54C5004ECAC9 /* Debug.h in Headers */,
-				30639A352E2D54C5004ECAC9 /* extension.h in Headers */,
+				30E241412FF2DD1C00D56D85 /* Extension.h in Headers */,
+				30E241422FF2DD1C00D56D85 /* IkConstraintPose.h in Headers */,
+				30E241432FF2DD1C00D56D85 /* Update.h in Headers */,
+				30E241442FF2DD1C00D56D85 /* Constraint.h in Headers */,
+				30E241452FF2DD1C00D56D85 /* ShearTimeline.h in Headers */,
+				30E241462FF2DD1C00D56D85 /* TransformConstraintTimeline.h in Headers */,
+				30E241472FF2DD1C00D56D85 /* BoneLocal.h in Headers */,
+				30E241482FF2DD1C00D56D85 /* BlockAllocator.h in Headers */,
+				30E241492FF2DD1C00D56D85 /* SkeletonRenderer.h in Headers */,
+				30E2414A2FF2DD1C00D56D85 /* IkConstraintData.h in Headers */,
+				30E2414B2FF2DD1C00D56D85 /* HasRendererObject.h in Headers */,
+				30E2414C2FF2DD1C00D56D85 /* AttachmentType.h in Headers */,
+				30E2414D2FF2DD1C00D56D85 /* PathConstraintMixTimeline.h in Headers */,
+				30E2414E2FF2DD1C00D56D85 /* BoneData.h in Headers */,
+				30E241502FF2DD1C00D56D85 /* Sequence.h in Headers */,
+				30E241512FF2DD1C00D56D85 /* EventTimeline.h in Headers */,
+				30E241522FF2DD1C00D56D85 /* AtlasAttachmentLoader.h in Headers */,
+				30E241532FF2DD1C00D56D85 /* dll.h in Headers */,
+				30E241542FF2DD1C00D56D85 /* PathAttachment.h in Headers */,
+				30E241552FF2DD1C00D56D85 /* Slot.h in Headers */,
+				30E241562FF2DD1C00D56D85 /* Version.h in Headers */,
+				30E241572FF2DD1C00D56D85 /* BoundingBoxAttachment.h in Headers */,
+				30E241582FF2DD1C00D56D85 /* EventData.h in Headers */,
+				30E241592FF2DD1C00D56D85 /* DrawOrderTimeline.h in Headers */,
+				30E2415A2FF2DD1C00D56D85 /* SkeletonClipping.h in Headers */,
+				30E2415B2FF2DD1C00D56D85 /* TextureLoader.h in Headers */,
+				30E2415C2FF2DD1C00D56D85 /* PhysicsConstraintPose.h in Headers */,
+				30E2415D2FF2DD1C00D56D85 /* SequenceTimeline.h in Headers */,
+				30E2415E2FF2DD1C00D56D85 /* RTTI.h in Headers */,
+				30E2415F2FF2DD1C00D56D85 /* Array.h in Headers */,
+				30E241602FF2DD1C00D56D85 /* PathConstraint.h in Headers */,
+				30E241612FF2DD1C00D56D85 /* IkConstraintTimeline.h in Headers */,
+				30E241622FF2DD1C00D56D85 /* ClippingAttachment.h in Headers */,
+				30E241632FF2DD1C00D56D85 /* Timeline.h in Headers */,
+				30E241642FF2DD1C00D56D85 /* BonePose.h in Headers */,
+				30E241652FF2DD1C00D56D85 /* RotateMode.h in Headers */,
+				30E241662FF2DD1C00D56D85 /* AnimationStateData.h in Headers */,
+				30E241672FF2DD1C00D56D85 /* SkeletonData.h in Headers */,
+				30E241682FF2DD1C00D56D85 /* SpineString.h in Headers */,
+				30E241692FF2DD1C00D56D85 /* Physics.h in Headers */,
+				30E2416A2FF2DD1C00D56D85 /* VertexAttachment.h in Headers */,
+				30E2416B2FF2DD1C00D56D85 /* TransformConstraint.h in Headers */,
+				30E2416C2FF2DD1C00D56D85 /* Atlas.h in Headers */,
+				30E2416D2FF2DD1C00D56D85 /* AnimationState.h in Headers */,
+				30E2416E2FF2DD1C00D56D85 /* Inherit.h in Headers */,
+				30E2416F2FF2DD1C00D56D85 /* PosedData.h in Headers */,
+				30E241702FF2DD1C00D56D85 /* IkConstraint.h in Headers */,
+				30E241712FF2DD1C00D56D85 /* Triangulator.h in Headers */,
+				30E241722FF2DD1C00D56D85 /* TransformConstraintData.h in Headers */,
+				30E241732FF2DD1C00D56D85 /* SliderMixTimeline.h in Headers */,
+				30E241742FF2DD1C00D56D85 /* PathConstraintSpacingTimeline.h in Headers */,
+				30E241752FF2DD1C00D56D85 /* Pose.h in Headers */,
+				30E241762FF2DD1C00D56D85 /* Slider.h in Headers */,
+				30E241772FF2DD1C00D56D85 /* TranslateTimeline.h in Headers */,
+				30E241782FF2DD1C00D56D85 /* Map.h in Headers */,
+				30E241792FF2DD1C00D56D85 /* PathConstraintPose.h in Headers */,
+				30E2417A2FF2DD1C00D56D85 /* PhysicsConstraintData.h in Headers */,
+				30E2417B2FF2DD1C00D56D85 /* InheritTimeline.h in Headers */,
+				30E2417C2FF2DD1C00D56D85 /* PhysicsConstraintTimeline.h in Headers */,
+				30E2417D2FF2DD1C00D56D85 /* spine.h in Headers */,
+				30E2417E2FF2DD1C00D56D85 /* BlendMode.h in Headers */,
+				30E2417F2FF2DD1C00D56D85 /* SpacingMode.h in Headers */,
+				30E241802FF2DD1C00D56D85 /* HashMap.h in Headers */,
+				30E241812FF2DD1C00D56D85 /* ConstraintTimeline1.h in Headers */,
+				30E241822FF2DD1C00D56D85 /* Pool.h in Headers */,
+				30E241832FF2DD1C00D56D85 /* ArrayUtils.h in Headers */,
+				30E241842FF2DD1C00D56D85 /* CurveTimeline.h in Headers */,
+				30E241852FF2DD1C00D56D85 /* SkeletonBounds.h in Headers */,
+				30E241862FF2DD1C00D56D85 /* MeshAttachment.h in Headers */,
+				30E241872FF2DD1C00D56D85 /* SkeletonJson.h in Headers */,
+				30E241882FF2DD1C00D56D85 /* Skeleton.h in Headers */,
+				30E241892FF2DD1C00D56D85 /* PosedActive.h in Headers */,
+				30E2418A2FF2DD1C00D56D85 /* PointAttachment.h in Headers */,
+				30E2418B2FF2DD1C00D56D85 /* BoneTimeline.h in Headers */,
+				30E2418C2FF2DD1C00D56D85 /* AttachmentTimeline.h in Headers */,
+				30E2418D2FF2DD1C00D56D85 /* ConstraintTimeline.h in Headers */,
+				30E2418E2FF2DD1C00D56D85 /* Json.h in Headers */,
+				30E2418F2FF2DD1C00D56D85 /* Animation.h in Headers */,
+				30E241902FF2DD1C00D56D85 /* AttachmentLoader.h in Headers */,
+				30E241912FF2DD1C00D56D85 /* SpineObject.h in Headers */,
+				30E241922FF2DD1C00D56D85 /* DrawOrderFolderTimeline.h in Headers */,
+				30E241932FF2DD1C00D56D85 /* SlotTimeline.h in Headers */,
+				30E241942FF2DD1C00D56D85 /* SliderPose.h in Headers */,
+				30E241952FF2DD1C00D56D85 /* PhysicsConstraint.h in Headers */,
+				30E241962FF2DD1C00D56D85 /* SliderData.h in Headers */,
+				30E241972FF2DD1C00D56D85 /* SlotCurveTimeline.h in Headers */,
+				30E241982FF2DD1C00D56D85 /* Skin.h in Headers */,
+				30E241992FF2DD1C00D56D85 /* Interpolation.h in Headers */,
+				30E2419A2FF2DD1C00D56D85 /* TransformConstraintPose.h in Headers */,
+				30E2419B2FF2DD1C00D56D85 /* SliderTimeline.h in Headers */,
+				30E2419C2FF2DD1C00D56D85 /* ScaleTimeline.h in Headers */,
+				30E2419D2FF2DD1C00D56D85 /* Debug.h in Headers */,
+				30E2419E2FF2DD1C00D56D85 /* Bone.h in Headers */,
+				30E2419F2FF2DD1C00D56D85 /* PathConstraintData.h in Headers */,
+				30E241A02FF2DD1C00D56D85 /* Posed.h in Headers */,
+				30E241A12FF2DD1C00D56D85 /* RotateTimeline.h in Headers */,
+				30E241A22FF2DD1C00D56D85 /* Event.h in Headers */,
+				30E241A32FF2DD1C00D56D85 /* Attachment.h in Headers */,
+				30E241A42FF2DD1C00D56D85 /* PathConstraintPositionTimeline.h in Headers */,
+				30E241A52FF2DD1C00D56D85 /* MathUtil.h in Headers */,
+				30E241A62FF2DD1C00D56D85 /* SkeletonBinary.h in Headers */,
+				30E241A72FF2DD1C00D56D85 /* SlotData.h in Headers */,
+				30E241A82FF2DD1C00D56D85 /* RegionAttachment.h in Headers */,
+				30E241A92FF2DD1C00D56D85 /* TextureRegion.h in Headers */,
+				30E241AA2FF2DD1C00D56D85 /* DeformTimeline.h in Headers */,
+				30E241AB2FF2DD1C00D56D85 /* SlotPose.h in Headers */,
+				30E241AC2FF2DD1C00D56D85 /* Property.h in Headers */,
+				30E241AD2FF2DD1C00D56D85 /* PositionMode.h in Headers */,
+				30E241AE2FF2DD1C00D56D85 /* ColorTimeline.h in Headers */,
+				30E241AF2FF2DD1C00D56D85 /* Color.h in Headers */,
+				30E241B02FF2DD1C00D56D85 /* LinkedMesh.h in Headers */,
+				30E241B12FF2DD1C00D56D85 /* ConstraintData.h in Headers */,
+				30E241B22FF2DD1C00D56D85 /* DrawOrder.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1809,48 +2257,94 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				306399DD2E2D54C5004ECAC9 /* PhysicsConstraint.c in Sources */,
-				306399DE2E2D54C5004ECAC9 /* SlotData.c in Sources */,
-				306399DF2E2D54C5004ECAC9 /* Debug.c in Sources */,
-				306399E02E2D54C5004ECAC9 /* AnimationState.c in Sources */,
-				306399E12E2D54C5004ECAC9 /* PhysicsConstraintData.c in Sources */,
-				306399E22E2D54C5004ECAC9 /* Skeleton.c in Sources */,
-				306399E32E2D54C5004ECAC9 /* VertexAttachment.c in Sources */,
-				306399E42E2D54C5004ECAC9 /* Atlas.c in Sources */,
-				306399E52E2D54C5004ECAC9 /* Color.c in Sources */,
-				306399E62E2D54C5004ECAC9 /* ClippingAttachment.c in Sources */,
-				306399E72E2D54C5004ECAC9 /* PointAttachment.c in Sources */,
-				306399E82E2D54C5004ECAC9 /* Attachment.c in Sources */,
-				306399E92E2D54C5004ECAC9 /* Slot.c in Sources */,
-				306399EA2E2D54C5004ECAC9 /* Json.c in Sources */,
-				306399EB2E2D54C5004ECAC9 /* SkeletonBounds.c in Sources */,
-				306399EC2E2D54C5004ECAC9 /* Event.c in Sources */,
-				306399ED2E2D54C5004ECAC9 /* SkeletonBinary.c in Sources */,
-				306399EE2E2D54C5004ECAC9 /* TransformConstraint.c in Sources */,
-				306399EF2E2D54C5004ECAC9 /* EventData.c in Sources */,
-				306399F02E2D54C5004ECAC9 /* IkConstraint.c in Sources */,
-				306399F12E2D54C5004ECAC9 /* PathConstraintData.c in Sources */,
-				306399F22E2D54C5004ECAC9 /* AnimationStateData.c in Sources */,
-				306399F32E2D54C5004ECAC9 /* Bone.c in Sources */,
-				306399F42E2D54C5004ECAC9 /* SkeletonJson.c in Sources */,
-				306399F52E2D54C5004ECAC9 /* extension.c in Sources */,
-				306399F62E2D54C5004ECAC9 /* Skin.c in Sources */,
-				306399F72E2D54C5004ECAC9 /* IkConstraintData.c in Sources */,
-				306399F82E2D54C5004ECAC9 /* Triangulator.c in Sources */,
-				306399F92E2D54C5004ECAC9 /* PathAttachment.c in Sources */,
-				306399FA2E2D54C5004ECAC9 /* AtlasAttachmentLoader.c in Sources */,
-				306399FB2E2D54C5004ECAC9 /* SkeletonData.c in Sources */,
-				306399FC2E2D54C5004ECAC9 /* BoundingBoxAttachment.c in Sources */,
-				306399FD2E2D54C5004ECAC9 /* MeshAttachment.c in Sources */,
-				306399FE2E2D54C5004ECAC9 /* Array.c in Sources */,
-				306399FF2E2D54C5004ECAC9 /* Sequence.c in Sources */,
-				30639A002E2D54C5004ECAC9 /* SkeletonClipping.c in Sources */,
-				30639A012E2D54C5004ECAC9 /* PathConstraint.c in Sources */,
-				30639A022E2D54C5004ECAC9 /* BoneData.c in Sources */,
-				30639A032E2D54C5004ECAC9 /* Animation.c in Sources */,
-				30639A042E2D54C5004ECAC9 /* RegionAttachment.c in Sources */,
-				30639A052E2D54C5004ECAC9 /* TransformConstraintData.c in Sources */,
-				30639A062E2D54C5004ECAC9 /* AttachmentLoader.c in Sources */,
+				30E240E72FF2DD1C00D56D85 /* EventTimeline.cpp in Sources */,
+				30E240E82FF2DD1C00D56D85 /* TextureRegion.cpp in Sources */,
+				30E240E92FF2DD1C00D56D85 /* IkConstraintData.cpp in Sources */,
+				30E240EA2FF2DD1C00D56D85 /* PathConstraintPose.cpp in Sources */,
+				30E240EB2FF2DD1C00D56D85 /* SkeletonJson.cpp in Sources */,
+				30E240EC2FF2DD1C00D56D85 /* SkeletonBounds.cpp in Sources */,
+				30E240ED2FF2DD1C00D56D85 /* SkeletonClipping.cpp in Sources */,
+				30E240EE2FF2DD1C00D56D85 /* Update.cpp in Sources */,
+				30E240EF2FF2DD1C00D56D85 /* TransformConstraint.cpp in Sources */,
+				30E240F02FF2DD1C00D56D85 /* PathAttachment.cpp in Sources */,
+				30E240F12FF2DD1C00D56D85 /* TextureLoader.cpp in Sources */,
+				30E240F22FF2DD1C00D56D85 /* AttachmentLoader.cpp in Sources */,
+				30E240F32FF2DD1C00D56D85 /* SkeletonBinary.cpp in Sources */,
+				30E240F42FF2DD1C00D56D85 /* TransformConstraintData.cpp in Sources */,
+				30E240F52FF2DD1C00D56D85 /* CurveTimeline.cpp in Sources */,
+				30E240F62FF2DD1C00D56D85 /* BoneLocal.cpp in Sources */,
+				30E240F72FF2DD1C00D56D85 /* SequenceTimeline.cpp in Sources */,
+				30E240F82FF2DD1C00D56D85 /* Triangulator.cpp in Sources */,
+				30E240F92FF2DD1C00D56D85 /* ScaleTimeline.cpp in Sources */,
+				30E240FA2FF2DD1C00D56D85 /* AnimationStateData.cpp in Sources */,
+				30E240FB2FF2DD1C00D56D85 /* AtlasAttachmentLoader.cpp in Sources */,
+				30E240FC2FF2DD1C00D56D85 /* PathConstraintSpacingTimeline.cpp in Sources */,
+				30E240FD2FF2DD1C00D56D85 /* SliderMixTimeline.cpp in Sources */,
+				30E240FE2FF2DD1C00D56D85 /* Slot.cpp in Sources */,
+				30E240FF2FF2DD1C00D56D85 /* PathConstraint.cpp in Sources */,
+				30E241002FF2DD1C00D56D85 /* SlotCurveTimeline.cpp in Sources */,
+				30E241012FF2DD1C00D56D85 /* DrawOrder.cpp in Sources */,
+				30E241022FF2DD1C00D56D85 /* BoneTimeline.cpp in Sources */,
+				30E241032FF2DD1C00D56D85 /* LinkedMesh.cpp in Sources */,
+				30E241042FF2DD1C00D56D85 /* TranslateTimeline.cpp in Sources */,
+				30E241052FF2DD1C00D56D85 /* IkConstraint.cpp in Sources */,
+				30E241062FF2DD1C00D56D85 /* ConstraintTimeline.cpp in Sources */,
+				30E241072FF2DD1C00D56D85 /* SpineObject.cpp in Sources */,
+				30E241082FF2DD1C00D56D85 /* PhysicsConstraintTimeline.cpp in Sources */,
+				30E241092FF2DD1C00D56D85 /* PathConstraintPositionTimeline.cpp in Sources */,
+				30E2410A2FF2DD1C00D56D85 /* RotateTimeline.cpp in Sources */,
+				30E2410B2FF2DD1C00D56D85 /* BoundingBoxAttachment.cpp in Sources */,
+				30E2410C2FF2DD1C00D56D85 /* Interpolation.cpp in Sources */,
+				30E2410D2FF2DD1C00D56D85 /* RegionAttachment.cpp in Sources */,
+				30E2410E2FF2DD1C00D56D85 /* MathUtil.cpp in Sources */,
+				30E2410F2FF2DD1C00D56D85 /* ConstraintData.cpp in Sources */,
+				30E241102FF2DD1C00D56D85 /* Timeline.cpp in Sources */,
+				30E241112FF2DD1C00D56D85 /* AttachmentTimeline.cpp in Sources */,
+				30E241122FF2DD1C00D56D85 /* RTTI.cpp in Sources */,
+				30E241132FF2DD1C00D56D85 /* ConstraintTimeline1.cpp in Sources */,
+				30E241142FF2DD1C00D56D85 /* IkConstraintTimeline.cpp in Sources */,
+				30E241152FF2DD1C00D56D85 /* SliderTimeline.cpp in Sources */,
+				30E241162FF2DD1C00D56D85 /* PhysicsConstraint.cpp in Sources */,
+				30E241172FF2DD1C00D56D85 /* Skin.cpp in Sources */,
+				30E241182FF2DD1C00D56D85 /* EventData.cpp in Sources */,
+				30E2411A2FF2DD1C00D56D85 /* PhysicsConstraintData.cpp in Sources */,
+				30E2411B2FF2DD1C00D56D85 /* Sequence.cpp in Sources */,
+				30E2411C2FF2DD1C00D56D85 /* SkeletonData.cpp in Sources */,
+				30E2411D2FF2DD1C00D56D85 /* Atlas.cpp in Sources */,
+				30E2411E2FF2DD1C00D56D85 /* Skeleton.cpp in Sources */,
+				30E2411F2FF2DD1C00D56D85 /* SliderPose.cpp in Sources */,
+				30E241202FF2DD1C00D56D85 /* SkeletonRenderer.cpp in Sources */,
+				30E241222FF2DD1C00D56D85 /* Slider.cpp in Sources */,
+				30E241232FF2DD1C00D56D85 /* MeshAttachment.cpp in Sources */,
+				30E241242FF2DD1C00D56D85 /* IkConstraintPose.cpp in Sources */,
+				30E241252FF2DD1C00D56D85 /* ShearTimeline.cpp in Sources */,
+				30E241262FF2DD1C00D56D85 /* SlotPose.cpp in Sources */,
+				30E241272FF2DD1C00D56D85 /* PhysicsConstraintPose.cpp in Sources */,
+				30E241282FF2DD1C00D56D85 /* TransformConstraintPose.cpp in Sources */,
+				30E241292FF2DD1C00D56D85 /* Json.cpp in Sources */,
+				30E2412A2FF2DD1C00D56D85 /* DrawOrderFolderTimeline.cpp in Sources */,
+				30E2412B2FF2DD1C00D56D85 /* PathConstraintMixTimeline.cpp in Sources */,
+				30E2412C2FF2DD1C00D56D85 /* Extension.cpp in Sources */,
+				30E2412D2FF2DD1C00D56D85 /* Animation.cpp in Sources */,
+				30E2412E2FF2DD1C00D56D85 /* DeformTimeline.cpp in Sources */,
+				30E2412F2FF2DD1C00D56D85 /* SlotData.cpp in Sources */,
+				30E241302FF2DD1C00D56D85 /* Bone.cpp in Sources */,
+				30E241312FF2DD1C00D56D85 /* BoneData.cpp in Sources */,
+				30E241322FF2DD1C00D56D85 /* Attachment.cpp in Sources */,
+				30E241332FF2DD1C00D56D85 /* SlotTimeline.cpp in Sources */,
+				30E241342FF2DD1C00D56D85 /* BonePose.cpp in Sources */,
+				30E241352FF2DD1C00D56D85 /* ClippingAttachment.cpp in Sources */,
+				30E241362FF2DD1C00D56D85 /* PathConstraintData.cpp in Sources */,
+				30E241372FF2DD1C00D56D85 /* Constraint.cpp in Sources */,
+				30E241382FF2DD1C00D56D85 /* VertexAttachment.cpp in Sources */,
+				30E241392FF2DD1C00D56D85 /* TransformConstraintTimeline.cpp in Sources */,
+				30E2413A2FF2DD1C00D56D85 /* Event.cpp in Sources */,
+				30E2413B2FF2DD1C00D56D85 /* AnimationState.cpp in Sources */,
+				30E2413C2FF2DD1C00D56D85 /* SliderData.cpp in Sources */,
+				30E2413D2FF2DD1C00D56D85 /* DrawOrderTimeline.cpp in Sources */,
+				30E2413E2FF2DD1C00D56D85 /* PointAttachment.cpp in Sources */,
+				30E2413F2FF2DD1C00D56D85 /* InheritTimeline.cpp in Sources */,
+				30E241402FF2DD1C00D56D85 /* ColorTimeline.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1858,48 +2352,94 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				30639A362E2D54C5004ECAC9 /* PhysicsConstraint.c in Sources */,
-				30639A372E2D54C5004ECAC9 /* SlotData.c in Sources */,
-				30639A382E2D54C5004ECAC9 /* Debug.c in Sources */,
-				30639A392E2D54C5004ECAC9 /* AnimationState.c in Sources */,
-				30639A3A2E2D54C5004ECAC9 /* PhysicsConstraintData.c in Sources */,
-				30639A3B2E2D54C5004ECAC9 /* Skeleton.c in Sources */,
-				30639A3C2E2D54C5004ECAC9 /* VertexAttachment.c in Sources */,
-				30639A3D2E2D54C5004ECAC9 /* Atlas.c in Sources */,
-				30639A3E2E2D54C5004ECAC9 /* Color.c in Sources */,
-				30639A3F2E2D54C5004ECAC9 /* ClippingAttachment.c in Sources */,
-				30639A402E2D54C5004ECAC9 /* PointAttachment.c in Sources */,
-				30639A412E2D54C5004ECAC9 /* Attachment.c in Sources */,
-				30639A422E2D54C5004ECAC9 /* Slot.c in Sources */,
-				30639A432E2D54C5004ECAC9 /* Json.c in Sources */,
-				30639A442E2D54C5004ECAC9 /* SkeletonBounds.c in Sources */,
-				30639A452E2D54C5004ECAC9 /* Event.c in Sources */,
-				30639A462E2D54C5004ECAC9 /* SkeletonBinary.c in Sources */,
-				30639A472E2D54C5004ECAC9 /* TransformConstraint.c in Sources */,
-				30639A482E2D54C5004ECAC9 /* EventData.c in Sources */,
-				30639A492E2D54C5004ECAC9 /* IkConstraint.c in Sources */,
-				30639A4A2E2D54C5004ECAC9 /* PathConstraintData.c in Sources */,
-				30639A4B2E2D54C5004ECAC9 /* AnimationStateData.c in Sources */,
-				30639A4C2E2D54C5004ECAC9 /* Bone.c in Sources */,
-				30639A4D2E2D54C5004ECAC9 /* SkeletonJson.c in Sources */,
-				30639A4E2E2D54C5004ECAC9 /* extension.c in Sources */,
-				30639A4F2E2D54C5004ECAC9 /* Skin.c in Sources */,
-				30639A502E2D54C5004ECAC9 /* IkConstraintData.c in Sources */,
-				30639A512E2D54C5004ECAC9 /* Triangulator.c in Sources */,
-				30639A522E2D54C5004ECAC9 /* PathAttachment.c in Sources */,
-				30639A532E2D54C5004ECAC9 /* AtlasAttachmentLoader.c in Sources */,
-				30639A542E2D54C5004ECAC9 /* SkeletonData.c in Sources */,
-				30639A552E2D54C5004ECAC9 /* BoundingBoxAttachment.c in Sources */,
-				30639A562E2D54C5004ECAC9 /* MeshAttachment.c in Sources */,
-				30639A572E2D54C5004ECAC9 /* Array.c in Sources */,
-				30639A582E2D54C5004ECAC9 /* Sequence.c in Sources */,
-				30639A592E2D54C5004ECAC9 /* SkeletonClipping.c in Sources */,
-				30639A5A2E2D54C5004ECAC9 /* PathConstraint.c in Sources */,
-				30639A5B2E2D54C5004ECAC9 /* BoneData.c in Sources */,
-				30639A5C2E2D54C5004ECAC9 /* Animation.c in Sources */,
-				30639A5D2E2D54C5004ECAC9 /* RegionAttachment.c in Sources */,
-				30639A5E2E2D54C5004ECAC9 /* TransformConstraintData.c in Sources */,
-				30639A5F2E2D54C5004ECAC9 /* AttachmentLoader.c in Sources */,
+				30E241B42FF2DD1C00D56D85 /* EventTimeline.cpp in Sources */,
+				30E241B52FF2DD1C00D56D85 /* TextureRegion.cpp in Sources */,
+				30E241B62FF2DD1C00D56D85 /* IkConstraintData.cpp in Sources */,
+				30E241B72FF2DD1C00D56D85 /* PathConstraintPose.cpp in Sources */,
+				30E241B82FF2DD1C00D56D85 /* SkeletonJson.cpp in Sources */,
+				30E241B92FF2DD1C00D56D85 /* SkeletonBounds.cpp in Sources */,
+				30E241BA2FF2DD1C00D56D85 /* SkeletonClipping.cpp in Sources */,
+				30E241BB2FF2DD1C00D56D85 /* Update.cpp in Sources */,
+				30E241BC2FF2DD1C00D56D85 /* TransformConstraint.cpp in Sources */,
+				30E241BD2FF2DD1C00D56D85 /* PathAttachment.cpp in Sources */,
+				30E241BE2FF2DD1C00D56D85 /* TextureLoader.cpp in Sources */,
+				30E241BF2FF2DD1C00D56D85 /* AttachmentLoader.cpp in Sources */,
+				30E241C02FF2DD1C00D56D85 /* SkeletonBinary.cpp in Sources */,
+				30E241C12FF2DD1C00D56D85 /* TransformConstraintData.cpp in Sources */,
+				30E241C22FF2DD1C00D56D85 /* CurveTimeline.cpp in Sources */,
+				30E241C32FF2DD1C00D56D85 /* BoneLocal.cpp in Sources */,
+				30E241C42FF2DD1C00D56D85 /* SequenceTimeline.cpp in Sources */,
+				30E241C52FF2DD1C00D56D85 /* Triangulator.cpp in Sources */,
+				30E241C62FF2DD1C00D56D85 /* ScaleTimeline.cpp in Sources */,
+				30E241C72FF2DD1C00D56D85 /* AnimationStateData.cpp in Sources */,
+				30E241C82FF2DD1C00D56D85 /* AtlasAttachmentLoader.cpp in Sources */,
+				30E241C92FF2DD1C00D56D85 /* PathConstraintSpacingTimeline.cpp in Sources */,
+				30E241CA2FF2DD1C00D56D85 /* SliderMixTimeline.cpp in Sources */,
+				30E241CB2FF2DD1C00D56D85 /* Slot.cpp in Sources */,
+				30E241CC2FF2DD1C00D56D85 /* PathConstraint.cpp in Sources */,
+				30E241CD2FF2DD1C00D56D85 /* SlotCurveTimeline.cpp in Sources */,
+				30E241CE2FF2DD1C00D56D85 /* DrawOrder.cpp in Sources */,
+				30E241CF2FF2DD1C00D56D85 /* BoneTimeline.cpp in Sources */,
+				30E241D02FF2DD1C00D56D85 /* LinkedMesh.cpp in Sources */,
+				30E241D12FF2DD1C00D56D85 /* TranslateTimeline.cpp in Sources */,
+				30E241D22FF2DD1C00D56D85 /* IkConstraint.cpp in Sources */,
+				30E241D32FF2DD1C00D56D85 /* ConstraintTimeline.cpp in Sources */,
+				30E241D42FF2DD1C00D56D85 /* SpineObject.cpp in Sources */,
+				30E241D52FF2DD1C00D56D85 /* PhysicsConstraintTimeline.cpp in Sources */,
+				30E241D62FF2DD1C00D56D85 /* PathConstraintPositionTimeline.cpp in Sources */,
+				30E241D72FF2DD1C00D56D85 /* RotateTimeline.cpp in Sources */,
+				30E241D82FF2DD1C00D56D85 /* BoundingBoxAttachment.cpp in Sources */,
+				30E241D92FF2DD1C00D56D85 /* Interpolation.cpp in Sources */,
+				30E241DA2FF2DD1C00D56D85 /* RegionAttachment.cpp in Sources */,
+				30E241DB2FF2DD1C00D56D85 /* MathUtil.cpp in Sources */,
+				30E241DC2FF2DD1C00D56D85 /* ConstraintData.cpp in Sources */,
+				30E241DD2FF2DD1C00D56D85 /* Timeline.cpp in Sources */,
+				30E241DE2FF2DD1C00D56D85 /* AttachmentTimeline.cpp in Sources */,
+				30E241DF2FF2DD1C00D56D85 /* RTTI.cpp in Sources */,
+				30E241E02FF2DD1C00D56D85 /* ConstraintTimeline1.cpp in Sources */,
+				30E241E12FF2DD1C00D56D85 /* IkConstraintTimeline.cpp in Sources */,
+				30E241E22FF2DD1C00D56D85 /* SliderTimeline.cpp in Sources */,
+				30E241E32FF2DD1C00D56D85 /* PhysicsConstraint.cpp in Sources */,
+				30E241E42FF2DD1C00D56D85 /* Skin.cpp in Sources */,
+				30E241E52FF2DD1C00D56D85 /* EventData.cpp in Sources */,
+				30E241E72FF2DD1C00D56D85 /* PhysicsConstraintData.cpp in Sources */,
+				30E241E82FF2DD1C00D56D85 /* Sequence.cpp in Sources */,
+				30E241E92FF2DD1C00D56D85 /* SkeletonData.cpp in Sources */,
+				30E241EA2FF2DD1C00D56D85 /* Atlas.cpp in Sources */,
+				30E241EB2FF2DD1C00D56D85 /* Skeleton.cpp in Sources */,
+				30E241EC2FF2DD1C00D56D85 /* SliderPose.cpp in Sources */,
+				30E241ED2FF2DD1C00D56D85 /* SkeletonRenderer.cpp in Sources */,
+				30E241EF2FF2DD1C00D56D85 /* Slider.cpp in Sources */,
+				30E241F02FF2DD1C00D56D85 /* MeshAttachment.cpp in Sources */,
+				30E241F12FF2DD1C00D56D85 /* IkConstraintPose.cpp in Sources */,
+				30E241F22FF2DD1C00D56D85 /* ShearTimeline.cpp in Sources */,
+				30E241F32FF2DD1C00D56D85 /* SlotPose.cpp in Sources */,
+				30E241F42FF2DD1C00D56D85 /* PhysicsConstraintPose.cpp in Sources */,
+				30E241F52FF2DD1C00D56D85 /* TransformConstraintPose.cpp in Sources */,
+				30E241F62FF2DD1C00D56D85 /* Json.cpp in Sources */,
+				30E241F72FF2DD1C00D56D85 /* DrawOrderFolderTimeline.cpp in Sources */,
+				30E241F82FF2DD1C00D56D85 /* PathConstraintMixTimeline.cpp in Sources */,
+				30E241F92FF2DD1C00D56D85 /* Extension.cpp in Sources */,
+				30E241FA2FF2DD1C00D56D85 /* Animation.cpp in Sources */,
+				30E241FB2FF2DD1C00D56D85 /* DeformTimeline.cpp in Sources */,
+				30E241FC2FF2DD1C00D56D85 /* SlotData.cpp in Sources */,
+				30E241FD2FF2DD1C00D56D85 /* Bone.cpp in Sources */,
+				30E241FE2FF2DD1C00D56D85 /* BoneData.cpp in Sources */,
+				30E241FF2FF2DD1C00D56D85 /* Attachment.cpp in Sources */,
+				30E242002FF2DD1C00D56D85 /* SlotTimeline.cpp in Sources */,
+				30E242012FF2DD1C00D56D85 /* BonePose.cpp in Sources */,
+				30E242022FF2DD1C00D56D85 /* ClippingAttachment.cpp in Sources */,
+				30E242032FF2DD1C00D56D85 /* PathConstraintData.cpp in Sources */,
+				30E242042FF2DD1C00D56D85 /* Constraint.cpp in Sources */,
+				30E242052FF2DD1C00D56D85 /* VertexAttachment.cpp in Sources */,
+				30E242062FF2DD1C00D56D85 /* TransformConstraintTimeline.cpp in Sources */,
+				30E242072FF2DD1C00D56D85 /* Event.cpp in Sources */,
+				30E242082FF2DD1C00D56D85 /* AnimationState.cpp in Sources */,
+				30E242092FF2DD1C00D56D85 /* SliderData.cpp in Sources */,
+				30E2420A2FF2DD1C00D56D85 /* DrawOrderTimeline.cpp in Sources */,
+				30E2420B2FF2DD1C00D56D85 /* PointAttachment.cpp in Sources */,
+				30E2420C2FF2DD1C00D56D85 /* InheritTimeline.cpp in Sources */,
+				30E2420D2FF2DD1C00D56D85 /* ColorTimeline.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2129,7 +2669,7 @@
 					../../Libraries/bx/include,
 					../../Libraries/bgfx/include,
 					../../Libraries/bimg/include,
-					"../../Libraries/spine-runtimes/spine-c/spine-c/include",
+					"../../Libraries/spine-runtimes/spine-cpp/include",
 					../../Libraries/SDL/src/video/uikit,
 					"$(inherited)",
 				);
@@ -2233,7 +2773,7 @@
 					../../Libraries/bx/include,
 					../../Libraries/bgfx/include,
 					../../Libraries/bimg/include,
-					"../../Libraries/spine-runtimes/spine-c/spine-c/include",
+					"../../Libraries/spine-runtimes/spine-cpp/include",
 					../../Libraries/SDL/src/video/uikit,
 					"$(inherited)",
 				);
@@ -2292,7 +2832,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = AFP6SAXN8A;
 				GCC_OPTIMIZATION_LEVEL = s;
-				HEADER_SEARCH_PATHS = "../../Libraries/spine-runtimes/spine-c/spine-c/include";
+				HEADER_SEARCH_PATHS = "../../Libraries/spine-runtimes/spine-cpp/include";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2307,7 +2847,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = AFP6SAXN8A;
-				HEADER_SEARCH_PATHS = "../../Libraries/spine-runtimes/spine-c/spine-c/include";
+				HEADER_SEARCH_PATHS = "../../Libraries/spine-runtimes/spine-cpp/include";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2325,7 +2865,7 @@
 				DEVELOPMENT_TEAM = AFP6SAXN8A;
 				EXECUTABLE_PREFIX = lib;
 				GCC_OPTIMIZATION_LEVEL = s;
-				HEADER_SEARCH_PATHS = "../../Libraries/spine-runtimes/spine-c/spine-c/include";
+				HEADER_SEARCH_PATHS = "../../Libraries/spine-runtimes/spine-cpp/include";
 				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -2339,7 +2879,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = AFP6SAXN8A;
 				EXECUTABLE_PREFIX = lib;
-				HEADER_SEARCH_PATHS = "../../Libraries/spine-runtimes/spine-c/spine-c/include";
+				HEADER_SEARCH_PATHS = "../../Libraries/spine-runtimes/spine-cpp/include";
 				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -2559,7 +3099,7 @@
 					../../Libraries/bx/include,
 					../../Libraries/bgfx/include,
 					../../Libraries/bimg/include,
-					"../../Libraries/spine-runtimes/spine-c/spine-c/include",
+					"../../Libraries/spine-runtimes/spine-cpp/include",
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = "Warlock-macOS-Info.plist";
@@ -2639,7 +3179,7 @@
 					../../Libraries/bx/include,
 					../../Libraries/bgfx/include,
 					../../Libraries/bimg/include,
-					"../../Libraries/spine-runtimes/spine-c/spine-c/include",
+					"../../Libraries/spine-runtimes/spine-cpp/include",
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = "Warlock-macOS-Info.plist";
