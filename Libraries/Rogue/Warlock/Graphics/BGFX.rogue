@@ -1,7 +1,6 @@
 library Warlock
 
 nativeHeader @|#include <bgfx/bgfx.h>
-nativeHeader @|#include <bgfx/platform.h>
 
 BGFX
 
