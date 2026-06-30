@@ -3,7 +3,6 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_vulkan.h>     // not strictly required for bgfx, but handy
 #include <bgfx/bgfx.h>
-#include <bgfx/platform.h>
 
 #include <cstdio>
 

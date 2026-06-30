@@ -25,12 +25,6 @@ public class MainActivity extends SDLActivity
     Log.d( "Warlock", "Launching app version " + getVersionName() + " (" + getVersionCode() + ")" );
 
     // Add additional configuration here
-    BackendlessInterface.configure( this );
-    FacebookInterface.configure( this );
-    GoogleSignInInterface.configure( this );
-    UnityAdsInterface.configure( this );
-
-    onMessage( "AppStore.configure", m -> { AppStoreInterface.configure( this, List.of("ts_premium") ); } );
 
     onMessage( "MainActivity.tick", m -> {tick();} );
 
@@ -59,7 +53,7 @@ public class MainActivity extends SDLActivity
   {
     for (ActivityResult result : pending_activity_results)
     {
-      FacebookInterface.callback_manager.onActivityResult( result.request_code, result.result_code, result.data );
+      //FacebookInterface.callback_manager.onActivityResult( result.request_code, result.result_code, result.data );
     }
     pending_activity_results.clear();
   }
