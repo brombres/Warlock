@@ -903,6 +903,11 @@ endRoutine
 routine rogo_android
   # SYNTAX: rogo android [rebuild|release]
   build( "Android" )
+  # Skip the Gradle build when invoked from Android Studio's Rogo task (IDE=true);
+  # otherwise this would recurse into a second concurrent build.
+  if (not String.exists(System.env//IDE))
+    execute "cd Platforms/Android && sh gradlew :app:assembleDebug"
+  endIf
 endRoutine
 
 routine rogo_android_open
@@ -911,7 +916,7 @@ endRoutine
 
 routine rogo_and
   # SYNTAX: rogo and [rebuild|release]
-  build( "Android" )
+  rogo_android
 endRoutine
 
 routine rogo_and_open
