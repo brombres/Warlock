@@ -16,7 +16,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "30A8CA692E2C626700203E31"
-               BuildableName = "Tomb Sweeper.app"
+               BuildableName = "Warlock-macOS.app"
                BlueprintName = "Warlock-macOS"
                ReferencedContainer = "container:Warlock.xcodeproj">
             </BuildableReference>
@@ -45,7 +45,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "30A8CA692E2C626700203E31"
-            BuildableName = "Tomb Sweeper.app"
+            BuildableName = "Warlock-macOS.app"
             BlueprintName = "Warlock-macOS"
             ReferencedContainer = "container:Warlock.xcodeproj">
          </BuildableReference>
@@ -62,7 +62,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "30A8CA692E2C626700203E31"
-            BuildableName = "Tomb Sweeper.app"
+            BuildableName = "Warlock-macOS.app"
             BlueprintName = "Warlock-macOS"
             ReferencedContainer = "container:Warlock.xcodeproj">
          </BuildableReference>
