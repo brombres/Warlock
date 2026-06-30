@@ -848,6 +848,21 @@ routine copy_file( from_file:File, to_file:File, base_folder:String, &header_sho
 
   to_file.parent.create_folder
 
+  # Binary templates (e.g. gradle-wrapper.jar) must be copied byte-for-byte;
+  # reading them through a UTF-8 String corrupts every byte >= 0x80. Only text
+  # templates need the project-id placeholder substitution. The early-out above
+  # already guarantees we only reach here when a copy is actually required.
+  local from_bytes = from_file.load_as_bytes
+  if (from_bytes.contains(0->Byte))
+    if (not header_shown)
+      header_shown = true
+      println "Copying project template Libraries/Warlock/$ -> $"(base_folder,base_folder)
+    endIf
+    if (mesg) println mesg
+    to_file.save( from_bytes )
+    return header_shown
+  endIf
+
   local content = String( from_file )
   if (replace_project_id and content.contains(placeholder_id))
     content .= replacing( placeholder_id, project_id )
