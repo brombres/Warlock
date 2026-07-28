@@ -944,7 +944,23 @@ routine rogo_ios
   # Skip xcodebuild when invoked from Xcode's "Compile Rogue" build phase (IDE=true);
   # otherwise this would recurse into a second concurrent build and lock build.db.
   if (not String.exists(System.env//IDE))
-    execute @|xcodebuild -workspace Platforms/Xcode/Warlock.xcworkspace -scheme Warlock-iOS build
+    execute_xcodebuild @|xcodebuild -workspace Platforms/Xcode/Warlock.xcworkspace -scheme Warlock-iOS build
+  endIf
+endRoutine
+
+routine execute_xcodebuild( cmd:String )
+  # Runs 'cmd' with output suppressed. On failure, prints the output beginning
+  # with the first line that contains "error:".
+  print_cmd( cmd )
+  local result = Process.run( cmd, &env )
+  if (not result.success)
+    local error_found = false
+    forEach (line in LineReader(result->String))
+      if (not error_found and line.contains("error:")) error_found = true
+      if (error_found) println( line )
+    endForEach
+    if (not error_found) println( result->String )
+    throw Error( "Build failed." )
   endIf
 endRoutine
 
@@ -958,7 +974,7 @@ routine rogo_macos
   # Skip xcodebuild when invoked from Xcode's "Compile Rogue" build phase (IDE=true);
   # otherwise this would recurse into a second concurrent build and lock build.db.
   if (not String.exists(System.env//IDE))
-    execute @|xcodebuild -workspace Platforms/Xcode/Warlock.xcworkspace -scheme Warlock-macOS build
+    execute_xcodebuild @|xcodebuild -workspace Platforms/Xcode/Warlock.xcworkspace -scheme Warlock-macOS build
   endIf
 endRoutine
 
