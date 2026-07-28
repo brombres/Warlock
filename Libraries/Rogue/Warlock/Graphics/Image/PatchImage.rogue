@@ -82,7 +82,7 @@ class PatchImage : Image
 
     method .ensure_patch_count( asset_name:String, n:Int, patch_split:XY )->Logical
       if (patches.count == n) return true
-      println ''PatchImage("$") requires a list of $ for a split of ($,$).''
+      println ''PatchImage("$") requires a list of $ for a split of ($,$).''...
         (asset_name, "# image".pluralized(n), patch_split.x->Int, patch_split.y->Int)
       patches = null
       return false

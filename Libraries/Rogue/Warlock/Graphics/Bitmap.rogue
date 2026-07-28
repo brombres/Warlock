@@ -11,9 +11,9 @@ augment Graphics::Bitmap
       native
       @|Warlock_resize_image(
        |  $this->pixels->as_bytes,
-       |  $this->width, $this->height,
+       |  (int)$this->width, (int)$this->height,
        |  $other->pixels->as_bytes,
-       |  $other->width, $other->height
+       |  (int)$other->width, (int)$other->height
        |);
 
       if (not was_premultiplied) unmultiply_alpha
