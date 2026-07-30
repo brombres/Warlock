@@ -917,13 +917,7 @@ endRoutine
 
 routine rogo_android
   # SYNTAX: rogo android [rebuild|release]
-  if (build("Android"))
-    # Skip the Gradle build when invoked from Android Studio's Rogo task (IDE=true);
-    # otherwise this would recurse into a second concurrent build.
-    if (not String.exists(System.env//IDE))
-      execute "cd Platforms/Android && sh gradlew :app:assembleDebug"
-    endIf
-  endIf
+  build "Android"
 endRoutine
 
 routine rogo_android_open
@@ -941,13 +935,7 @@ endRoutine
 
 routine rogo_ios
   # SYNTAX: rogo ios [rebuild|release]
-  if (build("iOS"))
-    # Skip xcodebuild when invoked from Xcode's "Compile Rogue" build phase (IDE=true);
-    # otherwise this would recurse into a second concurrent build and lock build.db.
-    if (not String.exists(System.env//IDE))
-      execute_xcodebuild @|xcodebuild -workspace Platforms/Xcode/Warlock.xcworkspace -scheme Warlock-iOS build
-    endIf
-  endIf
+  build "iOS"
 endRoutine
 
 routine execute_xcodebuild( cmd:String )
@@ -972,13 +960,7 @@ endRoutine
 
 routine rogo_macos
   # SYNTAX: rogo macos [rebuild|release]
-  if (build("macOS"))
-    # Skip xcodebuild when invoked from Xcode's "Compile Rogue" build phase (IDE=true);
-    # otherwise this would recurse into a second concurrent build and lock build.db.
-    if (not String.exists(System.env//IDE))
-      execute_xcodebuild @|xcodebuild -workspace Platforms/Xcode/Warlock.xcworkspace -scheme Warlock-macOS build
-    endIf
-  endIf
+  build "macOS"
 endRoutine
 
 routine rogo_macos_open
