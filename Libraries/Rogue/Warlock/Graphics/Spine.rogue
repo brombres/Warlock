@@ -18,8 +18,12 @@ class SpineSprite : Image
       # Spine doesn't work well with very small scales such as 0.001 so we don't
       # scale down the spine animation directly. Instead we'll scale down the Spine
       # drawing by a factor of 1,000.
-      Display.push_transform( Matrix.translate(animation.offset+XY(0.5)) )
+      local offset = animation.offset
+      if (h_flip) offset.x = -offset.x
+
+      Display.push_transform( Matrix.translate(offset+XY(0.5)) )
       Display.push_transform( Matrix.scale(1.0/1000.0) )
+      animation.h_flip = this.h_flip
       animation.draw( XY(0,0), color )
       Display.pop_transform
       Display.pop_transform
@@ -434,7 +438,7 @@ class SpineAnimation
      |   rogue_event.state = RogueString_create( entry->getAnimation().getName().buffer() );
      |   rogue_event.track = entry->getTrackIndex();
      |   rogue_event.play_id = (RogueInt64)(intptr_t)entry;
-     |   RogueWarlockSpineAnimation__dispatch__RogueInt64_WarlockSpineAnimationEvent(
+     |   RogueWarlockSpineAnimation__dispatch__RogueInt64_RogueWarlockSpineAnimationEvent(
      |     (RogueInt64)(intptr_t)state, rogue_event
      |   );
      |}
@@ -503,7 +507,7 @@ class SpineAnimation
       native @|spine::Skeleton* skeleton = $this->skeleton;
               |skeleton->setPosition( (float)$position.x, (float)$position.y );
               |skeleton->setScaleX( $h_flip ? -(float)$scale : (float)$scale );
-              |skeleton->setScaleY( $v_flip ? (float)$scale : -(float)$scale );
+              |skeleton->setScaleY( $v_flip ? -(float)$scale : (float)$scale );
               |$this->animation_state->apply( *skeleton );
               |skeleton->updateWorldTransform( spine::Physics_Update );
 
@@ -552,7 +556,7 @@ class SpineAnimation
               t += 3
             endWhile
 
-            mesh_builder.draw( texture, &shader=Renderer.shader )
+            mesh_builder.draw( texture, Renderer.render_mode )
           endIf
         endIf
 

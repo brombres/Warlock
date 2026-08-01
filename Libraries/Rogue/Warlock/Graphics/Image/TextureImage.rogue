@@ -11,6 +11,12 @@ class TextureImage : Image
       natural_size = texture.size
       scale = 1.0
 
+    method init( existing:Image, proportional_subset:Box )
+      if local existing_texture_image = existing->(as TextureImage)
+        init_clone( existing_texture_image )
+        crop( proportional_subset )
+      endIf
+
     method init( asset, image_index )
       natural_size = asset.images[image_index].bounds.size
       scale = 1.0
@@ -25,7 +31,7 @@ class TextureImage : Image
 
     method init_clone( existing:TextureImage )
       prior.init_clone( existing )
-      texture     = existing.texture
+      texture     = existing.@texture
       image_index = existing.image_index
 
     method crop( proportional_subset:Box )
