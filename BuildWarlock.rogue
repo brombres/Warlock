@@ -267,7 +267,7 @@ endRoutine
 
 routine rogo_deps [append]
   # SYNTAX: rogo deps [platform] [update|rebuild|reinstall] [<libs>]*
-  # Where <libs> is any combination of: [bgfx bimg bx miniaudio sdl spine stb tess2]
+  # Where <libs> is any combination of: [bgfx miniaudio sdl spine stb tess2]
   local args = System.command_line_arguments.cloned.[ remove("deps") ]
 
   local platform = Build.resolve_platform( args )
@@ -321,7 +321,7 @@ routine deps( platform:String, args=String[]:String[], &update, &rebuild, &reins
 
 
   -------- Libraries/bx --------
-  if (libs//bx)
+  if (libs//bgfx)
     local folder = File("Libraries/bx")
     local repo = GitRepo( "https://github.com/bkaradzic/bx.git", folder )
 
@@ -339,12 +339,13 @@ routine deps( platform:String, args=String[]:String[], &update, &rebuild, &reins
       if (repo.has_remote_changes)
         banner "Updating BX repo"
         repo.pull( &verbose )
+        repo.checkout( repo.branch, &verbose )
       endIf
     endIf
   endIf
 
   -------- Libraries/bimg --------
-  if (libs//bimg)
+  if (libs//bgfx)
     local folder = File("Libraries/bimg")
     local repo = GitRepo( "https://github.com/bkaradzic/bimg.git", folder )
 
@@ -362,6 +363,7 @@ routine deps( platform:String, args=String[]:String[], &update, &rebuild, &reins
       if (repo.has_remote_changes)
         banner "Updating BIMG repo"
         repo.pull( &verbose )
+        repo.checkout( repo.branch, &verbose )
       endIf
     endIf
   endIf
@@ -388,6 +390,7 @@ routine deps( platform:String, args=String[]:String[], &update, &rebuild, &reins
       if (repo.has_remote_changes)
         banner "Updating BGFX repo"
         repo.pull( &verbose )
+        repo.checkout( repo.branch, &verbose )
         needs_rebuild = true
       endIf
     endIf
@@ -430,6 +433,7 @@ routine deps( platform:String, args=String[]:String[], &update, &rebuild, &reins
       if (repo.has_remote_changes)
         banner "Updating SDL repo"
         repo.pull( &verbose )
+        repo.checkout( repo.branch, &verbose )
       endIf
     endIf
 
@@ -457,6 +461,7 @@ routine deps( platform:String, args=String[]:String[], &update, &rebuild, &reins
       if (repo.has_remote_changes)
         banner "Updating spine repo"
         repo.pull( &verbose )
+        repo.checkout( repo.branch, &verbose )
       endIf
     endIf
   endIf
@@ -480,6 +485,7 @@ routine deps( platform:String, args=String[]:String[], &update, &rebuild, &reins
       if (repo.has_remote_changes)
         banner "Updating stb repo"
         repo.pull( &verbose )
+        repo.checkout( repo.branch, &verbose )
       endIf
     endIf
   endIf
@@ -503,6 +509,7 @@ routine deps( platform:String, args=String[]:String[], &update, &rebuild, &reins
       if (repo.has_remote_changes)
         banner "Updating libtess2 repo"
         repo.pull( &verbose )
+        repo.checkout( repo.branch, &verbose )
       endIf
     endIf
   endIf
@@ -526,6 +533,7 @@ routine deps( platform:String, args=String[]:String[], &update, &rebuild, &reins
       if (repo.has_remote_changes)
         banner "Updating miniaudio repo"
         repo.pull( &verbose )
+        repo.checkout( repo.branch, &verbose )
       endIf
     endIf
   endIf
