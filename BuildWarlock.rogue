@@ -405,6 +405,7 @@ routine deps( platform:String, args:String[], &update, &rebuild, &reinstall )
          escapeLoop
       catch (error_building_bgfx:Error)
         if (not revert_bgfx_to_known_good) throw error_building_bgfx
+        banner "BGFX repos reverted to known-good commits. Retrying."
       endTry
     endLoop
   endIf
