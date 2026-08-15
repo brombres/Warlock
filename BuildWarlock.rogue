@@ -251,6 +251,8 @@ routine configure_project_id
     local android_id = Console.input( "Enter Android Package ID (default $): "(xcode_id) )
     if (not String.exists(android_id)) android_id = xcode_id
     Build.config//project_id//android = android_id
+
+    Build.save_config
   endIf
 
 endRoutine
