@@ -4,6 +4,10 @@
 
 $define SDL_BRANCH "release-3.2.x"
 
+$define KNOWN_GOOD_BX   "64dcc737a016cd41ad9705fb69c905d566813f04"
+$define KNOWN_GOOD_BGFX "c9bb37b668cb06e74da4752be9bccb5722b7cb71"
+$define KNOWN_GOOD_BIMG "3b3dc2b7081fc687bce3a73699b0b8db470f1afc"
+
 $requireRogue "2.34.3"
 
 uses Codec/Zip
@@ -316,6 +320,7 @@ routine deps( platform:String, args:String[], &update, &rebuild, &reinstall )
 
   ensure_folder( File("Libraries") )
 
+
   -------- Libraries/bx --------
   if (libs//bx)
     local folder = File("Libraries/bx")
@@ -388,13 +393,20 @@ routine deps( platform:String, args:String[], &update, &rebuild, &reinstall )
       endIf
     endIf
 
-    if (platform != System.os)
-      if (not rebuild or not .is_bgfx_built(System.os))
-        .build_bgfx( System.os, &rebuild=needs_rebuild )
-      endIf
-    endIf
+    loop
+      try
+        if (platform != System.os)
+          if (not rebuild or not .is_bgfx_built(System.os))
+            .build_bgfx( System.os, &rebuild=needs_rebuild )
+          endIf
+        endIf
 
-     .build_bgfx( platform, &rebuild=needs_rebuild )
+         .build_bgfx( platform, &rebuild=needs_rebuild )
+         escapeLoop
+      catch (error_building_bgfx:Error)
+        if (not revert_bgfx_to_known_good) throw error_building_bgfx
+      endTry
+    endLoop
   endIf
 
   -------- Libraries/SDL --------
@@ -1075,4 +1087,20 @@ routine rogo_xcode_deep_clean
   execute "cd Platforms/Xcode && xcodebuild clean -workspace Warlock.xcworkspace -scheme Warlock-macOS -configuration Debug"
 
   println "✅ Environment reset complete. 'rogo macos/ios open' and rebuild."
+endRoutine
+
+routine revert_bgfx_to_known_good->Logical
+  local result = false
+
+  forEach (pair in [("bx",KNOWN_GOOD_BX),("bimg",KNOWN_GOOD_BIMG),("bgfx",KNOWN_GOOD_BGFX)])
+    local (repo_name,good_commit) = pair
+
+    local repo = GitRepo( File("Libraries")/repo_name )
+    if (repo.head != good_commit)
+      result = true
+      repo.checkout( good_commit )
+    endIf
+  endForEach
+
+  return result
 endRoutine
