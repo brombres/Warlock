@@ -73,9 +73,24 @@ class GenerateAssetConfig : Visitor
               which (File(filepath_lc).extension)
                 case "png", "jpg", "jpeg"
                   write_echo " image"
-                  if (filepath_lc.contains(".9."))     write_echo " patch:9"
-                  elseIf (filepath_lc.contains(".8.")) write_echo " patch:8"
-                  elseIf (filepath_lc.contains(".3.")) write_echo " patch:3"
+                  if (filepath_lc.contains(".9."))
+                    write_echo " patch:9"
+                  elseIf (filepath_lc.contains(".8."))
+                    write_echo " patch:8"
+                  elseIf (filepath_lc.contains(".3."))
+                    write_echo " patch:3"
+                  else
+                    if local split = filename_split_dimensions( filepath )
+                      local file = File( "Assets/$/$"(folder,filepath) )
+                      local bitmap = Bitmap( file )
+                      if (bitmap.error)
+                        throw Error( "Error loading image '$'. File is corrupt or invalid."(file) )
+                      endIf
+                      if (bitmap.width != split.x or bitmap.height != split.y)
+                        write_echo " split:$x$"(split.x->Int,split.y->Int)
+                      endIf
+                    endIf
+                  endIf
                   writeln_echo
                 case "wav", "flac", "aiff", "ima4"
                   if (filepath_lc.contains("music")) writeln_echo " music"
@@ -98,6 +113,27 @@ class GenerateAssetConfig : Visitor
       unreferenced.clear
 
       return true
+
+    method filename_split_dimensions( filepath:String )->XY?
+      # Returns the WxH of a "<width>x<height>" filename suffix - e.g. XY(3,1)
+      # for "Rivets-3x1.png" - or null if the filename has no such suffix.
+      local stem = filepath.before_last( '.' )
+
+      local i = stem.count
+      while (i > 0 and stem[i-1].is_number) --i
+      if (i == stem.count or i == 0) return null
+      local h = stem.from( i )->Int
+
+      local x_index = i - 1
+      if (stem[x_index] != 'x' and stem[x_index] != 'X') return null
+
+      i = x_index
+      while (i > 0 and stem[i-1].is_number) --i
+      if (i == x_index) return null
+      local w = stem.substring( i, x_index-i )->Int
+
+      if (w == 0 or h == 0) return null
+      return XY( w, h )
 
     method on_visit_node( cmd:Cmd )
       throw cmd.t.error( "TODO: GenerateAssetConfig.on_visit_node($)"(cmd.type_name) )
