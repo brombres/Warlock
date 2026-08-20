@@ -16,6 +16,7 @@ class PatchImage : Image
 
       patches = Image[]( asset_name ).[ anchor=Anchor.TOP_LEFT ]
       patch_count = patches.count
+      if (not patch_count) return
 
       if (not split) split = patches.first.asset.image_patch_split
       if (split.value.product == 0)
