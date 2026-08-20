@@ -102,7 +102,7 @@ endRoutine
 routine rogo_assets( platform=null:String )
   platform = Build.resolve_platform( platform )
 
-  rogo_deps( platform )
+  deps( platform )
   compile_assets( platform )
 endRoutine
 
@@ -265,13 +265,12 @@ routine project_id( platform:String )->String
   return Build.config//project_id[platform]
 endRoutine
 
-routine rogo_deps( platform:String ) [append]
+routine rogo_deps [append]
   # SYNTAX: rogo deps [platform] [update|rebuild|reinstall] [<libs>]*
   # Where <libs> is any combination of: [bgfx bimg bx miniaudio sdl spine stb tess2]
   local args = System.command_line_arguments.cloned
 
-  if (platform) args.remove( platform.to_lowercase )
-  else          platform  = Build.resolve_platform( args )
+  local platform = Build.resolve_platform( args )
 
   local rebuild   = args.remove( "rebuild" )
   local update    = args.remove( "update" )
@@ -279,7 +278,7 @@ routine rogo_deps( platform:String ) [append]
   deps( platform, args, &=update, &=rebuild, &=reinstall )
 endRoutine
 
-routine deps( platform:String, args:String[], &update, &rebuild, &reinstall )
+routine deps( platform:String, args=String[]:String[], &update, &rebuild, &reinstall )
   if (Files(".","BuildWarlock.rogue").count == 1)
     banner "ERROR: Rogo should not be run directly in the Warlock library folder."
     System.exit 1

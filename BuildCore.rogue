@@ -47,13 +47,11 @@ augment Build
 endAugment
 
 routine rogo_default
-  rogo_deps
+  deps( System.os )
   rogo_help
 endRoutine
 
-routine rogo_deps( platform=null:String )
-  platform = Build.resolve_platform( platform )
-
+routine rogo_deps
   if (not File("Libraries/Warlock").exists)
     rogo_update
     rogo_update_buildcore
