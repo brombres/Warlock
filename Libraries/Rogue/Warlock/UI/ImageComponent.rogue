@@ -26,13 +26,13 @@ class ImageComponent : Component
       aspect_fill_width( image.natural_size )
 
     method aspect_fit
-      set_fixed_size( Aspect(image.natural_size) )
+      set_dynamic_size( Aspect(image.natural_size) )
 
     method aspect_fit_height_to_width
-      set_fixed_height( Aspect(image.natural_size) )
+      set_dynamic_height( Aspect(image.natural_size) )
 
     method aspect_fit_width_to_height
-      set_fixed_width( Aspect(image.natural_size) )
+      set_dynamic_width( Aspect(image.natural_size) )
 
     method .draw_entity [override]
       if (opacity)
