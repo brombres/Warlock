@@ -836,12 +836,6 @@ routine check_rogue_starter
 endRoutine
 
 routine copy_file( from_file:File, to_file:File, base_folder:String, &header_shown, &if_missing )->Logical
-  if (if_missing)
-    if (to_file.exists) return header_shown
-  else
-    if (not from_file.is_different_than(to_file)) return header_shown
-  endIf
-
   local replace_project_id = false
 
   local platform : String
@@ -866,6 +860,12 @@ routine copy_file( from_file:File, to_file:File, base_folder:String, &header_sho
     to_file = adjusted_file
   else
     mesg = "  $" (to_file->String.after_first(base_folder))
+  endIf
+
+  if (if_missing)
+    if (to_file.exists) return header_shown
+  else
+    if (not from_file.is_different_than(to_file)) return header_shown
   endIf
 
   to_file.parent.create_folder
