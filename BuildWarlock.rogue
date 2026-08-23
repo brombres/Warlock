@@ -1106,7 +1106,8 @@ routine revert_bgfx_to_known_good->Logical
     local repo = GitRepo( File("Libraries")/repo_name )
     if (repo.head != good_commit)
       result = true
-      repo.checkout( good_commit )
+      repo.pull( &verbose )
+      repo.checkout( good_commit, &verbose )
     endIf
   endForEach
 
