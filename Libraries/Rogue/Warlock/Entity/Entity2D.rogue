@@ -24,19 +24,23 @@ augment Entity::Entity2D
       endUse
 
     method draw( display_bounds )
-      if (attributes.invisible) return
+      temporarily size=display_bounds.size, anchor=Anchor.TOP_LEFT
+        draw( display_bounds.position )
+      endTemporarily
 
+      #{
       .begin_draw
       .handle_draw( &!over )
       .handle_draw( &over )
+      }#
 
       #{
-      local scale = bounds.size / natural_size
+      local scale = display_bounds.size / natural_size
       temporarily this.scale = scale
         use Display.transform_stack
           .begin_draw
           Display.push_transform(
-            Matrix.translate( XYZ(bounds.position,z) ) *
+            Matrix.translate( XYZ(display_bounds.position,z) ) *
             Matrix.scale( scale )
           )
           .handle_draw( &!over )
@@ -73,10 +77,6 @@ augment Entity::Entity2D
       display_bounds = Box( natural_size )
 
     method .pop_transform
-      if (rotation.is_identity)
-        Display.pop_transform
-      else
-        Display.pop_transform
-        Display.pop_rotation
-      endIf
+      Display.pop_transform
+      if (not rotation.is_identity) Display.pop_rotation
 endAugment
