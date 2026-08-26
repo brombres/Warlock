@@ -14,7 +14,7 @@ class TextureImage : Image
     method init( existing:Image, proportional_subset:Box )
       if local existing_texture_image = existing->(as TextureImage)
         init_clone( existing_texture_image )
-        crop( proportional_subset )
+        crop_texture( proportional_subset )
       endIf
 
     method init( asset, image_index )
@@ -34,7 +34,12 @@ class TextureImage : Image
       texture     = existing.@texture
       image_index = existing.image_index
 
-    method crop( proportional_subset:Box )
+    method crop( left_px=0:Real, top_px=0:Real, right_px=0:Real, bottom_px=0:Real )
+      reset_crop
+      size = XY( natural_size.x - (left_px+right_px), natural_size.y - (top_px+bottom_px) )
+      crop_texture( Box(left_px,top_px,natural_size.x-(left_px+right_px),natural_size.y-(top_px+bottom_px)) / natural_size )
+
+    method crop_texture( proportional_subset:Box )
       if (not original_texture)
         original_texture = texture
         texture = Texture( original_texture )
@@ -103,7 +108,6 @@ class TextureImage : Image
         else
           Renderer.draw( display_bounds, color, render_mode||RenderMode.ALPHA_COLOR, &=subdivisions )
         endIf
-        Renderer.draw( display_bounds, color, render_mode||RenderMode.ALPHA_COLOR, &=subdivisions )
       endIf
 
     method .v_flip_texture->Logical

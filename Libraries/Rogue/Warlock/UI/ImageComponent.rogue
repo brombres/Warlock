@@ -16,15 +16,6 @@ class ImageComponent : Component
       if (asset.image_patch_count) init( PatchImage(asset_name) )
       else                         init( Image(asset_name) )
 
-    method aspect_fill
-      aspect_fill( image.natural_size )
-
-    method aspect_fill_height
-      aspect_fill_height( image.natural_size )
-
-    method aspect_fill_width
-      aspect_fill_width( image.natural_size )
-
     method aspect_fit
       set_dynamic_size( Aspect(image.natural_size) )
 

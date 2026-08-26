@@ -64,6 +64,26 @@ class Image : Drawable2D
     method unload_unused
       if (not is_used) unload
 
+    method .draw_entity [override]
+      local color  : Color
+      local colors : Quad<<Color>>
+
+      if (this.colors)
+        colors = Quad<<Color>>(
+          this.colors.value.a.with_opacity( opacity ),
+          this.colors.value.b.with_opacity( opacity ),
+          this.colors.value.c.with_opacity( opacity ),
+          this.colors.value.d.with_opacity( opacity )
+        )
+      else
+        color = this.color.with_opacity( opacity )
+      endIf
+
+      if (this.colors)
+        Renderer.draw( display_bounds, colors, render_mode||RenderMode.ALPHA_COLOR, &=subdivisions )
+      elseIf (this.color.argb)
+        Renderer.draw( display_bounds, color, render_mode||RenderMode.ALPHA_COLOR, &=subdivisions )
+      endIf
 endClass
 
 augment Image[]

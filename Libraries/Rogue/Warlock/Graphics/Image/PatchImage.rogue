@@ -254,10 +254,14 @@ class PatchImage : Image
       .truncate_right = setting
 
     method stretchtiled( stretch_limit=1.0:Real )
+      if (not patches or patches.is_empty) return
+
       stretchtiled_edges
       stretchtiled_middle
 
     method stretchtiled_edges( stretch_limit=1.0:Real, &h, &v )
+      if (not patches or patches.is_empty) return
+
       if (h == v)
         h = true
         v = true
@@ -297,6 +301,8 @@ class PatchImage : Image
       endIf
 
     method stretchtiled_middle( stretch_limit=1.0:Real, &h, &v )
+      if (not patches or patches.is_empty) return
+
       if local p4 = patches[4]->(as Image)
         if (p4 not instanceOf StretchtiledImage) patches[4] = StretchtiledImage( p4 )
         local image = patches[4]->(as StretchtiledImage)
