@@ -45,10 +45,29 @@ augment UI::Text
         cur_value = app_data_key->Variant
         value.clear
         if (format)
-          forEach (ch in format)
-            if (ch == '$') value.print( cur_value )
-            else           value.print( ch )
-          endForEach
+          contingent
+            if local marker_i = format.locate( "$(" )
+              if (marker_i + 3 < format.count)
+                if (format[marker_i+3] == ')')
+                  forEach (i in 0..<marker_i) value.print( format[i] )
+                  which (format[marker_i+2])
+                    case 'I': value.print( cur_value->Int )
+                    others:   value.print( cur_value )
+                  endWhich
+                  forEach (i in marker_i+3..<format.count) value.print( format[i] )
+
+                  escapeContingent
+                endIf
+              endIf
+            endIf
+
+            if local marker_i = format.locate( '$' )
+              forEach (i in 0..<marker_i) value.print( format[i] )
+              value.print( cur_value )
+              forEach (i in marker_i+1..<format.count) value.print( format[i] )
+            endIf
+          endContingent
+
         else
           value.print( cur_value )
         endIf
