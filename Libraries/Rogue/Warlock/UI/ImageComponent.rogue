@@ -17,13 +17,13 @@ class ImageComponent : Component
       else                         init( Image(asset_name) )
 
     method aspect_fit
-      set_dynamic_size( Aspect(image.natural_size) )
+      set_dynamic_size( AspectRatio(image.natural_size) )
 
     method aspect_fit_height_to_width
-      set_dynamic_height( Aspect(image.natural_size) )
+      set_dynamic_height( AspectRatio(image.natural_size) )
 
     method aspect_fit_width_to_height
-      set_dynamic_width( Aspect(image.natural_size) )
+      set_dynamic_width( AspectRatio(image.natural_size) )
 
     method .draw_entity [override]
       if (opacity)
