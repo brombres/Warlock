@@ -24,7 +24,7 @@ enum SlideDirection
 endEnum
 
 class SlidingPanel : Component
-  # Note: shrink_to_fit_height by default.
+  # Note: dynamic_height = ShrinkToFit by default.
   PROPERTIES
     visibility          : VariantEntry         # e.g. <AppData.ui.slider_visibility>
 
@@ -77,7 +77,7 @@ class SlidingPanel : Component
     method init( visibility, &in, &out )
       if (in) set( 1 )
       else    set( 0 )
-      shrink_to_fit_height
+      dynamic_height = ShrinkToFit
 
     method current_offset->XY
       localize offset_out
