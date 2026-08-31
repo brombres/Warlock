@@ -1,0 +1,3 @@
+library Geometry
+
+class Outline( color:Color ) [compound];

@@ -4,6 +4,7 @@ $include Warlock/Geometry/BezierCurve
 $include Warlock/Geometry/Box
 $include Warlock/Geometry/Circle
 $include Warlock/Geometry/Line
+$include Warlock/Geometry/Outline
 $include Warlock/Geometry/Quad
 $include Warlock/Geometry/SpiralCurve
 $include Warlock/Geometry/Tessellator

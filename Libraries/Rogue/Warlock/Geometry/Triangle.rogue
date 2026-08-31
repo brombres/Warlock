@@ -5,14 +5,14 @@ uses Graphics
 
 augment Triangle
   METHODS
-    method draw( color:Color, render_mode=RenderMode.ALPHA_COLOR:RenderMode, thickness=1.0:Real, &outline )
-      if (outline)
-        Line( a, b ).draw( color, render_mode, thickness )
-        Line( b, c ).draw( color, render_mode, thickness )
-        Line( c, a ).draw( color, render_mode, thickness )
-      else
-        Renderer.draw( this, color, render_mode )
-      endIf
+    method draw( color:Color, render_mode=RenderMode.ALPHA_COLOR:RenderMode, thickness=1.0:Real )
+      Renderer.draw( this, color, render_mode )
+
+    method draw( outline:Outline, render_mode=RenderMode.ALPHA_COLOR:RenderMode, thickness=1.0:Real )
+      local color = outline.color
+      Line( a, b ).draw( color, render_mode, thickness )
+      Line( b, c ).draw( color, render_mode, thickness )
+      Line( c, a ).draw( color, render_mode, thickness )
 
     method draw( texture:Texture, color=Color.WHITE:Color, render_mode=RenderMode.ALPHA_TEXTURE_COLOR_MULTIPLY:RenderMode )
       Renderer.draw( this, texture, color, render_mode )

@@ -5,16 +5,16 @@ uses Warlock
 
 augment Box
   METHODS
-    method draw( color:Color, render_mode=RenderMode.ALPHA_COLOR:RenderMode, thickness=1.0:Real, &outline )
-      if (outline)
-        Box( position, thickness, size.y ).draw( color, render_mode )
-        Box( position+XY(size.x-thickness,0), thickness, size.y ).draw( color, render_mode )
-        if (size.x > thickness*2)
-          Box( position+XY(thickness,0), size.x-thickness*2, thickness ).draw( color, render_mode )
-          Box( position+XY(thickness,size.y-thickness), size.x-thickness*2, thickness ).draw( color, render_mode )
-        endIf
-      else
-        Renderer.draw( this, color, render_mode )
+    method draw( color:Color, render_mode=RenderMode.ALPHA_COLOR:RenderMode, thickness=1.0:Real )
+      Renderer.draw( this, color, render_mode )
+
+    method draw( outline:Outline, render_mode=RenderMode.ALPHA_COLOR:RenderMode, thickness=1.0:Real )
+      local color = outline.color
+      Box( position, thickness, size.y ).draw( color, render_mode )
+      Box( position+XY(size.x-thickness,0), thickness, size.y ).draw( color, render_mode )
+      if (size.x > thickness*2)
+        Box( position+XY(thickness,0), size.x-thickness*2, thickness ).draw( color, render_mode )
+        Box( position+XY(thickness,size.y-thickness), size.x-thickness*2, thickness ).draw( color, render_mode )
       endIf
 
     method draw( colors:Quad<<Color>>, render_mode=RenderMode.ALPHA_COLOR:RenderMode )
