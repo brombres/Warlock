@@ -7,7 +7,7 @@ class ImageComponent : Component
     dropshadow_offset : XY   # proportion of the screen height
 
   METHODS
-    method init( image, &aspect_fit=true )
+    method init( image, &aspect_fit )
       prior.init
       if (aspect_fit) this.aspect_fit
 
