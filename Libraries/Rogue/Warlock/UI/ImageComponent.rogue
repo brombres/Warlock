@@ -1,10 +1,26 @@
 library Warlock
 
+enum OffsetMode
+  # As a proportion of...
+  CATEGORIES
+    NONE
+    SCREEN_MAX
+    SCREEN_MIN
+    SCREEN_WIDTH
+    SCREEN_HEIGHT
+    IMAGE_MAX
+    IMAGE_MIN
+    IMAGE_WIDTH
+    IMAGE_HEIGHT
+endEnum
+
 class ImageComponent : Component
   PROPERTIES
     image             : Image
     dropshadow_color  = Color( 0x66000000 )
     dropshadow_offset : XY   # proportion of the screen height
+    dropshadow_mode   = OffsetMode.NONE : OffsetMode
+    rotation          = Radians(0)
 
   METHODS
     method init( image, &aspect_fit )
@@ -25,18 +41,33 @@ class ImageComponent : Component
     method aspect_fit_width_to_height
       set_dynamic_width( AspectRatio(image.natural_size) )
 
+    method set_dropshadow_offset( @dropshadow_offset, dropshadow_mode=OffsetMode.SCREEN_MAX )
+
+    method dropshadow_offset->XY
+      which (dropshadow_mode)
+        case SCREEN_MAX:    return Display.size.max * @dropshadow_offset
+        case SCREEN_MIN:    return Display.size.min * @dropshadow_offset
+        case SCREEN_WIDTH:  return Display.size.x   * @dropshadow_offset
+        case SCREEN_HEIGHT: return Display.size.y   * @dropshadow_offset
+        case IMAGE_MAX:     return image.natural_size.max * @dropshadow_offset
+        case IMAGE_MIN:     return image.natural_size.min * @dropshadow_offset
+        case IMAGE_WIDTH:   return image.natural_size.x   * @dropshadow_offset
+        case IMAGE_HEIGHT:  return image.natural_size.y   * @dropshadow_offset
+        others:             return XY.zero
+      endWhich
+
     method .draw_entity [override]
       if (opacity)
         localize display_bounds
 
-        temporarily image.opacity = opacity
-          if (dropshadow_offset != XY(0,0))
+        temporarily image.opacity=opacity, image.rotation=rotation, image.size=display_bounds.size
+          if (dropshadow_mode != OffsetMode.NONE)
             temporarily image.color = dropshadow_color
-              image.draw( display_bounds + dropshadow_offset * Display.size.y )
+              image.draw( display_bounds.center + dropshadow_offset )
             endTemporarily
           endIf
 
-          image.draw( display_bounds )
+          image.draw( display_bounds.center )
         endTemporarily
       endIf
 endClass
