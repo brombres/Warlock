@@ -66,6 +66,10 @@ class TextureImage : Image
       natural_size = texture.size
       scale = 1.0
 
+    method rotated( cw=0:Int, ccw=0:Int )->TextureImage
+      if (ccw) cw += (4 - ccw)
+      return TextureImage( Texture(texture,&rotate_cw=cw) )
+
     method texture->Texture [override]
       if (not @texture and asset)
         texture = asset.images[image_index].texture( &mipmaps )

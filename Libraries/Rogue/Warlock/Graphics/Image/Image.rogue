@@ -51,6 +51,10 @@ class Image : Drawable2D
     method recycle
       noAction
 
+    method rotated( cw=0:Int, ccw=0:Int )->Image
+      println "[ERROR] $.rotated() is not implemented."(type_name)
+      return this
+
     method set_is_used( @is_used )
 
     method set_opacity( @opacity )
