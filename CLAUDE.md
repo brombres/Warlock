@@ -11,7 +11,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 **`rogo` will refuse to run from inside this folder.** `BuildWarlock.rogue` checks for itself in the cwd and exits with `ERROR: Rogo should not be run directly in the Warlock library folder.` (see `BuildWarlock.rogue` `routine deps`). The intended workflow when modifying Warlock is:
 
 1. Edit files here (`Libraries/Rogue/Warlock/**`, `Libraries/Framework/**`, `Platforms/**`, etc.).
-2. `cd` to the parent project (the one that has `Libraries/Warlock` as a subfolder) and run `rogo macos` / `rogo ios` / `rogo android` from there.
+2. `cd` to the parent project (the one that has `Libraries/Warlock` as a subfolder) and run `rogo macos` / `rogo ios` / `rogo android` / `rogo web` from there.
 
 The parent project's top-level `BuildCore.rogue` is a *copy* of `BuildCore.rogue` here — it bootstraps by cloning Warlock into the parent's `Libraries/`, then `BuildWarlock.rogue` (which lives only here) is pulled in as a `#$ DEPENDENCIES` line. `rogo update_buildcore` re-syncs the parent's copy from this one when this file changes.
 
@@ -20,7 +20,7 @@ There is no test suite. Iteration is: edit Rogue → `rogo <platform>` from the 
 ## Repo Layout
 
 - `BuildCore.rogue` — bootstrap shim. Copied verbatim into consumer projects on first install (and kept in sync via `rogo update_buildcore`). Adds `BuildWarlock.rogue` as a dependency, defines `Build.resolve_platform`, clones Warlock into `Libraries/Warlock` if missing, and dispatches `rogo deps` / `rogo help`.
-- `BuildWarlock.rogue` — the real build implementation. Defines all the `rogo_*` routines (`assets`, `shaders`, `macos`, `ios`, `android`/`and`, `clean`, `deps`, `build`, `*_open`, `xcode_deep_clean`, …). Each routine has a `# SYNTAX: …` comment that `rogo help` reads.
+- `BuildWarlock.rogue` — the real build implementation. Defines all the `rogo_*` routines (`assets`, `shaders`, `macos`, `ios`, `android`/`and`, `web`, `clean`, `deps`, `build`, `*_open`, `xcode_deep_clean`, …). Each routine has a `# SYNTAX: …` comment that `rogo help` reads.
 - `Source/Main.rogue` — starter template. `check_rogue_starter` copies this into a consumer's `Source/Main.rogue` *only if missing*; consumers extend `WarlockController` here.
 - `Libraries/Rogue/Warlock/` — the actual framework Rogue source. `Warlock.rogue` is the library root; subfolders are `Audio`, `Control`, `Data`, `Display`, `Entity`, `FileIO`, `Framework`, `Geometry`, `Graphics`, `OS`, `Platform`, `UI`, `Utility`. `Macros.rogue` defines build-time macros.
 - `Libraries/Rogue/AssetCompiler/` — separate Rogue program built and run during `rogo assets`. Parses `Assets/AssetConfig.asc` (the `.asc` DSL) into compiled asset bundles.
@@ -28,6 +28,7 @@ There is no test suite. Iteration is: edit Rogue → `rogo <platform>` from the 
 - `Libraries/Shaders/` — stock bgfx shader pairs (`*-VS.sc` / `*-FS.sc`) and `varying.def.sc`. `rogo shaders` falls back to these when the consumer has no `Assets/Shaders/varying.def.sc`.
 - `Platforms/Xcode/`, `Platforms/Android/` — project templates copied into consumer projects by `check_platform_xcode` / `check_platform_android`. `com.developer.warlockapp` / `com/developer/warlockapp` placeholders are rewritten to the consumer's bundle/package ID. Some files copy *only if missing* (templates the consumer customizes — `Info.plist`, gradle scripts, `JSONData.java`, `Message*.java`, `app/src/main/cpp/**`); the rest are overwritten on every `rogo deps` run.
 - Native deps cloned into `Libraries/` on demand by `rogo deps`: `bgfx`, `bimg`, `bx`, `SDL` (pinned to `release-3.2.x`), `spine-runtimes`, `stb`, `libtess2`, `miniaudio`. SDL3 Android lib is downloaded prebuilt (`.aar`) from libsdl-org releases; bgfx is built locally via `build_bgfx`.
+- **Web target** (`rogo web`): compiles Rogue with `--target=Web` into `Build/Web/`, then `compile_web` checks for emscripten (`emcc`) and prints install instructions if absent. The emscripten C++ compile and the bgfx `make wasm` build are still TODO.
 
 ## Architecture
 

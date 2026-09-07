@@ -141,6 +141,9 @@ routine rogo_shaders( platform=null:String )
     case "macOS"
       shaderc = "Libraries/bgfx/.build/osx-arm64/bin/shadercRelease"
       platform_flags = "--platform osx --profile metal -O3"
+    case "Web"
+      shaderc = "Libraries/bgfx/.build/osx-arm64/bin/shadercRelease"
+      platform_flags = "--platform asm.js --profile 300_es -O3"
     others
       println "[SHADERS] No shader build process is defined for platform '$'."(platform)
       return
@@ -403,8 +406,14 @@ routine deps( platform:String, args=String[]:String[], &update, &rebuild, &reins
           endIf
         endIf
 
-         .build_bgfx( platform, &rebuild=needs_rebuild )
-         escapeLoop
+        if (platform == "Web")
+          # TODO: bgfx for Web must be built with emscripten ('make wasm' in
+          # Libraries/bgfx -> .build/wasm/bin). Deferred until compile_web()
+          # is implemented; the host build above still provides shaderc.
+        else
+          .build_bgfx( platform, &rebuild=needs_rebuild )
+        endIf
+        escapeLoop
       catch (error_building_bgfx:Error)
         if (not revert_bgfx_to_known_good) throw error_building_bgfx
         banner "BGFX repos reverted to known-good commits. Retrying."
@@ -584,6 +593,8 @@ routine .is_bgfx_built( platform:String )->Logical
     folder = "Libraries/bgfx/.build/osx-arm64/bin"
     files.add( "shadercDebug" )
     files.add( "shadercRelease" )
+  elseIf (platform == "Web")
+    folder = "Libraries/bgfx/.build/wasm/bin"
   else
     trace
     throw Error( "TODO: determine .is_bgfx_built for $"(platform) )
@@ -989,6 +1000,11 @@ routine rogo_macos_open
   open_xcode( "Platforms/Xcode" )
 endRoutine
 
+routine rogo_web
+  # SYNTAX: rogo web [rebuild|release]
+  build "Web"
+endRoutine
+
 routine rogo_build_debug( &rebuild )
   build( System.os, &debug, &=rebuild )
 endRoutine
@@ -1001,6 +1017,7 @@ routine build( platform:String, &debug, &rebuild )->Logical
   deps( platform, System.command_line_arguments )
   local compiled_rogue = compile_rogue( platform, &=debug, &=rebuild )
   compile_assets( platform )
+  if (platform == "Web") compile_web( &=debug, &=rebuild )
   return compiled_rogue
 endRoutine
 
@@ -1071,6 +1088,54 @@ routine compile_assets( platform:String )
 
   rogo_shaders( platform )
   rogo_update_asset_manifest( platform )
+endRoutine
+
+routine compile_web( &debug, &rebuild )
+  # Compiles Build/Web/Source/RogueProgram-Web.cpp (plus bgfx, SDL, etc.) to
+  # WebAssembly using emscripten.
+  check_emscripten
+
+  banner "TODO: compile $/RogueProgram-Web.cpp with emcc"(output_source_folder("Web"))
+endRoutine
+
+routine check_emscripten
+  # Verifies that the emscripten compiler (emcc) is on the PATH; prints
+  # installation instructions and exits if it isn't.
+  if (System.find_executable("emcc")) return
+
+  local w = Console.width.or_smaller( 80 )
+  println "=" * w
+  println "ERROR: emscripten (emcc) not found. Web builds require emscripten."
+  println "=" * w
+  println
+
+  if (System.is_macos)
+    println "Install on macOS with Homebrew:"
+    println
+    println "  brew install emscripten"
+    println
+  elseIf (System.is_linux)
+    println "Install on Linux with your package manager:"
+    println
+    println "  Debian/Ubuntu:  sudo apt install emscripten"
+    println "  Fedora:         sudo dnf install emscripten"
+    println "  Arch:           sudo pacman -S emscripten"
+    println
+    println "Distro packages can lag behind; the official emsdk is recommended:"
+    println
+    println "  git clone https://github.com/emscripten-core/emsdk.git"
+    println "  cd emsdk"
+    println "  ./emsdk install latest"
+    println "  ./emsdk activate latest"
+    println "  source ./emsdk_env.sh   # add to your shell profile"
+    println
+  else
+    println "See https://emscripten.org/docs/getting_started/downloads.html"
+    println
+  endIf
+
+  println "Re-run 'rogo web' once 'emcc' is on your PATH."
+  System.exit 1
 endRoutine
 
 routine open_xcode( folder:String )

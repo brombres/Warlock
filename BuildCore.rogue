@@ -19,6 +19,7 @@ augment Build
       "ios"     : "iOS",
       "linux"   : "Linux",
       "macos"   : "macOS",
+      "web"     : "Web",
       "windows" : "Windows"
     }
 
