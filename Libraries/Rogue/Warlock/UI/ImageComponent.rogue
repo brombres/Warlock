@@ -61,15 +61,26 @@ class ImageComponent : Component
       if (opacity)
         localize display_bounds
 
-        temporarily image.opacity=opacity, image.rotation=rotation, image.size=image.size.scaled_to_fit(display_bounds.size),
-                    image.scale=image.scale*scale
-          if (dropshadow_mode != OffsetMode.NONE)
-            temporarily image.color = dropshadow_color
-              image.draw( display_bounds.center + dropshadow_offset )
+        temporarily image.opacity=opacity
+          if (image instanceOf PatchImage)
+            if (dropshadow_mode != OffsetMode.NONE)
+              temporarily image.color = dropshadow_color
+                image.draw( display_bounds + dropshadow_offset )
+              endTemporarily
+            endIf
+
+            image.draw( display_bounds )
+          else
+            temporarily image.rotation=rotation, image.size=image.size.scaled_to_fit(display_bounds.size), image.scale=image.scale*scale
+              if (dropshadow_mode != OffsetMode.NONE)
+                temporarily image.color = dropshadow_color
+                  image.draw( display_bounds.center + dropshadow_offset )
+                endTemporarily
+              endIf
+
+              image.draw( display_bounds.center )
             endTemporarily
           endIf
-
-          image.draw( display_bounds.center )
         endTemporarily
       endIf
 endClass
