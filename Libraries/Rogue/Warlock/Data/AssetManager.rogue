@@ -318,7 +318,7 @@ class TextureInfo( filepath:String, size:XY, mipmaps:Logical, wrap:Logical, dyna
       local max_window = Window.max_size
       if (max_window.min <= 0) return 1
       local scale = 1
-      while (max_window.min * scale * 2 < dynamic_size.min and max_window.max < dynamic_size.max)
+      while (max_window.min * scale * 2 < dynamic_size.min and max_window.max * scale * 2 < dynamic_size.max)
         scale *= 2
       endWhile
       return scale
