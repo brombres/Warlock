@@ -117,6 +117,7 @@ class WarlockController
       local folder = Warlock.application_data_folder / app_name
       folder.create_folder
       save_state( AppData.data, folder/"SaveState.bin" )
+      if ($target("Web")) Web.sync_persistent_storage  # flush IDBFS to IndexedDB
 
     method tick
       begin_tick

@@ -84,6 +84,8 @@ class Warlock [essential singleton]
         local result : String
         native @|$result = RogueString_create( SDL_GetAndroidInternalStoragePath() );
         return result
+      elseIf ($target("Web"))
+        return Web.application_data_folder
       else
         println "TODO: defined Warlock.application_data_folder() for $"(System.os)
         return File( "~" )
@@ -99,6 +101,8 @@ class Warlock [essential singleton]
         local result : String
         native @|$result = RogueString_create( SDL_GetAndroidCachePath() );
         return result
+      elseIf ($target("Web"))
+        return Web.cache_folder
       else
         println "TODO: defined Warlock.cache_folder() for $"(System.os)
         return File( "~" )
@@ -111,6 +115,8 @@ class Warlock [essential singleton]
         local result : String
         native @|$result = RogueString_create( SDL_GetAndroidInternalStoragePath() );
         return result
+      elseIf ($target("Web"))
+        return Web.user_data_folder
       else
         println "TODO: defined Warlock.user_data_folder() for $"(System.os)
         return File( "~" )

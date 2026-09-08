@@ -22,6 +22,10 @@ class SDL : Framework [singleton]
      |  {
      |    case SDL_EVENT_WILL_ENTER_BACKGROUND:
      |    case SDL_EVENT_WINDOW_MINIMIZED:
+     |#if defined(%NS%ROGUE_TARGET_WEB)
+     |    case SDL_EVENT_WINDOW_HIDDEN:  // browser tab hidden
+     |    case SDL_EVENT_TERMINATING:    // page unloading; the filter runs synchronously so state can still be saved
+     |#endif
      |      // Have to handle BG event here, otherwise Android won't get it until after the
      |      // app suspends and resumes.
      |      RogueWarlockSDL__on_suspend();
@@ -384,6 +388,9 @@ class SDL : Framework [singleton]
       @|    break;
        |  case SDL_EVENT_DID_ENTER_FOREGROUND:
        |  case SDL_EVENT_WINDOW_RESTORED:
+       |#if defined(%NS%ROGUE_TARGET_WEB)
+       |  case SDL_EVENT_WINDOW_SHOWN:   // browser tab visible again
+       |#endif
             block
               if (Warlock.is_suspended)
                 Warlock.controller.handle_app_resume

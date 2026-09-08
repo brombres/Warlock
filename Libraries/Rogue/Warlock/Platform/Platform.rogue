@@ -1,5 +1,6 @@
 $include Platform/iOS
 $include Platform/macOS
+$include Platform/Web
 
 class Platform [singleton]
   METHODS

@@ -1,0 +1,42 @@
+# Web (Emscripten) Warlock specialization
+library Warlock
+
+class Web [singleton]
+  # Persistent storage lives on an IndexedDB-backed IDBFS mounted at /persistent
+  # by Platforms/Web/pre.js before main() runs. Everything else is in-memory
+  # (MEMFS) and is lost when the page reloads.
+  #
+  # Writes to /persistent only reach IndexedDB after sync_persistent_storage()
+  # (FS.syncfs) - WarlockController.save_state calls it automatically.
+  NATIVE
+    nativeHeader @|#if defined(%NS%ROGUE_TARGET_WEB)
+                  |  #include <emscripten.h>
+                  |#endif
+
+  PROPERTIES
+    persistent_folder = File( "/persistent" ) : File
+
+  METHODS
+    method application_data_folder->File
+      return ensure_folder( persistent_folder/"AppData" )
+
+    method cache_folder->File
+      return ensure_folder( File("/cache") )
+
+    method user_data_folder->File
+      return ensure_folder( persistent_folder/"UserData" )
+
+    method ensure_folder( folder:File )->File
+      if (not folder.exists) folder.create_folder
+      return folder
+
+    method sync_persistent_storage
+      # Flushes /persistent to IndexedDB. Asynchronous; call after writing files.
+      native @|#if defined(%NS%ROGUE_TARGET_WEB)
+              |  EM_ASM({
+              |    FS.syncfs( false, function(err) {
+              |      if (err) console.error( "[Warlock] Failed to sync persistent storage: " + err );
+              |    });
+              |  });
+              |#endif
+endClass

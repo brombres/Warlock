@@ -32,6 +32,7 @@ TESS_SOURCES := $(addprefix $(LIBS)/libtess2/Source/, \
   bucketalloc.c dict.c geom.c mesh.c priorityq.c sweep.c tess.c)
 
 SHELL_FILE := index.html
+PRE_JS     := pre.js
 ASSETS     := $(shell find $(BUILD)/Assets -type f 2>/dev/null)
 
 #-------------------------------------------------------------------------------
@@ -93,6 +94,9 @@ LDFLAGS := \
   -sALLOW_MEMORY_GROWTH=1 \
   -sSTACK_SIZE=4MB \
   -sEXIT_RUNTIME=0 \
+  -sEXPORTED_RUNTIME_METHODS=FS \
+  -lidbfs.js \
+  --pre-js $(PRE_JS) \
   --shell-file $(SHELL_FILE) \
   --preload-file $(BUILD)/Assets@/Assets
 
@@ -117,9 +121,13 @@ OBJS := $(APP_OBJS) $(UTIL_OBJS) $(MA_OBJS) $(SPINE_OBJS) $(TESS_OBJS)
 
 all: $(OUT_DIR)/index.html
 
-$(OUT_DIR)/index.html: $(OBJS) $(SDL_LIB) $(BGFX_LIBS) $(SHELL_FILE) $(ASSETS)
+$(OUT_DIR)/index.html: $(OBJS) $(SDL_LIB) $(BGFX_LIBS) $(SHELL_FILE) $(PRE_JS) $(ASSETS)
 	@mkdir -p $(OUT_DIR)
 	$(CXX) $(LINK_OPT) $(OBJS) $(SDL_LIB) $(BGFX_LIBS) $(LDFLAGS) -o $@
+	@# Tell the shell page's progress bar how many bytes it is waiting for.
+	@total=$$(( $$(wc -c < $(OUT_DIR)/index.wasm) + $$(wc -c < $(OUT_DIR)/index.data) )); \
+	 sed -e "s/__WARLOCK_TOTAL_BYTES__/$$total/g" $@ > $@.tmp && mv $@.tmp $@; \
+	 echo "Total download: $$total bytes"
 
 # SDL3 static library, built with emscripten's CMake wrapper.
 sdl: $(SDL_LIB)

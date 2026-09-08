@@ -26,33 +26,127 @@
       height: 100%;
       outline: none;
     }
-    #status {
-      position: absolute;
-      left: 0; right: 0; top: 45%;
-      text-align: center;
-      color: #888;
-      font: 16px system-ui, sans-serif;
+    /* Black loading screen with a minimal progress bar, shown until the app starts. */
+    #loader {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.25s ease-out;
+    }
+    #loader.done {
+      opacity: 0;
       pointer-events: none;
+    }
+    #loader-bar {
+      width: min(320px, 60vw);
+      height: 8px;
+      border: 1px solid #fff;
+      box-sizing: border-box;
+    }
+    #loader-fill {
+      width: 0%;
+      height: 100%;
+      background: #fff;
+      transition: width 0.1s linear;
     }
   </style>
 </head>
 <body>
-  <div id="status">Loading...</div>
   <canvas id="canvas" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
+  <div id="loader"><div id="loader-bar"><div id="loader-fill"></div></div></div>
   <script>
-    var Module = {
-      canvas: document.getElementById('canvas'),
-      print:    function(text) { console.log(text); },
-      printErr: function(text) { console.error(text); },
-      setStatus: function(text) {
-        var status = document.getElementById('status');
-        if (status) status.textContent = text;
+    // ---- Loading progress ---------------------------------------------------
+    // The Makefile replaces __WARLOCK_TOTAL_BYTES__ after linking with the
+    // combined size of index.wasm + index.data. Byte-accurate progress is shown
+    // whenever the downloads report it; otherwise progress is estimated from
+    // elapsed time, assuming a typical home wifi connection.
+    var Loader = {
+      totalBytes: Number( "__WARLOCK_TOTAL_BYTES__" ) || 0,
+      assumedBytesPerSecond: 6 * 1024 * 1024,   // ~50 Mbps
+      startTime: performance.now(),
+      wasm: { loaded: 0, total: 0 },
+      data: { loaded: 0, total: 0 },
+      shown: 0,
+      finished: false,
+
+      fraction: function() {
+        var loaded = this.wasm.loaded + this.data.loaded;
+        var total  = this.totalBytes || (this.wasm.total + this.data.total);
+        if (loaded > 0 && total > 0) return Math.min( loaded / total, 1 );
+
+        // No byte counts (yet): estimate from time. Never reaches 100% on its own.
+        var expectedSeconds = (this.totalBytes || 64 * 1024 * 1024) / this.assumedBytesPerSecond;
+        var elapsed = (performance.now() - this.startTime) / 1000;
+        return Math.min( elapsed / expectedSeconds, 0.95 );
       },
-      onRuntimeInitialized: function() {
-        var status = document.getElementById('status');
-        if (status) status.remove();
+
+      update: function() {
+        if (this.finished) return;
+        this.shown = Math.max( this.shown, this.fraction() );   // never move backwards
+        document.getElementById( 'loader-fill' ).style.width = (this.shown * 100) + '%';
+        requestAnimationFrame( function() { Loader.update(); } );
+      },
+
+      finish: function() {
+        this.finished = true;
+        document.getElementById( 'loader-fill' ).style.width = '100%';
+        var loader = document.getElementById( 'loader' );
+        loader.classList.add( 'done' );
+        setTimeout( function() { loader.remove(); }, 400 );
+      },
+
+      // Fetches 'url', accumulating progress into 'stats'; resolves to an ArrayBuffer.
+      fetchWithProgress: function( url, stats ) {
+        return fetch( url ).then( function( response ) {
+          if (!response.ok) throw new Error( "Failed to fetch " + url + ": " + response.status );
+          stats.total = Number( response.headers.get('Content-Length') ) || 0;
+          if (!response.body) return response.arrayBuffer();
+
+          var reader = response.body.getReader();
+          var chunks = [];
+          return reader.read().then( function step( result ) {
+            if (result.done) {
+              var buffer = new Uint8Array( stats.loaded );
+              var offset = 0;
+              chunks.forEach( function( chunk ) { buffer.set( chunk, offset ); offset += chunk.length; } );
+              return buffer.buffer;
+            }
+            chunks.push( result.value );
+            stats.loaded += result.value.length;
+            return reader.read().then( step );
+          });
+        });
       }
     };
+
+    var Module = {
+      canvas: document.getElementById( 'canvas' ),
+      print:    function( text ) { console.log( text ); },
+      printErr: function( text ) { console.error( text ); },
+
+      // Emscripten reports asset package download progress as
+      // "Downloading data... (loaded/total)".
+      setStatus: function( text ) {
+        var m = /\((\d+)\/(\d+)\)/.exec( text );
+        if (m) { Loader.data.loaded = Number( m[1] ); Loader.data.total = Number( m[2] ); }
+      },
+
+      // Fetch the .wasm ourselves so its download counts toward the progress bar.
+      instantiateWasm: function( imports, onSuccess ) {
+        Loader.fetchWithProgress( 'index.wasm', Loader.wasm )
+          .then( function( bytes )  { return WebAssembly.instantiate( bytes, imports ); } )
+          .then( function( result ) { onSuccess( result.instance, result.module ); } )
+          .catch( function( err )   { console.error( err ); Module.printErr( "Failed to load index.wasm" ); } );
+        return {};
+      },
+
+      onRuntimeInitialized: function() { Loader.finish(); }
+    };
+
+    Loader.update();
   </script>
   {{{ SCRIPT }}}
 </body>
