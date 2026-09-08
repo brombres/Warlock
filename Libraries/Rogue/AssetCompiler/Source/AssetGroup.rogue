@@ -10,23 +10,41 @@ class AssetGroup
     attributes  : AttributeList
     is_modified : Logical
     atlas_padding     = 8
-    dynamic_size      = -1
+    dynamic_size      : XY  # XY(0,0) = unspecified
 
   GLOBAL METHODS
-    method parse_dynamic_size_attribute( attributes:AttributeList )->Int
-      if (attributes is null) return -1
+    method parse_dynamic_size_attribute( attributes:AttributeList )->XY
+      # Returns the dynamic size specified by the first matching attribute:
+      #   'SIZE' or 'xSIZE' (e.g. '1024' or 'x1024') -> XY(SIZE,SIZE)
+      #   'WxH'             (e.g. '1024x768')        -> XY(W,H)
+      # Returns XY(0,0) ("unspecified") if there is no such attribute or if
+      # 'fixed_size' is specified.
+      if (attributes is null) return XY.zero
       forEach (attribute in attributes)
-        if (attribute.name == "fixed_size") return 0
-        if (attribute.name.count >= 2 and attribute.name[0] == 'x')
-          local rest = attribute.name.from(1)
-          local digits_only = true
-          forEach (ch in rest)
-            if (ch < '0' or ch > '9') digits_only = false
-          endForEach
-          if (digits_only) return rest->Int
-        endIf
+        if (attribute.name == "fixed_size") return XY.zero
+        local size = parse_dynamic_size( attribute.name )
+        if (size) return size
       endForEach
-      return -1
+      return XY.zero
+
+    method parse_dynamic_size( name:String )->XY
+      # Parses 'SIZE', 'xSIZE', or 'WxH'. Returns XY(0,0) if 'name' is not in
+      # one of those forms.
+      local text = name
+      if (text.count >= 2 and text[0] == 'x') text = text.from(1)
+
+      local parts = text.split( 'x' )
+      if (parts.count == 0 or parts.count > 2) return XY.zero
+      forEach (part in parts)
+        if (part.count == 0) return XY.zero
+        forEach (ch in part)
+          if (ch < '0' or ch > '9') return XY.zero
+        endForEach
+      endForEach
+
+      local w = parts[0]->Int
+      local h = which{ parts.count==2:parts[1]->Int || w }
+      return XY( w, h )
 
   METHODS
     method configure_id
@@ -47,7 +65,7 @@ class AssetGroup
           forEach (key in info//attributes.keys)
             local attr = attributes.find( key )
             necessary (attr)
-            necessary (attr.value.value == info//attributes[key])
+            necessary (attribute_variant(attr) == info//attributes[key])
           endForEach
         endIf
       unsatisfied
@@ -155,7 +173,7 @@ class AssetGroup
         atlas_padding = attr.value->Int
       endIf
       local dyn = AssetGroup.parse_dynamic_size_attribute( attributes )
-      if (dyn != -1) dynamic_size = dyn
+      if (dyn) dynamic_size = dyn
 
     method to->String
       return assets->String
@@ -166,7 +184,7 @@ class AssetGroup
       if (attributes)
         local attribute_table = result//attributes
         forEach (attribute in attributes)
-          attribute_table[attribute.name] = attribute.value.value
+          attribute_table[attribute.name] = attribute_variant( attribute )
         endForEach
       endIf
 
@@ -194,6 +212,11 @@ class AssetGroup
       endIf
 
       return result
+
+    method attribute_variant( attribute:Attribute )->Variant
+      # A valueless attribute (e.g. 'x1024' or 'mipmaps') is recorded as 'true'.
+      if (attribute.value) return Variant( attribute.value.value )
+      else                 return Variant( true )
 
     method .base26( n:Int, builder:String )
       if (n >= 26) .base26( n/26, builder )

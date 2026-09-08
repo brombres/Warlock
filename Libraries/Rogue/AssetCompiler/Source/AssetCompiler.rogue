@@ -92,7 +92,7 @@ class AssetCompiler [singleton]
         # dynamic_size are added; remaining assets get new groups.
         local default_audio    : AssetGroup
         local default_data     : AssetGroup
-        local default_graphics_by_size = [Int:AssetGroup]
+        local default_graphics_by_size = [XY:AssetGroup]
         forEach (asset in assets)
           if (not asset.group)
             if (not asset.is_standalone)
@@ -156,7 +156,7 @@ class AssetCompiler [singleton]
       texture_info.clear
       forEach (group in all_groups)
         forEach (info in group.page_info)
-          info//dynamic_size = group.dynamic_size
+          info//dynamic_size = group.dynamic_size->Variant
           texture_info[info//asset_filepath] = info
           existing_textures.remove( info//build_filepath->String )
         endForEach
@@ -200,9 +200,8 @@ class AssetCompiler [singleton]
       forEach (info in texture_info)
         manifest.print "$ $ "(info//size//x->Int.format("4"),info//size//y->Int.format("4"))
         manifest.print "mipmaps $ wrap $ "(info//mipmaps->String.justified(5),info//wrap->String.justified(5))
-        local dyn = info//dynamic_size->Int
-        if (dyn < 0) dyn = 0
-        manifest.print "$ "(dyn)
+        local dyn = XY( info//dynamic_size )
+        manifest.print "$ $ "(dyn.x->Int,dyn.y->Int)
         manifest.println info//asset_filepath
       endForEach
       manifest.println

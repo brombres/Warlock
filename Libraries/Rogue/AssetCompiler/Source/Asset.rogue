@@ -26,7 +26,7 @@ class Asset
     image_mipmaps       : Logical
     image_patch_count   : Int
     texture_wrap        : Logical
-    dynamic_size        = -1
+    dynamic_size        : XY  # XY(0,0) = unspecified
 
     has_resize          : Logical
     resize_scale        : Real  # >0: uniform scale factor; 0: derive from resize_w/resize_h
