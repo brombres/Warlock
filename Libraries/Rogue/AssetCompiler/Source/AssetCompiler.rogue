@@ -122,10 +122,15 @@ class AssetCompiler [singleton]
       # Collect groups
       # Assets can be reassigned to a group multiple times, so after that's
       # all over we figure out the final group membership.
+      # A group-level dynamic_size (e.g. 'group dynamic_size:x2048') sets or
+      # overrides the dynamic_size of every asset in the group. A group without
+      # one adopts the first asset-level dynamic_size it contains, if any.
       forEach (asset in assets)
         if local group = asset.group
           if (not groups.contains(group)) groups.add( group )
           group.add( asset )
+          if (group.dynamic_size) asset.dynamic_size = group.dynamic_size
+          elseIf (asset.dynamic_size) group.dynamic_size = asset.dynamic_size
         endIf
       endForEach
 

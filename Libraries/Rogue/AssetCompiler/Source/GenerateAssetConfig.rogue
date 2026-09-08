@@ -152,6 +152,7 @@ class GenerateAssetConfig : Visitor
 
     method on_visit_node( cmd:Group )
       writer.print "group"
+      write_attributes( cmd.attributes )
       if (cmd.multiline)
         writer.println
         forEach (filepath in cmd.filepaths)
@@ -177,7 +178,12 @@ class GenerateAssetConfig : Visitor
 
     method on_visit_node( cmd:AssetRule )
       writer.print cmd.filepath
-      forEach (attribute as Attribute in cmd.attributes)
+      write_attributes( cmd.attributes )
+      writer.println
+
+    method write_attributes( attributes:AttributeList )
+      if (attributes is null) return
+      forEach (attribute as Attribute in attributes)
         writer.print ' '
         writer.print attribute.name
         if (attribute.value)
@@ -185,7 +191,6 @@ class GenerateAssetConfig : Visitor
           writer.print attribute.value
         endIf
       endForEach
-      writer.println
 
     method on_visit_node( cmd:Comment )
       writer.println "#$"(cmd.content)

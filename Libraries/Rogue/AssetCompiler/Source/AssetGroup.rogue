@@ -15,13 +15,25 @@ class AssetGroup
   GLOBAL METHODS
     method parse_dynamic_size_attribute( attributes:AttributeList )->XY
       # Returns the dynamic size specified by the first matching attribute:
-      #   'SIZE' or 'xSIZE' (e.g. '1024' or 'x1024') -> XY(SIZE,SIZE)
-      #   'WxH'             (e.g. '1024x768')        -> XY(W,H)
+      #   'dynamic_size:SIZE', 'dynamic_size:xSIZE' -> XY(SIZE,SIZE)
+      #   'dynamic_size:WxH'                        -> XY(W,H)
+      #   Bare 'SIZE' / 'xSIZE' / 'WxH' (e.g. 'x1024', '1024x768') are also
+      #   accepted as shorthand.
       # Returns XY(0,0) ("unspecified") if there is no such attribute or if
-      # 'fixed_size' is specified.
+      # 'fixed_size' is specified. Throws a compile error if 'dynamic_size' has a
+      # missing or malformed value.
       if (attributes is null) return XY.zero
       forEach (attribute in attributes)
         if (attribute.name == "fixed_size") return XY.zero
+        if (attribute.name == "dynamic_size")
+          local size = which{ attribute.value:parse_dynamic_size(attribute.value.value) || XY.zero }
+          if (not size)
+            throw attribute.t.error(
+              "Expected e.g. 'dynamic_size:1024', 'dynamic_size:x1024', or 'dynamic_size:1024x768'."
+            )
+          endIf
+          return size
+        endIf
         local size = parse_dynamic_size( attribute.name )
         if (size) return size
       endForEach
