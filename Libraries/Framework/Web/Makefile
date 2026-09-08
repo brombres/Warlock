@@ -94,7 +94,7 @@ LDFLAGS := \
   -sALLOW_MEMORY_GROWTH=1 \
   -sSTACK_SIZE=4MB \
   -sEXIT_RUNTIME=0 \
-  -sEXPORTED_RUNTIME_METHODS=FS \
+  -sEXPORTED_RUNTIME_METHODS=FS,callMain \
   -lidbfs.js \
   --pre-js $(PRE_JS) \
   --shell-file $(SHELL_FILE) \

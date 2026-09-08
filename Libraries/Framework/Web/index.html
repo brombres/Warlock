@@ -46,15 +46,17 @@
       border: 1px solid #fff;
       box-sizing: border-box;
     }
+    /* The fill is animated with 'transform' rather than 'width' so that the
+       browser's compositor thread can keep animating it while the main thread
+       is blocked by the app's startup (see Loader.launch below). */
     #loader-fill {
-      width: 0%;
+      width: 100%;
       height: 100%;
       background: #fff;
-      transition: width 0.1s linear;
-    }
-    #loader-fill.complete {
-      width: 100%;
-      transition: none;
+      transform: scaleX(0);
+      transform-origin: 0 50%;
+      will-change: transform;
+      transition: transform 0.1s linear;
     }
   </style>
 </head>
@@ -63,30 +65,59 @@
   <div id="loader"><div id="loader-bar"><div id="loader-fill"></div></div></div>
   <script>
     // ---- Loading progress ---------------------------------------------------
-    // The Makefile replaces __WARLOCK_TOTAL_BYTES__ after linking with the
-    // combined size of index.wasm + index.data. Byte-accurate progress is shown
-    // whenever the downloads report it; otherwise progress is estimated from
-    // elapsed time, assuming a typical home wifi connection.
+    // The bar covers two phases:
     //
-    // Lifecycle: downloads -> runtime initialized (finish(): bar reaches 100%)
-    // -> the app's synchronous startup blocks the main thread while it decodes
-    // assets -> Warlock.cpp calls Module.onFirstFrame() after the first frame
-    // -> reveal(): the bar is displayed at 100% for 'completeHoldMs', then the
-    // loading screen fades out over 'fadeMs' to show the game.
+    // 1. Download (byte-accurate). The Makefile replaces __WARLOCK_TOTAL_BYTES__
+    //    after linking with the combined size of index.wasm + index.data. If
+    //    the downloads report no byte counts, progress is estimated from
+    //    elapsed time, assuming a typical home wifi connection.
+    //
+    // 2. Startup (time-estimated). Once the runtime is initialized, main() runs
+    //    the app's synchronous startup - decoding textures and other assets -
+    //    which blocks the main thread, so no script can update the bar. Instead,
+    //    a CSS transform transition is started just before main() is called; the
+    //    compositor thread keeps animating it while the main thread is blocked.
+    //    Its duration comes from the startup time measured on the previous load
+    //    (kept in localStorage and updated after every load, so it tracks changes
+    //    to the app), or a default guess on the first load.
+    //
+    // The two phases share the bar in proportion to their expected durations.
+    // When Warlock.cpp reports the first frame via Module.onFirstFrame(), the
+    // bar snaps to 100%, holds for 'completeHoldMs', then the loading screen
+    // fades out to reveal the game.
     var Loader = {
       totalBytes: Number( "__WARLOCK_TOTAL_BYTES__" ) || 0,
-      assumedBytesPerSecond: 6 * 1024 * 1024,   // ~50 Mbps
+      assumedBytesPerSecond: 6 * 1024 * 1024,   // ~50 Mbps; used only when no byte counts arrive
+      defaultStartupMs: 2000,   // startup estimate for a first-ever load
+      startupOverrunFactor: 1.2,  // animate a bit slower than the estimate so the bar rarely hits 100% early
       completeHoldMs: 250,   // how long the finished bar stays on screen
       fadeMs: 250,           // must match the #loader opacity transition
       revealTimeoutMs: 10000, // reveal anyway if the app never reports a first frame
+      storageKey: 'warlock.loader',
+
       startTime: performance.now(),
       wasm: { loaded: 0, total: 0 },
       data: { loaded: 0, total: 0 },
       shown: 0,
       finished: false,
+      launchTime: 0,
       revealed: false,
 
-      fraction: function() {
+      // Startup time measured on the previous load, or the default.
+      estimatedStartupMs: function() {
+        try {
+          var saved = JSON.parse( localStorage.getItem(this.storageKey) || '{}' );
+          if (saved.startupMs > 0) return saved.startupMs;
+        } catch (e) {}
+        return this.defaultStartupMs;
+      },
+
+      saveStartupMs: function( ms ) {
+        try { localStorage.setItem( this.storageKey, JSON.stringify({ startupMs: Math.round(ms) }) ); } catch (e) {}
+      },
+
+      // Fraction of the download completed, 0..1.
+      downloadFraction: function() {
         var loaded = this.wasm.loaded + this.data.loaded;
         var total  = this.totalBytes || (this.wasm.total + this.data.total);
         if (loaded > 0 && total > 0) return Math.min( loaded / total, 1 );
@@ -97,27 +128,60 @@
         return Math.min( elapsed / expectedSeconds, 0.95 );
       },
 
+      // Overall fraction during the download phase. The download's share of the
+      // bar is its projected duration (from the rate so far) relative to the
+      // projected duration of download + startup.
+      fraction: function() {
+        var f = this.downloadFraction();
+        if (f <= 0) return 0;
+        var elapsed = performance.now() - this.startTime;
+        var projectedDownloadMs = elapsed / f;
+        var share = projectedDownloadMs / (projectedDownloadMs + this.estimatedStartupMs());
+        return f * share;
+      },
+
+      setFill: function( fraction, transition ) {
+        var fill = document.getElementById( 'loader-fill' );
+        fill.style.transition = transition;
+        fill.style.transform = 'scaleX(' + fraction + ')';
+      },
+
       update: function() {
         if (this.finished) return;
         this.shown = Math.max( this.shown, this.fraction() );   // never move backwards
-        document.getElementById( 'loader-fill' ).style.width = (this.shown * 100) + '%';
+        this.setFill( this.shown, 'transform 0.1s linear' );
         requestAnimationFrame( function() { Loader.update(); } );
       },
 
-      // Called when the runtime is initialized: all downloads are complete.
-      finish: function() {
+      // Called when the runtime is initialized (downloads complete) and main()
+      // is waiting to be run. Starts the compositor-driven startup animation,
+      // waits for it to be committed to the compositor, then runs main().
+      launch: function() {
         if (this.finished) return;
         this.finished = true;
-        document.getElementById( 'loader-fill' ).classList.add( 'complete' );
+        var durationMs = this.estimatedStartupMs() * this.startupOverrunFactor;
+        this.setFill( 1, 'transform ' + Math.round(durationMs) + 'ms ease-out' );
         setTimeout( function() { Loader.reveal(); }, this.revealTimeoutMs );
+
+        // Two frames: the first commits the transition's starting state, the
+        // second guarantees the compositor has picked up the animation.
+        requestAnimationFrame( function() {
+          requestAnimationFrame( function() {
+            Loader.launchTime = performance.now();
+            Module.callMain();
+          });
+        });
       },
 
-      // Called after the app has drawn its first frame: hold the completed bar
-      // briefly, then fade the loading screen out to reveal the game.
+      // Called after the app has drawn its first frame: record the measured
+      // startup time, hold the completed bar briefly, then fade the loading
+      // screen out to reveal the game.
       reveal: function() {
         if (this.revealed) return;
         this.revealed = true;
-        this.finish();
+        if (this.launchTime) this.saveStartupMs( performance.now() - this.launchTime );
+
+        this.setFill( 1, 'none' );
         var loader = document.getElementById( 'loader' );
         requestAnimationFrame( function() {   // wait for the 100% bar to be painted
           setTimeout( function() {
@@ -172,7 +236,11 @@
         return {};
       },
 
-      onRuntimeInitialized: function() { Loader.finish(); },
+      // main() is run by Loader.launch() rather than automatically, so the
+      // startup animation can be handed to the compositor first.
+      // (Requires -sEXPORTED_RUNTIME_METHODS=callMain in the Makefile.)
+      noInitialRun: true,
+      onRuntimeInitialized: function() { Loader.launch(); },
       onFirstFrame:         function() { Loader.reveal(); }   // called from Warlock.cpp
     };
 
