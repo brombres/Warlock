@@ -1,0 +1,59 @@
+<!doctype html>
+<!--
+  Emscripten shell page for the Warlock Web build.
+
+  Copied from Libraries/Warlock/Libraries/Framework/Web/index.html into
+  Platforms/Web/ - yours to modify; 'rogo deps' will not overwrite it.
+  Emscripten replaces {{{ SCRIPT }}} with the <script> tag that loads the app.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  <title>Warlock App</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      overflow: hidden;
+    }
+    #canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      outline: none;
+    }
+    #status {
+      position: absolute;
+      left: 0; right: 0; top: 45%;
+      text-align: center;
+      color: #888;
+      font: 16px system-ui, sans-serif;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="status">Loading...</div>
+  <canvas id="canvas" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
+  <script>
+    var Module = {
+      canvas: document.getElementById('canvas'),
+      print:    function(text) { console.log(text); },
+      printErr: function(text) { console.error(text); },
+      setStatus: function(text) {
+        var status = document.getElementById('status');
+        if (status) status.textContent = text;
+      },
+      onRuntimeInitialized: function() {
+        var status = document.getElementById('status');
+        if (status) status.remove();
+      }
+    };
+  </script>
+  {{{ SCRIPT }}}
+</body>
+</html>

@@ -291,6 +291,7 @@ routine deps( platform:String, args=String[]:String[], &update, &rebuild, &reins
 
   check_platform_xcode
   check_platform_android
+  check_platform_web
   check_rogue_starter
   #update_platforms( platform, args, &=update, &=rebuild, &=reinstall )
 
@@ -406,13 +407,7 @@ routine deps( platform:String, args=String[]:String[], &update, &rebuild, &reins
           endIf
         endIf
 
-        if (platform == "Web")
-          # TODO: bgfx for Web must be built with emscripten ('make wasm' in
-          # Libraries/bgfx -> .build/wasm/bin). Deferred until compile_web()
-          # is implemented; the host build above still provides shaderc.
-        else
-          .build_bgfx( platform, &rebuild=needs_rebuild )
-        endIf
+        .build_bgfx( platform, &rebuild=needs_rebuild )
         escapeLoop
       catch (error_building_bgfx:Error)
         if (not revert_bgfx_to_known_good) throw error_building_bgfx
@@ -595,6 +590,7 @@ routine .is_bgfx_built( platform:String )->Logical
     files.add( "shadercRelease" )
   elseIf (platform == "Web")
     folder = "Libraries/bgfx/.build/wasm/bin"
+    files = files.map<<String>>( $.after_first("lib") )  # genie's Emscripten naming has no "lib" prefix
   else
     trace
     throw Error( "TODO: determine .is_bgfx_built for $"(platform) )
@@ -621,6 +617,9 @@ routine .build_bgfx( platform:String, &rebuild )
   elseIf (platform == "Android")
     make_folder = "Libraries/bgfx/.build/android-arm64"
     make_target = "android-arm64 CFLAGS=-DBGFX_CONFIG_MULTITHREADED=0"
+  elseIf (platform == "Web")
+    make_folder = "Libraries/bgfx/.build/wasm"
+    make_target = null  # handled below - genie + per-library make, no examples
   else
     trace
     throw Error( "[INTERNAL] TODO: build BGFX for $."(platform) )
@@ -645,13 +644,17 @@ routine .build_bgfx( platform:String, &rebuild )
       .configure_bgfx_android  # Android build files need patching
     endIf
 
-    #execute "cd Libraries/bgfx && ../bx/tools/bin/darwin/genie --with-tools --gcc=osx-x64 gmake"
-    local cmd = "cd Libraries/bgfx && make $"(make_target)
-    if (platform == "iOS")
-      cmd = ''export SDKROOT="$(xcrun --sdk iphoneos --show-sdk-path)" && '' + cmd
-    endIf
+    if (platform == "Web")
+      .build_bgfx_web
+    else
+      #execute "cd Libraries/bgfx && ../bx/tools/bin/darwin/genie --with-tools --gcc=osx-x64 gmake"
+      local cmd = "cd Libraries/bgfx && make $"(make_target)
+      if (platform == "iOS")
+        cmd = ''export SDKROOT="$(xcrun --sdk iphoneos --show-sdk-path)" && '' + cmd
+      endIf
 
-    execute cmd
+      execute cmd
+    endIf
   endIf
 
   if (platform == "Android") .sync_bgfx_android_libs
@@ -667,6 +670,20 @@ routine .configure_bgfx_android
   local content = String( android_makefile )
   content .= replacing( " -dynamiclib ", " -shared " )
   android_makefile.save( content )
+endRoutine
+
+routine .build_bgfx_web
+  # bgfx's top-level 'make wasm' also builds the combined examples, so instead
+  # generate the wasm project with genie and build just the four libraries.
+  # genie's Emscripten toolchain invokes "$(EMSCRIPTEN)/emcc" etc.
+  local emscripten = emscripten_folder
+  local genie = "../bx/tools/bin/$/genie"(which{ System.is_macos:"darwin" || "linux" })
+
+  execute ''cd Libraries/bgfx && EMSCRIPTEN="$" $ --gcc=wasm gmake''(emscripten,genie)
+
+  forEach (config in ["debug","release"])
+    execute ''cd Libraries/bgfx && EMSCRIPTEN="$" make -R -C .build/projects/gmake-wasm config=$ bx bimg bimg_decode bgfx CFLAGS=-DBGFX_CONFIG_MULTITHREADED=0''(emscripten,config)
+  endForEach
 endRoutine
 
 routine .sync_bgfx_android_libs
@@ -836,6 +853,24 @@ routine check_platform_android
   if (header_shown) println
 endRoutine
 
+routine check_platform_web
+  # Every file is a user-editable template: copied only if missing.
+  local default_files = Files( "Libraries/Warlock/Libraries/Framework/Web/**" )
+
+  local dest = File( "Platforms/Web" )
+  dest.create_folder
+
+  local header_shown = false
+  forEach (filepath in default_files)
+    local relative_filepath = default_files.relative_filepath( filepath )
+    local from_file = File( filepath )
+    local to_file   = File( "Platforms/Web"/relative_filepath )
+    header_shown = copy_file( from_file, to_file, "Platforms/Web/", &=header_shown, &if_missing )
+  endForEach
+
+  if (header_shown) println
+endRoutine
+
 routine check_rogue_starter
   local from_file = File( "Libraries/Warlock/Source/Main.rogue" )
   local to_file   = File( "Source/Main.rogue" )
@@ -859,7 +894,7 @@ routine copy_file( from_file:File, to_file:File, base_folder:String, &header_sho
   endIf
 
   localize project_id( platform )
-  local package_path = project_id.replacing( '.', '/' )
+  local package_path = which{ project_id:project_id.replacing('.','/') || "" }
   local placeholder_id   = "com.developer.warlockapp"
   local placeholder_path = "com/developer/warlockapp"
 
@@ -1005,6 +1040,14 @@ routine rogo_web
   build "Web"
 endRoutine
 
+routine rogo_web_open
+  # Serves Build/Web/App/ locally and opens it in the default browser (Ctrl+C to stop).
+  local index = File( "Build/Web/App/index.html" )
+  if (not index.exists) throw Error( "$ does not exist - run 'rogo web' first."(index) )
+  check_emscripten
+  execute "emrun $"(index.esc)
+endRoutine
+
 routine rogo_build_debug( &rebuild )
   build( System.os, &debug, &=rebuild )
 endRoutine
@@ -1091,11 +1134,20 @@ routine compile_assets( platform:String )
 endRoutine
 
 routine compile_web( &debug, &rebuild )
-  # Compiles Build/Web/Source/RogueProgram-Web.cpp (plus bgfx, SDL, etc.) to
-  # WebAssembly using emscripten.
+  # Compiles Build/Web/Source/RogueProgram-Web.cpp plus SDL, spine, miniaudio,
+  # libtess2 and the prebuilt bgfx wasm libraries to Build/Web/App/ using the
+  # user-editable Platforms/Web/Makefile.
   check_emscripten
 
-  banner "TODO: compile $/RogueProgram-Web.cpp with emcc"(output_source_folder("Web"))
+  banner "Compiling Web build with emscripten"
+  if (rebuild) execute "make -C Platforms/Web clean"
+  execute "make -C Platforms/Web CONFIG=$"(which{ debug:"debug" || "release" })
+endRoutine
+
+routine emscripten_folder->String
+  # Folder containing emcc/em++/emar (what bgfx's genie calls $(EMSCRIPTEN)).
+  check_emscripten
+  return System.find_executable("emcc").value.parent.filepath
 endRoutine
 
 routine check_emscripten

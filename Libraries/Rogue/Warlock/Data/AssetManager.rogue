@@ -32,8 +32,9 @@ class AssetManager [singleton]
         local manifest_filepath = "Assets/AssetManifest.txt"
 
         # On Android we need to load AssetManifest.txt first for Warlock.find_asset() to work.
+        # On Web the Assets/ folder is preloaded into Emscripten's virtual filesystem at /Assets.
         local file : File?
-        if ($target("Android"))
+        if ($target("Android") or $target("Web"))
           file = File( manifest_filepath )
         else
           if ($target("ObjC"))

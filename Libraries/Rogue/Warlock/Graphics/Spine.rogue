@@ -97,12 +97,23 @@ class Spine [essential singleton]
      |    char* _readFile( const spine::String &path, int *length ) override
      |    {
      |      // Resolve the logical asset name to a real filepath via Warlock, then
-     |      // read it with the default (stdio) implementation.
+     |      // read it with stdio. (Not delegated to DefaultSpineExtension::_readFile
+     |      // because spine-cpp compiles that out under __EMSCRIPTEN__.)
      |      RogueString* resolved =
      |        RogueWarlockSpine__data_filepath__RogueString( RogueString_create(path.buffer()) );
      |      printf( "Loading Spine data: %s\n", path.buffer() );
-     |      return spine::DefaultSpineExtension::_readFile(
-     |        spine::String((const char*)resolved->data->as_utf8), length );
+     |
+     |      FILE* file = fopen( (const char*)resolved->data->as_utf8, "rb" );
+     |      if ( !file ) return nullptr;
+     |
+     |      fseek( file, 0, SEEK_END );
+     |      *length = (int) ftell( file );
+     |      fseek( file, 0, SEEK_SET );
+     |
+     |      char* data = spine::SpineExtension::alloc<char>( *length, __FILE__, __LINE__ );
+     |      fread( data, 1, *length, file );
+     |      fclose( file );
+     |      return data;
      |    }
      |  };
      |}
