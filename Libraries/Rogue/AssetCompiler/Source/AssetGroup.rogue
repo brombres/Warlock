@@ -61,19 +61,13 @@ class AssetGroup
           (forEach in assets).update_placement_info
 
         case <Sound>, <Music>
-          local output_folder = AssetCompiler.assets_folder.parent.filepath
+          # Make sure the build's Audio folder exists even if it was deleted
+          # out from under a previous build.
+          (AssetCompiler.assets_folder/"Audio").create_folder
           forEach (asset in assets)
-
-            local output_filepath = asset.filepath
-            if (not output_filepath.begins_with("Assets/Audio/"))
-              output_filepath .= after_first( '/' )
-              output_filepath .= after_first( '/' )
-              output_filepath = "Assets/Audio" / output_filepath
-            endIf
-            output_filepath = output_folder/output_filepath
-
-            if (File(asset.filepath).is_different_than(File(output_filepath)))
-              File( asset.filepath ).copy_to( File(output_filepath), &verbose )
+            local output_file = audio_output_file( asset )
+            if (File(asset.filepath).is_different_than(output_file))
+              File( asset.filepath ).copy_to( output_file, &verbose )
             endIf
           endForEach
 
@@ -113,6 +107,13 @@ class AssetGroup
             if (not file.exists or file.timestamp < newest_timestamp) return true
           endForEach
 
+        case <Sound>, <Music>
+          forEach (asset in assets)
+            if (File(asset.filepath).is_different_than(audio_output_file(asset)))
+              return true
+            endIf
+          endForEach
+
         case <Binary>
           local output_folder = AssetCompiler.assets_folder.parent.filepath
           forEach (asset in assets)
@@ -124,6 +125,17 @@ class AssetGroup
       endWhich
 
       return false
+
+    method audio_output_file( asset:Asset )->File
+      # Maps an audio asset's source filepath to its destination in the current
+      # build's Assets/Audio folder.
+      local output_filepath = asset.filepath
+      if (not output_filepath.begins_with("Assets/Audio/"))
+        output_filepath .= after_first( '/' )
+        output_filepath .= after_first( '/' )
+        output_filepath = "Assets/Audio" / output_filepath
+      endIf
+      return File( AssetCompiler.assets_folder.parent.filepath / output_filepath )
 
     method newest_timestamp->Timestamp
       local newest_timestamp = assets.first.timestamp

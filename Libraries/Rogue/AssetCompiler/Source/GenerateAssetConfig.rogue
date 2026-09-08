@@ -96,8 +96,14 @@ class GenerateAssetConfig : Visitor
                   if (filepath_lc.contains("music")) writeln_echo " music"
                   else                               writeln_echo " sound"
                 case "mp3", "ogg"
-                  if (filepath_lc.contains("sound")) writeln_echo " sound"
-                  else                               writeln_echo " music"
+                  if (filepath_lc.contains("sound"))
+                    writeln_echo " sound"
+                  elseIf (File(filepath_lc).extension == "mp3" and is_small_audio_file(folder,filepath))
+                    # Short MP3s are almost certainly sound effects, not music.
+                    writeln_echo " sound"
+                  else
+                    writeln_echo " music"
+                  endIf
                 case "json"
                   writeln_echo " json"
                 others
@@ -113,6 +119,12 @@ class GenerateAssetConfig : Visitor
       unreferenced.clear
 
       return true
+
+    method is_small_audio_file( folder:String, filepath:String )->Logical
+      # True if the audio file is under 100K, the heuristic threshold below
+      # which a compressed audio file is classified as a sound effect rather
+      # than music.
+      return File( "Assets/$/$"(folder,filepath) ).size < 100*1024
 
     method filename_split_dimensions( filepath:String )->XY?
       # Returns the WxH of a "<width>x<height>" filename suffix - e.g. XY(3,1)
