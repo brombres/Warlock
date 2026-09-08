@@ -407,7 +407,10 @@ class Renderer [singleton]
       noAction
 
     method is_open_gl->Logical
-      return $target("Android")
+      # Returns 'true' if the active backend has a bottom-left texture origin
+      # (OpenGL / OpenGL ES / WebGL). Renderer-specific subclasses override
+      # this (e.g. BGFX.rogue queries bgfx::getCaps()->originBottomLeft).
+      return $target("Android") or $target("Web")
 
     method on_begin_render( render_target:RenderTarget )
       display_id = render_target.id

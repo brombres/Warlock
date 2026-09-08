@@ -400,6 +400,12 @@ class BGFX : Renderer [singleton]
         auto_clear_while_resizing = true
       endIf
 
+    method is_open_gl->Logical [override]
+      # Returns 'true' if the active backend has a bottom-left texture origin
+      # (OpenGL / OpenGL ES / WebGL), in which case render target images
+      # must be vertically flipped when drawn.
+      return native( "bgfx::getCaps()->originBottomLeft" )->Logical
+
     method uses_homogeneous_depth->Logical [override]
       # Returns 'true' if Z device coordinates are [-1,1] (homogeneous).
       # Returns 'false' if Z device coordinates are [0,1] (normalized).
