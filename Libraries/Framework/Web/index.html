@@ -52,6 +52,10 @@
       background: #fff;
       transition: width 0.1s linear;
     }
+    #loader-fill.complete {
+      width: 100%;
+      transition: none;
+    }
   </style>
 </head>
 <body>
@@ -63,14 +67,24 @@
     // combined size of index.wasm + index.data. Byte-accurate progress is shown
     // whenever the downloads report it; otherwise progress is estimated from
     // elapsed time, assuming a typical home wifi connection.
+    //
+    // Lifecycle: downloads -> runtime initialized (finish(): bar reaches 100%)
+    // -> the app's synchronous startup blocks the main thread while it decodes
+    // assets -> Warlock.cpp calls Module.onFirstFrame() after the first frame
+    // -> reveal(): the bar is displayed at 100% for 'completeHoldMs', then the
+    // loading screen fades out over 'fadeMs' to show the game.
     var Loader = {
       totalBytes: Number( "__WARLOCK_TOTAL_BYTES__" ) || 0,
       assumedBytesPerSecond: 6 * 1024 * 1024,   // ~50 Mbps
+      completeHoldMs: 250,   // how long the finished bar stays on screen
+      fadeMs: 250,           // must match the #loader opacity transition
+      revealTimeoutMs: 10000, // reveal anyway if the app never reports a first frame
       startTime: performance.now(),
       wasm: { loaded: 0, total: 0 },
       data: { loaded: 0, total: 0 },
       shown: 0,
       finished: false,
+      revealed: false,
 
       fraction: function() {
         var loaded = this.wasm.loaded + this.data.loaded;
@@ -90,12 +104,27 @@
         requestAnimationFrame( function() { Loader.update(); } );
       },
 
+      // Called when the runtime is initialized: all downloads are complete.
       finish: function() {
+        if (this.finished) return;
         this.finished = true;
-        document.getElementById( 'loader-fill' ).style.width = '100%';
+        document.getElementById( 'loader-fill' ).classList.add( 'complete' );
+        setTimeout( function() { Loader.reveal(); }, this.revealTimeoutMs );
+      },
+
+      // Called after the app has drawn its first frame: hold the completed bar
+      // briefly, then fade the loading screen out to reveal the game.
+      reveal: function() {
+        if (this.revealed) return;
+        this.revealed = true;
+        this.finish();
         var loader = document.getElementById( 'loader' );
-        loader.classList.add( 'done' );
-        setTimeout( function() { loader.remove(); }, 400 );
+        requestAnimationFrame( function() {   // wait for the 100% bar to be painted
+          setTimeout( function() {
+            loader.classList.add( 'done' );
+            setTimeout( function() { loader.remove(); }, Loader.fadeMs + 50 );
+          }, Loader.completeHoldMs );
+        });
       },
 
       // Fetches 'url', accumulating progress into 'stats'; resolves to an ArrayBuffer.
@@ -143,7 +172,8 @@
         return {};
       },
 
-      onRuntimeInitialized: function() { Loader.finish(); }
+      onRuntimeInitialized: function() { Loader.finish(); },
+      onFirstFrame:         function() { Loader.reveal(); }   // called from Warlock.cpp
     };
 
     Loader.update();

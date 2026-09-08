@@ -15,6 +15,7 @@
 #include <SDL3/SDL_main.h>
 
 #include <bgfx/bgfx.h>
+#include <emscripten.h>
 
 #include "RogueProgram-Web.h"
 
@@ -31,8 +32,18 @@ SDL_AppResult SDL_AppInit( void** appstate, int argc, char* argv[] )
 
 SDL_AppResult SDL_AppIterate( void* appstate )
 {
+  static bool first_frame = true;
+
   RogueWarlockWarlock__tick();
   Rogue_check_gc();
+
+  if (first_frame)
+  {
+    // Tell the loading screen in index.html that the app is up and drawing.
+    first_frame = false;
+    EM_ASM({ if (Module.onFirstFrame) Module.onFirstFrame(); });
+  }
+
   return SDL_APP_CONTINUE;
 }
 
