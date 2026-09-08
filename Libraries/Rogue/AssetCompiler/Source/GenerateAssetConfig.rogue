@@ -98,8 +98,8 @@ class GenerateAssetConfig : Visitor
                 case "mp3", "ogg"
                   if (filepath_lc.contains("sound"))
                     writeln_echo " sound"
-                  elseIf (File(filepath_lc).extension == "mp3" and is_small_audio_file(folder,filepath))
-                    # Short MP3s are almost certainly sound effects, not music.
+                  elseIf (is_small_audio_file(folder,filepath))
+                    # Short compressed audio files are almost certainly sound effects, not music.
                     writeln_echo " sound"
                   else
                     writeln_echo " music"
