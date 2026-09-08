@@ -311,7 +311,7 @@ class TextureInfo( filepath:String, size:XY, mipmaps:Logical, wrap:Logical, dyna
       # Returns 1 (no scaling) if dynamic_size is non-positive or the window
       # query is unavailable.
       if (dynamic_size <= 0) return 1
-      local max_window = Window.max_size.max->Int
+      local max_window = Window.max_size.min->Int
       if (max_window <= 0) return 1
       local scale = 1
       while (max_window * scale * 2 <= dynamic_size)
