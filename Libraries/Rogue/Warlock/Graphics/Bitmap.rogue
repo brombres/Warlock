@@ -16,6 +16,12 @@ augment Graphics::Bitmap
        |  (int)$other->width, (int)$other->height
        |);
 
-      if (not was_premultiplied) unmultiply_alpha
+      if (not was_premultiplied)
+        # Preserve the contract of Graphics::Bitmap.resize_to(): a straight-alpha
+        # source yields a straight-alpha result. Leaving 'other' premultiplied
+        # while callers (e.g. Texture.set) premultiply again darkens translucency.
+        unmultiply_alpha
+        other.unmultiply_alpha
+      endIf
 
 endAugment
