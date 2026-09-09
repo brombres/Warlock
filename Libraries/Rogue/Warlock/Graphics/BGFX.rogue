@@ -581,7 +581,7 @@ augment Warlock::Texture
           texels.add( mipmap.pixels )
         endWhile
       else
-        texels = bitmap.pixels
+        texels = mipmap.pixels
       endIf
 
       info.size = size
