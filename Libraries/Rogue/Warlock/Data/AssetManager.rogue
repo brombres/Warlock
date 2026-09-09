@@ -321,6 +321,5 @@ class TextureInfo( filepath:String, size:XY, mipmaps:Logical, wrap:Logical, dyna
       while (max_window.min * scale * 2 < dynamic_size.min and max_window.max * scale * 2 < dynamic_size.max)
         scale *= 2
       endWhile
-scale = 2
       return scale
 endClass
