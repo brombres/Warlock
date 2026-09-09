@@ -78,7 +78,6 @@
 		3092E4862EB2D26F00FA1D75 /* SDLDeepLinkEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 3092E4852EB2D26500FA1D75 /* SDLDeepLinkEvent.m */; };
 		3092E4872EB2D26F00FA1D75 /* SDLDeepLinkEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 3092E4852EB2D26500FA1D75 /* SDLDeepLinkEvent.m */; };
 		30AF47CB2EA3056400F8D6B4 /* SDLViewControllerModifications.m in Sources */ = {isa = PBXBuildFile; fileRef = 30AF47C92EA3056400F8D6B4 /* SDLViewControllerModifications.m */; };
-		3ECEB00B80F164FAC165B710 /* Pods_WarlockPods_Warlock_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6282222B0D666D5DE89835F4 /* Pods_WarlockPods_Warlock_iOS.framework */; };
 		30E240E72FF2DD1C00D56D85 /* EventTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E2409A2FF2DD1C00D56D85 /* EventTimeline.cpp */; };
 		30E240E82FF2DD1C00D56D85 /* TextureRegion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240CD2FF2DD1C00D56D85 /* TextureRegion.cpp */; };
 		30E240E92FF2DD1C00D56D85 /* IkConstraintData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E2409D2FF2DD1C00D56D85 /* IkConstraintData.cpp */; };
@@ -368,6 +367,7 @@
 		30E2420B2FF2DD1C00D56D85 /* PointAttachment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240B12FF2DD1C00D56D85 /* PointAttachment.cpp */; };
 		30E2420C2FF2DD1C00D56D85 /* InheritTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E240A02FF2DD1C00D56D85 /* InheritTimeline.cpp */; };
 		30E2420D2FF2DD1C00D56D85 /* ColorTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30E2408E2FF2DD1C00D56D85 /* ColorTimeline.cpp */; };
+		3ECEB00B80F164FAC165B710 /* Pods_WarlockPods_Warlock_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6282222B0D666D5DE89835F4 /* Pods_WarlockPods_Warlock_iOS.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -607,13 +607,6 @@
 		30A8CA6A2E2C626700203E31 /* Warlock-macOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Warlock-macOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		30A8CA8A2E2C656E00203E31 /* SDL.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SDL.xcodeproj; path = ../../Libraries/SDL/Xcode/SDL/SDL.xcodeproj; sourceTree = SOURCE_ROOT; };
 		30AF47C92EA3056400F8D6B4 /* SDLViewControllerModifications.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SDLViewControllerModifications.m; sourceTree = "<group>"; };
-		30F185012E6BD0ED00B0061D /* Warlock-iOS-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Warlock-iOS-Info.plist"; sourceTree = "<group>"; };
-		3715D23F63860DD341C80019 /* Pods_WarlockPods_Warlock_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WarlockPods_Warlock_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		6282222B0D666D5DE89835F4 /* Pods_WarlockPods_Warlock_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WarlockPods_Warlock_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		737A5A36744BAA56D1894777 /* Pods-WarlockPods-Warlock-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WarlockPods-Warlock-macOS.release.xcconfig"; path = "Target Support Files/Pods-WarlockPods-Warlock-macOS/Pods-WarlockPods-Warlock-macOS.release.xcconfig"; sourceTree = "<group>"; };
-		A0EB06497C69B6AF1576FBD7 /* Pods-WarlockPods-Warlock-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WarlockPods-Warlock-iOS.debug.xcconfig"; path = "Target Support Files/Pods-WarlockPods-Warlock-iOS/Pods-WarlockPods-Warlock-iOS.debug.xcconfig"; sourceTree = "<group>"; };
-		B0A2811E6B36F7D6027A2FEE /* Pods-WarlockPods-Warlock-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WarlockPods-Warlock-macOS.debug.xcconfig"; path = "Target Support Files/Pods-WarlockPods-Warlock-macOS/Pods-WarlockPods-Warlock-macOS.debug.xcconfig"; sourceTree = "<group>"; };
-		D6954D5A4AA485407629EB1C /* Pods-WarlockPods-Warlock-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WarlockPods-Warlock-iOS.release.xcconfig"; path = "Target Support Files/Pods-WarlockPods-Warlock-iOS/Pods-WarlockPods-Warlock-iOS.release.xcconfig"; sourceTree = "<group>"; };
 		30E2400C2FF2DD1C00D56D85 /* Animation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Animation.h; sourceTree = "<group>"; };
 		30E2400D2FF2DD1C00D56D85 /* AnimationState.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AnimationState.h; sourceTree = "<group>"; };
 		30E2400E2FF2DD1C00D56D85 /* AnimationStateData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AnimationStateData.h; sourceTree = "<group>"; };
@@ -815,6 +808,13 @@
 		30E240D42FF2DD1C00D56D85 /* Triangulator.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Triangulator.cpp; sourceTree = "<group>"; };
 		30E240D52FF2DD1C00D56D85 /* Update.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Update.cpp; sourceTree = "<group>"; };
 		30E240D62FF2DD1C00D56D85 /* VertexAttachment.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = VertexAttachment.cpp; sourceTree = "<group>"; };
+		30F185012E6BD0ED00B0061D /* Warlock-iOS-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Warlock-iOS-Info.plist"; sourceTree = "<group>"; };
+		3715D23F63860DD341C80019 /* Pods_WarlockPods_Warlock_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WarlockPods_Warlock_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6282222B0D666D5DE89835F4 /* Pods_WarlockPods_Warlock_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WarlockPods_Warlock_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		737A5A36744BAA56D1894777 /* Pods-WarlockPods-Warlock-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WarlockPods-Warlock-macOS.release.xcconfig"; path = "Target Support Files/Pods-WarlockPods-Warlock-macOS/Pods-WarlockPods-Warlock-macOS.release.xcconfig"; sourceTree = "<group>"; };
+		A0EB06497C69B6AF1576FBD7 /* Pods-WarlockPods-Warlock-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WarlockPods-Warlock-iOS.debug.xcconfig"; path = "Target Support Files/Pods-WarlockPods-Warlock-iOS/Pods-WarlockPods-Warlock-iOS.debug.xcconfig"; sourceTree = "<group>"; };
+		B0A2811E6B36F7D6027A2FEE /* Pods-WarlockPods-Warlock-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WarlockPods-Warlock-macOS.debug.xcconfig"; path = "Target Support Files/Pods-WarlockPods-Warlock-macOS/Pods-WarlockPods-Warlock-macOS.debug.xcconfig"; sourceTree = "<group>"; };
+		D6954D5A4AA485407629EB1C /* Pods-WarlockPods-Warlock-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WarlockPods-Warlock-iOS.release.xcconfig"; path = "Target Support Files/Pods-WarlockPods-Warlock-iOS/Pods-WarlockPods-Warlock-iOS.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -928,7 +928,8 @@
 				3021A6282E2D9015002E6394 /* Utilities.h */,
 				3021A6292E2D9015002E6394 /* Utilities.c */,
 			);
-			path = Utilities;
+			name = Utilities;
+			path = ../../Libraries/Warlock/Libraries/Framework/C;
 			sourceTree = "<group>";
 		};
 		3021A66D2E2D9429002E6394 /* Preview Content */ = {
@@ -1415,17 +1416,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		9BC9047E7149F705EAFA5FC1 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				A0EB06497C69B6AF1576FBD7 /* Pods-WarlockPods-Warlock-iOS.debug.xcconfig */,
-				D6954D5A4AA485407629EB1C /* Pods-WarlockPods-Warlock-iOS.release.xcconfig */,
-				B0A2811E6B36F7D6027A2FEE /* Pods-WarlockPods-Warlock-macOS.debug.xcconfig */,
-				737A5A36744BAA56D1894777 /* Pods-WarlockPods-Warlock-macOS.release.xcconfig */,
-			);
-			path = Pods;
-			sourceTree = "<group>";
-		};
 		30E2407D2FF2DD1C00D56D85 /* spine */ = {
 			isa = PBXGroup;
 			children = (
@@ -1666,6 +1656,17 @@
 			name = "spine-cpp";
 			path = "../../Libraries/spine-runtimes/spine-cpp";
 			sourceTree = SOURCE_ROOT;
+		};
+		9BC9047E7149F705EAFA5FC1 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				A0EB06497C69B6AF1576FBD7 /* Pods-WarlockPods-Warlock-iOS.debug.xcconfig */,
+				D6954D5A4AA485407629EB1C /* Pods-WarlockPods-Warlock-iOS.release.xcconfig */,
+				B0A2811E6B36F7D6027A2FEE /* Pods-WarlockPods-Warlock-macOS.debug.xcconfig */,
+				737A5A36744BAA56D1894777 /* Pods-WarlockPods-Warlock-macOS.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
@@ -2621,13 +2622,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A0EB06497C69B6AF1576FBD7 /* Pods-WarlockPods-Warlock-iOS.debug.xcconfig */;
 			buildSettings = {
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-framework",
-					"VideoToolbox",
-					"-framework",
-					"CoreMedia",
-				);
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
@@ -2707,6 +2701,13 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MARKETING_VERSION = 1.3;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-framework",
+					VideoToolbox,
+					"-framework",
+					CoreMedia,
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.developer.warlockapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -2726,13 +2727,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D6954D5A4AA485407629EB1C /* Pods-WarlockPods-Warlock-iOS.release.xcconfig */;
 			buildSettings = {
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-framework",
-					"VideoToolbox",
-					"-framework",
-					"CoreMedia",
-				);
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
@@ -2811,6 +2805,13 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MARKETING_VERSION = 1.3;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-framework",
+					VideoToolbox,
+					"-framework",
+					CoreMedia,
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.developer.warlockapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -3068,13 +3069,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B0A2811E6B36F7D6027A2FEE /* Pods-WarlockPods-Warlock-macOS.debug.xcconfig */;
 			buildSettings = {
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-framework",
-					"VideoToolbox",
-					"-framework",
-					"CoreMedia",
-				);
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
@@ -3130,6 +3124,13 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-framework",
+					VideoToolbox,
+					"-framework",
+					CoreMedia,
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.developer.warlockapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -3149,13 +3150,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 737A5A36744BAA56D1894777 /* Pods-WarlockPods-Warlock-macOS.release.xcconfig */;
 			buildSettings = {
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-framework",
-					"VideoToolbox",
-					"-framework",
-					"CoreMedia",
-				);
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
@@ -3210,6 +3204,13 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-framework",
+					VideoToolbox,
+					"-framework",
+					CoreMedia,
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.developer.warlockapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
