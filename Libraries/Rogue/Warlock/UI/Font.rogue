@@ -217,7 +217,7 @@ augment UI::Font
         font_ch.image.load
       endForEach
 
-    method measure( ch:Character )->XY
+    method measure( ch:Character )->XY [replace]
       local h = internal_height * scale.y
       if (fixed_width)
         local w = (fixed_width + spacing_adjustment) * scale.x

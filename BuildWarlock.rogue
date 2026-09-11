@@ -654,6 +654,11 @@ routine .build_bgfx( platform:String, &rebuild )
       endIf
 
       execute cmd
+
+      if (platform == "macOS")
+        # Delete the HUGE obj/ files after the bin/ files are ready.
+        File( "Libraries/bgfx/.build/osx-arm64/obj" ).delete
+      endIf
     endIf
   endIf
 
