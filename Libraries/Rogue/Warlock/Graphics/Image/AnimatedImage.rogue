@@ -1,0 +1,153 @@
+library Warlock
+
+class FrameAnimationState
+  PROPERTIES
+    animation  : FrameAnimation
+    name       : String
+    frames     : Int[]
+    is_looping : Logical
+    fps        : Real?
+    is_tweened : Logical?
+
+  METHODS
+    method init( name, frames, &looping, fps=null, tween=null:Logical? )
+      is_looping = looping
+      is_tweened = tween
+
+    method init( name, &looping, fps=null, tween=null:Logical? )
+      is_looping = looping
+      is_tweened = tween
+
+    method current_frame_index( image:AnimatedImage )->Int?
+      if (image.t < frames.count) return frames[image.t]
+      else                        return null
+
+    method is_tweened->Logical
+      return which{ @is_tweened || animation.default_tweened }
+
+    method next_frame_index( image:AnimatedImage )->Int?
+      localize image.t
+      if (t == t.floor) return null
+
+      if (t + 1 < frames.count)
+        return frames[t+1]
+      else
+        if (is_looping) return frames[0]
+        else            return null
+      endIf
+
+    method update( image:AnimatedImage )
+      local fps = which{ fps || animation.default_fps }
+      image.t += Window.dt * fps
+      if (image.t >= frames.count)
+        if (is_looping) image.t = 0.0
+        else            image.t = frames.count - 1
+      endIf
+endClass
+
+
+class FrameAnimation
+  PROPERTIES
+    states          = [String:FrameAnimationState]
+    default_fps     : Real
+    default_tweened : Logical
+
+  METHODS
+    method init( fps=30.0:Real, &looping, &tween )
+      default_fps = fps
+      default_tweened = tween
+      add( FrameAnimationState("DEFAULT",&=looping,&=tween) )
+
+    method init( state:FrameAnimationState, fps=30.0:Real, &tween )
+      default_fps = fps
+      default_tweened = tween
+      add( state )
+
+    method add( state:FrameAnimationState )
+      state.animation = this
+      states[state.name] = state
+
+    method configure( image:AnimatedImage )
+      forEach (state in states.values)
+        if (not state.frames)
+          state.frames = (0..<image.frames.count).to_list
+        endIf
+      endForEach
+      image.state = states.first
+
+endClass
+
+
+class AnimatedImage : ImageFrames
+  PROPERTIES
+    animation : FrameAnimation
+    state     : FrameAnimationState
+    t         : Real
+
+  METHODS
+    method init( frames:Image[], &fps=30.0, &looping, &tween )
+      prior.init( frames )
+      animation = FrameAnimation( &=fps, &=looping, &=tween )
+      animation.configure( this )
+
+    method init( frames:Image[], animation )
+      prior.init( frames )
+      animation.configure( this )
+
+    method current_frame->Image
+      if local index = state.current_frame_index( this )
+        local frame = frames[index]
+        frame.color = color
+        frame.opacity = opacity
+        frame.render_mode = render_mode
+        frame.scale = scale
+        frame.anchor = anchor
+        frame.render_mode = render_mode
+        return frame
+      else
+        return null
+      endIf
+
+    method next_frame->Image
+      if local index = state.next_frame_index( this )
+        local frame = frames[index]
+        frame.color = color
+        frame.opacity = opacity
+        frame.render_mode = render_mode
+        frame.scale = scale
+        frame.anchor = anchor
+        frame.render_mode = render_mode
+        return frame
+      else
+        return null
+      endIf
+
+    method on_update [override]
+      state.update( this )
+
+    method set_opacity( opacity:Real ) [override]
+      @opacity = opacity
+
+    method set_color( color:Color ) [override]
+      @color = color
+
+    method set_render_mode( render_mode:RenderMode ) [override]
+      @render_mode = render_mode
+
+    method .draw_entity [override]
+      prior._draw_entity
+
+      if (state.is_tweened)
+        localize next_frame
+        if (next_frame)
+          local opacity = this.opacity * (t - t.floor)
+          temporarily next_frame.opacity=opacity, next_frame.color=color, next_frame.render_mode=render_mode
+            temporarily next_frame.scale=scale, next_frame.anchor=anchor
+              next_frame.draw( display_bounds )
+            endTemporarily
+          endTemporarily
+        endIf
+      endIf
+endClass
+
+

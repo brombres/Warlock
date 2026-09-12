@@ -6,6 +6,7 @@ $include Warlock/Graphics/BlendMode
 $include Warlock/Graphics/CullingMode
 $include Warlock/Graphics/DepthTest
 $include Warlock/Graphics/Drawable2D
+$include Warlock/Graphics/Image/AnimatedImage
 $include Warlock/Graphics/Image/ColorFillImage
 $include Warlock/Graphics/Image/Image
 $include Warlock/Graphics/Image/ImageFrames

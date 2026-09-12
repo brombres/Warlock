@@ -11,23 +11,41 @@ class ImageFrames : Image
       ensure<<frames>>
 
     method init( frames )
+      if (frames.count) natural_size = frames.first.natural_size
 
     method current_frame->Image
-      return frames[frame]
+      local frame = frames[frame]
+      frame.color = color
+      frame.opacity = opacity
+      frame.render_mode = render_mode
+      frame.scale = scale
+      frame.anchor = anchor
+      frame.render_mode = render_mode
+      return frame
 
     method set_opacity( opacity:Real )
       @opacity = opacity
-      (forEach in frames).opacity = opacity
 
     method set_color( color:Color )
       @color = color
-      (forEach in frames).color = color
 
     method texture->Texture
+      if (not frames) return null
       return frames[frame].texture
 
     method set_render_mode( render_mode:RenderMode )
       @render_mode = render_mode
-      (forEach in frames).render_mode = render_mode
 
+    method unload
+      if (frames)
+        (forEach in frames).unload
+      endIf
+
+    method .draw_entity [override]
+      localize current_frame
+      temporarily current_frame.opacity=opacity, current_frame.color=color, current_frame.render_mode=render_mode
+        temporarily current_frame.scale=scale, current_frame.anchor=anchor
+          current_frame.draw( display_bounds )
+        endTemporarily
+      endTemporarily
 endClass
