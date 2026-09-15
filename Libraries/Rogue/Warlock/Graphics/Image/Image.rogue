@@ -130,8 +130,11 @@ augment Image[]
     method anchor_bottom_right
       (forEach as Image in this).anchor_bottom_right
 
-    method crop( proportional_subset:Box )
-      (forEach as TextureImage in this).crop( proportional_subset )
+    method crop( left_px=0:Real, top_px=0:Real, right_px=0:Real, bottom_px=0:Real )
+      (forEach as TextureImage in this).crop( &=left_px, &=top_px, &=right_px, &=bottom_px )
+
+    method crop_texture( proportional_subset:Box )
+      (forEach as TextureImage in this).crop_texture( proportional_subset )
 
     method reset_size( size:XY )
       (forEach as Image in this).reset_size( size )

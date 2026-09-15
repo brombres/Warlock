@@ -1,6 +1,6 @@
 library AssetCompiler
 
-$include "Scanner.rogue"
+$include "Tokenizer.rogue"
 $include "Parser.rogue" [optional]
 $include AssetGroup
 $include Asset
@@ -262,7 +262,7 @@ class AssetCompiler [singleton]
 
       local asc = File( "Assets/AssetConfig.asc" )
       if (asc.exists)
-        #forEach (t in Scanner( asc ).tokenize) println "$ $"(t.type,t)
+        #forEach (t in Tokenizer( asc ).tokenize) println "$ $"(t.type,t)
 
         statements = Parser( asc ).parse
         if (statements)

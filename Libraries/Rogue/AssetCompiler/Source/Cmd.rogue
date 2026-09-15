@@ -452,7 +452,7 @@ class AttributeValue : Cmd
 
   METHODS
     method init( t, value )
-      value_parser.reset( t, Scanner.ip_tokenize_value, &scan_limit=value.count )
+      value_parser.reset( t, Tokenizer.ip_tokenize_value, &scan_limit=value.count )
       cmd = value_parser.parse( Parser.ip_attribute_value )
 
     method init( existing:AttributeValue )
