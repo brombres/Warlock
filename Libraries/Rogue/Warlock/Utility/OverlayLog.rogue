@@ -6,6 +6,7 @@ class OverlayLog : BufferedPrintWriter<<output_buffer>> [essential singleton]
     lines = String[]
     timer = Timer(6.0)  # time until lines removed
     max_lines = 20 : Int?
+    continue_last_line : Logical  # previous flush ended without a newline
 
   METHODS
     method init
@@ -51,11 +52,21 @@ class OverlayLog : BufferedPrintWriter<<output_buffer>> [essential singleton]
 
       timer.restart
       Console.write( buffer )  # echo the message to the console
-      if (buffer.contains('\n'))
-        forEach (line in LineReader(buffer->String)) lines.add( line )
-      else
-        lines.add( buffer->String )
-      endIf
+
+      # BufferedPrintWriter flushes early once the buffer exceeds 1024 characters,
+      # so a flush may end mid-line. Always go through LineReader (which yields
+      # fresh copies - 'buffer' itself is cleared below) and splice a partial
+      # trailing line together with the start of the next flush.
+      local ends_with_newline = (buffer.last == '\n')
+      forEach (line in LineReader(buffer))
+        if (continue_last_line and lines.count)
+          lines.last.print( line )
+          continue_last_line = false
+        else
+          lines.add( line )
+        endIf
+      endForEach
+      continue_last_line = not ends_with_newline
       buffer.clear
 
     method update
