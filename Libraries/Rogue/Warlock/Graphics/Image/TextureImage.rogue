@@ -82,6 +82,8 @@ class TextureImage : Image
       original_texture = null
 
     method .draw_entity [override]
+      if (opacity == 0) return
+
       local color  : Color
       local colors : Quad<<Color>>
 
