@@ -467,6 +467,7 @@ class SpineAnimation
     color      = Color.WHITE : Color
 
     animation_event_handler : Function(SpineAnimationEvent)
+    on_finish               : Function
     active_states = Table<<Int64,SpineAnimationEvent>>()
     error      : Logical
     native "spine::Skeleton*       skeleton;"
@@ -581,6 +582,10 @@ class SpineAnimation
         active_states[e.play_id] = e
       elseIf (not e.is_user_event)
         active_states.remove( e.play_id )
+        if (on_finish)
+          on_finish()
+          on_finish = null
+        endIf
       endIf
       on( e )
       if (animation_event_handler) animation_event_handler( e )
@@ -610,7 +615,7 @@ class SpineAnimation
               |$this->skeleton = 0;
               |$this->animation_state = 0;
 
-    method play( state_name:String, &looping, track=0:Int32, time_scale=1.0:Real )
+    method play( state_name:String, &looping, track=0:Int32, time_scale=1.0:Real, on_finish=null:Function )
       if (not animation_names.contains(state_name))
         println "No such animation state $::$" (definition.name,state_name)
         println animation_names
@@ -631,6 +636,8 @@ class SpineAnimation
         |  }
         |  track_entry->setTimeScale((float)$time_scale);
         |}
+
+      @on_finish = on_finish
 
     method add( state_name:String, &looping, track=0:Int32, delay=0:Real, time_scale=1.0:Real )
       # delay
