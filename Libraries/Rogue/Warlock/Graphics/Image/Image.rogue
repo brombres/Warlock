@@ -5,6 +5,9 @@ class Image : Drawable2D
     method create( name:String )->Image
       return TextureImage( name )
 
+    method Style->ImageDrawStyle
+      return ImageDrawStyle()
+
   PROPERTIES
     asset        : AssetInfo
     opacity      = 1.0
@@ -24,15 +27,20 @@ class Image : Drawable2D
       opacity      = existing.opacity
       subdivisions = existing.subdivisions
 
-    method fill( color=null:Color? )
-      if (not color) color = this.color
+    method draw( style:ImageDrawStyle )
+      use style.image(this)
+        draw
+      endUse
 
-      Renderer.draw(
-        Box(natural_size),
-        color.value,
-        render_mode||RenderMode.ALPHA_COLOR,
-        subdivisions
-      )
+    method draw( position:XY, style:ImageDrawStyle )
+      use style.image(this)
+        draw( position )
+      endUse
+
+    method draw( bounds:Box, style:ImageDrawStyle )
+      use style.image(this)
+        draw( bounds )
+      endUse
 
     method is_loaded->Logical
       return true

@@ -1,0 +1,53 @@
+class ImageDrawStyle( image=null:Image, color=null:Color?, render_mode=null:RenderMode, opacity=null:Real? )  [compound]
+  METHODS
+    method ADDITIVE->ImageDrawStyle
+      return ImageDrawStyle( @image, @color, RenderMode.ALPHA_TEXTURE_COLOR_ADD, @opacity )
+
+    method COLOR_FILL( &color:Color? )->ImageDrawStyle
+      if (not color) color = @color
+      return ImageDrawStyle( @image, color, RenderMode.ALPHA_TEXTURE_COLOR_FILL, @opacity )
+
+    method SCREEN->ImageDrawStyle
+      return ImageDrawStyle( @image, @color, RenderMode.ALPHA_TEXTURE_SCREEN, @opacity )
+
+    method add( opacity=null:Real?, color=null:Color? )->ImageDrawStyle
+      local result = ADDITIVE
+      if (opacity) result .= opacity( opacity.value )
+      if (color)   result .= color( color.value )
+      return result
+
+    method color( color:Color )->ImageDrawStyle
+      return ImageDrawStyle( @image, color, @render_mode, @opacity )
+
+    method fill( opacity=null:Real?, color=null:Color? )->ImageDrawStyle
+      local result = COLOR_FILL
+      if (opacity) result .= opacity( opacity.value )
+      if (color)   result .= color( color.value )
+      return result
+
+    method image( image:Image )->ImageDrawStyle
+      return ImageDrawStyle( image, @color, @render_mode, @opacity )
+
+    method opacity( opacity:Real )->ImageDrawStyle
+      return ImageDrawStyle( @image, @color, @render_mode, opacity )
+
+    method render_mode( render_mode:RenderMode )->ImageDrawStyle
+      return ImageDrawStyle( @image, @color, render_mode, @opacity )
+
+    method on_use->ImageDrawStyle
+      local old_state = ImageDrawStyle( image, image?.color, image?.render_mode, image?.opacity )
+      if (image)
+        image.color = which{ @color || image.color }
+        image.opacity = which{ @opacity || image.opacity }
+        image.render_mode = which{ @render_mode || image.render_mode }
+      endIf
+      return old_state
+
+    method on_end_use( old_state:ImageDrawStyle )
+      if (image)
+        image.color = old_state.color.value
+        image.opacity = old_state.opacity.value
+        image.render_mode = old_state.render_mode
+      endIf
+
+endClass
