@@ -49,86 +49,86 @@ endClass
 
 class RenderModeAlphaColor : RenderMode [singleton]
   PROPERTIES
-    shader = Shader.ALPHA_COLOR : Shader
+    shader = Shader.ALPHA_COLOR : Shader ![override]
 
 endClass
 
 
 class RenderModeAlphaColorAdd : RenderMode [singleton]
   PROPERTIES
-    shader            = Shader.ALPHA_COLOR : Shader
-    source_blend      = BlendMode.ONE      : BlendMode
-    destination_blend = BlendMode.ONE      : BlendMode
+    shader            = Shader.ALPHA_COLOR : Shader ![override]
+    source_blend      = BlendMode.ONE      : BlendMode ![override]
+    destination_blend = BlendMode.ONE      : BlendMode ![override]
 
 endClass
 
 
 class RenderModeAlphaTextureColorMultiply : RenderMode [singleton]
   PROPERTIES
-    shader = Shader.ALPHA_TEXTURE_COLOR_MULTIPLY : Shader
+    shader = Shader.ALPHA_TEXTURE_COLOR_MULTIPLY : Shader ![override]
 endClass
 
 class RenderModeAlphaTextureColorAdd : RenderMode [singleton]
   PROPERTIES
-    shader = Shader.ALPHA_TEXTURE_COLOR_ADD : Shader
+    shader = Shader.ALPHA_TEXTURE_COLOR_ADD : Shader ![override]
 endClass
 
 class RenderModeAlphaTextureMaxLOD : RenderMode [singleton]
   PROPERTIES
-    shader = Shader.ALPHA_TEXTURE_MAX_LOD : Shader
+    shader = Shader.ALPHA_TEXTURE_MAX_LOD : Shader ![override]
 endClass
 
 
 class RenderModeAlphaTextureAdd : RenderMode [singleton]
   PROPERTIES
-    shader            = Shader.ALPHA_TEXTURE_COLOR_MULTIPLY : Shader
-    source_blend      = BlendMode.ONE : BlendMode
-    destination_blend = BlendMode.ONE : BlendMode
+    shader            = Shader.ALPHA_TEXTURE_COLOR_MULTIPLY : Shader ![override]
+    source_blend      = BlendMode.ONE : BlendMode ![override]
+    destination_blend = BlendMode.ONE : BlendMode ![override]
 endClass
 
 class RenderModeAlphaTextureScreen : RenderMode [singleton]
   PROPERTIES
-    shader            = Shader.ALPHA_TEXTURE_COLOR_MULTIPLY           : Shader
-    source_blend      = BlendMode.ONE                  : BlendMode
-    destination_blend = BlendMode.INVERSE_SOURCE_COLOR : BlendMode
+    shader            = Shader.ALPHA_TEXTURE_COLOR_MULTIPLY           : Shader ![override]
+    source_blend      = BlendMode.ONE                  : BlendMode ![override]
+    destination_blend = BlendMode.INVERSE_SOURCE_COLOR : BlendMode ![override]
 endClass
 
 class RenderModeAlphaTextureColorFill : RenderMode [singleton]
   PROPERTIES
-    shader = Shader.ALPHA_TEXTURE_COLOR_FILL : Shader
+    shader = Shader.ALPHA_TEXTURE_COLOR_FILL : Shader ![override]
 endClass
 
 
 class RenderModeLitTextureColorMultiply : RenderMode [singleton]
   PROPERTIES
-    shader                = Shader.LIT_TEXTURE_COLOR_MULTIPLY : Shader
-    should_update_normals = true
-    culling_mode          = CullingMode.CCW : CullingMode
-    depth_test            = DepthTest.LE    : DepthTest
+    shader                = Shader.LIT_TEXTURE_COLOR_MULTIPLY : Shader ![override]
+    should_update_normals = true ![override]
+    culling_mode          = CullingMode.CCW : CullingMode ![override]
+    depth_test            = DepthTest.LE    : DepthTest ![override]
 endClass
 
 class RenderModeLitTextureColorMultiplyWriteZ : RenderMode [singleton]
   PROPERTIES
-    shader                = Shader.LIT_TEXTURE_COLOR_MULTIPLY : Shader
-    should_update_normals = true
-    culling_mode          = CullingMode.CCW : CullingMode
-    depth_test            = DepthTest.LE    : DepthTest
-    write_z               = true
+    shader                = Shader.LIT_TEXTURE_COLOR_MULTIPLY : Shader ![override]
+    should_update_normals = true ![override]
+    culling_mode          = CullingMode.CCW : CullingMode ![override]
+    depth_test            = DepthTest.LE    : DepthTest ![override]
+    write_z               = true ![override]
 endClass
 
 class RenderModeLitTextureColorAdd : RenderMode [singleton]
   PROPERTIES
-    shader                = Shader.LIT_TEXTURE_COLOR_ADD : Shader
-    should_update_normals = true
-    culling_mode          = CullingMode.CCW : CullingMode
-    depth_test            = DepthTest.LE    : DepthTest
+    shader                = Shader.LIT_TEXTURE_COLOR_ADD : Shader ![override]
+    should_update_normals = true ![override]
+    culling_mode          = CullingMode.CCW : CullingMode ![override]
+    depth_test            = DepthTest.LE    : DepthTest ![override]
 endClass
 
 class RenderModeLitTextureColorAddWriteZ : RenderMode [singleton]
   PROPERTIES
-    shader                = Shader.LIT_TEXTURE_COLOR_ADD : Shader
-    should_update_normals = true
-    culling_mode          = CullingMode.CCW : CullingMode
-    depth_test            = DepthTest.LE    : DepthTest
-    write_z               = true
+    shader                = Shader.LIT_TEXTURE_COLOR_ADD : Shader ![override]
+    should_update_normals = true ![override]
+    culling_mode          = CullingMode.CCW : CullingMode ![override]
+    depth_test            = DepthTest.LE    : DepthTest ![override]
+    write_z               = true ![override]
 endClass

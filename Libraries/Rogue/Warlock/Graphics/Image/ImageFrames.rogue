@@ -2,7 +2,7 @@ library Warlock
 
 class ImageFrames : Image
   PROPERTIES
-    color  = Color.WHITE
+    color  = Color.WHITE ![override]
     frame  : Int
     frames : Image[]
 

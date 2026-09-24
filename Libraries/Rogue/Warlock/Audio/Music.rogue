@@ -2,8 +2,8 @@ library Warlock
 
 class Music : Sound
   PROPERTIES
-    is_music   = true
-    is_looping = true
+    is_music   = true ![override]
+    is_looping = true ![override]
 
   METHODS
     method init( filepath, pool_count=1:Int )

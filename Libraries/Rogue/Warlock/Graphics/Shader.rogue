@@ -51,7 +51,7 @@ class ShaderProgram
       return program
 
   PROPERTIES
-    filename : String
+    filename : String ![override]
     uniforms : ShaderUniforms
 
   METHODS

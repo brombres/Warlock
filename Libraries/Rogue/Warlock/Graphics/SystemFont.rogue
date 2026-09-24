@@ -2,7 +2,7 @@ library Warlock
 
 class SystemFont : Font [singleton]
   PROPERTIES
-    is_loaded : Logical
+    is_loaded : Logical ![override]
 
   METHODS
     method init
