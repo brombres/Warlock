@@ -334,17 +334,17 @@ class SDL : Framework [singleton]
                 local keycode = .sdl_scancode_to_keycode( scancode )
 
                 local modifiers : KeyModifier
-                if (native("$mods & SDL_KMOD_LSHIFT")->LiteralInt32)  modifiers |= KeyModifier.LEFT_SHIFT
-                if (native("$mods & SDL_KMOD_RSHIFT")->LiteralInt32)  modifiers |= KeyModifier.RIGHT_SHIFT
-                if (native("$mods & SDL_KMOD_LCTRL")->LiteralInt32)   modifiers |= KeyModifier.LEFT_CONTROL
-                if (native("$mods & SDL_KMOD_RCTRL")->LiteralInt32)   modifiers |= KeyModifier.RIGHT_CONTROL
-                if (native("$mods & SDL_KMOD_LALT")->LiteralInt32)    modifiers |= KeyModifier.LEFT_ALT
-                if (native("$mods & SDL_KMOD_RALT")->LiteralInt32)    modifiers |= KeyModifier.RIGHT_ALT
-                if (native("$mods & SDL_KMOD_LGUI")->LiteralInt32)    modifiers |= KeyModifier.LEFT_OS
-                if (native("$mods & SDL_KMOD_RGUI")->LiteralInt32)    modifiers |= KeyModifier.RIGHT_OS
-                if (native("$mods & SDL_KMOD_NUM")->LiteralInt32)     modifiers |= KeyModifier.NUM_LOCK
-                if (native("$mods & SDL_KMOD_CAPS")->LiteralInt32)    modifiers |= KeyModifier.CAPS_LOCK
-                if (native("$mods & SDL_KMOD_SCROLL")->LiteralInt32)  modifiers |= KeyModifier.SCROLL_LOCK
+                if (native("($mods & SDL_KMOD_LSHIFT)")->LiteralInt32)  modifiers |= KeyModifier.LEFT_SHIFT
+                if (native("($mods & SDL_KMOD_RSHIFT)")->LiteralInt32)  modifiers |= KeyModifier.RIGHT_SHIFT
+                if (native("($mods & SDL_KMOD_LCTRL)")->LiteralInt32)   modifiers |= KeyModifier.LEFT_CONTROL
+                if (native("($mods & SDL_KMOD_RCTRL)")->LiteralInt32)   modifiers |= KeyModifier.RIGHT_CONTROL
+                if (native("($mods & SDL_KMOD_LALT)")->LiteralInt32)    modifiers |= KeyModifier.LEFT_ALT
+                if (native("($mods & SDL_KMOD_RALT)")->LiteralInt32)    modifiers |= KeyModifier.RIGHT_ALT
+                if (native("($mods & SDL_KMOD_LGUI)")->LiteralInt32)    modifiers |= KeyModifier.LEFT_OS
+                if (native("($mods & SDL_KMOD_RGUI)")->LiteralInt32)    modifiers |= KeyModifier.RIGHT_OS
+                if (native("($mods & SDL_KMOD_NUM)")->LiteralInt32)     modifiers |= KeyModifier.NUM_LOCK
+                if (native("($mods & SDL_KMOD_CAPS)")->LiteralInt32)    modifiers |= KeyModifier.CAPS_LOCK
+                if (native("($mods & SDL_KMOD_SCROLL)")->LiteralInt32)  modifiers |= KeyModifier.SCROLL_LOCK
 
                 use key_event = RecyclePool<<KeyEvent>>
                   key_event.init( keycode, scancode, &=is_press, &=is_repeat, modifiers )
