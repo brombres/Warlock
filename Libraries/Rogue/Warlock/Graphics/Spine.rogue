@@ -467,8 +467,8 @@ class SpineAnimation
     color      = Color.WHITE : Color
 
     animation_event_handler : Function(SpineAnimationEvent)
-    on_finish               : Function
-    active_states = Table<<Int64,SpineAnimationEvent>>()
+    active_states           = Table<<Int64,SpineAnimationEvent>>()
+    finish_handlers         = Table<<Int64,Function>>()
     error      : Logical
     native "spine::Skeleton*       skeleton;"
     native "spine::AnimationState* animation_state;"
@@ -582,9 +582,8 @@ class SpineAnimation
         active_states[e.play_id] = e
       elseIf (not e.is_user_event)
         active_states.remove( e.play_id )
-        if (on_finish)
+        if local on_finish = finish_handlers.remove( e.play_id )
           on_finish()
-          on_finish = null
         endIf
       endIf
       on( e )
@@ -624,6 +623,8 @@ class SpineAnimation
 
       if (error) return
 
+      local play_id : Int64
+
       native...
        @|spine::TrackEntry* track_entry = &$this->animation_state->setAnimation( $track,
         |    spine::String($state_name->data->as_utf8), $looping );
@@ -636,10 +637,11 @@ class SpineAnimation
         |  }
         |  track_entry->setTimeScale((float)$time_scale);
         |}
+        |$play_id = (RogueInt64)(intptr_t)track_entry;
 
-      @on_finish = on_finish
+      if (on_finish) finish_handlers[play_id] = on_finish
 
-    method add( state_name:String, &looping, track=0:Int32, delay=0:Real, time_scale=1.0:Real )
+    method play_next( state_name:String, &looping, track=0:Int32, delay=0:Real, time_scale=1.0:Real, on_finish=null:Function )
       # delay
       #   0 waits for the previous animation to finish.
       #  >0 interrupts the previous animation after that many seconds.
@@ -650,17 +652,39 @@ class SpineAnimation
       endIf
 
       if (error) return
-      native @|spine::TrackEntry* track_entry = &$this->animation_state->addAnimation( $track,
-              |    spine::String($state_name->data->as_utf8), $looping, (float)$delay );
-              |if ($time_scale != 1.0)
-              |{
-              |  if ($time_scale < 0)
-              |  {
-              |    track_entry->setReverse( true );
-              |    $time_scale = -$time_scale;
-              |  }
-              |  track_entry->setTimeScale((float)$time_scale);
-              |}
+
+      local play_id : Int64
+
+      native
+      @|spine::TrackEntry* track_entry = &$this->animation_state->addAnimation( $track,
+       |    spine::String($state_name->data->as_utf8), $looping, (float)$delay );
+       |if ($time_scale != 1.0)
+       |{
+       |  if ($time_scale < 0)
+       |  {
+       |    track_entry->setReverse( true );
+       |    $time_scale = -$time_scale;
+       |  }
+       |  track_entry->setTimeScale((float)$time_scale);
+       |}
+       |$play_id = (RogueInt64)(intptr_t)track_entry;
+
+      if (on_finish) finish_handlers[play_id] = on_finish
+
+    method progress( state=null:String )->Real
+      # Returns the progress of the named state or (else the first active state) in its
+      # animation cycle (0.0-1.0), or 1.0 if no animation states are playing.
+      forEach (e at track_entry_ptr in active_states)
+        if (not state or e.state == state)
+          local result : Real
+          native
+          @|spine::TrackEntry* track_entry = (spine::TrackEntry*)(intptr_t)$track_entry_ptr;
+           |$result = 1.0;  // TODO: obtain actual progress (0.0 to 1.0) from track entry.
+          return result
+        endIf
+      endForEach
+
+      return 1.0
 
     method reset( track=null:Int32? )
       if (track)
