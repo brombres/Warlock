@@ -679,7 +679,22 @@ class SpineAnimation
           local result : Real
           native
           @|spine::TrackEntry* track_entry = (spine::TrackEntry*)(intptr_t)$track_entry_ptr;
-           |$result = 1.0;  // TODO: obtain actual progress (0.0 to 1.0) from track entry.
+           |// getAnimationTime() is always within [animationStart,animationEnd]: it wraps
+           |// (fmod) for looping entries and clamps to animationEnd for non-looping ones.
+           |// Progress is the fraction of the cycle elapsed regardless of playback direction
+           |// (a reversed entry still advances its track time from 0).
+           |float start    = track_entry->getAnimationStart();
+           |float duration = track_entry->getAnimationEnd() - start;
+           |if (duration > 0)
+           |{
+           |  $result = (track_entry->getAnimationTime() - start) / duration;
+           |  if ($result < 0) $result = 0;
+           |  else if ($result > 1) $result = 1;
+           |}
+           |else
+           |{
+           |  $result = 1.0;
+           |}
           return result
         endIf
       endForEach
