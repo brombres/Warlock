@@ -26,24 +26,19 @@ class OverlayLog : BufferedPrintWriter<<output_buffer>> [essential singleton]
       while (lines.count > max) lines.remove_first
 
       font.scale = Display.density
-      font.color = Color.WHITE
-      font.anchor = Anchor.TOP_LEFT
-
       local y = Display.safe_area.position.y
 
-      #if (Plasmacore.show_fps)
-      #  font.draw( "fps:$" (Plasmacore.fps), XY(0,0) )
-      #  y += font.height
-      #endIf
+      temporarily font.color=Color.WHITE, font.anchor=Anchor.TOP_LEFT, font.opacity=timer.remaining.clamped(0,1.0)
+        forEach (line in lines)
+          font.draw( line, XY(0,y) )
+          y += font.height
+        endForEach
 
-      font.opacity = timer.remaining.clamped( 0, 1.0 )
-
-      forEach (line in lines)
-        font.draw( line, XY(0,y) )
-        y += font.height
-      endForEach
-
-      font.color = Color.WHITE
+        #if (Plasmacore.show_fps)
+        #  font.draw( "fps:$" (Plasmacore.fps), XY(0,0) )
+        #  y += font.height
+        #endIf
+      endTemporarily
 
       #Display.pop_clip
 
