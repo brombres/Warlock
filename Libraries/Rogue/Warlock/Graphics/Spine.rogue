@@ -548,12 +548,9 @@ class SpineAnimation
             forEach (v in 0..<num_vertices)
               local color : Color
               native @|spine::RenderCommand* c = (spine::RenderCommand*)(intptr_t)$command;
-                      |uint32_t sc = c->colors[ $v ];
-                      |RogueInt32 cr = (RogueInt32)((sc >> 24) & 0xFF);
-                      |RogueInt32 cg = (RogueInt32)((sc >> 16) & 0xFF);
-                      |RogueInt32 cb = (RogueInt32)((sc >>  8) & 0xFF);
-                      |RogueInt32 ca = (RogueInt32)( sc        & 0xFF);
-                      |$color.argb = (ca<<24) | (cr<<16) | (cg<<8) | cb;
+                      |// spine-cpp packs vertex colors as (a<<24)|(r<<16)|(g<<8)|b (see
+                      |// SkeletonRenderer.cpp), which is already Rogue's AARRGGBB layout.
+                      |$color.argb = (RogueInt32) c->colors[ $v ];
               local pos = XY( native("c->positions[$v*2]")->Real, native("c->positions[$v*2+1]")->Real )
               local uv  = XY( native("c->uvs[$v*2]")->Real, native("c->uvs[$v*2+1]")->Real )
               mesh_builder.add( Vertex(pos, color * this.color * tint, uv) )
