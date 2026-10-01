@@ -24,12 +24,12 @@ class AssetGroup
           loader.include( p.get_value( this )->SoundVariants )
         elseIf (type.instance_of(<<Font>>))
           loader.include( p.get_value( this )->Font )
-        elseIf (type.instance_of(<<Image>>))
-          loader.include( p.get_value( this )->Image )
         elseIf (type.instance_of(<<Image[]>>))
           loader.include( p.get_value( this )->Image[] )
         elseIf (type.instance_of(<<PatchImage>>))
           loader.include( p.get_value( this )->PatchImage )
+        elseIf (type.instance_of(<<Image>>))
+          loader.include( p.get_value( this )->Image )
         endIf
       endForEach
 
@@ -51,12 +51,12 @@ class AssetGroup
           (p.get_value( this )->SoundVariants).set_is_used( setting )
         elseIf (type.instance_of(<<Font>>))
           (p.get_value( this )->Font).set_is_used( setting )
-        elseIf (type.instance_of(<<Image>>))
-          (p.get_value( this )->Image).set_is_used( setting )
         elseIf (type.instance_of(<<Image[]>>))
           (p.get_value( this )->Image[]).set_is_used( setting )
         elseIf (type.instance_of(<<PatchImage>>))
           (p.get_value( this )->PatchImage).set_is_used( setting )
+        elseIf (type.instance_of(<<Image>>))
+          (p.get_value( this )->Image).set_is_used( setting )
         endIf
       endForEach
 
@@ -76,12 +76,12 @@ class AssetGroup
           (p.get_value( this )->SoundVariants).unload
         elseIf (type.instance_of(<<Font>>))
           (p.get_value( this )->Font).unload
-        elseIf (type.instance_of(<<Image>>))
-          (p.get_value( this )->Image).unload
         elseIf (type.instance_of(<<Image[]>>))
           (p.get_value( this )->Image[]).unload
         elseIf (type.instance_of(<<PatchImage>>))
           (p.get_value( this )->PatchImage).unload
+        elseIf (type.instance_of(<<Image>>))
+          (p.get_value( this )->Image).unload
         endIf
       endForEach
 
@@ -101,12 +101,12 @@ class AssetGroup
           (p.get_value( this )->SoundVariants).unload_unused
         elseIf (type.instance_of(<<Font>>))
           (p.get_value( this )->Font).unload_unused
-        elseIf (type.instance_of(<<Image>>))
-          (p.get_value( this )->Image).unload_unused
         elseIf (type.instance_of(<<Image[]>>))
           (p.get_value( this )->Image[]).unload_unused
         elseIf (type.instance_of(<<PatchImage>>))
           (p.get_value( this )->PatchImage).unload_unused
+        elseIf (type.instance_of(<<Image>>))
+          (p.get_value( this )->Image).unload_unused
         endIf
       endForEach
 

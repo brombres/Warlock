@@ -15,7 +15,7 @@ class SoundVariants : Sound[]
       #
       # Example
       #
-      #   SoundVariants( "Damage-##.wav", 1, 3 )
+      #   SoundVariants( "Damage-##.wav", 1..3, 3 )
       #
       # loads Damage-01.wav, Damage-02.wav, and Damage-03.wav with 3 simultaneous plays each
       add( filepattern, sequence, pool_count )
