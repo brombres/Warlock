@@ -67,6 +67,12 @@ class Image : Drawable2D
 
     method set_opacity( @opacity )
 
+    method set_style( style:ImageDrawStyle )
+      style.image( this ).on_use
+
+    method style->ImageDrawStyle
+      return ImageDrawStyle( this, color, render_mode, opacity )
+
     method texture->Texture
       return null
 

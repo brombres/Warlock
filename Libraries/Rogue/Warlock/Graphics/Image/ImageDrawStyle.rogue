@@ -1,12 +1,12 @@
 class ImageDrawStyle( image=null:Image, color=null:Color?, render_mode=null:RenderMode, opacity=null:Real? )  [compound]
-  METHODS
+  GLOBAL METHODS
     method ADDITIVE->ImageDrawStyle
-      return ImageDrawStyle( @image, @color, RenderMode.ALPHA_TEXTURE_COLOR_ADD, @opacity )
+      return ImageDrawStyle( &render_mode=RenderMode.ALPHA_TEXTURE_COLOR_ADD )
 
-    method COLOR_FILL( &color:Color? )->ImageDrawStyle
-      if (not color) color = @color
-      return ImageDrawStyle( @image, color, RenderMode.ALPHA_TEXTURE_COLOR_FILL, @opacity )
+    method COLOR_FILL->ImageDrawStyle
+      return ImageDrawStyle( &render_mode=RenderMode.ALPHA_TEXTURE_COLOR_FILL )
 
+  METHODS
     method SCREEN->ImageDrawStyle
       return ImageDrawStyle( @image, @color, RenderMode.ALPHA_TEXTURE_SCREEN, @opacity )
 
