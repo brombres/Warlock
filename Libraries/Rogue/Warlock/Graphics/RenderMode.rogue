@@ -6,9 +6,9 @@ class RenderMode
     ALPHA_COLOR                        : RenderMode
     ALPHA_COLOR_ADD                    : RenderMode
     ALPHA_TEXTURE_COLOR_MULTIPLY       : RenderMode
-    ALPHA_TEXTURE_COLOR_ADD            : RenderMode
+    ALPHA_TEXTURE_COLOR_ADD            : RenderMode  # Image (vertex) color is added to texture; good for sprite flash effects.
     ALPHA_TEXTURE_MAX_LOD              : RenderMode
-    ALPHA_TEXTURE_ADD                  : RenderMode
+    ALPHA_TEXTURE_ADD                  : RenderMode  # Texture color multiplied by image color, result added to bg - good for glow effects
     ALPHA_TEXTURE_SCREEN               : RenderMode
     ALPHA_TEXTURE_COLOR_FILL           : RenderMode
     LIT_TEXTURE_COLOR_MULTIPLY         : RenderMode
