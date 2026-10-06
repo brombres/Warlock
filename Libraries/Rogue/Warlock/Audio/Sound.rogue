@@ -111,17 +111,17 @@ class Sound
 
     method play( &concurrent )
       # concurrent flag is ignored here but is utilized in Music override
-      if (rate_limit)
-        if (not rate_limit.is_expired) return
-        rate_limit.restart
-      endIf
-
       if (prepare)
         is_paused = false
         is_suspended = false
         if (is_playing)
           next_in_pool?.play( &=concurrent )
         else
+          if (rate_limit)
+            if (not rate_limit.is_expired) return
+            rate_limit.restart
+          endIf
+
           current_volume = volume
           native
           @|ma_sound_set_looping( &$this->sound, $is_looping );
