@@ -3,7 +3,7 @@ library Warlock
 class Texture
   PROPERTIES
     size       : XY
-    uv         : Quad     # .a/b/c/d = tl/tr/br/bl; corners orthogonal, maybe rotated 90º/180º/270º.
+    uv         : Box      # UV bounds within 'source' (0..1); position is top-left.
     source     : Texture  # if non-null, the original texture this is a subset of.
     filepath   : String
     is_managed : Logical  # Was retained by an AssetLoadingState
@@ -75,8 +75,9 @@ class Texture
     method init
       # Internal use.
 
-    method init( existing:Texture, subset=null:Box?, rotate_cw=0:Int, &hflip, &vflip )
-      # rotate_cw: number of 90º clockwise rotations of new Texture subset relative to original orientation
+    method init( existing:Texture, subset=null:Box? )
+      # subset: pixel bounds within 'existing', or proportional bounds (0..1) if
+      #         position < 1 and size <= 1.
       if local bounds = subset
         if (bounds.position.x < 1 and bounds.position.y < 1 and bounds.size.x <= 1 and bounds.size.y <= 1)
           # Convert proportional bounds into pixel bounds
@@ -90,44 +91,8 @@ class Texture
       size = subset.value.size
 
       local source_size = source.size
-      local existing_position = existing.uv.a * source_size
-      local existing_size = (existing.uv.c - existing.uv.a) * source_size
-      local existing_w    = (existing.uv.b - existing.uv.a) * source_size
-      local existing_h    = (existing.uv.d - existing.uv.a) * source_size
-
-      local x = subset.value.position.x * existing_w.sign
-      local y = subset.value.position.y * existing_h.sign
-      local w = subset.value.size.x * existing_w.sign
-      local h = subset.value.size.y * existing_h.sign
-
-      use corners = WorkList<<XY>>
-        corners.reserve( 4 )
-        local a = existing_position + x + y
-        corners.add( a / source_size )
-        corners.add( (a + w) / source_size )
-        corners.add( (a + w + h) / source_size )
-        corners.add( (a + h) / source_size )
-
-        which (rotate_cw)
-          case 1  # rotate clockwise 90º
-            corners.insert( corners.remove_last )
-            size = size.yx
-          case 2  # rotate 180º
-            corners.insert( corners.remove_last )
-            corners.insert( corners.remove_last )
-          case 3  # rotate clockwise 270º (counter-clockwise 90º)
-            corners.add( corners.remove_first )
-            size = size.yx
-        endWhich
-
-        if (hflip) corners.swap( 0, 1); corners.swap( 2, 3 )
-        if (vflip) corners.swap( 0, 3); corners.swap( 1, 2 )
-
-        uv.a = corners[0]
-        uv.b = corners[1]
-        uv.c = corners[2]
-        uv.d = corners[3]
-      endUse
+      local existing_position = existing.uv.position * source_size
+      uv = Box( existing_position + subset.value.position, size ) / source_size
 
     method polygon_mesh( polygon:XY[], mesh=Mesh():Mesh )->Mesh
       # polygon should contain normalized positions between (0,0) and (1,1).
@@ -138,9 +103,8 @@ class Texture
 
       if (Tessellator.tessellate(polygon))
         local i0 = mesh.indices.count
-        local uv1 = uv.a
-        local uv2 = uv.c
-        local uv_delta = uv2 - uv1
+        local uv1 = uv.position
+        local uv_delta = uv.size
         forEach (xy in Tessellator.vertex_positions)
           mesh.add( Vertex(xy, Color.WHITE, xy*uv_delta+uv1) )
         endForEach

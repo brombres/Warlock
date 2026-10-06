@@ -591,7 +591,7 @@ augment Warlock::Texture
 
     method set( texels:Color[], info:TextureInfo )
       this.size = info.size
-      uv = Quad( XY(0,0), XY(1,0), XY(1,1), XY(0,1) )
+      uv = Box( 0, 0, 1, 1 )
 
       native
       @|uint32_t sampler_flags = BGFX_SAMPLER_MIN_ANISOTROPIC | BGFX_SAMPLER_MAG_ANISOTROPIC;
@@ -643,7 +643,7 @@ augment RenderTargetTexture
       local w = size.x->Int
       local h = size.y->Int
       this.size = XY( w, h )
-      uv = Quad( XY(0,0), XY(1,0), XY(1,1), XY(0,1) )
+      uv = Box( 0, 0, 1, 1 )
 
       native @|bgfx::TextureFormat::Enum format;
       which (type)

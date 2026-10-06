@@ -46,7 +46,7 @@ class RenderTargetImage : TextureImage
         necessary (@texture)
 
         local source = @texture.source
-        local effective_size = @texture.uv.c * source.size
+        local effective_size = @texture.uv.bottom_right * source.size
         if (effective_size == XY(wp2,hp2)) return false # no change
 
         sufficient (wp2 <= source.size.x and hp2 <= source.size.y)

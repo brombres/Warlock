@@ -150,10 +150,10 @@ class Renderer [singleton]
       set_texture( texture )
       draw_triangles
 
-      local uv_a = texture.uv.a
-      local uv_b = texture.uv.b
-      local uv_c = texture.uv.c
-      local uv_d = texture.uv.d
+      local uv_a = texture.uv.top_left
+      local uv_b = texture.uv.top_right
+      local uv_c = texture.uv.bottom_right
+      local uv_d = texture.uv.bottom_left
 
       if (h_flip)
         swapValues( uv_a, uv_b )
@@ -203,16 +203,12 @@ class Renderer [singleton]
       set_texture( texture )
       draw_triangles
 
-      local texture_offset = texture_bounds.position / texture.size
-      local texture_size   = texture_bounds.size / texture.size
-
-      local du  = texture.uv.b - texture.uv.a
-      local dv  = texture.uv.c - texture.uv.b
-
-      local uv_a = texture.uv.a + texture_offset
-      local uv_b = uv_a + du * texture_size
-      local uv_c = uv_b + dv * texture_size
-      local uv_d = uv_a + dv * texture_size
+      local uv_bounds = Box( texture.uv.position + texture_bounds.position/texture.size*texture.uv.size,
+                             texture_bounds.size/texture.size*texture.uv.size )
+      local uv_a = uv_bounds.top_left
+      local uv_b = uv_bounds.top_right
+      local uv_c = uv_bounds.bottom_right
+      local uv_d = uv_bounds.bottom_left
 
       if (h_flip)
         swapValues( uv_a, uv_b )
@@ -292,10 +288,10 @@ class Renderer [singleton]
       set_texture( texture )
       draw_triangles
 
-      local uv_a = texture.uv.a
-      local uv_b = texture.uv.b
-      local uv_c = texture.uv.c
-      local uv_d = texture.uv.d
+      local uv_a = texture.uv.top_left
+      local uv_b = texture.uv.top_right
+      local uv_c = texture.uv.bottom_right
+      local uv_d = texture.uv.bottom_left
 
       if (h_flip)
         swapValues( uv_a, uv_b )
