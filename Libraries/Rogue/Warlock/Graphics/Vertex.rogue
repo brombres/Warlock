@@ -1,12 +1,15 @@
 library Warlock
 
-class Vertex( position:XYZ, color:Color, uv=XY(0,0):XY, normal=XYZ(0,0,1):XYZ ) [compound]
+class Vertex( position:XYZ, color:Color, uv=XY(0,0):XY, uv2=XY(0,0):XY, normal=XYZ(0,0,1):XYZ ) [compound]
+  # uv2: secondary texture coordinates for texture stage 1 (e.g. frame tweening).
   METHODS
     method average( other:Vertex )->Vertex
       return Vertex(
         (position + other.position) / 2,
         (color->XYZW + other.color->XYZW) / 2,
-        (uv + other.uv) / 2
+        (uv + other.uv) / 2,
+        (uv2 + other.uv2) / 2,
+        (normal + other.normal) / 2
       )
 
 endClass

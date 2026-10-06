@@ -93,6 +93,7 @@ class BGFX : Renderer [singleton]
        |  .add(bgfx::Attrib::Position,  3, bgfx::AttribType::Float )
        |  .add(bgfx::Attrib::Color0,    4, bgfx::AttribType::Uint8, true)
        |  .add(bgfx::Attrib::TexCoord0, 2, bgfx::AttribType::Float )
+       |  .add(bgfx::Attrib::TexCoord1, 2, bgfx::AttribType::Float )
        |  .add(bgfx::Attrib::Normal,    3, bgfx::AttribType::Float )
        |.end();
        |
@@ -235,6 +236,8 @@ class BGFX : Renderer [singleton]
        |    dest_data->z  = (float) src_data->position.z;
        |    dest_data->u  = (float) src_data->uv.x;
        |    dest_data->v  = (float) src_data->uv.y;
+       |    dest_data->u2 = (float) src_data->uv2.x;
+       |    dest_data->v2 = (float) src_data->uv2.y;
        |    dest_data->nx = (float) src_data->normal.x;
        |    dest_data->ny = (float) src_data->normal.y;
        |    dest_data->nz = (float) src_data->normal.z;
@@ -416,8 +419,8 @@ class BGFX : Renderer [singleton]
 endClass
 
 class BGFXVertex( x:Real32, y:Real32, z:Real32, abgr:Int32, u:Real32, v:Real32,
-                  nx:Real32, ny:Real32, nz:Real32 ) [compound]
-  # Position, Color, UV, Normal
+                  u2:Real32, v2:Real32, nx:Real32, ny:Real32, nz:Real32 ) [compound]
+  # Position, Color, UV, UV2, Normal - must match vertex_layout in BGFX.init()
 endClass
 
 augment ShaderProgram

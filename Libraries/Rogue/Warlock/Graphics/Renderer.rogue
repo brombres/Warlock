@@ -9,6 +9,7 @@ class Renderer [singleton]
     first_vertex   : Int
     first_index    : Int
     textures       = Texture[]
+    uv2            = Box(0,0,1,1) : Box  # UV bounds of texture stage 1; copied into Vertex.uv2
     render_mode    = RenderMode.ALPHA_TEXTURE_COLOR_MULTIPLY : RenderMode
 
     render_queue   = RendererBatch[]
@@ -150,20 +151,8 @@ class Renderer [singleton]
       set_texture( texture )
       draw_triangles
 
-      local uv_a = texture.uv.top_left
-      local uv_b = texture.uv.top_right
-      local uv_c = texture.uv.bottom_right
-      local uv_d = texture.uv.bottom_left
-
-      if (h_flip)
-        swapValues( uv_a, uv_b )
-        swapValues( uv_c, uv_d )
-      endIf
-
-      if (v_flip)
-        swapValues( uv_a, uv_d )
-        swapValues( uv_b, uv_c )
-      endIf
+      local uv  = .texture_corners( texture.uv, h_flip, v_flip )
+      local uv2 = .texture_corners( this.uv2, h_flip, v_flip )
 
       if (subdivisions.sum == 0)
         local i0 = data.vertices.count - first_vertex
@@ -172,18 +161,18 @@ class Renderer [singleton]
         local c = box.bottom_right
         local d = box.bottom_left
 
-        data.add Vertex( a, colors.a, uv_a )
-        data.add Vertex( b, colors.b, uv_b )
-        data.add Vertex( c, colors.c, uv_c )
-        data.add Vertex( d, colors.d, uv_d )
+        data.add Vertex( a, colors.a, uv.a, uv2.a )
+        data.add Vertex( b, colors.b, uv.b, uv2.b )
+        data.add Vertex( c, colors.c, uv.c, uv2.c )
+        data.add Vertex( d, colors.d, uv.d, uv2.d )
         data.add( i0, i0+1, i0+2 )
         data.add( i0, i0+2, i0+3 )
       else
         .generate_quad(
-          Vertex( box.position,     colors.a, uv_a ),
-          Vertex( box.top_right,    colors.b, uv_b ),
-          Vertex( box.bottom_right, colors.c, uv_c ),
-          Vertex( box.bottom_left,  colors.d, uv_d ),
+          Vertex( box.position,     colors.a, uv.a, uv2.a ),
+          Vertex( box.top_right,    colors.b, uv.b, uv2.b ),
+          Vertex( box.bottom_right, colors.c, uv.c, uv2.c ),
+          Vertex( box.bottom_left,  colors.d, uv.d, uv2.d ),
           subdivisions
         )
       endIf
@@ -203,22 +192,9 @@ class Renderer [singleton]
       set_texture( texture )
       draw_triangles
 
-      local uv_bounds = Box( texture.uv.position + texture_bounds.position/texture.size*texture.uv.size,
-                             texture_bounds.size/texture.size*texture.uv.size )
-      local uv_a = uv_bounds.top_left
-      local uv_b = uv_bounds.top_right
-      local uv_c = uv_bounds.bottom_right
-      local uv_d = uv_bounds.bottom_left
-
-      if (h_flip)
-        swapValues( uv_a, uv_b )
-        swapValues( uv_c, uv_d )
-      endIf
-
-      if (v_flip)
-        swapValues( uv_a, uv_d )
-        swapValues( uv_b, uv_c )
-      endIf
+      local proportional_bounds = texture_bounds / texture.size
+      local uv  = .texture_corners( .subset(texture.uv,proportional_bounds), h_flip, v_flip )
+      local uv2 = .texture_corners( .subset(this.uv2,proportional_bounds), h_flip, v_flip )
 
       if (subdivisions.sum == 0)
         local i0 = data.vertices.count - first_vertex
@@ -226,18 +202,18 @@ class Renderer [singleton]
         local b = box.top_right
         local c = box.bottom_right
         local d = box.bottom_left
-        data.add Vertex( a, colors.a, uv_a )
-        data.add Vertex( b, colors.b, uv_b )
-        data.add Vertex( c, colors.c, uv_c )
-        data.add Vertex( d, colors.d, uv_d )
+        data.add Vertex( a, colors.a, uv.a, uv2.a )
+        data.add Vertex( b, colors.b, uv.b, uv2.b )
+        data.add Vertex( c, colors.c, uv.c, uv2.c )
+        data.add Vertex( d, colors.d, uv.d, uv2.d )
         data.add( i0, i0+1, i0+2 )
         data.add( i0, i0+2, i0+3 )
       else
         .generate_quad(
-          Vertex( box.position,     colors.a, uv_a ),
-          Vertex( box.top_right,    colors.b, uv_b ),
-          Vertex( box.bottom_right, colors.c, uv_c ),
-          Vertex( box.bottom_left,  colors.d, uv_d ),
+          Vertex( box.position,     colors.a, uv.a, uv2.a ),
+          Vertex( box.top_right,    colors.b, uv.b, uv2.b ),
+          Vertex( box.bottom_right, colors.c, uv.c, uv2.c ),
+          Vertex( box.bottom_left,  colors.d, uv.d, uv2.d ),
           subdivisions
         )
       endIf
@@ -288,38 +264,49 @@ class Renderer [singleton]
       set_texture( texture )
       draw_triangles
 
-      local uv_a = texture.uv.top_left
-      local uv_b = texture.uv.top_right
-      local uv_c = texture.uv.bottom_right
-      local uv_d = texture.uv.bottom_left
-
-      if (h_flip)
-        swapValues( uv_a, uv_b )
-        swapValues( uv_c, uv_d )
-      endIf
-
-      if (v_flip)
-        swapValues( uv_a, uv_d )
-        swapValues( uv_b, uv_c )
-      endIf
+      local uv  = .texture_corners( texture.uv, h_flip, v_flip )
+      local uv2 = .texture_corners( this.uv2, h_flip, v_flip )
 
       if (subdivisions.sum == 0)
         local i0 = data.vertices.count - first_vertex
-        data.add Vertex( quad.a, colors.a, uv_a )
-        data.add Vertex( quad.b, colors.b, uv_b )
-        data.add Vertex( quad.c, colors.c, uv_c )
-        data.add Vertex( quad.d, colors.d, uv_d )
+        data.add Vertex( quad.a, colors.a, uv.a, uv2.a )
+        data.add Vertex( quad.b, colors.b, uv.b, uv2.b )
+        data.add Vertex( quad.c, colors.c, uv.c, uv2.c )
+        data.add Vertex( quad.d, colors.d, uv.d, uv2.d )
         data.add( i0, i0+1, i0+2 )
         data.add( i0, i0+2, i0+3 )
       else
         .generate_quad(
-          Vertex( quad.a colors.a, uv_a ),
-          Vertex( quad.b colors.b, uv_b ),
-          Vertex( quad.c colors.c, uv_c ),
-          Vertex( quad.d colors.d, uv_d ),
+          Vertex( quad.a, colors.a, uv.a, uv2.a ),
+          Vertex( quad.b, colors.b, uv.b, uv2.b ),
+          Vertex( quad.c, colors.c, uv.c, uv2.c ),
+          Vertex( quad.d, colors.d, uv.d, uv2.d ),
           subdivisions
         )
       endIf
+
+    method .subset( uv:Box, proportional_bounds:Box )->Box
+      # Returns the portion of UV bounds 'uv' covered by 'proportional_bounds' (0..1).
+      return Box( uv.position + proportional_bounds.position*uv.size, proportional_bounds.size*uv.size )
+
+    method .texture_corners( uv:Box, h_flip:Logical, v_flip:Logical )->Quad
+      # Returns tl/tr/br/bl texture coordinates for 'uv', flipped as specified.
+      local a = uv.top_left
+      local b = uv.top_right
+      local c = uv.bottom_right
+      local d = uv.bottom_left
+
+      if (h_flip)
+        swapValues( a, b )
+        swapValues( c, d )
+      endIf
+
+      if (v_flip)
+        swapValues( a, d )
+        swapValues( b, c )
+      endIf
+
+      return Quad( a, b, c, d )
 
     method .generate_quad( tl:Vertex, tr:Vertex, br:Vertex, bl:Vertex, subdivisions:XY )
       if (subdivisions.x > 0)
@@ -358,9 +345,9 @@ class Renderer [singleton]
       set_texture( texture )
       draw_triangles
       local i0 = data.vertices.count - first_vertex
-      data.add Vertex( triangle.a, color, XY(0,0) )
-      data.add Vertex( triangle.b, color, XY(1,0) )
-      data.add Vertex( triangle.c, color, XY(1,1) )
+      data.add Vertex( triangle.a, color, texture.uv.top_left,     uv2.top_left )
+      data.add Vertex( triangle.b, color, texture.uv.top_right,    uv2.top_right )
+      data.add Vertex( triangle.c, color, texture.uv.bottom_right, uv2.bottom_right )
       data.add( i0, i0+1, i0+2 )
 
     method flush
@@ -468,6 +455,7 @@ class Renderer [singleton]
       textures[0] = new_texture
 
     method set_texture( stage:Int, new_texture:Texture )
+      if (stage == 1) uv2 = new_texture.uv  # before resolving to .source
       if (new_texture.source) new_texture .= source
       if (textures.count > stage and textures[stage] is new_texture) return
       flush
