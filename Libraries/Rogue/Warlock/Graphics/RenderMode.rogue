@@ -11,6 +11,7 @@ class RenderMode
     ALPHA_TEXTURE_ADD                  : RenderMode  # Texture color multiplied by image color, result added to bg - good for glow effects
     ALPHA_TEXTURE_SCREEN               : RenderMode
     ALPHA_TEXTURE_COLOR_FILL           : RenderMode
+    ALPHA_TEXTURE_TWEEN_COLOR_MULTIPLY : RenderMode
     LIT_TEXTURE_COLOR_MULTIPLY         : RenderMode
     LIT_TEXTURE_COLOR_MULTIPLY_WRITE_Z : RenderMode
     LIT_TEXTURE_COLOR_ADD              : RenderMode
@@ -98,6 +99,10 @@ class RenderModeAlphaTextureColorFill : RenderMode [singleton]
     shader = Shader.ALPHA_TEXTURE_COLOR_FILL : Shader ![override]
 endClass
 
+class RenderModeAlphaTextureTweenColorMultiply : RenderMode [singleton]
+  PROPERTIES
+    shader = Shader.ALPHA_TEXTURE_TWEEN_COLOR_MULTIPLY : Shader ![override]
+endClass
 
 class RenderModeLitTextureColorMultiply : RenderMode [singleton]
   PROPERTIES

@@ -107,6 +107,7 @@ class BGFX : Renderer [singleton]
 
       Shader.ALPHA_COLOR                  = Shader( "AlphaColor" )
       Shader.ALPHA_TEXTURE_COLOR_MULTIPLY = Shader( "AlphaTextureColorMultiply" )
+      Shader.ALPHA_TEXTURE_TWEEN_COLOR_MULTIPLY = Shader( "AlphaTextureTweenColorMultiply" )
       Shader.ALPHA_TEXTURE_COLOR_ADD      = Shader( "AlphaTextureColorAdd" )
       Shader.ALPHA_TEXTURE_MAX_LOD        = Shader( "AlphaTextureMaxLOD" )
       Shader.ALPHA_TEXTURE_COLOR_FILL     = Shader( "AlphaTextureColorFill" )
@@ -121,6 +122,7 @@ class BGFX : Renderer [singleton]
       RenderMode.ALPHA_TEXTURE_ADD        = RenderModeAlphaTextureAdd
       RenderMode.ALPHA_TEXTURE_SCREEN     = RenderModeAlphaTextureScreen
       RenderMode.ALPHA_TEXTURE_COLOR_FILL = RenderModeAlphaTextureColorFill
+      RenderMode.ALPHA_TEXTURE_TWEEN_COLOR_MULTIPLY = RenderModeAlphaTextureTweenColorMultiply
       RenderMode.LIT_TEXTURE_COLOR_MULTIPLY         = RenderModeLitTextureColorMultiply
       RenderMode.LIT_TEXTURE_COLOR_MULTIPLY_WRITE_Z = RenderModeLitTextureColorMultiplyWriteZ
       RenderMode.LIT_TEXTURE_COLOR_ADD         = RenderModeLitTextureColorAdd

@@ -135,19 +135,23 @@ class AnimatedImage : ImageFrames
       @render_mode = render_mode
 
     method .draw_entity [override]
-      prior._draw_entity
-
-      if (state.is_tweened)
+      contingent
+        necessary (state.is_tweened)
         localize next_frame
-        if (next_frame)
-          local opacity = this.opacity * (t - t.floor)
-          temporarily next_frame.opacity=opacity, next_frame.color=color, next_frame.render_mode=render_mode
-            temporarily next_frame.scale=scale, next_frame.anchor=anchor
-              next_frame.draw( display_bounds )
-            endTemporarily
-          endTemporarily
-        endIf
-      endIf
+        necessary (next_frame)
+
+        local progress = (t - t.floor)
+
+        temporarily render_mode = RenderMode.ALPHA_TEXTURE_TWEEN_COLOR_MULTIPLY
+          render_mode.uniforms//frame_progress = (t - t.floor)
+          Renderer.set_texture( 1, next_frame.texture )
+          prior._draw_entity
+        endTemporarily
+
+      unsatisfied
+        prior._draw_entity
+      endContingent
+
 endClass
 
 
