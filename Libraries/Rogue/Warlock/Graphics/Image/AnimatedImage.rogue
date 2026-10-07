@@ -108,6 +108,23 @@ class AnimatedImage : ImageFrames
         return null
       endIf
 
+    method current_frame_index->Int
+      if local index = state.current_frame_index( this )
+        return index
+      else
+        return 0
+      endIf
+
+    method frame_count->Int
+      # For the current animation
+      return state.frames.count
+
+    method frame_progress->Int
+      # For the current animation
+      localize frame_count
+      if (frame_count <= 1) return frame_count
+      else                  return current_frame_index->Real / (frame_count - 1)
+
     method next_frame->Image
       if local index = state.next_frame_index( this )
         local frame = frames[index]
