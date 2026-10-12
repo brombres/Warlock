@@ -26,9 +26,7 @@ class Sound
 
   METHODS
     method init( filepath, pool_count=1:Int )
-      if (pool_count > 1)
-        next_in_pool = Sound( filepath, pool_count - 1 )
-      endIf
+      set_pool_count( pool_count )
 
     method init_object
       AudioManager.all_audio.add( this )
@@ -135,6 +133,10 @@ class Sound
     method play_after_delay( seconds:Real )
       AudioManager.actions |= Action.wait( seconds ) + Action( () => this.play )
 
+    method pool_count->Int
+      if (next_in_pool) return next_in_pool.pool_count + 1
+      else              return 1
+
     method position->Real
       local seconds : Real
       if (is_prepared)
@@ -229,6 +231,14 @@ class Sound
 
     method set_is_used( @is_used )
       next_in_pool?.set_is_used( is_used )
+
+    method set_pool_count( n:Int )
+      local additional = (n - pool_count).clamped_low( 0 )
+      if (n > 0)
+        local last = this
+        while (last.next_in_pool) last .= next_in_pool
+        last.next_in_pool = Sound( filepath, n - 1 )
+      endIf
 
     method set_volume( @volume )
       if (is_prepared) current_volume = volume
