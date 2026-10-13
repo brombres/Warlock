@@ -347,7 +347,3 @@ class Window : Display [singleton]
 
 endClass
 
-augment UI::Event
-  PROPERTIES
-    window = Window : Warlock::Window
-endAugment

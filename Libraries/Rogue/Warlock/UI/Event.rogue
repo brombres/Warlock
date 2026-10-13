@@ -1,0 +1,11 @@
+library UI
+
+augment Event
+  PROPERTIES
+    window = Window : Warlock::Window
+
+  METHODS
+    method init( existing:Event ) [append]
+      this.window = existing.window
+endAugment
+
